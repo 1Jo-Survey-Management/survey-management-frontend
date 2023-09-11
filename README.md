@@ -13,7 +13,7 @@ index.tsx -> App.tsx -> Layout.tsx -> Body.tsx -> routeInfo.tsx -> 각 전환될
 
 ### 접근 흐름 설명
 
-index.tst : 제일 처음 앱 시작했을때 접근하는 파일. <App/> 를 근거로 App.tsx로 접근
+index.tst : 제일 처음 앱 시작했을때 접근하는 파일. <App/> 를 근거로 App.tsx로 접근 \n
 App.tsx : 라우터가 있는곳. useNavigate 등으로 페이지 전환을 위한 접근 url은 모두 이곳을 통하여 접근하게 된다.
 Layout.tsx : Header, Body, Footer가 한곳에 있는 곳으로 혹여나 Body의 페이지가 다른 레이아웃의 분기가 필요할때 조건문걸고 다르게 접근시키면 된다. Header, Footer도 마찬가지
 Body.tsx : 각 기능이 존재하는 페이지로 routeInfo(location.pathname)은 넘어오는 url을 받기 때문에 각 기능의 페이지로 접근시킨다.
