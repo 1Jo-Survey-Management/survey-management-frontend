@@ -1,46 +1,41 @@
-# Getting Started with Create React App
+# Survey Management Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a React TypeScript frontend project for a presentation on December 4th.
 
-## Available Scripts
+## 프론트엔드 개발 참고 사항
 
-In the project directory, you can run:
+현 readme의 명세는 개발 참고사항으로 이용되고 있으며, 차후 프로젝트의 명세로 전환될 예정임
 
-### `npm start`
+### 리액트 접근 흐름
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+[파일명 기준]
+index.tsx -> App.tsx -> Layout.tsx -> Body.tsx -> routeInfo.tsx -> 각 전환될 페이지.tsx
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 접근 흐름 설명
 
-### `npm test`
+index.tst : 제일 처음 앱 시작했을때 접근하는 파일. <App/> 를 근거로 App.tsx로 접근
+App.tsx : 라우터가 있는곳. useNavigate 등으로 페이지 전환을 위한 접근 url은 모두 이곳을 통하여 접근하게 된다.
+Layout.tsx : Header, Body, Footer가 한곳에 있는 곳으로 혹여나 Body의 페이지가 다른 레이아웃의 분기가 필요할때 조건문걸고 다르게 접근시키면 된다. Header, Footer도 마찬가지
+Body.tsx : 각 기능이 존재하는 페이지로 routeInfo(location.pathname)은 넘어오는 url을 받기 때문에 각 기능의 페이지로 접근시킨다.
+routeInfo.tsx : 라우터를 통해서 넘어온 url을 실제 현재 디렉터리의 경로로 전환해주는 곳이다. 여기에 필요한 url와 경로를 설정하고 사용하면 된다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+### 디렉터리 구조
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+layout 폴더 : Body, Header, Footer과 셋을 아우르는 Layout 파일이 있는 폴더. 만약 Body의 레이아웃이 크게 바뀐다면 기존 구조를 참고하여 새로운 파일 만들면 된다.
+route 폴더 : 라우터의 경로를 설정해주는 파일이 있는 폴더. 건드릴 필요 없다.
+survey 폴더 : 각종 페이지의 파일들을 각자 만들어서 사용하면 된다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* 각 폴더나 파일들은 개인의 결정에 따라 생성 가능하나 feature 브랜치에서 설정하고 완성후 논의를 통해 병합하도록한다.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 참고사항
 
-### `npm run eject`
+git clone을 받을시 react-script가 없을 수 있는데
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+npm install create-react-app
+명령어로 해결가능하다. (react-script는 create-react-app 설치에 포함된다.)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 즐거운 코딩됩시당
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Hello World!
+by puo(aka SunGyu)
