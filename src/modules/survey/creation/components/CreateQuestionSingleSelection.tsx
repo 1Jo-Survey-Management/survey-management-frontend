@@ -25,6 +25,8 @@ import {
 } from "@mui/material";
 
 import CreateSingleSelection from "./CreateSingleSelection";
+import CreateMultipleSelection from "./CreateMultipleSelection";
+import CreateShortAnswer from "./CreatShortAnswer";
 
 const CreateQuestionSingleSelection: React.FC = () => {
   const [questionType, setQuestionType] = useState<string>("1");
@@ -153,63 +155,10 @@ const CreateQuestionSingleSelection: React.FC = () => {
         {questionDescription}
         {selectQuestionType}
 
-        {questionType === "1" && <Typography>1번 테스트</Typography>}
-        {questionType === "2" && <Typography>2번 테스트</Typography>}
-        {questionType === "3" && <Typography>3번 테스트</Typography>}
+        {questionType === "1" && <CreateSingleSelection />}
+        {questionType === "2" && <CreateMultipleSelection />}
+        {questionType === "3" && <CreateShortAnswer />}
         {questionType === "4" && <Typography>4번 테스트</Typography>}
-
-        <CreateSingleSelection></CreateSingleSelection>
-
-        <RadioGroup
-          aria-labelledby="demo-radio-buttons-group-label"
-          name="radio-buttons-group"
-        >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <AddIcon
-              sx={{
-                color: "#3f50b5",
-                border: "solid 1px #3f50b5",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            ></AddIcon>
-            <RemoveIcon
-              sx={{
-                color: "#3f50b5",
-                border: "solid 1px #3f50b5",
-                borderRadius: "5px",
-                marginLeft: "5px",
-                cursor: "pointer",
-              }}
-            ></RemoveIcon>
-            <Radio
-              disabled
-              onChange={handleChange}
-              value="a"
-              name="radio-buttons"
-              inputProps={{ "aria-label": "A" }}
-            />
-            <Input
-              placeholder="문항 설명을 입력해주세요."
-              sx={{ flexGrow: 1 }}
-            />
-          </Box>
-          <FormControlLabel
-            value="female"
-            control={<Radio />}
-            label="10개 ~ 100개"
-          />
-          <FormControlLabel
-            value="male"
-            control={<Radio />}
-            label="100개 ~ 1000개"
-          />
-          <FormControlLabel
-            value="other"
-            control={<Radio />}
-            label="1000개 ~ 10000개"
-          />
-        </RadioGroup>
       </CardContent>
     </Card>
   );

@@ -1,11 +1,21 @@
+import { Box, Checkbox, Input } from "@mui/material";
 import React, { useState } from "react";
-import { Box, Radio, Input } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
 const primaryColor = "#3f50b5";
 
 const styles = {
+  selectionBox: {
+    display: "flex",
+    alingItems: "center",
+  },
+  removeAndAddIconBox: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "end",
+    width: "53px",
+  },
   icon: {
     color: primaryColor,
     border: `solid 1px ${primaryColor}`,
@@ -15,19 +25,9 @@ const styles = {
   input: {
     flexGrow: 1,
   },
-  removeAndAddIconBox: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "end",
-    width: "53px",
-  },
-  selectionBox: {
-    display: "flex",
-    alingItems: "center",
-  },
 };
 
-const CreateSingleSelection: React.FC = () => {
+const CreateMultipleSelection: React.FC = () => {
   const [selections, setSelections] = useState<any[]>([
     { id: new Date().getTime() },
   ]);
@@ -40,6 +40,7 @@ const CreateSingleSelection: React.FC = () => {
     if (selections.length === 1) {
       return;
     }
+
     const updateSelections = selections.filter(
       (selection) => selection.id !== id
     );
@@ -55,18 +56,17 @@ const CreateSingleSelection: React.FC = () => {
               {index === selections.length - 1 && (
                 <AddIcon
                   sx={styles.icon}
-                  aria-label="Add"
                   onClick={handleAddSelection}
-                />
+                ></AddIcon>
               )}
+
               <RemoveIcon
                 sx={{ ...styles.icon, marginLeft: "5px" }}
-                aria-label="Remove"
                 onClick={() => handleRemoveSelection(selection.id)}
-              />
+              ></RemoveIcon>
             </Box>
-            <Radio disabled name={`radio-buttons-${selection.id}`} />
-            <Input placeholder="문항을 입력해주세요." sx={styles.input} />
+            <Checkbox disabled></Checkbox>
+            <Input placeholder="문항을 입력해주세요." sx={styles.input}></Input>
           </Box>
         </div>
       ))}
@@ -74,4 +74,4 @@ const CreateSingleSelection: React.FC = () => {
   );
 };
 
-export default CreateSingleSelection;
+export default CreateMultipleSelection;
