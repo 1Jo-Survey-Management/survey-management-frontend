@@ -3,6 +3,7 @@ import React from "react";
 import Container from "@mui/material/Container";
 import { useLocation } from "react-router-dom";
 import CreateQuestionSingleSelection from "../components/CreateQuestionSingleSelection";
+import FloatingActionButtons from "../components/FloatingActionButtons";
 
 const CreationSurvey: React.FC = () => {
   const location = useLocation();
@@ -13,6 +14,7 @@ const CreationSurvey: React.FC = () => {
       <h1>Creation Survey</h1>
 
       <CreateQuestionSingleSelection></CreateQuestionSingleSelection>
+      <FloatingActionButtons></FloatingActionButtons>
     </Container>
   );
 };
