@@ -12,6 +12,7 @@ const styles = {
     right: "10px",
     display: "flex",
     flexDirection: "column",
+    zIndex: "1",
   },
   fabStyles: {
     width: "44px",
@@ -20,7 +21,13 @@ const styles = {
   },
 };
 
-const FloatingActionButtons: React.FC = () => {
+interface FloatingActionButtonsProps {
+  onClickAddQuestion: () => void;
+}
+
+const FloatingActionButtons: React.FC<FloatingActionButtonsProps> = ({
+  onClickAddQuestion,
+}) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -50,7 +57,12 @@ const FloatingActionButtons: React.FC = () => {
       >
         <ArrowDropDownIcon></ArrowDropDownIcon>
       </Fab>
-      <Fab color="primary" aria-label="add" sx={styles.fabStyles}>
+      <Fab
+        color="primary"
+        aria-label="add"
+        sx={styles.fabStyles}
+        onClick={onClickAddQuestion}
+      >
         <AddIcon></AddIcon>
       </Fab>
       <Fab color="primary" aria-label="add" sx={styles.fabStyles}>
