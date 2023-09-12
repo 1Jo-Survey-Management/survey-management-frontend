@@ -27,6 +27,7 @@ import {
 import CreateSingleSelection from "./CreateSingleSelection";
 import CreateMultipleSelection from "./CreateMultipleSelection";
 import CreateShortAnswer from "./CreatShortAnswer";
+import CreateSubjectiveDescriptive from "./CreateSubjectiveDescriptive";
 
 const CreateQuestionSingleSelection: React.FC = () => {
   const [questionType, setQuestionType] = useState<string>("1");
@@ -158,7 +159,7 @@ const CreateQuestionSingleSelection: React.FC = () => {
         {questionType === "1" && <CreateSingleSelection />}
         {questionType === "2" && <CreateMultipleSelection />}
         {questionType === "3" && <CreateShortAnswer />}
-        {questionType === "4" && <Typography>4번 테스트</Typography>}
+        {questionType === "4" && <CreateSubjectiveDescriptive />}
       </CardContent>
     </Card>
   );
