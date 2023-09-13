@@ -1,8 +1,7 @@
 // 네이버 로그인 JDK 사용로직
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 
-const naverClientId = "ukwEecKhMrJzOdjwpJfB" ;
+const naverClientId = 'ukwEecKhMrJzOdjwpJfB' ;
 const naverRedirectURL = "http://localhost:8080/login/naver/callback";
 //CSRF를 방지하기 위한 인증값, 사용자임의로 넣어야하고, 테스트를 위해 test로 설정
 const naverstate = "test";

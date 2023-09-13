@@ -1,7 +1,6 @@
 // LoginDisplay.tsx
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
-import { pathInfo, routeInfo } from "../route/routeInfo"
 import { Button } from '@mui/material';
 import LoginFig from './img/LoginFig.png';
 import Logo from './img/SurveyLogo.png';
@@ -9,7 +8,6 @@ import Logo from './img/SurveyLogo.png';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 
-import Grid from '@mui/material/Grid';
 
 import { styled } from '@mui/material/styles';
 
