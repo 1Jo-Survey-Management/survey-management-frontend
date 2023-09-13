@@ -48,7 +48,7 @@ const LoginDisplay: React.FC = () => {
 
   useEffect(() => {
     getNaverToken();
-  }, []); 
+  }, []);
 
   console.log(location.pathname)
   return (
@@ -80,20 +80,11 @@ const LoginDisplay: React.FC = () => {
         }}
       >
         <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img src={`${Logo}`} style={{ width: '50px', marginRight: '10px' }} />
-          <h1 style={{ position: 'relative', color: '#9E9E9E' }}> NoName Survey</h1>
-        </Box>  
-
-        <Box style={{ height: '50px' }}>
-        </Box>  
-
-        <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <LoginNaver/>
+          <img src={`${Logo}`} style={{ width: '50px', margin: '10px' }} />
+          <h1 style={{ position: 'relative', color: '#9E9E9E', paddingLeft: '10px' }}> NoName Survey</h1>
         </Box>
 
-        <Box style={{ height: '50px' }}>
-        </Box> 
-        
+        <LoginNaver/>
 
         <h2 style={{ position: 'relative', marginBottom: '1px' }}>Nice to See you Again</h2>
         <Button style={{ position: 'relative', color: '#9E9E9E' }} onClick={goLogin}>비회원으로 로그인</Button>
