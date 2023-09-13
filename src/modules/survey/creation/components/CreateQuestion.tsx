@@ -208,6 +208,7 @@ const CreateQuestion: React.FC<CreateQuestionProps> = ({
         borderColor: "#3f50b5",
         boxShadow:
           "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);",
+        marginBottom: "30px",
       }}
     >
       <CardContent>

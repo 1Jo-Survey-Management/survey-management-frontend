@@ -4,6 +4,17 @@ import Container from "@mui/material/Container";
 import { useLocation } from "react-router-dom";
 import CreateQuestion from "../components/CreateQuestion";
 import FloatingActionButtons from "../components/FloatingActionButtons";
+import CreateSurveyInfo from "../components/CreateSurveyInfo";
+
+interface SurveyInfoProps {
+  id: number;
+  surveyTitle: string;
+  surveyImage: string;
+  surveyTags: string[];
+  endDate: string;
+  openStatus: string;
+  surveyDescription: string;
+}
 
 const CreationSurvey: React.FC = () => {
   const location = useLocation();
@@ -11,6 +22,16 @@ const CreationSurvey: React.FC = () => {
   const [questions, setQuestions] = useState<any[]>([
     { id: new Date().getTime() },
   ]);
+
+  const [surveyInfo, setSurveyInfo] = useState<SurveyInfoProps>({
+    id: new Date().getTime(),
+    surveyTitle: "",
+    surveyImage: "",
+    surveyTags: [],
+    surveyDescription: "",
+    endDate: "",
+    openStatus: "",
+  });
 
   const handleAddQuestion = () => {
     setQuestions([...questions, { id: new Date().getTime() }]);
@@ -36,6 +57,8 @@ const CreationSurvey: React.FC = () => {
   return (
     <Container maxWidth="md">
       <h1>Creation Survey</h1>
+
+      <CreateSurveyInfo></CreateSurveyInfo>
 
       {questions.map((question, index) => {
         return (
