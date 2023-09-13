@@ -52,6 +52,9 @@
     ]
   },
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4e2dab6 ([git] git 이슈 푸쉬 체크)
   "proxy": "http://localhost:8080",
   "devDependencies": {
     "eslint": "^8.2.0",
@@ -61,7 +64,10 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0"
   }
+<<<<<<< HEAD
 =======
   "proxy": "http://localhost:8080"
 >>>>>>> d6763f9 (Revert "Revert "[feat] OAuth 네이버 로그인 UI 완료 #1"")
+=======
+>>>>>>> 4e2dab6 ([git] git 이슈 푸쉬 체크)
 }
