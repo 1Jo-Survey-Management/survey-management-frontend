@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
 import {
   Container,
   Card,
@@ -29,23 +27,108 @@ import CreateMultipleSelection from "./CreateMultipleSelection";
 import CreateShortAnswer from "./CreatShortAnswer";
 import CreateSubjectiveDescriptive from "./CreateSubjectiveDescriptive";
 
-const CreateQuestionSingleSelection: React.FC = () => {
+const styles = {
+  dragIndicatorBox: {
+    margin: "0 auto",
+    display: "flex",
+    justifyContent: "center",
+    position: "relative",
+    top: "-15px",
+  },
+
+  iconAndSwitchContainer: {
+    display: "flex",
+    justifyContent: "flex-end",
+    marginTop: "-15px",
+  },
+
+  iconAndSwitchBox: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  switchBox: {
+    display: "flex",
+    alignItems: "center",
+    marginLeft: "5px",
+  },
+
+  questionTitleBox: {
+    display: "flex",
+    alignItems: "center",
+  },
+
+  questionDescriptionBox: {
+    display: "flex",
+    alignItems: "center",
+    marginTop: "10px",
+  },
+
+  selectQuestionTypeBox: {
+    display: "flex",
+    alignItems: "center",
+    marginTop: "10px",
+  },
+};
+
+interface CreateQuestionProps {
+  question: any;
+  onClickRemoveQuestion: (removeTargetId: number) => void;
+  questions: any[];
+  setQuestions(updateQuestions: any[]): void;
+}
+
+/**
+ * 설문조사 문항을 만드는 컴포넌트 입니다.
+ *
+ * @param param0
+ * @returns {React.FC}
+ * @author 강명관
+ */
+const CreateQuestion: React.FC<CreateQuestionProps> = ({
+  onClickRemoveQuestion,
+  question,
+  questions,
+  setQuestions,
+}) => {
   const [questionType, setQuestionType] = useState<string>("1");
 
+  /**
+   * 셀렉박스의 선택에 따라 문항 타입을 랜더링하기 위한 메서드입니다.
+   *
+   * @param event SelectChangeEvent
+   */
   const handleChange = (event: SelectChangeEvent) => {
     setQuestionType(event.target.value);
   };
 
+  const handleRemoveQuestion = () => {
+    console.log("Is this?");
+    console.log(question.id);
+    onClickRemoveQuestion(question.id);
+    console.log("What the Fuck");
+  };
+
+  const handleRemoveQuestion2 = (removeTargetId: number) => {
+    if (questions.length === 1) {
+      return;
+    }
+
+    console.log(questions);
+
+    console.log(removeTargetId);
+    // const updateSelections = questions.filter((question) => {
+    //   return question.id !== removeTargetId;
+    // });
+    // console.log(updateSelections);
+    setQuestions([
+      ...questions.filter((question) => question.id !== removeTargetId),
+    ]);
+  };
+
   const dragIndicator = (
-    <Box
-      sx={{
-        margin: "0 auto",
-        display: "flex",
-        justifyContent: "center",
-        position: "relative",
-        top: "-15px",
-      }}
-    >
+    <Box sx={styles.dragIndicatorBox}>
       <DragIndicatorIcon
         sx={{ transform: "rotate(90deg);", color: "#b2b2b2" }}
       ></DragIndicatorIcon>
@@ -53,33 +136,23 @@ const CreateQuestionSingleSelection: React.FC = () => {
   );
 
   const deleteIconAndRequiredSwitch = (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "flex-end",
-        marginTop: "-15px",
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Tooltip title="Delete">
+    <Box sx={styles.iconAndSwitchContainer}>
+      <Box sx={styles.iconAndSwitchBox}>
+        {/* <Tooltip title="Delete" onClick={handleRemoveQuestion}> */}
+        <Tooltip
+          title="Delete"
+          // onClick={() => {
+          //   console.log(question.id);
+          //   handleRemoveQuestion2(question.Id);
+          // }}
+          onClick={() => handleRemoveQuestion2(question.id)}
+        >
           <IconButton>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
         <FormGroup>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              marginLeft: "5px",
-            }}
-          >
+          <Box sx={styles.switchBox}>
             <Typography sx={{ marginRight: "-7px" }}>필수</Typography>
             <Switch defaultChecked />
           </Box>
@@ -89,13 +162,7 @@ const CreateQuestionSingleSelection: React.FC = () => {
   );
 
   const questionTitle = (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "",
-      }}
-    >
+    <Box sx={styles.questionTitleBox}>
       <Typography sx={{ marginRight: "10px", fontWeight: "bold" }}>
         문항 제목
       </Typography>
@@ -104,13 +171,7 @@ const CreateQuestionSingleSelection: React.FC = () => {
   );
 
   const questionDescription = (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        marginTop: "10px",
-      }}
-    >
+    <Box sx={styles.questionDescriptionBox}>
       <Typography sx={{ marginRight: "10px", fontWeight: "bold" }}>
         문항 설명
       </Typography>
@@ -119,7 +180,7 @@ const CreateQuestionSingleSelection: React.FC = () => {
   );
 
   const selectQuestionType = (
-    <Box sx={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
+    <Box sx={styles.selectQuestionTypeBox}>
       <Typography sx={{ marginRight: "10px", fontWeight: "bold" }}>
         문항 유형
       </Typography>
@@ -231,4 +292,4 @@ const test: React.FC = () => {
   );
 };
 
-export default CreateQuestionSingleSelection;
+export default CreateQuestion;

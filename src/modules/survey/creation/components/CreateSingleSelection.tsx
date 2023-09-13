@@ -27,15 +27,33 @@ const styles = {
   },
 };
 
+/**
+ * 문항 생성에서 단일 선택형 선택지를 만드는 컴포넌트 입니다.
+ *
+ * @component
+ * @returns 단일 선택형 선택지
+ * @author 강명관
+ */
 const CreateSingleSelection: React.FC = () => {
   const [selections, setSelections] = useState<any[]>([
     { id: new Date().getTime() },
   ]);
 
+  /**
+   * 선택지를 추가하는 메서드입니다.
+   *
+   * @author 강명관
+   */
   const handleAddSelection = () => {
     setSelections([...selections, { id: new Date().getTime() }]);
   };
 
+  /**
+   * 선택지를 삭제하는 메서드입니다.
+   *
+   * @param id selection Id
+   * @author 강명관
+   */
   const handleRemoveSelection = (id: number) => {
     if (selections.length === 1) {
       return;

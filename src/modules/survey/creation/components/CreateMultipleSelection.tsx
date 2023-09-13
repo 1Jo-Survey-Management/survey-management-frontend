@@ -27,15 +27,30 @@ const styles = {
   },
 };
 
+/**
+ * 다중 선택형 문항 선택지를 만드는 컴포넌트 입니다.
+ *
+ * @component
+ * @returns
+ */
 const CreateMultipleSelection: React.FC = () => {
   const [selections, setSelections] = useState<any[]>([
     { id: new Date().getTime() },
   ]);
 
+  /**
+   * 선택지를 추가하는 메서드 입니다.
+   */
   const handleAddSelection = () => {
     setSelections([...selections, { id: new Date().getTime() }]);
   };
 
+  /**
+   * 선택지를 삭제하는 메서드 입니다.
+   *
+   * @param id 삭제할 selection
+   * @returns {void} state의 selections 에서 삭제
+   */
   const handleRemoveSelection = (id: number) => {
     if (selections.length === 1) {
       return;

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Container from "@mui/material/Container";
 import { useLocation } from "react-router-dom";
-import CreateQuestionSingleSelection from "../components/CreateQuestionSingleSelection";
+import CreateQuestion from "../components/CreateQuestion";
 import FloatingActionButtons from "../components/FloatingActionButtons";
 
 const CreationSurvey: React.FC = () => {
@@ -14,9 +14,23 @@ const CreationSurvey: React.FC = () => {
 
   const handleAddQuestion = () => {
     setQuestions([...questions, { id: new Date().getTime() }]);
+    console.log(questions);
   };
 
-  const handleRemoveQuestion = () => {};
+  const handleRemoveQuestion = (removeTargetId: number) => {
+    console.log("제대로 들어옴?");
+    if (questions.length === 1) {
+      return;
+    }
+
+    console.log(removeTargetId);
+    const updateSelections = questions.filter((question) => {
+      return question.id !== removeTargetId;
+    });
+
+    setQuestions(updateSelections);
+  };
+  console.log("삭제후", questions);
 
   console.log(location.pathname);
   return (
@@ -25,13 +39,16 @@ const CreationSurvey: React.FC = () => {
 
       {questions.map((question, index) => {
         return (
-          <CreateQuestionSingleSelection
+          <CreateQuestion
             key={index}
-          ></CreateQuestionSingleSelection>
+            question={question}
+            onClickRemoveQuestion={() => handleRemoveQuestion(question.id)}
+            questions={questions}
+            setQuestions={setQuestions}
+          ></CreateQuestion>
         );
       })}
 
-      {/* <CreateQuestionSingleSelection></CreateQuestionSingleSelection> */}
       <FloatingActionButtons
         onClickAddQuestion={handleAddQuestion}
       ></FloatingActionButtons>
