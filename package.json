@@ -51,6 +51,7 @@
       "last 1 safari version"
     ]
   },
+<<<<<<< HEAD
   "proxy": "http://localhost:8080",
   "devDependencies": {
     "eslint": "^8.2.0",
@@ -60,4 +61,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0"
   }
+=======
+  "proxy": "http://localhost:8080"
+>>>>>>> d6763f9 (Revert "Revert "[feat] OAuth 네이버 로그인 UI 완료 #1"")
 }
