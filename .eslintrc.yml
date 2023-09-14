@@ -4,5 +4,3 @@ env:
   node: true
 extends:
   - airbnb
-
-   
