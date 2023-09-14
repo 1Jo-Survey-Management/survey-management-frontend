@@ -1,4 +1,4 @@
-import { Box, Input, TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import React from "react";
 
 const CreateSubjectiveDescriptive: React.FC = () => {

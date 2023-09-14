@@ -1,37 +1,30 @@
-// LoginDisplay.tsx
 import React, { useState } from "react";
 import Container from "@mui/material/Container";
 import { useLocation } from "react-router-dom";
 import CreateQuestion from "../components/CreateQuestion";
 import FloatingActionButtons from "../components/FloatingActionButtons";
 import CreateSurveyInfo from "../components/CreateSurveyInfo";
-
-interface SurveyInfoProps {
-  id: number;
-  surveyTitle: string;
-  surveyImage: string;
-  surveyTags: string[];
-  endDate: string;
-  openStatus: string;
-  surveyDescription: string;
-}
+import { SurveyInfoProps } from "../types/SurveyTypes";
 
 const CreationSurvey: React.FC = () => {
   const location = useLocation();
 
-  const [questions, setQuestions] = useState<any[]>([
-    { id: new Date().getTime() },
-  ]);
+  const [surveyId, setSurveyId] = useState<number>(new Date().getTime());
 
   const [surveyInfo, setSurveyInfo] = useState<SurveyInfoProps>({
-    id: new Date().getTime(),
+    surveyId: surveyId,
+    surveyInfoId: new Date().getTime(),
     surveyTitle: "",
     surveyImage: "",
     surveyTags: [],
     surveyDescription: "",
-    endDate: "",
+    surveyClosingAt: "",
     openStatus: "",
   });
+
+  const [questions, setQuestions] = useState<any[]>([
+    { id: new Date().getTime() },
+  ]);
 
   const handleAddQuestion = () => {
     setQuestions([...questions, { id: new Date().getTime() }]);
@@ -58,7 +51,10 @@ const CreationSurvey: React.FC = () => {
     <Container maxWidth="md">
       <h1>Creation Survey</h1>
 
-      <CreateSurveyInfo></CreateSurveyInfo>
+      <CreateSurveyInfo
+        surveyInfo={surveyInfo}
+        setSurveyInfo={setSurveyInfo}
+      ></CreateSurveyInfo>
 
       {questions.map((question, index) => {
         return (

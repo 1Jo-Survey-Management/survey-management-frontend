@@ -15,7 +15,8 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import ImageIcon from "@mui/icons-material/Image";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { CreateSurveyInfoProps } from "../types/SurveyTypes";
+import { UploadFile } from "@mui/icons-material";
 
 const styles = {
   card: {
@@ -67,13 +68,41 @@ const tagNames = [
 
 const defaultOpenStatus: string = "전체공개";
 
-const CreateSurveyInfo: React.FC = () => {
+const CreateSurveyInfo: React.FC<CreateSurveyInfoProps> = ({
+  surveyInfo,
+  setSurveyInfo,
+}) => {
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [fileName, setFileName] = useState<string>("");
   const [fileType, setFileType] = useState<string>("");
   const [selectedTag, setSelectedTag] = useState<string[]>([]);
 
   const [openStatus, setOpenStatus] = useState<string>(defaultOpenStatus);
+
+  const handleSurveyTitleChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = event.target;
+    setSurveyInfo((prevSurveyInfo) => ({
+      ...prevSurveyInfo,
+      [name]: value,
+    }));
+
+    console.log(surveyInfo);
+  };
+
+  // const handleSurveyImageUpload = (event: React.ChangeEvent<HTMLInputElement) => (
+  //   const uploadFile = event.target.files && event.target.files[0];
+
+  //   if(uploadFile) {
+  //     setFileName(UploadFile.name);
+  //     const imageUrl: string = URL.createObjectURL(UploadFile);
+  //     setSurveyInfo((prevSurveyInfo) => ({
+  //       ...prevSurveyInfo,
+  //       []
+  //     }))
+  //   }
+  // )
 
   /**
    * 이미지 선택시 호출되는 메서드 입니다.
@@ -117,7 +146,12 @@ const CreateSurveyInfo: React.FC = () => {
       <Typography sx={{ marginRight: "10px", fontWeight: "bold" }}>
         설문 제목
       </Typography>
-      <Input placeholder="설문 제목을 입력해주세요." sx={{ flexGrow: 1 }} />
+      <Input
+        placeholder="설문 제목을 입력해주세요."
+        sx={{ flexGrow: 1 }}
+        name="surveyTitle"
+        onChange={handleSurveyTitleChange}
+      />
     </Box>
   );
 
