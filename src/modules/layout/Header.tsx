@@ -5,6 +5,10 @@ import Typography from '@mui/material/Typography';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 
+/**
+ * 메뉴탭이 있는 Layout의 Header입니다.
+ * @returns Header
+ */
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();

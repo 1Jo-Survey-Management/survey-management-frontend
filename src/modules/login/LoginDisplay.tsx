@@ -1,4 +1,7 @@
-// LoginDisplay.tsx
+/**
+ * 로그인 화면
+ * @author 김선규
+ */
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
@@ -7,6 +10,9 @@ import Logo from './img/SurveyLogo.png';
 import LoginFig from './img/LoginFig.png';
 import LoginNaver from './LoginNaver';
 
+/**
+ * @returns LoginDispay
+ */
 function LoginDisplay() {
   const location = useLocation();
   const navigate = useNavigate();

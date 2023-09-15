@@ -10,6 +10,10 @@ const containerStyle = {
   // 다른 스타일 속성도 필요한 경우 추가할 수 있습니다.
 };
 
+/**
+ * Layout의 Body입니다!
+ * @returns 페이지 변경 경로
+ */
 function Body() {
   const location = useLocation();
   console.log(location.pathname);

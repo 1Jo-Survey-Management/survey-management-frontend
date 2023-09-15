@@ -3,8 +3,12 @@ import SurveyMain from '../survey/Main';
 import LoginDisplay from '../login/LoginDisplay';
 import Mypage from '../survey/Mypage';
 
-export const pathInfo: { [key: string]: string[] }[] = [{ survey: ['main'] }];
-
+/**
+ * 각 페이지에 대한 라우팅 경로 설정입니다
+ * @author 김선규
+ * @param path
+ * @returns
+ */
 export const routeInfo = (path: string) => {
   switch (path) {
     case '/survey/main':
