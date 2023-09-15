@@ -1,10 +1,10 @@
 // Body.tsx
 import React from 'react';
 import Container from '@mui/material/Container';
-import { useLocation } from 'react-router-dom';
-import { routeInfo } from '../route/routeInfo';
+import { useLocation, useNavigate, useRoutes } from "react-router-dom";
+import { pathInfo, routeInfo } from "../route/routeInfo"
 
-function Body() {
+const Body: React.FC = () => {
   const location = useLocation();
 
   const containerStyle = {
@@ -13,11 +13,17 @@ function Body() {
     // 다른 스타일 속성도 필요한 경우 추가할 수 있습니다.
   };
 
-  // console.log(location.pathname);
-
+  console.log(location.pathname)
   return (
-    <Container style={containerStyle}>{routeInfo(location.pathname)}</Container>
+    <Container style={containerStyle}>
+  
+      {routeInfo(location.pathname)}
+
+    </Container>
+
+    
   );
-}
+};
 
 export default Body;
+
