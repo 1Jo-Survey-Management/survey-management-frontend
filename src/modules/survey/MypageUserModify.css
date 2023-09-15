@@ -1,0 +1,86 @@
+.mypage-title-p {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  width: 100%;
+  height: 50px;
+
+  background-color: aqua;
+}
+
+.profile-modify-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 50px;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  /* background-color: chartreuse; */
+}
+
+.profile-modify-img-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  width: 100%;
+  height: 250px;
+
+  /* background-color: blueviolet; */
+}
+
+/* .input-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  width: 100%;
+  height: 60px;
+} */
+
+.profile-modify-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 180px;
+
+  /* background-color: chocolate; */
+}
+
+.profile-modify-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 120px;
+  /* 
+  font-size: 18px;
+
+  font-weight: 900; */
+
+  /* background-color: aquamarine; */
+}
+
+.custom-textfield input {
+  font-size: 14px; /* 원하는 폰트 크기로 설정합니다. */
+  width: 200px;
+  height: 30px;
+
+  padding-left: 15px;
+  border-radius: 5px;
+
+  background-color: #ebebeb;
+}
+
+.custom-label {
+  font-size: 18px; /* 원하는 Label의 폰트 크기로 설정합니다. */
+}
