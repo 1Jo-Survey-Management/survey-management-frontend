@@ -7,12 +7,9 @@ import Footer from './Footer';
 import LoginPage from '../login/LoginDisplay';
 
 export default function Layout() {
-  // 컴포넌트 이름은 대문자로 시작
-
   const location = useLocation();
 
   const isLoginPage = location.pathname === '/';
-
   return (
     <>
       <CssBaseline />

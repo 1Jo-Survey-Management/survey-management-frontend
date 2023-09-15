@@ -9,6 +9,11 @@ const naverstate = 'test';
 
 // const { naver } = window as any;
 
+const handleNaverLogin = () => {
+  // 네이버 OAuth 인증 페이지로 리다이렉트
+  window.location.href = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&state=${naverstate}&redirect_uri=${naverRedirectURL}`;
+};
+
 function LoginNaver() {
   // 이미지가 호버 상태인지 여부를 관리하기 위한 상태 변수
   const [isHovered, setIsHovered] = useState(false);
@@ -18,11 +23,6 @@ function LoginNaver() {
     isHovered
       ? `${process.env.PUBLIC_URL}/naverhover.png`
       : `${process.env.PUBLIC_URL}/naverButton.png`;
-
-  const handleNaverLogin = () => {
-    // 네이버 OAuth 인증 페이지로 리다이렉트
-    window.location.href = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&state=${naverstate}&redirect_uri=${naverRedirectURL}`;
-  };
 
   return (
     <div>

@@ -7,29 +7,27 @@ import Logo from './img/SurveyLogo.png';
 import LoginFig from './img/LoginFig.png';
 import LoginNaver from './LoginNaver';
 
-const location = useLocation();
-const navigate = useNavigate();
-
-const getNaverToken = () => {
-  if (!location.hash) return;
-  const token = location.hash.split('=')[1].split('&')[0];
-  const state = location.hash.split('=')[2].split('&')[0];
-  console.log(`AccessToken : ${token}`);
-  console.log(`State : ${state}`);
-};
-
-const goLogin = () => {
-  console.log('nono');
-  navigate('/survey/main');
-};
-
-useEffect(() => {
-  getNaverToken();
-}, []);
-
-console.log(location.pathname);
-
 function LoginDisplay() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const goLogin = () => {
+    console.log('nono');
+    navigate('/survey/main');
+  };
+
+  const getNaverToken = () => {
+    console.log(location.pathname);
+    if (!location.hash) return;
+    const token = location.hash.split('=')[1].split('&')[0];
+    const state = location.hash.split('=')[2].split('&')[0];
+    console.log(`AccessToken : ${token}`);
+    console.log(`State : ${state}`);
+  };
+
+  useEffect(() => {
+    getNaverToken();
+  }, []);
   return (
     <Box
       component="div"
