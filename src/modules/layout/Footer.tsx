@@ -4,7 +4,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
-const Footer: React.FC = () => {
+function Footer() {
   return (
     <AppBar position="static" color="primary">
       <Toolbar>
@@ -14,6 +14,6 @@ const Footer: React.FC = () => {
       </Toolbar>
     </AppBar>
   );
-};
+}
 
 export default Footer;
