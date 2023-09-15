@@ -1,17 +1,17 @@
-import { Box, Input, TextField } from "@mui/material";
-import React from "react";
+import { Box, Input } from '@mui/material';
+import React from 'react';
 
-const CreateShortAnswer: React.FC = () => {
+function CreateShortAnswer() {
   return (
-    <Box sx={{ display: "flex", justifyContent: "center" }}>
-      <Box sx={{ width: "60.56px", marginRight: "10px" }}></Box>
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box sx={{ width: '60.56px', marginRight: '10px' }} />
       <Input
         disabled
-        defaultValue={"문항 답변 입력란"}
-        sx={{ flexGrow: "1", marginTop: "15px" }}
-      ></Input>
+        defaultValue="문항 답변 입력란"
+        sx={{ flexGrow: '1', marginTop: '15px' }}
+      />
     </Box>
   );
-};
+}
 
 export default CreateShortAnswer;

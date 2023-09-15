@@ -1,23 +1,23 @@
-import { Box, Fab } from "@mui/material";
-import React from "react";
-import AddIcon from "@mui/icons-material/Add";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Box, Fab } from '@mui/material';
+import React from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const styles = {
   fabBox: {
-    position: "fixed",
-    bottom: "10px",
-    right: "10px",
-    display: "flex",
-    flexDirection: "column",
-    zIndex: "1",
+    position: 'fixed',
+    bottom: '10px',
+    right: '10px',
+    display: 'flex',
+    flexDirection: 'column',
+    zIndex: '1',
   },
   fabStyles: {
-    width: "44px",
-    height: "44px",
-    marginBottom: "8px",
+    width: '44px',
+    height: '44px',
+    marginBottom: '8px',
   },
 };
 
@@ -25,17 +25,17 @@ interface FloatingActionButtonsProps {
   onClickAddQuestion: () => void;
 }
 
-const FloatingActionButtons: React.FC<FloatingActionButtonsProps> = ({
+function FloatingActionButtons({
   onClickAddQuestion,
-}) => {
+}: FloatingActionButtonsProps) {
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const scrollToBottom = () => {
     window.scrollTo({
       top: document.documentElement.scrollHeight,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   };
 
@@ -47,7 +47,7 @@ const FloatingActionButtons: React.FC<FloatingActionButtonsProps> = ({
         sx={styles.fabStyles}
         onClick={scrollToTop}
       >
-        <ArrowDropUpIcon></ArrowDropUpIcon>
+        <ArrowDropUpIcon />
       </Fab>
       <Fab
         color="primary"
@@ -55,7 +55,7 @@ const FloatingActionButtons: React.FC<FloatingActionButtonsProps> = ({
         sx={styles.fabStyles}
         onClick={scrollToBottom}
       >
-        <ArrowDropDownIcon></ArrowDropDownIcon>
+        <ArrowDropDownIcon />
       </Fab>
       <Fab
         color="primary"
@@ -63,13 +63,13 @@ const FloatingActionButtons: React.FC<FloatingActionButtonsProps> = ({
         sx={styles.fabStyles}
         onClick={onClickAddQuestion}
       >
-        <AddIcon></AddIcon>
+        <AddIcon />
       </Fab>
       <Fab color="primary" aria-label="add" sx={styles.fabStyles}>
-        <VisibilityIcon></VisibilityIcon>
+        <VisibilityIcon />
       </Fab>
     </Box>
   );
-};
+}
 
 export default FloatingActionButtons;

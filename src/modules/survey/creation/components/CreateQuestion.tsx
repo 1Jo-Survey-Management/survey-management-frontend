@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import DeleteIcon from "@mui/icons-material/Delete";
-import IconButton from "@mui/material/IconButton";
+import React, { useState } from 'react';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 import {
-  Container,
+  // Container,
   Card,
   CardContent,
   Typography,
   Box,
-  Radio,
-  RadioGroup,
+  // Radio,
+  // RadioGroup,
   FormGroup,
-  FormControlLabel,
-  TextField,
+  // FormControlLabel,
+  // TextField,
   Tooltip,
   Switch,
   Input,
@@ -20,64 +20,58 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
-} from "@mui/material";
+} from '@mui/material';
 
-import CreateSingleSelection from "./CreateSingleSelection";
-import CreateMultipleSelection from "./CreateMultipleSelection";
-import CreateShortAnswer from "./CreatShortAnswer";
-import CreateSubjectiveDescriptive from "./CreateSubjectiveDescriptive";
+import CreateSingleSelection from './CreateSingleSelection';
+import CreateMultipleSelection from './CreateMultipleSelection';
+import CreateShortAnswer from './CreatShortAnswer';
+import CreateSubjectiveDescriptive from './CreateSubjectiveDescriptive';
+import { CreateQuestionProps } from '../types/SurveyTypes';
 
 const styles = {
   dragIndicatorBox: {
-    margin: "0 auto",
-    display: "flex",
-    justifyContent: "center",
-    position: "relative",
-    top: "-15px",
+    margin: '0 auto',
+    display: 'flex',
+    justifyContent: 'center',
+    position: 'relative',
+    top: '-15px',
   },
 
   iconAndSwitchContainer: {
-    display: "flex",
-    justifyContent: "flex-end",
-    marginTop: "-15px",
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: '-15px',
   },
 
   iconAndSwitchBox: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   switchBox: {
-    display: "flex",
-    alignItems: "center",
-    marginLeft: "5px",
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: '5px',
   },
 
   questionTitleBox: {
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
   },
 
   questionDescriptionBox: {
-    display: "flex",
-    alignItems: "center",
-    marginTop: "10px",
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: '10px',
   },
 
   selectQuestionTypeBox: {
-    display: "flex",
-    alignItems: "center",
-    marginTop: "10px",
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: '10px',
   },
 };
-
-interface CreateQuestionProps {
-  question: any;
-  onClickRemoveQuestion: (removeTargetId: number) => void;
-  questions: any[];
-  setQuestions(updateQuestions: any[]): void;
-}
 
 /**
  * 설문조사 문항을 만드는 컴포넌트 입니다.
@@ -86,13 +80,12 @@ interface CreateQuestionProps {
  * @returns {React.FC}
  * @author 강명관
  */
-const CreateQuestion: React.FC<CreateQuestionProps> = ({
-  onClickRemoveQuestion,
+function CreateQuestion({
   question,
   questions,
   setQuestions,
-}) => {
-  const [questionType, setQuestionType] = useState<string>("1");
+}: CreateQuestionProps) {
+  const [questionType, setQuestionType] = useState<string>('1');
 
   /**
    * 셀렉박스의 선택에 따라 문항 타입을 랜더링하기 위한 메서드입니다.
@@ -103,49 +96,34 @@ const CreateQuestion: React.FC<CreateQuestionProps> = ({
     setQuestionType(event.target.value);
   };
 
-  const handleRemoveQuestion = () => {
-    console.log("Is this?");
-    console.log(question.id);
-    onClickRemoveQuestion(question.id);
-    console.log("What the Fuck");
-  };
-
   const handleRemoveQuestion2 = (removeTargetId: number) => {
     if (questions.length === 1) {
       return;
     }
 
-    console.log(questions);
-
-    console.log(removeTargetId);
-    // const updateSelections = questions.filter((question) => {
-    //   return question.id !== removeTargetId;
-    // });
-    // console.log(updateSelections);
     setQuestions([
-      ...questions.filter((question) => question.id !== removeTargetId),
+      ...questions.filter((ques) => ques.questionId !== removeTargetId),
     ]);
   };
 
   const dragIndicator = (
     <Box sx={styles.dragIndicatorBox}>
       <DragIndicatorIcon
-        sx={{ transform: "rotate(90deg);", color: "#b2b2b2" }}
-      ></DragIndicatorIcon>
+        sx={{ transform: 'rotate(90deg);', color: '#b2b2b2' }}
+      />
     </Box>
   );
 
   const deleteIconAndRequiredSwitch = (
     <Box sx={styles.iconAndSwitchContainer}>
       <Box sx={styles.iconAndSwitchBox}>
-        {/* <Tooltip title="Delete" onClick={handleRemoveQuestion}> */}
         <Tooltip
           title="Delete"
           // onClick={() => {
           //   console.log(question.id);
           //   handleRemoveQuestion2(question.Id);
           // }}
-          onClick={() => handleRemoveQuestion2(question.id)}
+          onClick={() => handleRemoveQuestion2(question.questionId)}
         >
           <IconButton>
             <DeleteIcon />
@@ -153,7 +131,7 @@ const CreateQuestion: React.FC<CreateQuestionProps> = ({
         </Tooltip>
         <FormGroup>
           <Box sx={styles.switchBox}>
-            <Typography sx={{ marginRight: "-7px" }}>필수</Typography>
+            <Typography sx={{ marginRight: '-7px' }}>필수</Typography>
             <Switch defaultChecked />
           </Box>
         </FormGroup>
@@ -163,7 +141,7 @@ const CreateQuestion: React.FC<CreateQuestionProps> = ({
 
   const questionTitle = (
     <Box sx={styles.questionTitleBox}>
-      <Typography sx={{ marginRight: "10px", fontWeight: "bold" }}>
+      <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
         문항 제목
       </Typography>
       <Input placeholder="문항 제목을 입력해주세요." sx={{ flexGrow: 1 }} />
@@ -172,7 +150,7 @@ const CreateQuestion: React.FC<CreateQuestionProps> = ({
 
   const questionDescription = (
     <Box sx={styles.questionDescriptionBox}>
-      <Typography sx={{ marginRight: "10px", fontWeight: "bold" }}>
+      <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
         문항 설명
       </Typography>
       <Input placeholder="문항 설명을 입력해주세요." sx={{ flexGrow: 1 }} />
@@ -181,11 +159,11 @@ const CreateQuestion: React.FC<CreateQuestionProps> = ({
 
   const selectQuestionType = (
     <Box sx={styles.selectQuestionTypeBox}>
-      <Typography sx={{ marginRight: "10px", fontWeight: "bold" }}>
+      <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
         문항 유형
       </Typography>
 
-      <FormControl sx={{ flexGrow: "1" }}>
+      <FormControl sx={{ flexGrow: '1' }}>
         <Select
           id="demo-simple-select"
           value={questionType}
@@ -205,10 +183,10 @@ const CreateQuestion: React.FC<CreateQuestionProps> = ({
     <Card
       variant="outlined"
       sx={{
-        borderColor: "#3f50b5",
+        borderColor: '#3f50b5',
         boxShadow:
-          "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);",
-        marginBottom: "30px",
+          '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
+        marginBottom: '30px',
       }}
     >
       <CardContent>
@@ -218,79 +196,79 @@ const CreateQuestion: React.FC<CreateQuestionProps> = ({
         {questionDescription}
         {selectQuestionType}
 
-        {questionType === "1" && <CreateSingleSelection />}
-        {questionType === "2" && <CreateMultipleSelection />}
-        {questionType === "3" && <CreateShortAnswer />}
-        {questionType === "4" && <CreateSubjectiveDescriptive />}
+        {questionType === '1' && (
+          <CreateSingleSelection questionId={question.questionId} />
+        )}
+        {questionType === '2' && <CreateMultipleSelection />}
+        {questionType === '3' && <CreateShortAnswer />}
+        {questionType === '4' && <CreateSubjectiveDescriptive />}
       </CardContent>
     </Card>
   );
-};
+}
 
-const test: React.FC = () => {
-  return (
-    <Container>
-      <Card variant="outlined">
-        <CardContent>
-          <TextField id="standard-basic" label="문항 제목" variant="standard" />
+// function test() {
+//   <Container>
+//     <Card variant="outlined">
+//       <CardContent>
+//         <TextField id="standard-basic" label="문항 제목" variant="standard" />
 
-          <TextField id="standard-basic" label="문항 제목" variant="standard" />
-          <TextField
-            id="standard-basic"
-            sx={{
-              "& .MuiInputBase-input": {
-                fontSize: "16px", // 내부 텍스트 크기 조절
-              },
-              "& input": {
-                padding: "12px", // 입력 필드 크기 조절 (예: 패딩을 조정하여 크기 조절)
-              },
-            }}
-            label="문항 설명"
-            size="small"
-          />
-          <Typography variant="h5" component="div">
-            1. 단일선택형 문항입니다
-          </Typography>
+//         <TextField id="standard-basic" label="문항 제목" variant="standard" />
+//         <TextField
+//           id="standard-basic"
+//           sx={{
+//             '& .MuiInputBase-input': {
+//               fontSize: '16px', // 내부 텍스트 크기 조절
+//             },
+//             '& input': {
+//               padding: '12px', // 입력 필드 크기 조절 (예: 패딩을 조정하여 크기 조절)
+//             },
+//           }}
+//           label="문항 설명"
+//           size="small"
+//         />
+//         <Typography variant="h5" component="div">
+//           1. 단일선택형 문항입니다
+//         </Typography>
 
-          <Box
-            component="div"
-            sx={{
-              display: "inline-block",
-              mx: "2px",
-              marginLeft: "15px",
-              marginTop: "10px",
-            }}
-          >
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              문항에 대한 설명입니다.
-            </Typography>
-          </Box>
+//         <Box
+//           component="div"
+//           sx={{
+//             display: 'inline-block',
+//             mx: '2px',
+//             marginLeft: '15px',
+//             marginTop: '10px',
+//           }}
+//         >
+//           <Typography sx={{ mb: 1.5 }} color="text.secondary">
+//             문항에 대한 설명입니다.
+//           </Typography>
+//         </Box>
 
-          <RadioGroup
-            aria-labelledby="demo-radio-buttons-group-label"
-            defaultValue="female"
-            name="radio-buttons-group"
-          >
-            <FormControlLabel
-              value="female"
-              control={<Radio />}
-              label="10개 ~ 100개"
-            />
-            <FormControlLabel
-              value="male"
-              control={<Radio />}
-              label="100개 ~ 1000개"
-            />
-            <FormControlLabel
-              value="other"
-              control={<Radio />}
-              label="1000개 ~ 10000개"
-            />
-          </RadioGroup>
-        </CardContent>
-      </Card>
-    </Container>
-  );
-};
+//         <RadioGroup
+//           aria-labelledby="demo-radio-buttons-group-label"
+//           defaultValue="female"
+//           name="radio-buttons-group"
+//         >
+//           <FormControlLabel
+//             value="female"
+//             control={<Radio />}
+//             label="10개 ~ 100개"
+//           />
+//           <FormControlLabel
+//             value="male"
+//             control={<Radio />}
+//             label="100개 ~ 1000개"
+//           />
+//           <FormControlLabel
+//             value="other"
+//             control={<Radio />}
+//             label="1000개 ~ 10000개"
+//           />
+//         </RadioGroup>
+//       </CardContent>
+//     </Card>
+//   </Container>;
+// }
 
 export default CreateQuestion;

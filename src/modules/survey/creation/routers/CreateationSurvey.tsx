@@ -1,78 +1,63 @@
-import React, { useState } from "react";
-import Container from "@mui/material/Container";
-import { useLocation } from "react-router-dom";
-import CreateQuestion from "../components/CreateQuestion";
-import FloatingActionButtons from "../components/FloatingActionButtons";
-import CreateSurveyInfo from "../components/CreateSurveyInfo";
-import { SurveyInfoProps } from "../types/SurveyTypes";
+import React, { useState } from 'react';
+import Container from '@mui/material/Container';
+import CreateQuestion from '../components/CreateQuestion';
+import FloatingActionButtons from '../components/FloatingActionButtons';
+import CreateSurveyInfo from '../components/CreateSurveyInfo';
+import { QuestionProps, SurveyInfoProps } from '../types/SurveyTypes';
 
-const CreationSurvey: React.FC = () => {
-  const location = useLocation();
-
-  const [surveyId, setSurveyId] = useState<number>(new Date().getTime());
+function CreationSurvey() {
+  const [surveyId] = useState<number>(new Date().getTime());
 
   const [surveyInfo, setSurveyInfo] = useState<SurveyInfoProps>({
-    surveyId: surveyId,
+    surveyId,
     surveyInfoId: new Date().getTime(),
-    surveyTitle: "",
-    surveyImage: "",
+    surveyTitle: '',
+    surveyImage: '',
     surveyTags: [],
-    surveyDescription: "",
-    surveyClosingAt: "",
-    openStatus: "",
+    surveyDescription: '',
+    surveyClosingAt: '',
+    openStatus: '',
   });
 
-  const [questions, setQuestions] = useState<any[]>([
-    { id: new Date().getTime() },
+  const [questions, setQuestions] = useState<QuestionProps[]>([
+    {
+      surveyId,
+      questionId: new Date().getTime(),
+      questionTitle: '',
+      questionDescription: '',
+    },
   ]);
 
   const handleAddQuestion = () => {
-    setQuestions([...questions, { id: new Date().getTime() }]);
-    console.log(questions);
+    setQuestions([
+      ...questions,
+      {
+        surveyId,
+        questionId: new Date().getTime(),
+        questionTitle: '',
+        questionDescription: '',
+      },
+    ]);
   };
 
-  const handleRemoveQuestion = (removeTargetId: number) => {
-    console.log("제대로 들어옴?");
-    if (questions.length === 1) {
-      return;
-    }
-
-    console.log(removeTargetId);
-    const updateSelections = questions.filter((question) => {
-      return question.id !== removeTargetId;
-    });
-
-    setQuestions(updateSelections);
-  };
-  console.log("삭제후", questions);
-
-  console.log(location.pathname);
   return (
     <Container maxWidth="md">
       <h1>Creation Survey</h1>
 
-      <CreateSurveyInfo
-        surveyInfo={surveyInfo}
-        setSurveyInfo={setSurveyInfo}
-      ></CreateSurveyInfo>
+      <CreateSurveyInfo surveyInfo={surveyInfo} setSurveyInfo={setSurveyInfo} />
 
-      {questions.map((question, index) => {
-        return (
-          <CreateQuestion
-            key={index}
-            question={question}
-            onClickRemoveQuestion={() => handleRemoveQuestion(question.id)}
-            questions={questions}
-            setQuestions={setQuestions}
-          ></CreateQuestion>
-        );
-      })}
+      {questions.map((question) => (
+        <CreateQuestion
+          key={question.questionId}
+          question={question}
+          questions={questions}
+          setQuestions={setQuestions}
+        />
+      ))}
 
-      <FloatingActionButtons
-        onClickAddQuestion={handleAddQuestion}
-      ></FloatingActionButtons>
+      <FloatingActionButtons onClickAddQuestion={handleAddQuestion} />
     </Container>
   );
-};
+}
 
 export default CreationSurvey;

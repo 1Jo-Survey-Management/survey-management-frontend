@@ -1,11 +1,4 @@
-import React from "react";
-
-export interface SurveyProps {
-  survyeId: number;
-  surveyInfo: SurveyInfoProps;
-  questions: QuestionProps[];
-  selections: SelectionProps[];
-}
+import React from 'react';
 
 export interface SurveyInfoProps {
   surveyId: number;
@@ -23,18 +16,31 @@ export interface CreateSurveyInfoProps {
   setSurveyInfo: React.Dispatch<React.SetStateAction<SurveyInfoProps>>;
 }
 
+export interface SelectionProps {
+  questionId: number;
+  selectionId: number;
+  questionMoveId?: number;
+  selectionValue: string;
+  isMoveable: boolean;
+}
+
 export interface QuestionProps {
   surveyId: number;
   questionId: number;
   questionTitle: string;
   questionDescription: string;
-  selections: SelectionProps[];
+  selections?: SelectionProps[];
 }
 
-export interface SelectionProps {
-  questionId: number;
-  selectionId: number;
-  questionMoveId: number;
-  selectionValue: string;
-  isMoveable: boolean;
+export interface CreateQuestionProps {
+  question: QuestionProps;
+  questions: QuestionProps[];
+  setQuestions: React.Dispatch<React.SetStateAction<QuestionProps[]>>;
+}
+
+export interface SurveyProps {
+  survyeId: number;
+  surveyInfo: SurveyInfoProps;
+  questions: QuestionProps[];
+  selections: SelectionProps[];
 }

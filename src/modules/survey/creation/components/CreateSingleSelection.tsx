@@ -1,29 +1,30 @@
-import React, { useState } from "react";
-import { Box, Radio, Input } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
+import React, { useState } from 'react';
+import { Box, Radio, Input } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { SelectionProps } from '../types/SurveyTypes';
 
-const primaryColor = "#3f50b5";
+const primaryColor = '#3f50b5';
 
 const styles = {
   icon: {
     color: primaryColor,
     border: `solid 1px ${primaryColor}`,
-    borderRadius: "5px",
-    cursor: "pointer",
+    borderRadius: '5px',
+    cursor: 'pointer',
   },
   input: {
     flexGrow: 1,
   },
   removeAndAddIconBox: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "end",
-    width: "53px",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'end',
+    width: '53px',
   },
   selectionBox: {
-    display: "flex",
-    alingItems: "center",
+    display: 'flex',
+    alingItems: 'center',
   },
 };
 
@@ -34,9 +35,14 @@ const styles = {
  * @returns 단일 선택형 선택지
  * @author 강명관
  */
-const CreateSingleSelection: React.FC = () => {
-  const [selections, setSelections] = useState<any[]>([
-    { id: new Date().getTime() },
+function CreateSingleSelection({ questionId }: { questionId: number }) {
+  const [selections, setSelections] = useState<SelectionProps[]>([
+    {
+      questionId,
+      selectionId: new Date().getTime(),
+      selectionValue: '',
+      isMoveable: false,
+    },
   ]);
 
   /**
@@ -45,7 +51,15 @@ const CreateSingleSelection: React.FC = () => {
    * @author 강명관
    */
   const handleAddSelection = () => {
-    setSelections([...selections, { id: new Date().getTime() }]);
+    setSelections([
+      ...selections,
+      {
+        questionId,
+        selectionId: new Date().getTime(),
+        selectionValue: '',
+        isMoveable: false,
+      },
+    ]);
   };
 
   /**
@@ -54,12 +68,12 @@ const CreateSingleSelection: React.FC = () => {
    * @param id selection Id
    * @author 강명관
    */
-  const handleRemoveSelection = (id: number) => {
+  const handleRemoveSelection = (removeTargetSelectionId: number) => {
     if (selections.length === 1) {
       return;
     }
     const updateSelections = selections.filter(
-      (selection) => selection.id !== id
+      (selection) => selection.selectionId !== removeTargetSelectionId
     );
     setSelections(updateSelections);
   };
@@ -67,7 +81,7 @@ const CreateSingleSelection: React.FC = () => {
   return (
     <div>
       {selections.map((selection, index) => (
-        <div key={selection.id}>
+        <div key={selection.selectionId}>
           <Box sx={styles.selectionBox}>
             <Box sx={styles.removeAndAddIconBox}>
               {index === selections.length - 1 && (
@@ -78,18 +92,18 @@ const CreateSingleSelection: React.FC = () => {
                 />
               )}
               <RemoveIcon
-                sx={{ ...styles.icon, marginLeft: "5px" }}
+                sx={{ ...styles.icon, marginLeft: '5px' }}
                 aria-label="Remove"
-                onClick={() => handleRemoveSelection(selection.id)}
+                onClick={() => handleRemoveSelection(selection.selectionId)}
               />
             </Box>
-            <Radio disabled name={`radio-buttons-${selection.id}`} />
+            <Radio disabled name={`radio-buttons-${selection.selectionId}`} />
             <Input placeholder="문항을 입력해주세요." sx={styles.input} />
           </Box>
         </div>
       ))}
     </div>
   );
-};
+}
 
 export default CreateSingleSelection;
