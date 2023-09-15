@@ -2,49 +2,34 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
-import LoginFig from './img/LoginFig.png';
-import Logo from './img/SurveyLogo.png';
-
-import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-
-import { styled } from '@mui/material/styles';
-
-import Paper from '@mui/material/Paper';
-
+import Logo from './img/SurveyLogo.png';
+import LoginFig from './img/LoginFig.png';
 import LoginNaver from './LoginNaver';
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
+const location = useLocation();
+const navigate = useNavigate();
 
-const LoginDisplay: React.FC = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const goLogin = () => {
-    console.log('nono');
-    navigate('/survey/main');
-  };
+const getNaverToken = () => {
+  if (!location.hash) return;
+  const token = location.hash.split('=')[1].split('&')[0];
+  const state = location.hash.split('=')[2].split('&')[0];
+  console.log(`AccessToken : ${token}`);
+  console.log(`State : ${state}`);
+};
 
-  <CssBaseline />;
+const goLogin = () => {
+  console.log('nono');
+  navigate('/survey/main');
+};
 
-  const getNaverToken = () => {
-    if (!location.hash) return;
-    const token = location.hash.split('=')[1].split('&')[0];
-    const state = location.hash.split('=')[2].split('&')[0];
-    console.log('AccessToken : ' + token);
-    console.log('State : ' + state);
-  };
+useEffect(() => {
+  getNaverToken();
+}, []);
 
-  useEffect(() => {
-    getNaverToken();
-  }, []);
+console.log(location.pathname);
 
-  console.log(location.pathname);
+function LoginDisplay() {
   return (
     <Box
       component="div"
@@ -77,14 +62,18 @@ const LoginDisplay: React.FC = () => {
             justifyContent: 'center',
           }}
         >
-          <img src={`${Logo}`} style={{ width: '50px', marginRight: '10px' }} />
+          <img
+            src={`${Logo}`}
+            style={{ width: '50px', marginRight: '10px' }}
+            alt="로고사라짐ㅠ"
+          />
           <h1 style={{ position: 'relative', color: '#9E9E9E' }}>
             {' '}
             NoName Survey
           </h1>
         </Box>
 
-        <Box style={{ height: '50px' }}></Box>
+        <Box style={{ height: '50px' }} />
 
         <Box
           style={{
@@ -96,7 +85,7 @@ const LoginDisplay: React.FC = () => {
           <LoginNaver />
         </Box>
 
-        <Box style={{ height: '50px' }}></Box>
+        <Box style={{ height: '50px' }} />
 
         <h2 style={{ position: 'relative', marginBottom: '1px' }}>
           Nice to See you Again
@@ -110,6 +99,6 @@ const LoginDisplay: React.FC = () => {
       </Box>
     </Box>
   );
-};
+}
 
 export default LoginDisplay;
