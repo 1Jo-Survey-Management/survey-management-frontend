@@ -27,6 +27,7 @@ import CreateMultipleSelection from './CreateMultipleSelection';
 import CreateShortAnswer from './CreatShortAnswer';
 import CreateSubjectiveDescriptive from './CreateSubjectiveDescriptive';
 import { CreateQuestionProps } from '../types/SurveyTypes';
+import CreateMoveableSingleSelection from './CreateMoveableSingleSelection';
 
 const styles = {
   dragIndicatorBox: {
@@ -96,7 +97,7 @@ function CreateQuestion({
     setQuestionType(event.target.value);
   };
 
-  const handleRemoveQuestion2 = (removeTargetId: number) => {
+  const handleRemoveQuestion = (removeTargetId: number) => {
     if (questions.length === 1) {
       return;
     }
@@ -119,11 +120,7 @@ function CreateQuestion({
       <Box sx={styles.iconAndSwitchBox}>
         <Tooltip
           title="Delete"
-          // onClick={() => {
-          //   console.log(question.id);
-          //   handleRemoveQuestion2(question.Id);
-          // }}
-          onClick={() => handleRemoveQuestion2(question.questionId)}
+          onClick={() => handleRemoveQuestion(question.questionId)}
         >
           <IconButton>
             <DeleteIcon />
@@ -171,9 +168,10 @@ function CreateQuestion({
           onChange={handleChange}
         >
           <MenuItem value="1">단일 선택형</MenuItem>
-          <MenuItem value="2">복수 선택형</MenuItem>
-          <MenuItem value="3">주관식 단답형</MenuItem>
-          <MenuItem value="4">주관식 서술형</MenuItem>
+          <MenuItem value="2">단일 선택형 (선택시 문항 이동)</MenuItem>
+          <MenuItem value="3">복수 선택형</MenuItem>
+          <MenuItem value="4">주관식 단답형</MenuItem>
+          <MenuItem value="5">주관식 서술형</MenuItem>
         </Select>
       </FormControl>
     </Box>
@@ -199,9 +197,15 @@ function CreateQuestion({
         {questionType === '1' && (
           <CreateSingleSelection questionId={question.questionId} />
         )}
-        {questionType === '2' && <CreateMultipleSelection />}
-        {questionType === '3' && <CreateShortAnswer />}
-        {questionType === '4' && <CreateSubjectiveDescriptive />}
+        {questionType === '2' && (
+          <CreateMoveableSingleSelection
+            questionId={question.questionId}
+            questions={questions}
+          />
+        )}
+        {questionType === '3' && <CreateMultipleSelection />}
+        {questionType === '4' && <CreateShortAnswer />}
+        {questionType === '5' && <CreateSubjectiveDescriptive />}
       </CardContent>
     </Card>
   );

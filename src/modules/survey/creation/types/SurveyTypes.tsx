@@ -29,6 +29,7 @@ export interface QuestionProps {
   questionId: number;
   questionTitle: string;
   questionDescription: string;
+  questionRequired: boolean;
   selections?: SelectionProps[];
 }
 

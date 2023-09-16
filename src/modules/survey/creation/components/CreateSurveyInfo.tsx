@@ -39,7 +39,6 @@ const styles = {
 
   surveyDescriptionBox: {
     display: 'flex',
-    // alignItems: "center",
     justifyContent: 'center',
     flexDirection: 'column',
     marginTop: '10px',
@@ -88,19 +87,6 @@ function CreateSurveyInfo({
     console.log(surveyInfo);
   };
 
-  // const handleSurveyImageUpload = (event: React.ChangeEvent<HTMLInputElement) => (
-  //   const uploadFile = event.target.files && event.target.files[0];
-
-  //   if(uploadFile) {
-  //     setFileName(UploadFile.name);
-  //     const imageUrl: string = URL.createObjectURL(UploadFile);
-  //     setSurveyInfo((prevSurveyInfo) => ({
-  //       ...prevSurveyInfo,
-  //       []
-  //     }))
-  //   }
-  // )
-
   /**
    * 이미지 선택시 호출되는 메서드 입니다.
    *
@@ -130,9 +116,14 @@ function CreateSurveyInfo({
     );
   };
 
+  /**
+   * 설문의 공개 상태를 변경하는 메서드 입니다.
+   *
+   * @param event SelectChangeEvent
+   * @author 강명관
+   */
   const handleOpenStatusChange = (event: SelectChangeEvent) => {
     const openStatusValue = event.target.value;
-    console.log(openStatusValue);
     setOpenStatus(openStatusValue);
   };
 
@@ -148,6 +139,35 @@ function CreateSurveyInfo({
         onChange={handleSurveyTitleChange}
       />
     </Box>
+  );
+
+  const surveyTagSelectBox = (
+    <div style={{ marginBottom: '10px' }}>
+      <FormControl sx={{ width: '100%' }}>
+        <InputLabel id="demo-multiple-chip-label">태그</InputLabel>
+        <Select
+          labelId="demo-multiple-chip-label"
+          id="demo-multiple-chip"
+          multiple
+          value={selectedTag}
+          onChange={handleTagChange}
+          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+          renderValue={(selectedValue) => (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              {selectedValue.map((value) => (
+                <Chip key={value} label={value} />
+              ))}
+            </Box>
+          )}
+        >
+          {tagNames.map((tag) => (
+            <MenuItem key={tag} value={tag}>
+              {tag}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
   );
 
   const surveyDescription = (
@@ -170,6 +190,7 @@ function CreateSurveyInfo({
     <Card sx={styles.card}>
       <CardContent>
         {surveyTitle}
+
         <Box sx={{ marginBottom: '20px' }}>
           {!selectedImage && (
             <Box sx={styles.iamgeBox}>
@@ -195,32 +216,7 @@ function CreateSurveyInfo({
           />
         </Box>
 
-        <div style={{ marginBottom: '10px' }}>
-          <FormControl sx={{ width: '100%' }}>
-            <InputLabel id="demo-multiple-chip-label">태그</InputLabel>
-            <Select
-              labelId="demo-multiple-chip-label"
-              id="demo-multiple-chip"
-              multiple
-              value={selectedTag}
-              onChange={handleTagChange}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selectedValue) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selectedValue.map((value) => (
-                    <Chip key={value} label={value} />
-                  ))}
-                </Box>
-              )}
-            >
-              {tagNames.map((tag) => (
-                <MenuItem key={tag} value={tag}>
-                  {tag}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
+        {surveyTagSelectBox}
 
         <Box
           sx={{

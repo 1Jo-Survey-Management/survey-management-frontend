@@ -25,6 +25,7 @@ function CreationSurvey() {
       questionId: new Date().getTime(),
       questionTitle: '',
       questionDescription: '',
+      questionRequired: true,
     },
   ]);
 
@@ -36,6 +37,7 @@ function CreationSurvey() {
         questionId: new Date().getTime(),
         questionTitle: '',
         questionDescription: '',
+        questionRequired: true,
       },
     ]);
   };
