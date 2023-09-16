@@ -137,6 +137,13 @@ function CreateMoveableSingleSelection({
     }
   };
 
+  /**
+   * 선택지의 내용을 변경할때 state를 변경하는 메서드 입니다.
+   *
+   * @param changedSelection 변경된 선택지 SelectionProps
+   * @param event Input의 변경 이벤트
+   * @author 강명관
+   */
   const handleSelectionValueChange = (
     changedSelection: SelectionProps,
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
