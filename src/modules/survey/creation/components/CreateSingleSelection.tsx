@@ -78,6 +78,26 @@ function CreateSingleSelection({ questionId }: { questionId: number }) {
     setSelections(updateSelections);
   };
 
+  const handleSelectionValueChange = (
+    changedSelection: SelectionProps,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const changeValue = event.target.value;
+
+    const updateSelection: SelectionProps = {
+      ...changedSelection,
+      selectionValue: changeValue,
+    };
+
+    const updateSelections = selections.map((selection) =>
+      selection.selectionId === updateSelection.selectionId
+        ? updateSelection
+        : selection
+    );
+
+    setSelections(updateSelections);
+  };
+
   return (
     <div>
       {selections.map((selection, index) => (
@@ -98,7 +118,12 @@ function CreateSingleSelection({ questionId }: { questionId: number }) {
               />
             </Box>
             <Radio disabled name={`radio-buttons-${selection.selectionId}`} />
-            <Input placeholder="문항을 입력해주세요." sx={styles.input} />
+            <Input
+              placeholder="문항을 입력해주세요."
+              sx={styles.input}
+              value={selection.selectionValue}
+              onChange={(event) => handleSelectionValueChange(selection, event)}
+            />
           </Box>
         </div>
       ))}

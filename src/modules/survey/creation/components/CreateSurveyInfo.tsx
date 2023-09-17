@@ -96,8 +96,6 @@ function CreateSurveyInfo({
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadFile = event.target.files && event.target.files[0];
     if (uploadFile) {
-      console.log(uploadFile);
-
       const imageUrl: string = URL.createObjectURL(uploadFile);
       setSelectedImage(imageUrl);
     }
