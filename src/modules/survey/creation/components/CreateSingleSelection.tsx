@@ -78,6 +78,13 @@ function CreateSingleSelection({ questionId }: { questionId: number }) {
     setSelections(updateSelections);
   };
 
+  /**
+   * 선택지 내용 변경에 따른 메서드 입니다.
+   *
+   * @param changedSelection 변경된 선택지 내용의 선택지 객체
+   * @param event HTML Input Change Evenet
+   * @author 강명관
+   */
   const handleSelectionValueChange = (
     changedSelection: SelectionProps,
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
