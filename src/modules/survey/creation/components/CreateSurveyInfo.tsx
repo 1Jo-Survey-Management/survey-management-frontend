@@ -130,7 +130,7 @@ function CreateSurveyInfo({
       ? tagValue
       : [tagValue];
 
-    const maxTagCount: number = 3;
+    const maxTagCount: number = 2;
 
     const selectedCount = tagValueArray.length;
 

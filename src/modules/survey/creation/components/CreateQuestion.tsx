@@ -3,16 +3,11 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import {
-  // Container,
   Card,
   CardContent,
   Typography,
   Box,
-  // Radio,
-  // RadioGroup,
   FormGroup,
-  // FormControlLabel,
-  // TextField,
   Tooltip,
   Switch,
   Input,
@@ -77,8 +72,9 @@ const styles = {
 /**
  * 설문조사 문항을 만드는 컴포넌트 입니다.
  *
- * @param param0
- * @returns {React.FC}
+ * @param question 자기 자신 문항 객체
+ * @param questions 문항 배열
+ * @param setQuestions questions setStataus 메서드
  * @author 강명관
  */
 function CreateQuestion({
