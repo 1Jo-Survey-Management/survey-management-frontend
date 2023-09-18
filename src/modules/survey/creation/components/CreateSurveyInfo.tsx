@@ -51,18 +51,7 @@ const styles = {
   },
 };
 
-const tagNames = [
-  '회의',
-  '업무',
-  '공지',
-  '기타',
-  '교육',
-  '일상',
-  '복지',
-  '회식',
-  '중요',
-  '사회',
-];
+const tagNames = ['일상', '업무', '공지', '중요', '기타'];
 
 function CreateSurveyInfo({
   surveyInfo,
