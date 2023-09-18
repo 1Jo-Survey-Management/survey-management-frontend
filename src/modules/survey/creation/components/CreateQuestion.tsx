@@ -26,7 +26,7 @@ import CreateSingleSelection from './CreateSingleSelection';
 import CreateMultipleSelection from './CreateMultipleSelection';
 import CreateShortAnswer from './CreatShortAnswer';
 import CreateSubjectiveDescriptive from './CreateSubjectiveDescriptive';
-import { CreateQuestionProps } from '../types/SurveyTypes';
+import { CreateQuestionProps, QuestionProps } from '../types/SurveyTypes';
 import CreateMoveableSingleSelection from './CreateMoveableSingleSelection';
 
 const styles = {
@@ -114,6 +114,26 @@ function CreateQuestion({
     ]);
   };
 
+  /**
+   * 문항의 필수 여부를 변경하는 메서드 입니다.
+   *
+   * @param targetQuestion 변경할 문항
+   * @author 강명관
+   */
+  const handleRequiredSwitchChange = (targetQuestion: QuestionProps) => {
+    const updateQuestions = questions.map((prevQuestion) => {
+      if (prevQuestion.questionId === targetQuestion.questionId) {
+        return {
+          ...prevQuestion,
+          questionRequired: !prevQuestion.questionRequired,
+        };
+      }
+      return prevQuestion;
+    });
+
+    setQuestions(updateQuestions);
+  };
+
   const dragIndicator = (
     <Box sx={styles.dragIndicatorBox}>
       <DragIndicatorIcon
@@ -121,6 +141,12 @@ function CreateQuestion({
       />
     </Box>
   );
+
+  /**
+   * TODO => 1. 설문 문항 필수 스위치 핸들 메서드 작성해야 함.
+   * 2.설문 문항 받을 DTO 구상
+   * 3. 여기도 변경사항에 따른 state 변경 메서드가 필요. 이걸 2번으로 잡자
+   */
 
   const deleteIconAndRequiredSwitch = (
     <Box sx={styles.iconAndSwitchContainer}>
@@ -136,7 +162,10 @@ function CreateQuestion({
         <FormGroup>
           <Box sx={styles.switchBox}>
             <Typography sx={{ marginRight: '-7px' }}>필수</Typography>
-            <Switch defaultChecked />
+            <Switch
+              defaultChecked
+              onChange={() => handleRequiredSwitchChange(question)}
+            />
           </Box>
         </FormGroup>
       </Box>
