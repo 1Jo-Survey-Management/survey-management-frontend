@@ -64,14 +64,11 @@ const tagNames = [
   '사회',
 ];
 
-// const defaultOpenStatus: string = '전체공개';
-
 function CreateSurveyInfo({
   surveyInfo,
   setSurveyInfo,
 }: CreateSurveyInfoProps) {
   const [selectedImage, setSelectedImage] = useState<string>('');
-  // const [selectedTag, setSelectedTag] = useState<string[]>([]);
 
   const today = new Date();
   const oneWeekLater = new Date(today);
