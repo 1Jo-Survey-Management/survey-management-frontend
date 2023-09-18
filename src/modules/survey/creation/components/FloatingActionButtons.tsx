@@ -28,10 +28,20 @@ interface FloatingActionButtonsProps {
 function FloatingActionButtons({
   onClickAddQuestion,
 }: FloatingActionButtonsProps) {
+  /**
+   * 화면의 스크롤을 최상단으로 보내는 메서드 입니다.
+   *
+   * @author 강명관
+   */
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  /**
+   * 화면의 스크롤을 최하단으로 보내는 메서드 입니다.
+   *
+   * @author 강명관
+   */
   const scrollToBottom = () => {
     window.scrollTo({
       top: document.documentElement.scrollHeight,
