@@ -93,10 +93,17 @@ function CreateQuestion({
    *
    * @param event SelectChangeEvent
    */
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleQuestionTypeChange = (event: SelectChangeEvent) => {
     setQuestionType(event.target.value);
   };
 
+  /**
+   * 문항을 삭제하기 위한 메서드 입니다.
+   *
+   * @param removeTargetId 삭제할 문항의 id
+   * @return 문항이 한 개 밖에 존재하지 않는경우 삭제 불가
+   * @author 강명관
+   */
   const handleRemoveQuestion = (removeTargetId: number) => {
     if (questions.length === 1) {
       return;
@@ -165,7 +172,7 @@ function CreateQuestion({
           id="demo-simple-select"
           value={questionType}
           displayEmpty
-          onChange={handleChange}
+          onChange={handleQuestionTypeChange}
         >
           <MenuItem value="1">단일 선택형</MenuItem>
           <MenuItem value="2">단일 선택형 (선택시 문항 이동)</MenuItem>
