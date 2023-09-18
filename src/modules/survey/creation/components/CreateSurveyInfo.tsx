@@ -13,9 +13,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ImageIcon from '@mui/icons-material/Image';
-import { CreateSurveyInfoProps } from '../types/SurveyTypes';
+import { CreateSurveyInfoProps, SurveyInfoProps } from '../types/SurveyTypes';
 
 const styles = {
   card: {
@@ -64,7 +64,7 @@ const tagNames = [
   '사회',
 ];
 
-const defaultOpenStatus: string = '전체공개';
+// const defaultOpenStatus: string = '전체공개';
 
 function CreateSurveyInfo({
   surveyInfo,
@@ -73,10 +73,22 @@ function CreateSurveyInfo({
   const [selectedImage, setSelectedImage] = useState<string>('');
   const [selectedTag, setSelectedTag] = useState<string[]>([]);
 
-  const [openStatus, setOpenStatus] = useState<string>(defaultOpenStatus);
+  const today = new Date();
+  const oneWeekLater = new Date(today);
+  oneWeekLater.setDate(oneWeekLater.getDate() + 7);
+
+  const todayFormatted = today.toISOString().split('T')[0];
+  const oneWeekLaterFormatted = oneWeekLater.toISOString().split('T')[0];
+
+  useEffect(() => {
+    setSurveyInfo((prevSurveyInfo) => ({
+      ...prevSurveyInfo,
+      surveyClosingAt: oneWeekLaterFormatted,
+    }));
+  }, []);
 
   /**
-   * 설문지 제목, 설명을 변경하는 메서드 입니다.
+   * 설문지 제목, 설명, 날짜를 변경하는 메서드 입니다.
    *
    * @param event Input onChange Event
    * @author 강명관
@@ -85,10 +97,13 @@ function CreateSurveyInfo({
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = event.target;
-    setSurveyInfo((prevSurveyInfo) => ({
-      ...prevSurveyInfo,
+
+    const updateSurveyInfo: SurveyInfoProps = {
+      ...surveyInfo,
       [name]: value,
-    }));
+    };
+
+    setSurveyInfo(updateSurveyInfo);
   };
 
   /**
@@ -125,8 +140,14 @@ function CreateSurveyInfo({
    * @author 강명관
    */
   const handleOpenStatusChange = (event: SelectChangeEvent) => {
-    const openStatusValue = event.target.value;
-    setOpenStatus(openStatusValue);
+    const { name, value } = event.target;
+
+    const updateSurveyInfo: SurveyInfoProps = {
+      ...surveyInfo,
+      [name]: value,
+    };
+
+    setSurveyInfo(updateSurveyInfo);
   };
 
   const surveyTitle = (
@@ -188,12 +209,25 @@ function CreateSurveyInfo({
     </Box>
   );
 
-  const today = new Date();
-  const oneWeekLater = new Date(today);
-  oneWeekLater.setDate(oneWeekLater.getDate() + 7);
-
-  const todayFormatted = today.toISOString().split('T')[0];
-  const oneWeekLaterFormatted = oneWeekLater.toISOString().split('T')[0];
+  const surveyOpenStatusSelectBox = (
+    <Box>
+      <FormControl fullWidth>
+        <InputLabel id="openStatus-select-label">공개 여부</InputLabel>
+        <Select
+          labelId="openStatus-select-label"
+          id="openStatus-select"
+          value={surveyInfo.openStatus}
+          name="openStatus"
+          label="공개 여부"
+          onChange={handleOpenStatusChange}
+        >
+          <MenuItem value="전체공개">전체공개</MenuItem>
+          <MenuItem value="회원공개">회원공개</MenuItem>
+          <MenuItem value="비공개">비공개</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+  );
 
   return (
     <Card sx={styles.card}>
@@ -240,33 +274,16 @@ function CreateSurveyInfo({
             id="date"
             label="마감일"
             type="date"
-            defaultValue={oneWeekLaterFormatted}
-            InputLabelProps={{
-              shrink: true,
-            }}
+            name="surveyClosingAt"
+            value={surveyInfo.surveyClosingAt}
             inputProps={{
               min: todayFormatted,
             }}
+            onChange={handleSurveyInfoInputChange}
           />
         </Box>
 
-        <Box>
-          <FormControl fullWidth>
-            <InputLabel id="openStatus-select-label">공개 여부</InputLabel>
-            <Select
-              labelId="openStatus-select-label"
-              id="openStatus-select"
-              value={openStatus}
-              label="공개 여부"
-              onChange={handleOpenStatusChange}
-            >
-              <MenuItem value="전체공개">전채공개</MenuItem>
-              <MenuItem value="회원공개">회원공개</MenuItem>
-              <MenuItem value="비공개">비공개</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-
+        {surveyOpenStatusSelectBox}
         {surveyDescription}
       </CardContent>
     </Card>

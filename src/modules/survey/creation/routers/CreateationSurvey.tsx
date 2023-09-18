@@ -16,7 +16,7 @@ function CreationSurvey() {
     surveyTags: [],
     surveyDescription: '',
     surveyClosingAt: '',
-    openStatus: '',
+    openStatus: '전체공개',
   });
 
   const [questions, setQuestions] = useState<QuestionProps[]>([
