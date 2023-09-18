@@ -13,7 +13,8 @@ function Body() {
     // 다른 스타일 속성도 필요한 경우 추가할 수 있습니다.
   };
 
-  console.log(location.pathname);
+  // console.log(location.pathname);
+
   return (
     <Container style={containerStyle}>{routeInfo(location.pathname)}</Container>
   );
