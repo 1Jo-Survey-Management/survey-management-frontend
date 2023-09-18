@@ -30,6 +30,7 @@ export interface QuestionProps {
   questionTitle: string;
   questionDescription: string;
   questionRequired: boolean;
+  questionType: string;
   selections?: SelectionProps[];
 }
 

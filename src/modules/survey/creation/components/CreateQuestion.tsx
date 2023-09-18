@@ -134,6 +134,30 @@ function CreateQuestion({
     setQuestions(updateQuestions);
   };
 
+  /**
+   * 설문 문항의 제목과 설명을 작성하는 메서드 입니다.
+   *
+   * @param event 설문 문항 제목, 설명 Input 태그의 onChange 이벤트
+   * @author 강명관
+   */
+  const handelQuestionInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.target;
+
+    const updateQuestions = questions.map((prevQuestion) => {
+      if (prevQuestion.questionId === question.questionId) {
+        return {
+          ...prevQuestion,
+          [name]: value,
+        };
+      }
+      return prevQuestion;
+    });
+
+    setQuestions(updateQuestions);
+  };
+
   const dragIndicator = (
     <Box sx={styles.dragIndicatorBox}>
       <DragIndicatorIcon
@@ -141,12 +165,6 @@ function CreateQuestion({
       />
     </Box>
   );
-
-  /**
-   * TODO => 1. 설문 문항 필수 스위치 핸들 메서드 작성해야 함.
-   * 2.설문 문항 받을 DTO 구상
-   * 3. 여기도 변경사항에 따른 state 변경 메서드가 필요. 이걸 2번으로 잡자
-   */
 
   const deleteIconAndRequiredSwitch = (
     <Box sx={styles.iconAndSwitchContainer}>
@@ -177,7 +195,13 @@ function CreateQuestion({
       <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
         문항 제목
       </Typography>
-      <Input placeholder="문항 제목을 입력해주세요." sx={{ flexGrow: 1 }} />
+      <Input
+        placeholder="문항 제목을 입력해주세요."
+        sx={{ flexGrow: 1 }}
+        value={question.questionTitle}
+        name="questionTitle"
+        onChange={(event) => handelQuestionInputChange(event)}
+      />
     </Box>
   );
 
@@ -186,7 +210,13 @@ function CreateQuestion({
       <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
         문항 설명
       </Typography>
-      <Input placeholder="문항 설명을 입력해주세요." sx={{ flexGrow: 1 }} />
+      <Input
+        placeholder="문항 설명을 입력해주세요."
+        sx={{ flexGrow: 1 }}
+        name="questionDescription"
+        value={question.questionDescription}
+        onChange={(event) => handelQuestionInputChange(event)}
+      />
     </Box>
   );
 
@@ -199,7 +229,7 @@ function CreateQuestion({
       <FormControl sx={{ flexGrow: '1' }}>
         <Select
           id="demo-simple-select"
-          value={questionType}
+          value={question.questionType}
           displayEmpty
           onChange={handleQuestionTypeChange}
         >
