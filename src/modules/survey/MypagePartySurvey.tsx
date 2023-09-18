@@ -1,5 +1,3 @@
-/* eslint-disable react/function-component-definition */
-// Mypage.tsx
 import React from 'react';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
@@ -10,14 +8,11 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import './MypageUserModify.css';
-
 import Box from '@mui/material/Box';
 
-const Mypage: React.FC = () => {
+function Mypage() {
   const navigate = useNavigate();
   const goBack = () => {
-    // console.log("nono");
     navigate('/survey/main');
   };
 
@@ -34,12 +29,6 @@ const Mypage: React.FC = () => {
 
           width: '100%',
           height: 600,
-
-          // backgroundColor: "primary.dark",
-          // "&:hover": {
-          //   backgroundColor: "primary.main",
-          //   opacity: [0.9, 0.8, 0.7],
-          // },
         }}
       >
         <p className="profile-modify-title">Your Profile Picture</p>
@@ -108,6 +97,6 @@ const Mypage: React.FC = () => {
       <Button onClick={goBack}>돌아가기</Button>
     </Container>
   );
-};
+}
 
 export default Mypage;
