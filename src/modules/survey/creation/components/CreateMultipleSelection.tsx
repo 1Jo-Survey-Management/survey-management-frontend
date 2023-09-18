@@ -46,6 +46,8 @@ function CreateMultipleSelection() {
 
   /**
    * 선택지를 추가하는 메서드 입니다.
+   *
+   * @author 강명관
    */
   const handleAddSelection = () => {
     setSelections([
@@ -64,6 +66,7 @@ function CreateMultipleSelection() {
    *
    * @param id 삭제할 selection
    * @returns {void} state의 selections 에서 삭제
+   * @author 강명관
    */
   const handleRemoveSelection = (removeTargetSelectionId: number) => {
     if (selections.length === 1) {
@@ -76,6 +79,13 @@ function CreateMultipleSelection() {
     setSelections(updateSelections);
   };
 
+  /**
+   * 선택지 입력 값을 변경하는 메서드 입니다.
+   *
+   * @param changedSelection 변경된 선택지
+   * @param event Input Change Event
+   * @author 강명관
+   */
   const handleSelectionValueChange = (
     changedSelection: SelectionProps,
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
