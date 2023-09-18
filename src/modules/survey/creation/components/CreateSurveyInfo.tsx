@@ -71,7 +71,7 @@ function CreateSurveyInfo({
   setSurveyInfo,
 }: CreateSurveyInfoProps) {
   const [selectedImage, setSelectedImage] = useState<string>('');
-  const [selectedTag, setSelectedTag] = useState<string[]>([]);
+  // const [selectedTag, setSelectedTag] = useState<string[]>([]);
 
   const today = new Date();
   const oneWeekLater = new Date(today);
@@ -128,9 +128,27 @@ function CreateSurveyInfo({
    */
   const handleTagChange = (event: SelectChangeEvent<typeof tagNames>) => {
     const tagValue = event.target.value;
-    setSelectedTag(
-      typeof tagValue === 'string' ? tagValue.split(',') : tagValue
-    );
+
+    const tagValueArray: string[] = Array.isArray(tagValue)
+      ? tagValue
+      : [tagValue];
+
+    const maxTagCount: number = 3;
+
+    const selectedCount = tagValueArray.length;
+
+    if (selectedCount > maxTagCount) {
+      const limitedSelection = tagValueArray.slice(0, maxTagCount);
+      setSurveyInfo({
+        ...surveyInfo,
+        surveyTags: limitedSelection,
+      });
+    } else {
+      setSurveyInfo({
+        ...surveyInfo,
+        surveyTags: tagValueArray,
+      });
+    }
   };
 
   /**
@@ -173,7 +191,7 @@ function CreateSurveyInfo({
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
           multiple
-          value={selectedTag}
+          value={surveyInfo.surveyTags}
           onChange={handleTagChange}
           input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
           renderValue={(selectedValue) => (
