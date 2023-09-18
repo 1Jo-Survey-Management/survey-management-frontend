@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
@@ -86,15 +86,23 @@ function CreateQuestion({
   questions,
   setQuestions,
 }: CreateQuestionProps) {
-  const [questionType, setQuestionType] = useState<string>('1');
-
   /**
    * 셀렉박스의 선택에 따라 문항 타입을 랜더링하기 위한 메서드입니다.
    *
    * @param event SelectChangeEvent
    */
   const handleQuestionTypeChange = (event: SelectChangeEvent) => {
-    setQuestionType(event.target.value);
+    const { name, value } = event.target;
+
+    const updateQuestions: QuestionProps[] = questions.map((prevQuestion) => {
+      if (prevQuestion.questionId === question.questionId) {
+        return { ...prevQuestion, [name]: value };
+      }
+
+      return prevQuestion;
+    });
+
+    setQuestions(updateQuestions);
   };
 
   /**
@@ -229,6 +237,7 @@ function CreateQuestion({
       <FormControl sx={{ flexGrow: '1' }}>
         <Select
           id="demo-simple-select"
+          name="questionType"
           value={question.questionType}
           displayEmpty
           onChange={handleQuestionTypeChange}
@@ -260,18 +269,18 @@ function CreateQuestion({
         {questionDescription}
         {selectQuestionType}
 
-        {questionType === '1' && (
+        {question.questionType === '1' && (
           <CreateSingleSelection questionId={question.questionId} />
         )}
-        {questionType === '2' && (
+        {question.questionType === '2' && (
           <CreateMoveableSingleSelection
             questionId={question.questionId}
             questions={questions}
           />
         )}
-        {questionType === '3' && <CreateMultipleSelection />}
-        {questionType === '4' && <CreateShortAnswer />}
-        {questionType === '5' && <CreateSubjectiveDescriptive />}
+        {question.questionType === '3' && <CreateMultipleSelection />}
+        {question.questionType === '4' && <CreateShortAnswer />}
+        {question.questionType === '5' && <CreateSubjectiveDescriptive />}
       </CardContent>
     </Card>
   );
