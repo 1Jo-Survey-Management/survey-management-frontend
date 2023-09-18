@@ -25,6 +25,14 @@ interface FloatingActionButtonsProps {
   onClickAddQuestion: () => void;
 }
 
+/**
+ * 설문조사 작성 페이지 플로팅 버튼 컴포넌트 입니다.
+ *
+ * @component
+ * @param onClickAddQuestion 설문 문항을 추가하는 메서드 입니다.
+ * @returns 설문조사 작성 플로팅 버튼
+ * @author 강명관
+ */
 function FloatingActionButtons({
   onClickAddQuestion,
 }: FloatingActionButtonsProps) {
@@ -49,6 +57,16 @@ function FloatingActionButtons({
     });
   };
 
+  /**
+   * 플로팅 버튼으로 문항을 추가하고, 스크롤을 최하단으로 보내는 메서드 입니다.
+   *
+   * @author 강명관
+   */
+  const handleAddQuestion = () => {
+    scrollToBottom();
+    onClickAddQuestion();
+  };
+
   return (
     <Box sx={styles.fabBox}>
       <Fab
@@ -71,7 +89,7 @@ function FloatingActionButtons({
         color="primary"
         aria-label="add"
         sx={styles.fabStyles}
-        onClick={onClickAddQuestion}
+        onClick={handleAddQuestion}
       >
         <AddIcon />
       </Fab>
