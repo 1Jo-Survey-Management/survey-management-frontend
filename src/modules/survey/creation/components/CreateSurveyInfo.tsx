@@ -75,7 +75,13 @@ function CreateSurveyInfo({
 
   const [openStatus, setOpenStatus] = useState<string>(defaultOpenStatus);
 
-  const handleSurveyTitleChange = (
+  /**
+   * 설문지 제목, 설명을 변경하는 메서드 입니다.
+   *
+   * @param event Input onChange Event
+   * @author 강명관
+   */
+  const handleSurveyInfoInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = event.target;
@@ -83,8 +89,6 @@ function CreateSurveyInfo({
       ...prevSurveyInfo,
       [name]: value,
     }));
-
-    console.log(surveyInfo);
   };
 
   /**
@@ -134,7 +138,8 @@ function CreateSurveyInfo({
         placeholder="설문 제목을 입력해주세요."
         sx={{ flexGrow: 1 }}
         name="surveyTitle"
-        onChange={handleSurveyTitleChange}
+        value={surveyInfo.surveyTitle}
+        onChange={handleSurveyInfoInputChange}
       />
     </Box>
   );
@@ -173,7 +178,13 @@ function CreateSurveyInfo({
       <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
         문항 설명
       </Typography>
-      <Input placeholder="문항 설명을 입력해주세요." sx={{ flexGrow: 1 }} />
+      <Input
+        placeholder="문항 설명을 입력해주세요."
+        sx={{ flexGrow: 1 }}
+        name="surveyDescription"
+        value={surveyInfo.surveyDescription}
+        onChange={handleSurveyInfoInputChange}
+      />
     </Box>
   );
 
