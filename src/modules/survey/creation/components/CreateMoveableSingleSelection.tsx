@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import {
@@ -10,7 +10,11 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
-import { QuestionProps, SelectionProps } from '../types/SurveyTypes';
+import {
+  CreateQuestionProps,
+  QuestionProps,
+  SelectionProps,
+} from '../types/SurveyTypes';
 
 const primaryColor = '#3f50b5';
 
@@ -49,20 +53,28 @@ const END_OF_SURVEY: string = 'endOfSurvey';
  * @returns 선택지에 따른 문항 이동 컴포넌트
  */
 function CreateMoveableSingleSelection({
-  questionId,
+  question,
   questions,
-}: {
-  questionId: number;
-  questions: QuestionProps[];
-}) {
-  const [selections, setSelections] = useState<SelectionProps[]>([
-    {
-      questionId,
-      selectionId: new Date().getTime(),
-      selectionValue: '',
-      isMoveable: true,
-    },
-  ]);
+  setQuestions,
+}: CreateQuestionProps) {
+  /**
+   * 문항 배열에서 업데이트할 배열을 찾아서 업데이트된 배열을 반환해주는 메서드 입니다.
+   *
+   * @param updateQuestion 업데이트할 배열
+   * @returns 업데이트된 배열
+   * @author 강명관
+   */
+  const findQuestionAndUpdateQuestions = (
+    updateQuestion: QuestionProps
+  ): QuestionProps[] => {
+    const updatedQuestions: QuestionProps[] = questions.map((prevQuestion) =>
+      prevQuestion.questionId === question.questionId
+        ? updateQuestion
+        : prevQuestion
+    );
+
+    return updatedQuestions;
+  };
 
   /**
    * 문항 이동이 가능한 선택지를 추가하는 메서드 입니다.
@@ -70,15 +82,19 @@ function CreateMoveableSingleSelection({
    * @author 강명관
    */
   const handleAddMoveableSelection = () => {
-    setSelections([
-      ...selections,
-      {
-        questionId,
-        selectionId: new Date().getTime(),
-        selectionValue: '',
-        isMoveable: true,
-      },
-    ]);
+    const addSelection: SelectionProps = {
+      questionId: question.questionId,
+      selectionId: new Date().getTime(),
+      selectionValue: '',
+      isMoveable: true,
+    };
+
+    const updateQuestion: QuestionProps = {
+      ...question,
+      selections: [...question.selections, addSelection],
+    };
+
+    setQuestions(findQuestionAndUpdateQuestions(updateQuestion));
   };
 
   /**
@@ -88,13 +104,19 @@ function CreateMoveableSingleSelection({
    * @returns 선택지가 삭제된 SelectionProps[]
    */
   const handleRemoveMoveableSelection = (removeTargetSelectionId: number) => {
-    if (selections.length === 1) {
+    if (question.selections.length === 1) {
       return;
     }
-    const updateSelections = selections.filter(
+    const updateSelections: SelectionProps[] = question.selections.filter(
       (selection) => selection.selectionId !== removeTargetSelectionId
     );
-    setSelections(updateSelections);
+
+    const updateQuestion: QuestionProps = {
+      ...question,
+      selections: updateSelections,
+    };
+
+    setQuestions(findQuestionAndUpdateQuestions(updateQuestion));
   };
 
   /**
@@ -103,38 +125,36 @@ function CreateMoveableSingleSelection({
    * @param selectionId
    */
   const handelSetQuestionNumber = (
-    selectedSelectionId: number,
+    changeSelection: SelectionProps,
     event: SelectChangeEvent
   ) => {
     const selectedValue: string = event.target.value;
 
-    const findQuestion: QuestionProps | undefined = questions.find(
-      (question) => question.questionId.toString() === selectedValue
-    );
+    const questionIndex: number = questions.indexOf(question);
+    const selectionIndex: number = question.selections.indexOf(changeSelection);
 
-    if (findQuestion === undefined) {
-      return;
+    let changedQuestionMoveId: number = questionIndex + 1;
+
+    if (selectedValue === END_OF_SURVEY) {
+      changedQuestionMoveId = question.selections.length;
+    } else if (selectedValue === NEXT_QUESTION) {
+      changedQuestionMoveId = questionIndex + 1;
+    } else {
+      changedQuestionMoveId = Number(event.target.value);
     }
 
-    const findSelection: SelectionProps | undefined = selections.find(
-      (selection) => selection.selectionId === selectedSelectionId
-    );
+    const updateSelections: SelectionProps[] = [...question.selections];
+    updateSelections[selectionIndex] = {
+      ...updateSelections[selectionIndex],
+      questionMoveId: changedQuestionMoveId,
+    };
 
-    if (findSelection === undefined) {
-      return;
-    }
+    const updateQuestion = {
+      ...question,
+      selections: updateSelections,
+    };
 
-    const findQuestionIndex: number = questions.indexOf(findQuestion);
-    const findSelectionIndex: number = selections.indexOf(findSelection);
-
-    if (selectedValue === NEXT_QUESTION) {
-      const updateSelections: SelectionProps[] = [...selections];
-      updateSelections[findSelectionIndex] = {
-        ...updateSelections[findSelectionIndex],
-        questionMoveId: findQuestionIndex + 1,
-      };
-      setSelections(updateSelections);
-    }
+    setQuestions(findQuestionAndUpdateQuestions(updateQuestion));
   };
 
   /**
@@ -155,21 +175,27 @@ function CreateMoveableSingleSelection({
       selectionValue: changeValue,
     };
 
-    const updatedSelections = selections.map((selection) =>
+    const updatedSelections = question.selections.map((selection) =>
       selection.selectionId === updatedSelection.selectionId
         ? updatedSelection
         : selection
     );
-    setSelections(updatedSelections);
+
+    const uddateQuestion: QuestionProps = {
+      ...question,
+      selections: updatedSelections,
+    };
+
+    setQuestions(findQuestionAndUpdateQuestions(uddateQuestion));
   };
 
   return (
     <div>
-      {selections.map((selection, index) => (
+      {question.selections.map((selection, index) => (
         <div key={selection.selectionId}>
           <Box sx={styles.selectionBox}>
             <Box sx={styles.removeAndAddIconBox}>
-              {index === selections.length - 1 && (
+              {index === question.selections.length - 1 && (
                 <AddIcon
                   sx={styles.icon}
                   onClick={handleAddMoveableSelection}
@@ -201,14 +227,11 @@ function CreateMoveableSingleSelection({
                   id="demo-simple-select"
                   value={NEXT_QUESTION}
                   onChange={(event: SelectChangeEvent) =>
-                    handelSetQuestionNumber(selection.selectionId, event)
+                    handelSetQuestionNumber(selection, event)
                   }
                 >
-                  {questions.map((question, questionIndex) => (
-                    <MenuItem
-                      key={question.questionId}
-                      value={questionIndex + 1}
-                    >
+                  {questions.map((que, questionIndex) => (
+                    <MenuItem key={que.questionId} value={questionIndex + 1}>
                       {questionIndex + 1}번
                     </MenuItem>
                   ))}

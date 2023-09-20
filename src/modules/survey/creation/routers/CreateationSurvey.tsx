@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import Container from '@mui/material/Container';
+import { Box, Button } from '@mui/material';
 import CreateQuestion from '../components/CreateQuestion';
 import FloatingActionButtons from '../components/FloatingActionButtons';
 import CreateSurveyInfo from '../components/CreateSurveyInfo';
-import { QuestionProps, SurveyInfoProps } from '../types/SurveyTypes';
+import {
+  QuestionProps,
+  // SelectionProps,
+  SurveyInfoProps,
+} from '../types/SurveyTypes';
 
 function CreationSurvey() {
   const [surveyId] = useState<number>(new Date().getTime());
@@ -27,8 +32,11 @@ function CreationSurvey() {
       questionDescription: '',
       questionType: '1',
       questionRequired: true,
+      selections: [],
     },
   ]);
+
+  // const [selections, setSelections] = useState<SelectionProps[]>([]);
 
   const handleAddQuestion = () => {
     setQuestions([
@@ -40,8 +48,15 @@ function CreationSurvey() {
         questionDescription: '',
         questionType: '1',
         questionRequired: true,
+        selections: [],
       },
     ]);
+  };
+
+  const handleSubmitSurvey = () => {
+    console.log(surveyInfo);
+    console.log(questions);
+    // console.log(selections);
   };
 
   return (
@@ -56,8 +71,23 @@ function CreationSurvey() {
           question={question}
           questions={questions}
           setQuestions={setQuestions}
+          // selections={selections}
+          // setSelections={setSelections}
         />
       ))}
+
+      <Box sx={{ marginRight: '10px', marginBottom: '1000px' }}>
+        <Button
+          variant="contained"
+          color="success"
+          sx={{ marginRight: '20px' }}
+          onClick={handleSubmitSurvey}
+        >
+          작성하기
+        </Button>
+
+        <Button variant="contained">개시하기</Button>
+      </Box>
 
       <FloatingActionButtons onClickAddQuestion={handleAddQuestion} />
     </Container>

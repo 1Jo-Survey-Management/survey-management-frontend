@@ -31,7 +31,13 @@ export interface QuestionProps {
   questionDescription: string;
   questionRequired: boolean;
   questionType: string;
-  selections?: SelectionProps[];
+  selections: SelectionProps[];
+}
+
+export interface CreateSelectionProps {
+  question: QuestionProps;
+  questions: QuestionProps[];
+  setQuestions: React.Dispatch<React.SetStateAction<QuestionProps[]>>;
 }
 
 export interface CreateQuestionProps {

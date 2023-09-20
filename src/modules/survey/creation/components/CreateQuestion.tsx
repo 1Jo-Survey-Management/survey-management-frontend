@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
@@ -21,7 +21,11 @@ import CreateSingleSelection from './CreateSingleSelection';
 import CreateMultipleSelection from './CreateMultipleSelection';
 import CreateShortAnswer from './CreatShortAnswer';
 import CreateSubjectiveDescriptive from './CreateSubjectiveDescriptive';
-import { CreateQuestionProps, QuestionProps } from '../types/SurveyTypes';
+import {
+  CreateQuestionProps,
+  QuestionProps,
+  SelectionProps,
+} from '../types/SurveyTypes';
 import CreateMoveableSingleSelection from './CreateMoveableSingleSelection';
 
 const styles = {
@@ -80,7 +84,7 @@ const styles = {
 function CreateQuestion({
   question,
   questions,
-  setQuestions,
+  setQuestions, // selections,
 }: CreateQuestionProps) {
   /**
    * 셀렉박스의 선택에 따라 문항 타입을 랜더링하기 위한 메서드입니다.
@@ -90,9 +94,27 @@ function CreateQuestion({
   const handleQuestionTypeChange = (event: SelectChangeEvent) => {
     const { name, value } = event.target;
 
+    let defaultSelection: SelectionProps = {
+      questionId: question.questionId,
+      selectionId: new Date().getTime(),
+      selectionValue: '',
+      isMoveable: false,
+    };
+
+    if (value === '2') {
+      defaultSelection = {
+        ...defaultSelection,
+        isMoveable: true,
+      };
+    }
+
     const updateQuestions: QuestionProps[] = questions.map((prevQuestion) => {
       if (prevQuestion.questionId === question.questionId) {
-        return { ...prevQuestion, [name]: value };
+        return {
+          ...prevQuestion,
+          [name]: value,
+          selections: [defaultSelection],
+        };
       }
 
       return prevQuestion;
@@ -100,6 +122,20 @@ function CreateQuestion({
 
     setQuestions(updateQuestions);
   };
+
+  /**
+   * 문항이 처음 랜더링 될 때 디폴트 타입으로 단일 선택형 문항을 선택하고,
+   * 그에 맞게 선택지를 랜더링 해주기 위한 useEffect 입니다.
+   * @author 강명관
+   */
+  useEffect(() => {
+    handleQuestionTypeChange({
+      target: {
+        name: 'questionType',
+        value: question.questionType,
+      },
+    } as SelectChangeEvent);
+  }, []);
 
   /**
    * 문항을 삭제하기 위한 메서드 입니다.
@@ -266,15 +302,26 @@ function CreateQuestion({
         {selectQuestionType}
 
         {question.questionType === '1' && (
-          <CreateSingleSelection questionId={question.questionId} />
+          <CreateSingleSelection
+            question={question}
+            questions={questions}
+            setQuestions={setQuestions}
+          />
         )}
         {question.questionType === '2' && (
           <CreateMoveableSingleSelection
-            questionId={question.questionId}
+            question={question}
             questions={questions}
+            setQuestions={setQuestions}
           />
         )}
-        {question.questionType === '3' && <CreateMultipleSelection />}
+        {question.questionType === '3' && (
+          <CreateMultipleSelection
+            question={question}
+            questions={questions}
+            setQuestions={setQuestions}
+          />
+        )}
         {question.questionType === '4' && <CreateShortAnswer />}
         {question.questionType === '5' && <CreateSubjectiveDescriptive />}
       </CardContent>

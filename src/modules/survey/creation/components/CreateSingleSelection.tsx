@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Radio, Input } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { SelectionProps } from '../types/SurveyTypes';
+import {
+  CreateSelectionProps,
+  QuestionProps,
+  SelectionProps,
+} from '../types/SurveyTypes';
 
 const primaryColor = '#3f50b5';
 
@@ -35,15 +39,29 @@ const styles = {
  * @returns 단일 선택형 선택지
  * @author 강명관
  */
-function CreateSingleSelection({ questionId }: { questionId: number }) {
-  const [selections, setSelections] = useState<SelectionProps[]>([
-    {
-      questionId,
-      selectionId: new Date().getTime(),
-      selectionValue: '',
-      isMoveable: false,
-    },
-  ]);
+function CreateSingleSelection({
+  question,
+  questions,
+  setQuestions,
+}: CreateSelectionProps) {
+  /**
+   * 문항 배열에서 업데이트할 배열을 찾아서 업데이트된 배열을 반환해주는 메서드 입니다.
+   *
+   * @param updateQuestion 업데이트할 배열
+   * @returns 업데이트된 배열
+   * @author 강명관
+   */
+  const findQuestionAndUpdateQuestions = (
+    updateQuestion: QuestionProps
+  ): QuestionProps[] => {
+    const updatedQuestions: QuestionProps[] = questions.map((prevQuestion) =>
+      prevQuestion.questionId === question.questionId
+        ? updateQuestion
+        : prevQuestion
+    );
+
+    return updatedQuestions;
+  };
 
   /**
    * 선택지를 추가하는 메서드입니다.
@@ -51,15 +69,19 @@ function CreateSingleSelection({ questionId }: { questionId: number }) {
    * @author 강명관
    */
   const handleAddSelection = () => {
-    setSelections([
-      ...selections,
-      {
-        questionId,
-        selectionId: new Date().getTime(),
-        selectionValue: '',
-        isMoveable: false,
-      },
-    ]);
+    const addSelection: SelectionProps = {
+      questionId: question.questionId,
+      selectionId: new Date().getTime(),
+      selectionValue: '',
+      isMoveable: false,
+    };
+
+    const updatedQuestion: QuestionProps = {
+      ...question,
+      selections: [...question.selections, addSelection],
+    };
+
+    setQuestions(findQuestionAndUpdateQuestions(updatedQuestion));
   };
 
   /**
@@ -69,13 +91,19 @@ function CreateSingleSelection({ questionId }: { questionId: number }) {
    * @author 강명관
    */
   const handleRemoveSelection = (removeTargetSelectionId: number) => {
-    if (selections.length === 1) {
+    if (question.selections.length === 1) {
       return;
     }
-    const updateSelections = selections.filter(
+    const updateSelections: SelectionProps[] = question.selections.filter(
       (selection) => selection.selectionId !== removeTargetSelectionId
     );
-    setSelections(updateSelections);
+
+    const updateQuestion: QuestionProps = {
+      ...question,
+      selections: updateSelections,
+    };
+
+    setQuestions(findQuestionAndUpdateQuestions(updateQuestion));
   };
 
   /**
@@ -96,22 +124,27 @@ function CreateSingleSelection({ questionId }: { questionId: number }) {
       selectionValue: changeValue,
     };
 
-    const updateSelections = selections.map((selection) =>
+    const updateSelections = question.selections.map((selection) =>
       selection.selectionId === updateSelection.selectionId
         ? updateSelection
         : selection
     );
 
-    setSelections(updateSelections);
+    const updateQuestion = {
+      ...question,
+      selections: updateSelections,
+    };
+
+    setQuestions(findQuestionAndUpdateQuestions(updateQuestion));
   };
 
   return (
     <div>
-      {selections.map((selection, index) => (
+      {question.selections.map((selection, index) => (
         <div key={selection.selectionId}>
           <Box sx={styles.selectionBox}>
             <Box sx={styles.removeAndAddIconBox}>
-              {index === selections.length - 1 && (
+              {index === question.selections.length - 1 && (
                 <AddIcon
                   sx={styles.icon}
                   aria-label="Add"
