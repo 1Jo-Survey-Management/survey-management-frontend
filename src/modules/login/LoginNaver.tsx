@@ -2,22 +2,9 @@
  * 네이버 로그인 JDK 사용로직
  * @author 김선규
  */
+// import axios from 'axios';
 import React, { useState } from 'react';
-
-const naverClientId = 'ukwEecKhMrJzOdjwpJfB';
-const naverRedirectURL = 'http://localhost:8080/login/naver/callback';
-
-/**
- * CSRF를 방지하기 위한 인증값, 사용자임의로 넣어야하고, 테스트를 위해 test로 설정
- */
-const naverstate = 'test';
-
-/**
- * 네이버 OAuth 인증 페이지로 리다이렉트
- */
-const handleNaverLogin = () => {
-  window.location.href = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&state=${naverstate}&redirect_uri=${naverRedirectURL}`;
-};
+import Modal from './modal/BasicModal';
 
 /**
  * 네이버 OAuth 로그인 입니다.
@@ -25,11 +12,31 @@ const handleNaverLogin = () => {
  */
 function LoginNaver() {
   const [isHovered, setIsHovered] = useState(false);
+  const [isModaled, setIsModaled] = useState(false);
 
   const getImageSrc = () =>
     isHovered
       ? `${process.env.PUBLIC_URL}/naverhover.png`
       : `${process.env.PUBLIC_URL}/naverButton.png`;
+
+  const handleNaverLogin = () => {
+    // window.location.href = 'http://localhost:8080/login/log';
+
+    console.log(`모달있는곳${isModaled}`);
+
+    setIsModaled(true);
+
+    // axios
+    //   .get('http://localhost:8080/login/log')
+    //   .then((response) => {
+    //     // 서버로부터의 응답 처리
+    //     console.log(response.data);
+    //     <Modal />;
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
+  };
 
   return (
     <div>
@@ -42,6 +49,7 @@ function LoginNaver() {
       >
         <img src={getImageSrc()} style={{ width: '40%' }} alt="대체_텍스트" />
       </button>
+      {isModaled && <Modal onClose={() => setIsModaled(false)} />}
     </div>
   );
 }

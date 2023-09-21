@@ -6,6 +6,7 @@ import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
+// import axios from 'axios';
 import Logo from './img/SurveyLogo.png';
 import LoginFig from './img/LoginFig.png';
 import LoginNaver from './LoginNaver';
@@ -17,23 +18,28 @@ function LoginDisplay() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+
+    // 로그인 페이지 접근 url에 flag와 token을 확인하고
+    // 첫 로그인 시 프로필 모달을 띄워 해당 데이터와 함께 회원가입
+    // 기존 회원일 시 서버에서 메인 페이지 접근을 함
+    const flag = searchParams.get('flag');
+
+    if (flag) {
+      console.log('good');
+
+      // TODO : 프로필 모달 띄우기
+
+      // TODO : axois로 회원 insert
+    }
+  }, []);
+
   const goLogin = () => {
     console.log('nono');
     navigate('/survey/main');
   };
 
-  const getNaverToken = () => {
-    console.log(location.pathname);
-    if (!location.hash) return;
-    const token = location.hash.split('=')[1].split('&')[0];
-    const state = location.hash.split('=')[2].split('&')[0];
-    console.log(`AccessToken : ${token}`);
-    console.log(`State : ${state}`);
-  };
-
-  useEffect(() => {
-    getNaverToken();
-  }, []);
   return (
     <Box
       component="div"
@@ -77,8 +83,6 @@ function LoginDisplay() {
           </h1>
         </Box>
 
-        <Box style={{ height: '50px' }} />
-
         <Box
           style={{
             display: 'flex',
@@ -106,3 +110,15 @@ function LoginDisplay() {
 }
 
 export default LoginDisplay;
+
+//
+// axios
+//   .post('http://localhost:3000', { data: 'success' })
+//   .then((response) => {
+//     // 서버로부터의 응답 처리
+//     console.log(response.data);
+//   })
+//   .catch((error) => {
+//     // 오류 처리
+//     console.error(error);
+//   });
