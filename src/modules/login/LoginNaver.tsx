@@ -1,14 +1,11 @@
-/**
- * 네이버 로그인 JDK 사용로직
- * @author 김선규
- */
 // import axios from 'axios';
 import React, { useState } from 'react';
 import Modal from './modal/BasicModal';
 
 /**
- * 네이버 OAuth 로그인 입니다.
- * @returns LoginNaver
+ * 네이버 OAuth 로그인
+ * @author 김선규
+ * @returns 네이버 로그인 버튼
  */
 function LoginNaver() {
   const [isHovered, setIsHovered] = useState(false);

@@ -7,6 +7,11 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 // import OutlinedInput from '@mui/material/OutlinedInput';
 
+/**
+ * 닉네임을 입력할수 있는 input box 입니다
+ * @author 김선규
+ * @returns 닉네임 입력 컴포넌트
+ */
 export default function ComposedTextField() {
   return (
     <Box

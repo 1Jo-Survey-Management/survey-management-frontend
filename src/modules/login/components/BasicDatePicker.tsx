@@ -8,6 +8,11 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 // import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
+/**
+ * 생년월일 입력 데이트 픽커입니다
+ * @author 김선규
+ * @returns date Picker 컴포넌트
+ */
 export default function ResponsiveDatePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

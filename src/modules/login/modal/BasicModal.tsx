@@ -16,7 +16,7 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  border: '0px solid #000',
   boxShadow: 24,
   p: 4,
 };
@@ -33,11 +33,16 @@ const emptyBox = {
   height: 50,
 };
 
-// onClose props에 대한 타입 지정
 interface ModalProps {
   onClose: () => void;
 }
 
+/**
+ * 최초 로그인 시 프로필 입력 받는 모달
+ * @author 김선규
+ * @param param0
+ * @returns
+ */
 export default function BasicModal({ onClose }: ModalProps) {
   const [open, setOpen] = useState(true);
 

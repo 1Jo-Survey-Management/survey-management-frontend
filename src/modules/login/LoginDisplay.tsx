@@ -2,8 +2,8 @@
  * 로그인 화면
  * @author 김선규
  */
-import React, { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 // import axios from 'axios';
@@ -11,29 +11,15 @@ import Logo from './img/SurveyLogo.png';
 import LoginFig from './img/LoginFig.png';
 import LoginNaver from './LoginNaver';
 
+const emptyBoxSimple = {
+  height: 20,
+};
+
 /**
  * @returns LoginDispay
  */
 function LoginDisplay() {
-  const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-
-    // 로그인 페이지 접근 url에 flag와 token을 확인하고
-    // 첫 로그인 시 프로필 모달을 띄워 해당 데이터와 함께 회원가입
-    // 기존 회원일 시 서버에서 메인 페이지 접근을 함
-    const flag = searchParams.get('flag');
-
-    if (flag) {
-      console.log('good');
-
-      // TODO : 프로필 모달 띄우기
-
-      // TODO : axois로 회원 insert
-    }
-  }, []);
 
   const goLogin = () => {
     console.log('nono');
@@ -65,6 +51,7 @@ function LoginDisplay() {
           borderRadius: '10px',
         }}
       >
+        <Box sx={emptyBoxSimple}> </Box>
         <Box
           style={{
             display: 'flex',
@@ -82,7 +69,10 @@ function LoginDisplay() {
             NoName Survey
           </h1>
         </Box>
-
+        {/* 임시 지정 공백, 차후 디자인 수정 예정 */}
+        <Box sx={emptyBoxSimple}> </Box>
+        <Box sx={emptyBoxSimple}> </Box>
+        <Box sx={emptyBoxSimple}> </Box>
         <Box
           style={{
             display: 'flex',

@@ -9,6 +9,11 @@ const radioStyle = {
   marginLeft: 1,
 };
 
+/**
+ * 성별(남,여) 선택하는 라디오박스 입니다
+ * @author 김선규
+ * @returns 성별 지정 라디오박스
+ */
 export default function RowRadioButtonsGroup() {
   return (
     <FormControl sx={radioStyle}>
