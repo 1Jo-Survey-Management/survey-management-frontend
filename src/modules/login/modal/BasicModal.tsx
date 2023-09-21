@@ -37,6 +37,12 @@ interface ModalProps {
   onClose: () => void;
 }
 
+interface FormData {
+  birth: string;
+  nickName: string;
+  radioValue: string;
+}
+
 /**
  * 최초 로그인 시 프로필 입력 받는 모달
  * @author 김선규
@@ -45,6 +51,24 @@ interface ModalProps {
  */
 export default function BasicModal({ onClose }: ModalProps) {
   const [open, setOpen] = useState(true);
+  const [formData, setFormData] = useState<FormData>({
+    nickName: '',
+    radioValue: '',
+    birth: '',
+  });
+
+  // 각 입력 필드에 대한 데이터 업데이트 함수
+  const handleNickNameChange = (value: string) => {
+    setFormData({ ...formData, nickName: value });
+  };
+
+  const handleRadioChange = (value: string) => {
+    setFormData({ ...formData, radioValue: value });
+  };
+
+  const handleBirthChange = (value: string) => {
+    setFormData({ ...formData, birth: value });
+  };
 
   const handleClose = () => {
     onClose(); // onClose 함수를 호출하여 모달을 닫음
@@ -52,6 +76,17 @@ export default function BasicModal({ onClose }: ModalProps) {
   };
 
   console.log(open);
+
+  // 폼 제출 핸들러
+  const handleSubmit = () => {
+    // formData를 서버로 전송
+    console.log(formData);
+  };
+
+  const cancelSubmit = () => {
+    // formData를 서버로 전송
+    console.log('회원가입 안함');
+  };
 
   return (
     <div>
@@ -69,15 +104,15 @@ export default function BasicModal({ onClose }: ModalProps) {
             필수 추가 정보를 입력해야 회원가입이 가능합니다.
           </Typography>
           <Box sx={emptyBoxSimple}> </Box>
-          <InputNickName />
+          <InputNickName onChange={handleNickNameChange} />
           <Box sx={emptyBoxSimple}> </Box>
-          <RadioButton />
+          <RadioButton onChange={handleRadioChange} />
           <Box sx={emptyBoxSimple}> </Box>
-          <GetBirth />
+          <GetBirth onChange={handleBirthChange} />
           <Box sx={emptyBox}> </Box>
           <Box sx={columnStyle}>
-            <StyledButton buttonText="회원가입" />
-            <StyledButton buttonText="취소" />
+            <StyledButton buttonText="회원가입" onClick={handleSubmit} />
+            <StyledButton buttonText="취소" onClick={cancelSubmit} />
           </Box>
         </Box>
       </Modal>
