@@ -17,11 +17,11 @@ function LoginNaver() {
       : `${process.env.PUBLIC_URL}/naverButton.png`;
 
   const handleNaverLogin = () => {
-    // window.location.href = 'http://localhost:8080/login/log';
+    window.location.href = 'http://localhost:8080/oauth2.0/authorize/naver';
 
     console.log(`모달있는곳${isModaled}`);
 
-    setIsModaled(true);
+    // setIsModaled(true);
 
     // axios
     //   .get('http://localhost:8080/login/log')

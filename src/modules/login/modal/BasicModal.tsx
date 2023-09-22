@@ -79,13 +79,27 @@ export default function BasicModal({ onClose }: ModalProps) {
 
   // 폼 제출 핸들러
   const handleSubmit = () => {
-    // formData를 서버로 전송
+    // TODO : 입력된 프로필 데이터 + 토큰 가지고 회원가입
+    // Order : axios로 로그인(요청) -> Oauth로그인후 첫로그인이면 flag=false 와 함께 첫프로필 모달 호출(응답)
+    //                             -> flag=true 만 돌아오고 다음페이지 접근가능(응답)
+
     console.log(formData);
+
+    // axios
+    //   .get('http://localhost:8080/login/회원가입시킬메서드')
+    //   .then((response) => {
+    //     // 서버로부터의 응답 처리
+    //     console.log(response.data);
+    //     <Modal />;
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   };
 
   const cancelSubmit = () => {
-    // formData를 서버로 전송
     console.log('회원가입 안함');
+    return handleClose();
   };
 
   return (

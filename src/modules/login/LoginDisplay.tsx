@@ -22,7 +22,6 @@ function LoginDisplay() {
   const navigate = useNavigate();
 
   const goLogin = () => {
-    console.log('nono');
     navigate('/survey/main');
   };
 
