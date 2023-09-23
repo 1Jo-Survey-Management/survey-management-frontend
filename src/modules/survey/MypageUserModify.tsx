@@ -15,8 +15,9 @@ function MypageUserModify() {
   const [imagePreview, setImagePreview] = useState<string | null>(
     '/broken-image.jpg'
   );
+  const [nickname, setNickname] = useState('');
 
-  const userNo = 3; // 사용자 번호
+  const userNo = 3;
 
   const navigate = useNavigate();
 
@@ -46,7 +47,7 @@ function MypageUserModify() {
 
       try {
         // 이미지 업로드 API 호출
-        const response = await axios.put(
+        const imageResponse = await axios.put(
           `http://localhost:8000/api/users/${userNo}/image`,
           formData,
           {
@@ -56,20 +57,22 @@ function MypageUserModify() {
           }
         );
 
-        if (response.data.success) {
+        if (imageResponse.data.success) {
           console.log('이미지 업로드 성공');
-          alert('이미지가 성공적으로 수정되었습니다.'); // 이미지 수정 성공 알림
+          alert('이미지가 성공적으로 수정되었습니다.');
           setSelectedFile(null);
 
           // 이미지 업로드 후 이미지 미리보기 업데이트
-          const imageResponse = await axios.get(
+          const updatedImageResponse = await axios.get(
             `http://localhost:8000/api/users/${userNo}`
           );
 
-          if (imageResponse.data.data) {
-            setImagePreview(`http://localhost:8000/${imageResponse.data.data}`);
+          if (updatedImageResponse.data.data) {
+            setImagePreview(
+              `http://localhost:8000/${updatedImageResponse.data.data}`
+            );
           } else {
-            setImagePreview('/broken-image.jpg'); // 이미지가 없으면 기본 이미지로 설정
+            setImagePreview('/broken-image.jpg');
           }
         } else {
           console.error('이미지 업로드 실패');
@@ -77,6 +80,47 @@ function MypageUserModify() {
       } catch (error) {
         console.error('이미지 업로드 오류:', error);
       }
+    }
+  };
+
+  // 리액트 코드
+  const updateNickname = async () => {
+    if (nickname) {
+      try {
+        const requestBody = {
+          userNo,
+          userNickName: nickname,
+        };
+
+        // 닉네임 수정 API 호출
+        const nicknameResponse = await axios.put(
+          `http://localhost:8000/api/users/${userNo}/nickname`,
+          requestBody // 수정한 닉네임을 요청에 포함
+        );
+
+        if (nicknameResponse.data.success) {
+          console.log('닉네임 수정 성공');
+          alert('닉네임이 성공적으로 수정되었습니다.');
+          setNickname('');
+        } else {
+          console.error('닉네임 수정 실패');
+        }
+      } catch (error) {
+        console.error('닉네임 수정 오류:', error);
+      }
+    }
+  };
+
+  const uploadImageAndNickname = async () => {
+    if (selectedFile || nickname) {
+      if (selectedFile) {
+        await uploadImage(); // 이미지 업로드 호출
+      }
+      if (nickname) {
+        await updateNickname(); // 닉네임 수정 호출
+      }
+    } else {
+      alert('이미지 또는 닉네임을 입력하세요.');
     }
   };
 
@@ -134,9 +178,11 @@ function MypageUserModify() {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
                 endAdornment={
                   <InputAdornment position="end">
-                    <Button>확인</Button>
+                    <Button onClick={updateNickname}>확인</Button>
                   </InputAdornment>
                 }
                 label="Password"
@@ -156,7 +202,7 @@ function MypageUserModify() {
               height: 40,
               border: '1px solid white',
             }}
-            onClick={uploadImage}
+            onClick={uploadImageAndNickname}
           >
             수정하기
           </Button>
