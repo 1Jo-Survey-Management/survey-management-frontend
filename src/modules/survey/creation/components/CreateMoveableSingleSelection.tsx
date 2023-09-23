@@ -85,6 +85,7 @@ function CreateMoveableSingleSelection({
     const addSelection: SelectionProps = {
       questionId: question.questionId,
       selectionId: new Date().getTime(),
+      questionMoveId: questions.indexOf(question) + 2,
       selectionValue: '',
       isMoveable: true,
     };
@@ -133,14 +134,18 @@ function CreateMoveableSingleSelection({
     const questionIndex: number = questions.indexOf(question);
     const selectionIndex: number = question.selections.indexOf(changeSelection);
 
-    let changedQuestionMoveId: number = questionIndex + 1;
+    let changedQuestionMoveId: number = questionIndex + 2;
 
     if (selectedValue === END_OF_SURVEY) {
-      changedQuestionMoveId = question.selections.length;
+      changedQuestionMoveId = questions.length;
     } else if (selectedValue === NEXT_QUESTION) {
-      changedQuestionMoveId = questionIndex + 1;
+      changedQuestionMoveId = questionIndex + 2;
     } else {
-      changedQuestionMoveId = Number(event.target.value);
+      // changedQuestionMoveId = Number(event.target.value);
+      const selectedQuestionMoveId = Number(selectedValue);
+      if (selectedQuestionMoveId > changedQuestionMoveId) {
+        changedQuestionMoveId = selectedQuestionMoveId;
+      }
     }
 
     const updateSelections: SelectionProps[] = [...question.selections];
@@ -225,16 +230,21 @@ function CreateMoveableSingleSelection({
               <FormControl sx={{ minWidth: '200px' }}>
                 <Select
                   id="demo-simple-select"
-                  value={NEXT_QUESTION}
+                  value={selection.questionMoveId?.toString()}
                   onChange={(event: SelectChangeEvent) =>
                     handelSetQuestionNumber(selection, event)
                   }
                 >
-                  {questions.map((que, questionIndex) => (
-                    <MenuItem key={que.questionId} value={questionIndex + 1}>
-                      {questionIndex + 1}번
-                    </MenuItem>
-                  ))}
+                  {questions
+                    .slice(questions.indexOf(question) + 1) // 현재 인덱스 이후의 항목만 선택
+                    .map((que, queIndex) => (
+                      <MenuItem
+                        key={que.questionId}
+                        value={questions.indexOf(question) + queIndex + 2}
+                      >
+                        {questions.indexOf(question) + queIndex + 2}번
+                      </MenuItem>
+                    ))}
                   <MenuItem value={NEXT_QUESTION}>다음 문항</MenuItem>
                   <MenuItem value={END_OF_SURVEY}>종료</MenuItem>
                 </Select>

@@ -4,16 +4,19 @@ export interface SurveyInfoProps {
   surveyId: number;
   surveyInfoId: number;
   surveyTitle: string;
-  surveyImage: string;
   surveyTags: string[];
   surveyClosingAt: string;
-  openStatus: string;
+  openStatusNo: number;
   surveyDescription: string;
+  surveyStatusNo: number;
+  surveyPostAt?: string;
+  userNo: string | null;
 }
 
 export interface CreateSurveyInfoProps {
   surveyInfo: SurveyInfoProps;
   setSurveyInfo: React.Dispatch<React.SetStateAction<SurveyInfoProps>>;
+  setSurveyImage: React.Dispatch<React.SetStateAction<File | undefined>>;
 }
 
 export interface SelectionProps {

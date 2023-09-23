@@ -56,6 +56,7 @@ const tagNames = ['일상', '업무', '공지', '중요', '기타'];
 function CreateSurveyInfo({
   surveyInfo,
   setSurveyInfo,
+  setSurveyImage,
 }: CreateSurveyInfoProps) {
   const [selectedImage, setSelectedImage] = useState<string>('');
 
@@ -102,6 +103,8 @@ function CreateSurveyInfo({
     const uploadFile = event.target.files && event.target.files[0];
     if (uploadFile) {
       const imageUrl: string = URL.createObjectURL(uploadFile);
+
+      setSurveyImage(uploadFile);
       setSelectedImage(imageUrl);
     }
   };
@@ -182,14 +185,14 @@ function CreateSurveyInfo({
           input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
           renderValue={(selectedValue) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selectedValue.map((value) => (
-                <Chip key={value} label={value} />
+              {selectedValue.map((value, index) => (
+                <Chip key={value} label={tagNames[index]} />
               ))}
             </Box>
           )}
         >
-          {tagNames.map((tag) => (
-            <MenuItem key={tag} value={tag}>
+          {tagNames.map((tag, index) => (
+            <MenuItem key={tag} value={index + 1}>
               {tag}
             </MenuItem>
           ))}
@@ -201,7 +204,7 @@ function CreateSurveyInfo({
   const surveyDescription = (
     <Box sx={styles.surveyDescriptionBox}>
       <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
-        문항 설명
+        설문 설명
       </Typography>
       <Input
         placeholder="문항 설명을 입력해주세요."
@@ -220,14 +223,14 @@ function CreateSurveyInfo({
         <Select
           labelId="openStatus-select-label"
           id="openStatus-select"
-          value={surveyInfo.openStatus}
-          name="openStatus"
+          value={surveyInfo.openStatusNo.toString()}
+          name="openStatusNo"
           label="공개 여부"
           onChange={handleOpenStatusChange}
         >
-          <MenuItem value="전체공개">전체공개</MenuItem>
-          <MenuItem value="회원공개">회원공개</MenuItem>
-          <MenuItem value="비공개">비공개</MenuItem>
+          <MenuItem value={1}>전체공개</MenuItem>
+          <MenuItem value={2}>회원공개</MenuItem>
+          <MenuItem value={3}>비공개</MenuItem>
         </Select>
       </FormControl>
     </Box>

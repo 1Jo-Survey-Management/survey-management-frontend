@@ -102,8 +102,11 @@ function CreateQuestion({
     };
 
     if (value === '2') {
+      const currentQuestionIndex = questions.indexOf(question);
+
       defaultSelection = {
         ...defaultSelection,
+        questionMoveId: currentQuestionIndex + 2,
         isMoveable: true,
       };
     }
