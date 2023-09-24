@@ -1,5 +1,6 @@
-// import axios from 'axios';
+import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Modal from './modal/BasicModal';
 
 /**
@@ -10,6 +11,7 @@ import Modal from './modal/BasicModal';
 function LoginNaver() {
   const [isHovered, setIsHovered] = useState(false);
   const [isModaled, setIsModaled] = useState(false);
+  const navigate = useNavigate();
 
   const getImageSrc = () =>
     isHovered
@@ -17,22 +19,25 @@ function LoginNaver() {
       : `${process.env.PUBLIC_URL}/naverButton.png`;
 
   const handleNaverLogin = () => {
-    window.location.href = 'http://localhost:8080/oauth2.0/authorize/naver';
+    window.location.href = '';
 
     console.log(`모달있는곳${isModaled}`);
 
     // setIsModaled(true);
 
     // axios
-    //   .get('http://localhost:8080/login/log')
+    //   .get('http://localhost:8080/login/oauth2/code/naver1')
     //   .then((response) => {
     //     // 서버로부터의 응답 처리
-    //     console.log(response.data);
-    //     <Modal />;
+    //     console.log(response.data);       
+    //     navigate('/survey/main'); 
+ 
     //   })
     //   .catch((error) => {
     //     console.error(error);
     //   });
+
+      
   };
 
   return (
