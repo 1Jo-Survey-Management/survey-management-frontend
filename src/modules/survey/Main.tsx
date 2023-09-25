@@ -6,35 +6,40 @@ import axios from 'axios';
 function Main() {
   const test = () => {
     window.location.href = 'http://localhost:8080/logout';
-
-    
-
   };
 
   // OAuth 2.0 토큰
-const accessToken = ''; // 획득한 토큰을 여기에 설정
+  // const accessToken = ''; // 획득한 토큰을 여기에 설정
 
-// Axios 요청 설정
-const config = {
-  headers: {
-    'Authorization': `Bearer ${accessToken}`,
-  },
-};
+  // // Axios 요청 설정
+  // const config = {
+  //   headers: {
+  //     Authorization: `Bearer ${accessToken}`,
+  //   },
+  // };
 
+  const test2 = () => {
+    const accessToken = '';
 
-const test2 = () => {
-  axios
-    .post('http://localhost:8080/login/go', {
-      // POST 요청으로 보낼 데이터를 여기에 추가
-    })
-    .then((response) => {
-      // 서버로부터의 응답 처리
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
+    axios
+      .post('http://localhost:8080/login/go', null, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => {
+        // 서버로부터의 응답 처리
+        const respData = response.data;
+        console.log(`돌아오는 토큰 : ${respData}`);
+
+        if (respData === '') {
+          console.log('돌아오는 토큰 없담마');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <Container maxWidth="md">
