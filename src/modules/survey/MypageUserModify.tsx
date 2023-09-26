@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
@@ -24,12 +24,39 @@ function MypageUserModify() {
   const [isNicknameEmpty, setIsNicknameEmpty] = useState(true);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
 
+  const [userData, setUserData] = useState({
+    userNickname: '',
+    userImage: '',
+  });
+
   console.log(`닉네임 체크 여부: ${nicknameCheckResult}`);
   console.log(`isNicknameEmpty: ${isNicknameEmpty}`);
 
-  const userNo = 3;
+  const userNo = 2;
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/users/${userNo}`
+        );
+
+        if (response.status === 200) {
+          const { userNickname, userImage } = response.data;
+          const imageURL = `http://localhost:3000/images/${userImage
+            .split('\\')
+            .pop()}`;
+          setUserData({ userNickname, userImage });
+          setImagePreview(imageURL);
+        }
+      } catch (error) {
+        console.error('유저 정보 불러오기 오류: ', error);
+      }
+    };
+    fetchUserData();
+  }, [userNo]);
 
   const goBack = () => {
     navigate('/survey/main');
@@ -54,6 +81,7 @@ function MypageUserModify() {
     if (selectedFile) {
       const formData = new FormData();
       formData.append('file', selectedFile);
+      console.log('셀렉티드 파일:', selectedFile);
 
       try {
         const imageResponse = await axios.put(
@@ -67,21 +95,22 @@ function MypageUserModify() {
         );
 
         if (imageResponse.data.success) {
-          console.log('이미지 업로드 성공');
-          alert('이미지가 성공적으로 수정되었습니다.');
-          setSelectedFile(null);
-
-          const updatedImageResponse = await axios.get(
+          const response = await axios.get(
             `http://localhost:8000/api/users/${userNo}`
           );
 
-          if (updatedImageResponse.data.data) {
-            setImagePreview(
-              `http://localhost:8000/${updatedImageResponse.data.data}`
-            );
-          } else {
-            setImagePreview('/broken-image.jpg');
-          }
+          const imageBox = response.data.userImage;
+
+          const imageURL = `http://localhost:3000/images/${imageBox
+            .split('\\')
+            .pop()}`;
+
+          setImagePreview(imageURL);
+
+          console.log('이미지 업로드 성공');
+          alert('이미지가 성공적으로 수정되었습니다.');
+
+          setSelectedFile(null);
         } else {
           console.error('이미지 업로드 실패');
         }
@@ -134,7 +163,6 @@ function MypageUserModify() {
     }
   };
 
-  // 리액트 코드
   const updateNickname = async () => {
     if (nickname) {
       try {
@@ -151,6 +179,7 @@ function MypageUserModify() {
         if (nicknameResponse.data.success) {
           console.log('닉네임 수정 성공');
           alert('닉네임이 성공적으로 수정되었습니다.');
+          setUserData({ ...userData, userNickname: nickname });
           setNickname('');
         } else {
           console.error('닉네임 수정 실패');
@@ -162,10 +191,7 @@ function MypageUserModify() {
   };
 
   const uploadImageAndNickname = async () => {
-    if (
-      (selectedFile && isNicknameChecked) ||
-      (nickname && isNicknameChecked)
-    ) {
+    if ((selectedFile && isNicknameEmpty) || (nickname && isNicknameChecked)) {
       if (selectedFile) {
         await uploadImage();
       }
@@ -179,25 +205,59 @@ function MypageUserModify() {
 
   return (
     <Container maxWidth="md">
-      <h1>회원 정보 수정</h1>
+      <h1
+        style={{
+          fontSize: '25px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        회원 정보 수정
+      </h1>
 
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'space-around',
           width: '100%',
-          height: 600,
+          height: 500,
         }}
       >
-        <p className="profile-modify-title">Your Profile Picture</p>
-        <div className="profile-modify-img-area">
+        <p
+          className="profile-modify-title"
+          style={{
+            fontWeight: 600,
+            width: '100%',
+            height: '25px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin: 0,
+          }}
+        >
+          Your Profile Picture
+        </p>
+        <div
+          className="profile-modify-img-area"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            width: '265px',
+            height: '200px',
+            backgroundColor: '#ebebeb',
+            borderRadius: '20px',
+          }}
+        >
           <Avatar
             src={imagePreview || undefined}
             sx={{
-              width: 100,
-              height: 100,
+              width: 120,
+              height: 120,
             }}
           />
           <Button
@@ -207,8 +267,9 @@ function MypageUserModify() {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              width: 90,
-              height: 40,
+              width: 80,
+              height: 35,
+              fontWeight: 600,
               border: '1px solid white',
             }}
             onClick={openFileInput}
@@ -226,18 +287,17 @@ function MypageUserModify() {
         <TextField
           disabled
           id="filled-disabled"
-          label="Nickname"
-          defaultValue="Hello World"
+          label={userData.userNickname}
           variant="filled"
           sx={{
-            width: '265px',
+            width: '30ch',
           }}
         />
         <div className="profile-modify-input">
           <div className="input-container">
             <FormControl sx={{ m: 1, width: '30ch' }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-                변경할 닉네임
+                변경할 닉네임을 입력
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
@@ -248,17 +308,31 @@ function MypageUserModify() {
                     <Button
                       onClick={handleNicknameCheck}
                       disabled={isNicknameEmpty}
+                      sx={{
+                        fontSize: '16px',
+                      }}
                     >
                       확인
                     </Button>
                   </InputAdornment>
                 }
                 label="Password"
+                sx={{
+                  height: '55px',
+                }}
               />
             </FormControl>
           </div>
         </div>
-        <div className="profile-modify-button">
+        <div
+          className="profile-modify-button"
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '265px',
+          }}
+        >
           <Button
             variant="contained"
             disableElevation
@@ -269,9 +343,13 @@ function MypageUserModify() {
               width: 120,
               height: 40,
               border: '1px solid white',
+              fontWeight: 600,
             }}
             onClick={uploadImageAndNickname}
-            disabled={!selectedFile && (isNicknameEmpty || !isNicknameChecked)}
+            disabled={
+              (!selectedFile && isNicknameEmpty) ||
+              (!isNicknameEmpty && !isNicknameChecked)
+            }
           >
             수정하기
           </Button>
@@ -285,10 +363,11 @@ function MypageUserModify() {
               width: 120,
               height: 40,
               border: '1px solid white',
+              fontWeight: 600,
             }}
             onClick={goBack}
           >
-            돌아가기
+            취소
           </Button>
         </div>
       </Box>
