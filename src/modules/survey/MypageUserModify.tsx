@@ -7,8 +7,9 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 function MypageUserModify() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -16,6 +17,15 @@ function MypageUserModify() {
     '/broken-image.jpg'
   );
   const [nickname, setNickname] = useState('');
+  const [nicknameCheckResult, setNicknameCheckResult] = useState<string | null>(
+    ''
+  );
+
+  const [isNicknameEmpty, setIsNicknameEmpty] = useState(true);
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+
+  console.log(`닉네임 체크 여부: ${nicknameCheckResult}`);
+  console.log(`isNicknameEmpty: ${isNicknameEmpty}`);
 
   const userNo = 3;
 
@@ -46,7 +56,6 @@ function MypageUserModify() {
       formData.append('file', selectedFile);
 
       try {
-        // 이미지 업로드 API 호출
         const imageResponse = await axios.put(
           `http://localhost:8000/api/users/${userNo}/image`,
           formData,
@@ -62,7 +71,6 @@ function MypageUserModify() {
           alert('이미지가 성공적으로 수정되었습니다.');
           setSelectedFile(null);
 
-          // 이미지 업로드 후 이미지 미리보기 업데이트
           const updatedImageResponse = await axios.get(
             `http://localhost:8000/api/users/${userNo}`
           );
@@ -83,19 +91,61 @@ function MypageUserModify() {
     }
   };
 
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setNickname(value);
+    setIsNicknameEmpty(value.trim() === '');
+    setIsNicknameChecked(false);
+    console.log(`nickname: ${value}`);
+  };
+
+  const handleNicknameCheck = async () => {
+    if (nickname.trim() === '') {
+      alert('닉네임을 입력하세요.');
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/api/users/check-duplicate-nickname`,
+        { userNickname: nickname }
+      );
+
+      if (response.status === 200) {
+        if (response.data === 'Nickname is available') {
+          setNicknameCheckResult('사용 가능한 닉네임입니다.');
+          setIsNicknameChecked(true);
+          window.alert('사용 가능한 닉네임입니다.');
+          setIsNicknameEmpty(false);
+        } else {
+          setNicknameCheckResult('이미 사용 중인 닉네임입니다.');
+          setIsNicknameChecked(false);
+          window.alert('이미 사용 중인 닉네임입니다.');
+        }
+      }
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        if (error.response && error.response.status === 409) {
+          setNicknameCheckResult('이미 사용 중인 닉네임입니다.');
+          window.alert('이미 사용 중인 닉네임입니다.');
+          setIsNicknameChecked(false);
+        }
+      }
+    }
+  };
+
   // 리액트 코드
   const updateNickname = async () => {
     if (nickname) {
       try {
         const requestBody = {
           userNo,
-          userNickName: nickname,
+          userNickname: nickname,
         };
 
-        // 닉네임 수정 API 호출
         const nicknameResponse = await axios.put(
           `http://localhost:8000/api/users/${userNo}/nickname`,
-          requestBody // 수정한 닉네임을 요청에 포함
+          requestBody
         );
 
         if (nicknameResponse.data.success) {
@@ -112,15 +162,18 @@ function MypageUserModify() {
   };
 
   const uploadImageAndNickname = async () => {
-    if (selectedFile || nickname) {
+    if (
+      (selectedFile && isNicknameChecked) ||
+      (nickname && isNicknameChecked)
+    ) {
       if (selectedFile) {
-        await uploadImage(); // 이미지 업로드 호출
+        await uploadImage();
       }
       if (nickname) {
-        await updateNickname(); // 닉네임 수정 호출
+        await updateNickname();
       }
     } else {
-      alert('이미지 또는 닉네임을 입력하세요.');
+      alert('업로드 또는 확인 버튼을 누르고 수정을 눌러주세요.');
     }
   };
 
@@ -170,6 +223,16 @@ function MypageUserModify() {
             onChange={handleFileSelect}
           />
         </div>
+        <TextField
+          disabled
+          id="filled-disabled"
+          label="Nickname"
+          defaultValue="Hello World"
+          variant="filled"
+          sx={{
+            width: '265px',
+          }}
+        />
         <div className="profile-modify-input">
           <div className="input-container">
             <FormControl sx={{ m: 1, width: '30ch' }} variant="outlined">
@@ -179,10 +242,15 @@ function MypageUserModify() {
               <OutlinedInput
                 id="outlined-adornment-password"
                 value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
+                onChange={handleNicknameChange}
                 endAdornment={
                   <InputAdornment position="end">
-                    <Button onClick={updateNickname}>확인</Button>
+                    <Button
+                      onClick={handleNicknameCheck}
+                      disabled={isNicknameEmpty}
+                    >
+                      확인
+                    </Button>
                   </InputAdornment>
                 }
                 label="Password"
@@ -203,6 +271,7 @@ function MypageUserModify() {
               border: '1px solid white',
             }}
             onClick={uploadImageAndNickname}
+            disabled={!selectedFile && (isNicknameEmpty || !isNicknameChecked)}
           >
             수정하기
           </Button>
