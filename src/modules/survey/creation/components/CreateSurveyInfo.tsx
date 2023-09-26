@@ -64,7 +64,9 @@ function CreateSurveyInfo({
   const oneWeekLater = new Date(today);
   oneWeekLater.setDate(oneWeekLater.getDate() + 7);
 
-  const todayFormatted = today.toISOString().split('T')[0];
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const tomorrowFormatted = tomorrow.toISOString().split('T')[0];
   const oneWeekLaterFormatted = oneWeekLater.toISOString().split('T')[0];
 
   useEffect(() => {
@@ -284,7 +286,7 @@ function CreateSurveyInfo({
             name="surveyClosingAt"
             value={surveyInfo.surveyClosingAt}
             inputProps={{
-              min: todayFormatted,
+              min: tomorrowFormatted,
             }}
             onChange={handleSurveyInfoInputChange}
           />
