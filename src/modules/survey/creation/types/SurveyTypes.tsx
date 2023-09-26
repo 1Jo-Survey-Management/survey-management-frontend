@@ -31,7 +31,7 @@ export interface QuestionProps {
   surveyId: number;
   questionId: number;
   questionTitle: string;
-  questionDescription: string;
+  questionDescription?: string;
   questionRequired: boolean;
   questionType: string;
   selections: SelectionProps[];
