@@ -3,13 +3,14 @@
  * @author 김선규
  */
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
-// import axios from 'axios';
 import Logo from './img/SurveyLogo.png';
 import LoginFig from './img/LoginFig.png';
 import LoginNaver from './LoginNaver';
+import axios from 'axios';
 
 const emptyBoxSimple = {
   height: 20,
@@ -20,6 +21,23 @@ const emptyBoxSimple = {
  */
 function LoginDisplay() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // URL에서 'accessToken' 파라미터 추출
+    const searchParams = new URLSearchParams(location.search);
+    const accessToken = searchParams.get('accessToken');
+
+    // 추출한 accessToken을 사용하거나 상태(state)에 저장할 수 있습니다.
+    if (accessToken) {
+      console.log('AccessToken:', accessToken);
+      
+      // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
+		axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+
+    }
+  }, [location]);
+
 
   const goLogin = () => {
     navigate('/survey/main');
