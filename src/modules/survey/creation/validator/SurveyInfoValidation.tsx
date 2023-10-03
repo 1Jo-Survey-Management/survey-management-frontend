@@ -67,7 +67,7 @@ export default class SurveyInfoValidation {
     openStatusNo: number,
     surveyDescription: string,
     surveyStatusNo: number,
-    userNo: string
+    userNo: string | null
   ) {
     this.surveyId = surveyId;
     this.surveyInfoId = surveyInfoId;
