@@ -5,17 +5,9 @@ import Typography from '@mui/material/Typography';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 
-/**
- * 메뉴탭이 있는 Layout의 Header입니다.
- * @returns Header
- */
 function Header() {
-  const navigate = useNavigate();
   const location = useLocation();
-  // 현재 경로가 '/'이면 로그아웃 버튼을 숨깁니다.
-  const isHomePage = location.pathname === '/';
-
-  console.log(`헤더에서 여기 어디${location.pathname}`);
+  const navigate = useNavigate();
 
   const goMypage = () => {
     console.log('mypage');
@@ -26,6 +18,11 @@ function Header() {
     console.log('logout');
     navigate('/');
   };
+
+  // 현재 경로가 '/'이면 로그아웃 버튼을 숨깁니다.
+  const isHomePage = location.pathname === '/';
+
+  console.log(`헤더에서 여기 어디${location.pathname}`);
 
   return (
     <AppBar position="static">
