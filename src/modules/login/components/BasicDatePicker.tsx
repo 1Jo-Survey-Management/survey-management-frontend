@@ -20,12 +20,13 @@ export default function ResponsiveDatePickers({
 }: InputBirthDateProps) {
   // const [selectedDateString, setSelectedDateString] = useState('');
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(
-    dayjs('2022-12-05')
+    dayjs('')
   );
 
   const handleDateChange = (date: dayjs.Dayjs | null) => {
     if (date === null) {
       // null 값인 경우에 대한 처리
+      setSelectedDate(date);
       console.log('No date selected');
     } else if (dayjs.isDayjs(date)) {
       // dayjs 객체인 경우 Date 객체로 변환 후 처리

@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 // import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import axios from 'axios';
 import RadioButton from '../components/RowRadioButtonsGroup';
 import InputNickName from '../components/NameInput';
 import GetBirth from '../components/BasicDatePicker';
@@ -38,9 +39,9 @@ interface ModalProps {
 }
 
 interface FormData {
-  birth: string;
-  nickName: string;
-  radioValue: string;
+  userBirth: string;
+  userNickname: string;
+  userGender: string;
 }
 
 /**
@@ -52,22 +53,22 @@ interface FormData {
 export default function BasicModal({ onClose }: ModalProps) {
   const [open, setOpen] = useState(true);
   const [formData, setFormData] = useState<FormData>({
-    nickName: '',
-    radioValue: '',
-    birth: '',
+    userNickname: '',
+    userGender: '',
+    userBirth: '',
   });
 
   // 각 입력 필드에 대한 데이터 업데이트 함수
   const handleNickNameChange = (value: string) => {
-    setFormData({ ...formData, nickName: value });
+    setFormData({ ...formData, userNickname: value });
   };
 
   const handleRadioChange = (value: string) => {
-    setFormData({ ...formData, radioValue: value });
+    setFormData({ ...formData, userGender: value });
   };
 
   const handleBirthChange = (value: string) => {
-    setFormData({ ...formData, birth: value });
+    setFormData({ ...formData, userBirth: value });
   };
 
   const handleClose = () => {
@@ -77,17 +78,52 @@ export default function BasicModal({ onClose }: ModalProps) {
 
   console.log(open);
 
-  // 폼 제출 핸들러
+  // 회원가입 API 요청
   const handleSubmit = () => {
-    // TODO : 입력된 프로필 데이터 + 토큰 가지고 회원가입
-    // Order : axios로 로그인(요청) -> Oauth로그인후 첫로그인이면 flag=false 와 함께 첫프로필 모달 호출(응답)
-    //                             -> flag=true 만 돌아오고 다음페이지 접근가능(응답)
+    if (
+      formData.userNickname === '' ||
+      formData.userBirth === '' ||
+      formData.userGender === ''
+    ) {
+      console.log('하나라도 비어있으면 안돼');
+    } else {
+      // 모두 적합하게 적었으니 회원가입 Axios 요청
 
-    console.log(formData);
+      // formData 객체를 JSON 형태로 변환
+      const formDataJSON = JSON.stringify(formData);
+
+      axios
+        .post('http://localhost:8080/login/regist', formDataJSON, {
+          headers: {
+            'Content-Type': 'application/json', // JSON 데이터 전송을 위한 헤더 설정
+          },
+        })
+        .then((response) => {
+          // 서버로부터의 응답 처리
+          const respData = response.data;
+          console.log(`API 요청 : ${respData}`);
+
+          if (respData === '') {
+            console.log('API 요청 실패');
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+      console.log(formData);
+    }
   };
 
   const cancelSubmit = () => {
     console.log('회원가입 안함');
+
+    // 여기에다 회원가입 안하면 안된다는 모달 띄움
+    // 그 모달에서도 취소하면 토큰 취소하고 브라우저의 로그인 쿠키도 삭제
+
+    // 회원가입 취소하면 회원가입하기 위해 만들어 두었던 데이터베이스 폼도 요청보내서 삭제
+    // 발급 받았던 액세스 토큰도 삭제할 수 있으면 삭제
+
     return handleClose();
   };
 

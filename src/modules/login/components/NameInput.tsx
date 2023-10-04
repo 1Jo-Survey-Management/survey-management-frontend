@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { useState, ChangeEvent } from 'react';
 import Box from '@mui/material/Box';
-// import FilledInput from '@mui/material/FilledInput';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
-// import OutlinedInput from '@mui/material/OutlinedInput';
 
 interface InputNickNameProps {
   onChange: (value: string) => void;
@@ -19,11 +17,20 @@ interface InputNickNameProps {
  */
 export default function ComposedTextField({ onChange }: InputNickNameProps) {
   const [nickName, setNickName] = useState('');
+  const [error, setError] = useState(true);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setNickName(value);
-    onChange(value); // 데이터 변경 함수 호출하여 값 전달
+
+    // validation 체크 (예: 닉네임이 비어 있는지 확인)
+    if (value.trim() === '' || value.trim() === null) {
+      setError(true); // 에러 발생
+      onChange(value); // 데이터 변경 함수 호출하여 값 전달
+    } else {
+      onChange(value); // 데이터 변경 함수 호출하여 값 전달
+      setError(false); // 에러 해제
+    }
   };
 
   return (
@@ -35,11 +42,6 @@ export default function ComposedTextField({ onChange }: InputNickNameProps) {
       noValidate
       autoComplete="off"
     >
-      {/* <FormControl variant="standard">
-        <InputLabel htmlFor="component-simple">Name</InputLabel>
-        <Input id="component-simple" defaultValue="Composed TextField" />
-      </FormControl> */}
-
       <FormControl variant="standard">
         <InputLabel htmlFor="component-helper">닉네임</InputLabel>
         <Input
@@ -47,38 +49,19 @@ export default function ComposedTextField({ onChange }: InputNickNameProps) {
           aria-describedby="component-helper-text"
           value={nickName}
           onChange={handleInputChange}
+          error={error} // 에러 상태에 따라 스타일을 변경
         />
-        <FormHelperText id="component-helper-text">
-          이쁘게 적어보세요. 예를 들면 타노스
-        </FormHelperText>
+        {error && (
+          <FormHelperText id="component-helper-text" error>
+            닉네임을 입력하세요.
+          </FormHelperText>
+        )}
+        {!error && (
+          <FormHelperText id="component-helper-text">
+            이쁘게 적어보세요. 예를 들면 타노스
+          </FormHelperText>
+        )}
       </FormControl>
-
-      {/* <FormControl disabled variant="standard">
-        <InputLabel htmlFor="component-disabled">Name</InputLabel>
-        <Input id="component-disabled" defaultValue="Composed TextField" />
-        <FormHelperText>Disabled</FormHelperText>
-      </FormControl>
-      <FormControl error variant="standard">
-        <InputLabel htmlFor="component-error">Name</InputLabel>
-        <Input
-          id="component-error"
-          defaultValue="Composed TextField"
-          aria-describedby="component-error-text"
-        />
-        <FormHelperText id="component-error-text">Error</FormHelperText>
-      </FormControl>
-      <FormControl>
-        <InputLabel htmlFor="component-outlined">Name</InputLabel>
-        <OutlinedInput
-          id="component-outlined"
-          defaultValue="Composed TextField"
-          label="Name"
-        />
-      </FormControl>
-      <FormControl variant="filled">
-        <InputLabel htmlFor="component-filled">Name</InputLabel>
-        <FilledInput id="component-filled" defaultValue="Composed TextField" />
-      </FormControl> */}
     </Box>
   );
 }
