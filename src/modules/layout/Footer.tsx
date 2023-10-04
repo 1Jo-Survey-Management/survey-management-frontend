@@ -13,7 +13,7 @@ function Footer() {
         width: '100%', // 전체 화면 너비
         height: 100,
         backgroundColor: (theme) => theme.palette.primary.main, // 배경색 설정
-        marginTop: '500px', // 헤더와의 간격을 조절할 수 있습니다.
+        // marginTop: '500px', // 헤더와의 간격을 조절할 수 있습니다.
       }}
     >
       {/* Footer 내용 */}

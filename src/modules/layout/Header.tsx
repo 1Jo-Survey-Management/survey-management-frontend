@@ -13,10 +13,6 @@ function Header() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const goMypage = () => {
-    navigate('/survey/Mypage');
-  };
-
   const goMain = () => {
     navigate('/survey/main');
   };

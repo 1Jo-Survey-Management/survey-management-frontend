@@ -1,10 +1,12 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 export default function FloatingActionButtons() {
+  const navigate = useNavigate();
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -38,7 +40,11 @@ export default function FloatingActionButtons() {
       >
         <ArrowDropUpIcon />
       </Fab>
-      <Fab sx={styles.fabStyles} color="primary">
+      <Fab
+        sx={styles.fabStyles}
+        color="primary"
+        onClick={() => navigate('/survey/')}
+      >
         <AddIcon />
       </Fab>
     </Box>

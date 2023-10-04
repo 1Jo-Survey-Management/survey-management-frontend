@@ -11,7 +11,6 @@ export default function Layout() {
       <CssBaseline />
       <Header />
       <Body />
-      <Footer />
     </>
   );
 }

@@ -9,8 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
-import '../../../global.css';
-
+import '.global.css';
 import {
   Button,
   Card,
@@ -22,9 +21,8 @@ import {
   Modal,
   Fade,
 } from '@mui/material';
-import GroupsIcon from '@mui/icons-material/Groups';
+import FaceIcon from '@mui/icons-material/Face';
 import { useNavigate } from 'react-router-dom';
-
 type CardData = {
   surveyNo: number;
   surveyTitle: string;
@@ -36,7 +34,7 @@ type CardData = {
   userImage: string;
   surveyStatusName: string;
   openStatusName: string;
-  tag: Array<string>;
+  tag: string;
   surveyAttendCount: number;
   isDeleted: boolean;
   // 기타 카드에 필요한 속성들을 추가로 정의
@@ -60,44 +58,19 @@ function SurveySearch() {
         return 'default';
     }
   };
-
   const fontFamily = "'Noto Sans KR', sans-serif";
   const textStyle = {
     fontFamily: fontFamily,
   };
+
   const [cardList, setCardList] = useState<CardData[]>([]);
   useEffect(() => {
     const data = async () => {
       const card = await axios.get('http://localhost:8080/survey/surveyall');
-
+      console.log(card);
       setCardList(card.data);
-      setFilteredData(card.data);
-      console.log(card.data);
     };
     data();
-  }, []);
-
-  useEffect(() => {
-    const sortedCardData = [...cardList].sort((a, b) => {
-      // 날짜 형식을 startDate 객체로 변환
-      const dateA = new Date(a.surveyPostAt.replace('~', ''));
-      const dateB = new Date(b.surveyPostAt.replace('~', ''));
-
-      if (a.surveyStatusName === '마감' && b.surveyStatusName !== '마감') {
-        return 1; // a가 "마감"이고 b가 "마감"이 아닌 경우, a가 b보다 뒤에 위치
-      }
-      if (a.surveyStatusName !== '마감' && b.surveyStatusName === '마감') {
-        return -1; // a가 "마감"이 아니고 b가 "마감"인 경우, a가 b보다 앞에 위치
-      }
-
-      // startDate 객체를 비교하여 정렬
-      if (dateA === dateB) {
-        return 0;
-      }
-      return dateA < dateB ? -1 : 1;
-    });
-
-    setFilteredData(sortedCardData);
   }, []);
 
   const handleSearchOptionChange = (
@@ -116,8 +89,7 @@ function SurveySearch() {
         searchOptions.some((option) => card.tag.includes(option));
       const includesSearchTerm =
         card.surveyTitle.includes(searchTerm) ||
-        card.userNickName.includes(searchTerm) ||
-        card.tag.includes(searchTerm);
+        card.userNickName.includes(searchTerm);
       const matchesState =
         selectedState === '전체(모든 카드)' ||
         card.surveyStatusName === selectedState;
@@ -125,13 +97,7 @@ function SurveySearch() {
       return includesOption && includesSearchTerm && matchesState;
     });
 
-    // "마감" 상태를 선택한 경우 "진행" 상태인 카드를 필터링에서 제외
-    const filteredWithoutInProgress =
-      selectedState === '마감'
-        ? filtered.filter((card) => card.surveyStatusName !== '진행')
-        : filtered;
-
-    const sortedCardData = [...filteredWithoutInProgress].sort((a, b) => {
+    const sortedCardData = [...filtered].sort((a, b) => {
       const dateA = new Date(a.surveyPostAt).getTime();
       const dateB = new Date(b.surveyPostAt).getTime();
 
@@ -143,6 +109,7 @@ function SurveySearch() {
 
     setFilteredData(sortedCardData);
   };
+
   const openCardModal = (card: CardData) => {
     setSelectedCard(card);
     setOpenModal(true);
@@ -220,13 +187,12 @@ function SurveySearch() {
           }}
         >
           <MenuItem value="전체(모든 카드)">전체</MenuItem>
-          <MenuItem value="진행">진행</MenuItem>
-          <MenuItem value="작성">작성</MenuItem>
+          <MenuItem value="진행">진행중</MenuItem>
+          <MenuItem value="작성">작성중</MenuItem>
           <MenuItem value="마감">마감</MenuItem>
         </Select>
 
         <Button
-          style={textStyle}
           variant="outlined"
           sx={{
             height: '35px',
@@ -239,14 +205,13 @@ function SurveySearch() {
 
             // 모든 카드 데이터로 필터링 초기화
             const sortedCardData = [...cardList].sort((a, b) => {
-              const dateA = a.surveyPostAt;
-              const dateB = b.surveyPostAt;
+              const dateA = new Date(a.surveyPostAt).getTime();
+              const dateB = new Date(b.surveyPostAt).getTime();
 
-              // 문자열로 된 날짜를 직접 비교
               if (dateA === dateB) {
                 return 0;
               }
-              return dateA < dateB ? -1 : 1;
+              return dateA > dateB ? -1 : 1;
             });
 
             setFilteredData(sortedCardData);
@@ -276,16 +241,11 @@ function SurveySearch() {
           >
             {/* 카드를 클릭하면 해당 카드 정보를 전달하여 모달 열기 */}
             <Card
-              variant="outlined"
               sx={{
                 minWidth: 100,
                 maxWidth: 150,
                 minHeight: 80,
-                border: 2,
-                borderColor: '#BCBCBC',
-                borderRadius: 5,
               }}
-              style={textStyle}
             >
               <CardContent
                 sx={{
@@ -301,14 +261,14 @@ function SurveySearch() {
                 >
                   <Chip
                     icon={
-                      <GroupsIcon
+                      <FaceIcon
                         sx={{
                           fontSize: '15px',
                         }}
                       />
                     }
                     label={card.surveyAttendCount}
-                    // variant="outlined"
+                    variant="outlined"
                     sx={{
                       fontSize: '12px',
                       width: '60px',
@@ -316,13 +276,11 @@ function SurveySearch() {
                       fontWeight: 600,
                       justifyContent: 'space-between',
                     }}
-                    style={textStyle}
                   />
 
                   <Chip
                     label={card.surveyStatusName}
                     color={getChipColor(card.surveyStatusName)} // 상태에 따른 색상 사용
-                    variant="outlined"
                     sx={{
                       width: '50px',
                       height: '20px',
@@ -345,10 +303,9 @@ function SurveySearch() {
                     color: 'text.secondary',
                     marginBottom: '10px',
                     fontWeight: 600,
-                    fontFamily: fontFamily,
                   }}
                 >
-                  {card.surveyClosingAt.slice(0, 10)}
+                  {card.surveyPostAt}
                 </div>
                 <Typography
                   variant="h5"
@@ -359,20 +316,6 @@ function SurveySearch() {
                     marginBottom: '8px',
                     cursor: 'pointer',
                   }}
-                  style={textStyle}
-                >
-                  {card.surveyNo}
-                </Typography>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{
-                    fontSize: 18,
-                    fontWeight: 600,
-                    marginBottom: '8px',
-                    cursor: 'pointer',
-                  }}
-                  style={textStyle}
                 >
                   {card.surveyTitle}
                 </Typography>
@@ -395,12 +338,14 @@ function SurveySearch() {
                       marginRight: '8px',
                     },
                   }}
-                  style={textStyle}
                 >
-                  {card.tag &&
-                    card.tag.map((tag, index) => (
-                      <span key={index}>#{tag}</span>
-                    ))}
+                  {card.tag}
+                  {/* {card.tag.map((tag, index, array) => (
+                    <React.Fragment key={tag}>
+                      {tag}
+                      {index !== array.length - 1 && ', '}
+                    </React.Fragment>
+                  ))} */}
                 </Typography>
               </CardContent>
             </Card>
@@ -431,25 +376,21 @@ function SurveySearch() {
               textAlign: 'center',
             }}
           >
-            <h2 id="modal-title" style={textStyle}>
+            <h2 id="modal-title">
               {selectedCard ? selectedCard.surveyTitle : ''}
             </h2>
-            <p style={textStyle}>
+            <p>
               날짜:
-              {selectedCard ? selectedCard.surveyPostAt.slice(0, 10) : ''}~{' '}
-              {selectedCard ? selectedCard.surveyClosingAt.slice(0, 10) : ''}
+              {selectedCard ? selectedCard.surveyPostAt : ''}~{' '}
+              {selectedCard ? selectedCard.surveyClosingAt : ''}
             </p>
 
-            <p style={textStyle}>
-              작성자: {selectedCard ? selectedCard.userNickName : ''}
-            </p>
-            <p style={textStyle}>
-              태그: {selectedCard ? selectedCard.tag : ''}
-            </p>
-            <p style={textStyle}>
+            <p>작성자: {selectedCard ? selectedCard.userNickName : ''}</p>
+            <p>태그: {selectedCard ? selectedCard.tag : ''}</p>
+            <p>
               참석자 수: {selectedCard ? selectedCard.surveyAttendCount : ''}
             </p>
-            <p id="modal-description" style={textStyle}>
+            <p id="modal-description">
               {selectedCard ? selectedCard.surveyDiscription : ''}
             </p>
             <Button onClick={closeCardModal}>닫기</Button>

@@ -17,9 +17,15 @@
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@types/swiper": "^6.0.0",
+    "axios": "^1.5.0",
+    "axobject-query": "^4.0.0",
     "create-react-app": "^5.0.1",
+    "date-fns": "^2.30.0",
+    "emoji-regex": "^10.2.1",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-intersection-observer": "^9.5.2",
     "react-router-dom": "^6.15.0",
     "styled-components": "^5.3.11",
     "swiper": "^10.2.0",
@@ -65,7 +71,6 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^3.0.3",
-    "react-scripts": "^5.0.1",
     "typescript": "^5.2.2"
   }
 }
