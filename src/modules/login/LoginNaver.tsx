@@ -23,19 +23,6 @@ function LoginNaver() {
       'https://nid.naver.com/oauth2.0/authorize?client_id=ukwEecKhMrJzOdjwpJfB&response_type=code&redirect_uri=http://localhost:8080/login/oauth2/code/naver';
 
     console.log(`모달있는곳${isModaled}`);
-
-    // setIsModaled(true);
-
-    // axios
-    //   .get('http://localhost:8080/')
-    //   .then((response) => {
-    //     // 서버로부터의 응답 처리
-    //     console.log(response.data);
-    //     // navigate('/survey/main');
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
   };
 
   return (

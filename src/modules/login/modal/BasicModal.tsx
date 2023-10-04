@@ -84,17 +84,6 @@ export default function BasicModal({ onClose }: ModalProps) {
     //                             -> flag=true 만 돌아오고 다음페이지 접근가능(응답)
 
     console.log(formData);
-
-    // axios
-    //   .get('http://localhost:8080/login/회원가입시킬메서드')
-    //   .then((response) => {
-    //     // 서버로부터의 응답 처리
-    //     console.log(response.data);
-    //     <Modal />;
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
   };
 
   const cancelSubmit = () => {
