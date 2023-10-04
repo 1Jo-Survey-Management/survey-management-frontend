@@ -2,6 +2,7 @@ import * as React from 'react';
 import SurveyMain from '../survey/Main';
 import LoginDisplay from '../login/LoginDisplay';
 import Mypage from '../survey/Mypage';
+// import CreationSurvey from '../survey/creation/routers/CreateationSurvey';
 
 /**
  * 각 페이지에 대한 라우팅 경로 설정입니다
@@ -17,6 +18,9 @@ export const routeInfo = (path: string) => {
       return <LoginDisplay />;
     case '/survey/Mypage':
       return <Mypage />;
+    // case '/survey/register':
+    //   return <CreationSurvey />;
+
     default:
       return <LoginDisplay />;
   }
