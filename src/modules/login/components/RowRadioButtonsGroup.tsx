@@ -48,13 +48,6 @@ export default function RowRadioButtonsGroup({ onChange }: InputGenderProps) {
           label="여"
           checked={gender === 'female'}
         />
-
-        {/* <FormControlLabel
-          value="disabled"
-          disabled
-          control={<Radio />}
-          label="other"
-        /> */}
       </RadioGroup>
     </FormControl>
   );

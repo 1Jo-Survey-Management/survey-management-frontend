@@ -61,14 +61,6 @@ export default function ResponsiveDatePickers({
             onChange={handleDateChange}
           />
         </DemoItem>
-        {/* <DemoItem label="Mobile variant">
-          <MobileDatePicker defaultValue={dayjs('2022-04-17
-          ')} />
-        </DemoItem> */}
-
-        {/* <DemoItem label="Static variant">
-          <StaticDatePicker defaultValue={dayjs('2022-04-17')} />
-        </DemoItem> */}
       </DemoContainer>
     </LocalizationProvider>
   );

@@ -2,10 +2,10 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
-type ColorButtonsProps = {
+interface ColorButtonsProps {
   buttonText: string;
   onClick?: () => void;
-};
+}
 
 const defaultProps: Partial<ColorButtonsProps> = {
   onClick: () => {}, // 아무 동작도 하지 않는 기본 콜백 함수를 설정
@@ -32,8 +32,6 @@ export default function StyledButton({
       <Button variant="text" onClick={handleClick}>
         {buttonText}
       </Button>
-      {/* <Button variant="contained">{ buttonText }</Button>
-      <Button variant="outlined">{ buttonText }</Button> */}
     </Stack>
   );
 }
