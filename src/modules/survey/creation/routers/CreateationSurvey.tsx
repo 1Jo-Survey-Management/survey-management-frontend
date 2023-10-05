@@ -291,7 +291,9 @@ function CreationSurvey() {
       return questionValidationCheck;
     }
 
-    questionValidationCheck = await validationSelection(selectionsArray);
+    if (selectionsArray.length > 0) {
+      questionValidationCheck = await validationSelection(selectionsArray);
+    }
 
     await Promise.all([
       questionValidationPromise,
