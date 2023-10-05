@@ -3,6 +3,16 @@ import React, { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 import Modal from './modal/BasicModal';
 
+const buttonStyle = {
+  border: 'none',
+  background: 'none',
+  cursor: 'pointer',
+};
+
+const imageStyle = {
+  width: '40%',
+};
+
 /**
  * 네이버 OAuth 로그인
  * @author 김선규
@@ -32,9 +42,9 @@ function LoginNaver() {
         onClick={handleNaverLogin}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        style={{ border: 'none', background: 'none', cursor: 'pointer' }}
+        style={buttonStyle}
       >
-        <img src={getImageSrc()} style={{ width: '40%' }} alt="대체_텍스트" />
+        <img src={getImageSrc()} style={imageStyle} alt="대체_텍스트" />
       </button>
       {isModaled && <Modal onClose={() => setIsModaled(false)} />}
     </div>

@@ -17,6 +17,53 @@ const emptyBoxSimple = {
   height: 20,
 };
 
+const emptyBox = {
+  height: '50px',
+};
+
+const basicBox = {
+  display: 'flex',
+  position: 'absolute',
+  width: '100%',
+  height: '100%',
+  backgroundImage: `url(${LoginFig})`,
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat',
+  alignItems: 'center',
+  textAlign: 'center',
+  justifyContent: 'center',
+};
+
+const secBasicBox = {
+  width: 550,
+  height: 400,
+  backgroundColor: '#C2E9FF',
+  borderRadius: '10px',
+};
+
+const loginBox = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
+const imageSx = {
+  width: '50px',
+  marginRight: '10px',
+};
+
+const naverloginButton = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
+const guestLogin = {
+  position: 'relative',
+  color: '#9E9E9E',
+};
+
 /**
  * @returns LoginDispay
  */
@@ -43,53 +90,16 @@ function LoginDisplay() {
     }
   }, [location]);
 
-  // const closeModal = () => {
-  //   // 모달을 닫기 위해 상태를 업데이트합니다.
-  //   setShowModal(false);
-  // };
-
   const goLogin = () => {
     navigate('/survey/main');
   };
 
   return (
-    <Box
-      component="div"
-      sx={{
-        display: 'flex',
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        backgroundImage: `url(${LoginFig})`,
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        alignItems: 'center',
-        textAlign: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Box
-        sx={{
-          width: 550,
-          height: 400,
-          backgroundColor: '#C2E9FF',
-          borderRadius: '10px',
-        }}
-      >
+    <Box component="div" sx={basicBox}>
+      <Box sx={secBasicBox}>
         <Box sx={emptyBoxSimple}> </Box>
-        <Box
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <img
-            src={`${Logo}`}
-            style={{ width: '50px', marginRight: '10px' }}
-            alt="로고사라짐ㅠ"
-          />
+        <Box sx={loginBox}>
+          <img src={`${Logo}`} style={imageSx} alt="로고사라짐ㅠ" />
           <h1 style={{ position: 'relative', color: '#9E9E9E' }}>
             {' '}
             NoName Survey
@@ -99,27 +109,18 @@ function LoginDisplay() {
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={emptyBoxSimple}> </Box>
-        <Box
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <Box sx={naverloginButton}>
           <LoginNaver />
 
           {showModal && <Modal onClose={() => {}} />}
         </Box>
 
-        <Box style={{ height: '50px' }} />
+        <Box sx={emptyBox} />
 
         <h2 style={{ position: 'relative', marginBottom: '1px' }}>
           Nice to See you Again
         </h2>
-        <Button
-          style={{ position: 'relative', color: '#9E9E9E' }}
-          onClick={goLogin}
-        >
+        <Button sx={guestLogin} onClick={goLogin}>
           비회원으로 로그인
         </Button>
       </Box>
