@@ -23,20 +23,26 @@ export default class SelectionValidation {
   selectionValue: string;
 
   @IsNotEmpty({ message: '선택지 이동여부는 필수 입력사항입니다.' })
-  @IsBoolean({ message: '선택지 이동여부는 Boolean 타입이어야 합니다.' })
+  @IsBoolean({ message: '선택지 이동여부는 boolean 타입이어야 합니다.' })
   isMoveable: boolean;
+
+  @IsNotEmpty({ message: '종료 여부는 필수 입력사항 입니다.' })
+  @IsBoolean({ message: '종료 여부는 boolean 타입이어야 합니다.' })
+  isEndOfSurvey: boolean;
 
   constructor(
     questionId: number,
     selectionId: number,
     selectionValue: string,
     isMoveable: boolean,
+    isEndOfSurvey: boolean,
     questionMoveId?: number
   ) {
     this.questionId = questionId;
     this.selectionId = selectionId;
     this.selectionValue = selectionValue;
     this.isMoveable = isMoveable;
+    this.isEndOfSurvey = isEndOfSurvey;
     this.questionMoveId = questionMoveId;
   }
 }

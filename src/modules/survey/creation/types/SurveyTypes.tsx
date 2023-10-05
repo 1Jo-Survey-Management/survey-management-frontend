@@ -25,6 +25,7 @@ export interface SelectionProps {
   questionMoveId?: number;
   selectionValue: string;
   isMoveable: boolean;
+  isEndOfSurvey: boolean;
 }
 
 export interface QuestionProps {

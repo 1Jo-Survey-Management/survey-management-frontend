@@ -56,7 +56,7 @@ export default class SurveyInfoValidation {
 
   @IsNotEmpty({ message: '사용자 번호는 필수 입력사항입니다.' })
   @IsString({ message: '사용자 번호는 문자열이어야 합니다.' })
-  userNo: string | null;
+  userNo: string;
 
   constructor(
     surveyId: number,
@@ -67,7 +67,7 @@ export default class SurveyInfoValidation {
     openStatusNo: number,
     surveyDescription: string,
     surveyStatusNo: number,
-    userNo: string | null
+    userNo: string
   ) {
     this.surveyId = surveyId;
     this.surveyInfoId = surveyInfoId;
