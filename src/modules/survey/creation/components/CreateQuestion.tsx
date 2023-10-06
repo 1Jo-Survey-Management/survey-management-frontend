@@ -84,7 +84,7 @@ const styles = {
 function CreateQuestion({
   question,
   questions,
-  setQuestions, // selections,
+  setQuestions,
 }: CreateQuestionProps) {
   /**
    * 셀렉박스의 선택에 따라 문항 타입을 랜더링하기 위한 메서드입니다.
@@ -99,16 +99,24 @@ function CreateQuestion({
       selectionId: new Date().getTime(),
       selectionValue: '',
       isMoveable: false,
+      isEndOfSurvey: false,
     };
 
     if (value === '2') {
       const currentQuestionIndex = questions.indexOf(question);
 
-      defaultSelection = {
-        ...defaultSelection,
-        questionMoveId: currentQuestionIndex + 2,
-        isMoveable: true,
-      };
+      if (questions.length - 1 !== currentQuestionIndex) {
+        defaultSelection = {
+          ...defaultSelection,
+          questionMoveId: currentQuestionIndex + 2,
+          isMoveable: true,
+        };
+      } else {
+        defaultSelection = {
+          ...defaultSelection,
+          isMoveable: true,
+        };
+      }
     }
 
     const updateQuestions: QuestionProps[] = questions.map((prevQuestion) => {

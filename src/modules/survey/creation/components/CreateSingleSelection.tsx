@@ -74,6 +74,7 @@ function CreateSingleSelection({
       selectionId: new Date().getTime(),
       selectionValue: '',
       isMoveable: false,
+      isEndOfSurvey: false,
     };
 
     const updatedQuestion: QuestionProps = {
