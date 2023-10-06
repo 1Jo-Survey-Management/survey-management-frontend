@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 // import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import RadioButton from '../components/RowRadioButtonsGroup';
 import InputNickName from '../components/NameInput';
 import GetBirth from '../components/BasicDatePicker';
@@ -51,6 +53,8 @@ interface FormData {
  * @returns
  */
 export default function BasicModal({ onClose }: ModalProps) {
+  const navigate = useNavigate();
+
   const [open, setOpen] = useState(true);
   const [formData, setFormData] = useState<FormData>({
     userNickname: '',
@@ -87,13 +91,15 @@ export default function BasicModal({ onClose }: ModalProps) {
     ) {
       console.log('하나라도 비어있으면 안돼');
     } else {
-      // 모두 적합하게 적었으니 회원가입 Axios 요청
-
-      // formData 객체를 JSON 형태로 변환
-      const formDataJSON = JSON.stringify(formData);
-
+      // formData 객체를 UserInfo 객체로 변환
+      const userInfo = {
+        userNickname: formData.userNickname,
+        userBirth: formData.userBirth,
+        userGender: formData.userGender,
+        // 나머지 필드도 필요에 따라 추가
+      };
       axios
-        .post('http://localhost:8080/login/regist', formDataJSON, {
+        .post('http://localhost:8080/login/regist', userInfo, {
           headers: {
             'Content-Type': 'application/json', // JSON 데이터 전송을 위한 헤더 설정
           },
@@ -101,17 +107,19 @@ export default function BasicModal({ onClose }: ModalProps) {
         .then((response) => {
           // 서버로부터의 응답 처리
           const respData = response.data;
-          console.log(`API 요청 : ${respData}`);
+          console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
 
           if (respData === '') {
             console.log('API 요청 실패');
           }
+
+          navigate(
+            `/survey/main?accessToken=${respData.content.accessToken}&&userNo=${respData.content.userNo}`
+          );
         })
         .catch((error) => {
           console.error(error);
         });
-
-      console.log(formData);
     }
   };
 
@@ -123,7 +131,6 @@ export default function BasicModal({ onClose }: ModalProps) {
 
     // 회원가입 취소하면 회원가입하기 위해 만들어 두었던 데이터베이스 폼도 요청보내서 삭제
     // 발급 받았던 액세스 토큰도 삭제할 수 있으면 삭제
-
     return handleClose();
   };
 

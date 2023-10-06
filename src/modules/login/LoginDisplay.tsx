@@ -11,7 +11,8 @@ import axios from 'axios';
 import Logo from './img/SurveyLogo.png';
 import LoginFig from './img/LoginFig.png';
 import LoginNaver from './LoginNaver';
-import Modal from './modal/BasicModal';
+// import Modal from './modal/BasicModal';
+import BasicModal from './modal/BasicModal';
 
 const emptyBoxSimple = {
   height: 20,
@@ -99,7 +100,7 @@ function LoginDisplay() {
       <Box sx={secBasicBox}>
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={loginBox}>
-          <img src={`${Logo}`} style={imageSx} alt="로고사라짐ㅠ" />
+          <img src={`${Logo}`} style={imageSx} alt="not Logo" />
           <h1 style={{ position: 'relative', color: '#9E9E9E' }}>
             {' '}
             NoName Survey
@@ -112,7 +113,7 @@ function LoginDisplay() {
         <Box sx={naverloginButton}>
           <LoginNaver />
 
-          {showModal && <Modal onClose={() => {}} />}
+          {showModal && <BasicModal onClose={() => {}} />}
         </Box>
 
         <Box sx={emptyBox} />

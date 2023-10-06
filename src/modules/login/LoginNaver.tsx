@@ -1,7 +1,8 @@
 // import axios from 'axios';
+import axios from 'axios';
 import React, { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
-import Modal from './modal/BasicModal';
+// import Modal from './modal/BasicModal';
 
 const buttonStyle = {
   border: 'none',
@@ -20,7 +21,7 @@ const imageStyle = {
  */
 function LoginNaver() {
   const [isHovered, setIsHovered] = useState(false);
-  const [isModaled, setIsModaled] = useState(false);
+  const [isClientId, setIsClientId] = useState('');
   // const navigate = useNavigate();
 
   const getImageSrc = () =>
@@ -29,10 +30,44 @@ function LoginNaver() {
       : `${process.env.PUBLIC_URL}/naverButton.png`;
 
   const handleNaverLogin = () => {
-    window.location.href =
-      'https://nid.naver.com/oauth2.0/authorize?client_id=ukwEecKhMrJzOdjwpJfB&response_type=code&redirect_uri=http://localhost:8080/login/oauth2/code/naver';
+    // window.location.href =
+    //   'https://nid.naver.com/oauth2.0/authorize?client_id=ukwEecKhMrJzOdjwpJfB&response_type=code&redirect_uri=http://localhost:8080/login/oauth2/code/naver';
 
-    console.log(`모달있는곳${isModaled}`);
+    axios
+      .post('http://localhost:8080/login/oauth2/code/naver/call')
+      .then((response) => {
+        // 서버로부터의 응답 처리
+        const respData = response.data;
+        console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
+        setIsClientId(`${respData.content}`);
+
+        console.log(`클라이언트아이디 : ${isClientId}`);
+
+        if (respData === '') {
+          console.log('API 요청 실패');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    axios
+      .post('http://localhost:8080/login/oauth2/code/naver/accessback')
+      .then((response) => {
+        // 서버로부터의 응답 처리
+        const respData = response.data;
+        console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
+        setIsClientId(`${respData.content}`);
+
+        console.log(`클라이언트아이디 : ${isClientId}`);
+
+        if (respData === '') {
+          console.log('API 요청 실패');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -46,7 +81,7 @@ function LoginNaver() {
       >
         <img src={getImageSrc()} style={imageStyle} alt="대체_텍스트" />
       </button>
-      {isModaled && <Modal onClose={() => setIsModaled(false)} />}
+      {/* {isModaled && <Modal onClose={() => setIsModaled(false)} />} */}
     </div>
   );
 }

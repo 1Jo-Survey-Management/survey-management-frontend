@@ -16,6 +16,8 @@ function Main() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // 회원이 존재했을때 url parm 검사 해서 토큰, 유저번호 있으면 axois 헤더 default 설정해줌
+  // (보안이슈) 아무 토큰과 번호를 url로 입력해서 프론트 서버 url로 접근시 보안 불가
   useEffect(() => {
     // URL에서 'accessToken' 파라미터 추출
     const searchParams = new URLSearchParams(location.search);
