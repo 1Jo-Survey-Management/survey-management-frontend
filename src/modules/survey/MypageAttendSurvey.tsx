@@ -32,7 +32,7 @@ type CardData = {
   surveyClosingAt: string;
   surveyPostAt: string;
   openStatusNo: number;
-  writer: string;
+  userNickname: string;
 };
 
 function getStatusText(surveyStatusNo: number) {
@@ -89,7 +89,7 @@ function Mypage() {
 
   const fetchCardData = () => {
     axios
-      .get(`http://localhost:8000/api/my-surveys/${userNo}/write-surveys`)
+      .get(`http://localhost:8000/api/my-surveys/${userNo}/attend-surveys`)
       .then((response) => {
         const cardData: CardData[] = response.data.content;
 
@@ -186,7 +186,7 @@ function Mypage() {
           fontSize: '25px',
         }}
       >
-        내가 작성한 설문 목록
+        내가 참여한 설문 목록
       </h1>
 
       <Box
@@ -387,6 +387,15 @@ function Mypage() {
                     </React.Fragment>
                   ))}
                 </Typography>
+                <Typography
+                  sx={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    paddingTop: '12px',
+                  }}
+                >
+                  작성자: {card.userNickname}
+                </Typography>
               </CardContent>
             </Card>
           </div>
@@ -430,6 +439,7 @@ function Mypage() {
                 : ''}
             </p>
 
+            <p>작성자: {selectedCard ? selectedCard.userNickname : ''}</p>
             <p>태그: {selectedCard ? selectedCard.tagNames.join(', ') : ''}</p>
             <p>참석자 수: {selectedCard ? selectedCard.attendeeCount : ''}</p>
             <p id="modal-description">

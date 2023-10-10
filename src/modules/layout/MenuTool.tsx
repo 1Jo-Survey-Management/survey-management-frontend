@@ -10,10 +10,8 @@ import TextField from '@mui/material/TextField';
 
 function MenuTool() {
   const navigate = useNavigate();
-  // 메뉴의 열림/닫힘 상태를 관리하는 상태 변수
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  // 메뉴를 열기 위한 함수
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -22,7 +20,6 @@ function MenuTool() {
     setAnchorEl(null);
   };
 
-  // 메뉴를 닫기 위한 함수
   const handleMenuCloseGoWriteSurvey = () => {
     setAnchorEl(null);
     navigate('/survey/MypageWrite');
@@ -30,7 +27,7 @@ function MenuTool() {
 
   const handleMenuCloseGoPartySurvey = () => {
     setAnchorEl(null);
-    navigate('/survey/MypageParty');
+    navigate('/survey/MypageAttend');
   };
 
   const handleMenuCloseGoMypageModify = () => {
@@ -44,15 +41,14 @@ function MenuTool() {
         size="large"
         color="inherit"
         aria-label="menu"
-        onClick={handleMenuOpen} // IconButton 클릭 시 메뉴 열기
+        onClick={handleMenuOpen}
       >
         <MenuIcon />
       </IconButton>
-      {/* 메뉴 컴포넌트 */}
       <Menu
         anchorEl={anchorEl}
-        open={Boolean(anchorEl)} // anchorEl이 존재할 때 메뉴가 열립니다.
-        onClose={handleMenuClose} // 메뉴 닫기
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
       >
         <div className="avatar-area">
           <Avatar
@@ -74,7 +70,6 @@ function MenuTool() {
             variant="standard"
           />
         </div>
-        {/* 메뉴 아이템 */}
         <div className="menu-item-area">
           <MenuItem
             onClick={handleMenuCloseGoWriteSurvey}

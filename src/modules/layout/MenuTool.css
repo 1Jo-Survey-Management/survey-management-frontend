@@ -1,6 +1,5 @@
 .css-6hp17o-MuiList-root-MuiMenu-list {
   width: 300px;
-  /* height: 600px; */
 }
 
 .avatar-area {
@@ -10,8 +9,6 @@
 
   width: 100%;
   height: 150px;
-
-  background-color: aqua;
 }
 
 .nickname-input {
@@ -32,6 +29,4 @@
 
   width: 100%;
   height: 300px;
-
-  background-color: aquamarine;
 }

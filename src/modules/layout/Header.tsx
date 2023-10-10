@@ -13,36 +13,24 @@ function Header() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // const goMypage = () => {
-  //   console.log("mypage");
-  // };
-
   const goMain = () => {
-    // console.log("main");
     navigate('/survey/main');
   };
 
   const logout = () => {
-    // console.log("logout");
     navigate('/');
   };
 
-  // 현재 경로가 '/'이면 로그아웃 버튼을 숨깁니다.
   const isHomePage = location.pathname === '/';
-
-  // console.log(`헤더에서 여기 어디${  location.pathname}`);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <MenuTool /> {/* MenuTool 컴포넌트를 렌더링 */}
+          <MenuTool />
           <Typography variant="h6" onClick={goMain}>
             Logo survey
           </Typography>
-          {/* <Button onClick={goMypage} color="inherit">
-            마이페이지
-          </Button> */}
           {isHomePage ? null : (
             <Button onClick={logout} color="inherit">
               로그아웃

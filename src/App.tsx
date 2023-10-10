@@ -8,7 +8,6 @@ function App() {
     <Router>
       <Routes>
         <Route path="*" element={<Layout />} />
-        {/* 다른 라우트에 대한 설정 추가 */}
       </Routes>
     </Router>
   );
