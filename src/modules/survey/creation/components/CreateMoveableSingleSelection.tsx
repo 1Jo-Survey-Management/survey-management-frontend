@@ -15,6 +15,7 @@ import {
   QuestionProps,
   SelectionProps,
 } from '../types/SurveyTypes';
+import { CREATE_NEXT_QUESTION_INDEX } from '../constant/SurveyCreationConstant';
 
 const primaryColor = '#3f50b5';
 
@@ -44,7 +45,6 @@ const styles = {
 
 const NEXT_QUESTION: string = 'nextQuestion';
 const END_OF_SURVEY: string = 'endOfSurvey';
-const NEXT_QUESTION_INDEX: number = 2;
 
 /**
  * 선택지에 따른 문항 이동이 가능한 선택지를 만드는 컴포넌트 입니다.
@@ -86,7 +86,7 @@ function CreateMoveableSingleSelection({
     const addSelection: SelectionProps = {
       questionId: question.questionId,
       selectionId: new Date().getTime(),
-      questionMoveId: questions.indexOf(question) + NEXT_QUESTION_INDEX,
+      questionMoveId: questions.indexOf(question) + CREATE_NEXT_QUESTION_INDEX,
       selectionValue: '',
       isMoveable: true,
       isEndOfSurvey: false,
@@ -154,10 +154,11 @@ function CreateMoveableSingleSelection({
       return;
     }
 
-    let changedQuestionMoveId: number = questionIndex + NEXT_QUESTION_INDEX;
+    let changedQuestionMoveId: number =
+      questionIndex + CREATE_NEXT_QUESTION_INDEX;
 
     if (selectedValue === NEXT_QUESTION) {
-      changedQuestionMoveId = questionIndex + NEXT_QUESTION_INDEX;
+      changedQuestionMoveId = questionIndex + CREATE_NEXT_QUESTION_INDEX;
     } else {
       const selectedQuestionMoveId = Number(selectedValue);
       if (selectedQuestionMoveId > changedQuestionMoveId) {

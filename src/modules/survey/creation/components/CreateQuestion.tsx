@@ -27,6 +27,7 @@ import {
   SelectionProps,
 } from '../types/SurveyTypes';
 import CreateMoveableSingleSelection from './CreateMoveableSingleSelection';
+import { CREATE_NEXT_QUESTION_INDEX } from '../constant/SurveyCreationConstant';
 
 const styles = {
   dragIndicatorBox: {
@@ -84,7 +85,7 @@ const styles = {
 function CreateQuestion({
   question,
   questions,
-  setQuestions,
+  setQuestions, // selections,
 }: CreateQuestionProps) {
   /**
    * 셀렉박스의 선택에 따라 문항 타입을 랜더링하기 위한 메서드입니다.
@@ -105,18 +106,11 @@ function CreateQuestion({
     if (value === '2') {
       const currentQuestionIndex = questions.indexOf(question);
 
-      if (questions.length - 1 !== currentQuestionIndex) {
-        defaultSelection = {
-          ...defaultSelection,
-          questionMoveId: currentQuestionIndex + 2,
-          isMoveable: true,
-        };
-      } else {
-        defaultSelection = {
-          ...defaultSelection,
-          isMoveable: true,
-        };
-      }
+      defaultSelection = {
+        ...defaultSelection,
+        questionMoveId: currentQuestionIndex + CREATE_NEXT_QUESTION_INDEX,
+        isMoveable: true,
+      };
     }
 
     const updateQuestions: QuestionProps[] = questions.map((prevQuestion) => {
