@@ -1,7 +1,6 @@
 import Container from '@mui/material/Container';
 import Floating from './components/Floating';
-import SurveyCard from './components/Card';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputBase from '@mui/material/InputBase';
@@ -9,9 +8,8 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
-import { useInView } from 'react-intersection-observer';
 import '../../../global.css';
-
+import InfiniteScroll from 'react-infinite-scroll-component';
 import {
   Button,
   Card,
@@ -40,10 +38,9 @@ type CardData = {
   tag: Array<string>;
   surveyAttendCount: number;
   isDeleted: boolean;
-  // 기타 카드에 필요한 속성들을 추가로 정의
 };
 
-function SurveySearch() {
+function SurveySearch(this: any) {
   const navigate = useNavigate();
   const [searchOptions, setSearchOptions] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -62,65 +59,70 @@ function SurveySearch() {
     }
   };
 
-  const [ref, isView] = useInView();
-  const [page, setPage] = useState(1);
-
   const fontFamily = "'Noto Sans KR', sans-serif";
   const textStyle = {
     fontFamily: fontFamily,
   };
-  const [cardList, setCardList] = useState<CardData[]>([]);
-  const getData = useCallback(async () => {
-    // 서버에서는 한 페이지당 3개의 데이터를 보내준다
-    await axios
-      .get(`http://localhost:8080/survey/surveyall?_page=${page}&_limit=3`)
-      .then((res) => {
-        // 기존 데이터에 새로 불러온 데이터를 합치고 page를 + 1시킴
-        setCardList([...res.data, ...cardList]);
-        setPage(page + 1);
-      });
-  }, [isView]);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const next = () => {
+    setPage(page + 1);
+  };
 
   useEffect(() => {
-    getData();
-  }, []);
+    const fetchData = async () => {
+      if (selectedState === '전체(모든 카드)') {
+        const response = await axios.get(
+          `http://localhost:8080/surveys/surveyall?page=${page}`
+        );
+        if (response.data.length === 0) {
+          setHasMore(false);
+          return;
+        }
+
+        if (page === 0) {
+          setFilteredData(response.data);
+        } else {
+          setFilteredData((prevData) => [...prevData, ...response.data]);
+        }
+      } else if (selectedState === '진행') {
+        const response = await axios.get(
+          `http://localhost:8080/surveys/select-post?page=${page}`
+        );
+
+        if (response.data.length === 0) {
+          setHasMore(false);
+          return;
+        }
+
+        if (page === 0) {
+          setFilteredData(response.data);
+        } else {
+          setFilteredData((prevData) => [...prevData, ...response.data]);
+        }
+      } else if (selectedState === '마감') {
+        const response = await axios.get(
+          `http://localhost:8080/surveys/select-closing?page=${page}`
+        );
+
+        if (response.data.length === 0) {
+          setHasMore(false);
+          return;
+        }
+
+        if (page === 0) {
+          setFilteredData(response.data);
+        } else {
+          setFilteredData((prevData) => [...prevData, ...response.data]);
+        }
+      }
+    };
+
+    fetchData();
+  }, [page, selectedState]);
 
   useEffect(() => {
-    if (isView) {
-      getData();
-    }
-  }, [isView]);
-  // useEffect(() => {
-  //   const data = async () => {
-  //     if (selectedState === '전체(모든 카드)') {
-  //       const card = await axios.get(`http://localhost:8080/survey/surveyall`);
-
-  //       setCardList(card.data);
-  //       setFilteredData(card.data);
-  //       console.log(card.data);
-  //     } else if (selectedState === '진행') {
-  //       const card = await axios.get(
-  //         `http://localhost:8080/survey/select-post`
-  //       );
-
-  //       setCardList(card.data);
-  //       setFilteredData(card.data);
-  //       console.log(card.data);
-  //     } else if (selectedState === '마감') {
-  //       const card = await axios.get(
-  //         `http://localhost:8080/survey/select-closing`
-  //       );
-
-  //       setCardList(card.data);
-  //       setFilteredData(card.data);
-  //       console.log(card.data);
-  //     }
-  //   };
-  //   data();
-  // }, [selectedState]);
-
-  useEffect(() => {
-    const sortedCardData = [...cardList].sort((a, b) => {
+    const sortedCardData = [...filteredData].sort((a, b) => {
       // 날짜 형식을 startDate 객체로 변환
       const dateA = new Date(a.surveyPostAt.replace('~', ''));
       const dateB = new Date(b.surveyPostAt.replace('~', ''));
@@ -151,8 +153,13 @@ function SurveySearch() {
     setSearchOptions(newValue);
   };
 
+  const removePage = () => {
+    setPage(0);
+    setHasMore(true);
+  };
+
   const handleSearch = () => {
-    const filtered = cardList.filter((card) => {
+    const filtered = filteredData.filter((card) => {
       const includesSearchTerm =
         card.surveyTitle.includes(searchTerm) ||
         card.userNickName.includes(searchTerm) ||
@@ -248,18 +255,24 @@ function SurveySearch() {
           }}
           MenuProps={{
             anchorOrigin: {
-              vertical: 'bottom', // 메뉴 박스가 Select 아래에 표시
-              horizontal: 'left', // 메뉴 박스가 Select 왼쪽에 표시
+              vertical: 'bottom',
+              horizontal: 'left',
             },
             transformOrigin: {
-              vertical: 'top', // 메뉴 박스가 메뉴 아이템 위에 표시
-              horizontal: 'left', // 메뉴 박스가 메뉴 아이템 왼쪽에 표시
+              vertical: 'top',
+              horizontal: 'left',
             },
           }}
         >
-          <MenuItem value="전체(모든 카드)">전체</MenuItem>
-          <MenuItem value="진행">진행</MenuItem>
-          <MenuItem value="마감">마감</MenuItem>
+          <MenuItem value="전체(모든 카드)" onClick={removePage}>
+            전체
+          </MenuItem>
+          <MenuItem value="진행" onClick={removePage}>
+            진행
+          </MenuItem>
+          <MenuItem value="마감" onClick={removePage}>
+            마감
+          </MenuItem>
         </Select>
 
         <Button
@@ -273,13 +286,13 @@ function SurveySearch() {
             setSearchOptions([]);
             setSearchTerm('');
             setSelectedState('전체(모든 카드)');
+            removePage;
 
             // 모든 카드 데이터로 필터링 초기화
-            const sortedCardData = [...cardList].sort((a, b) => {
+            const sortedCardData = [...filteredData].sort((a, b) => {
               const dateA = a.surveyPostAt;
               const dateB = b.surveyPostAt;
 
-              // 문자열로 된 날짜를 직접 비교
               if (dateA === dateB) {
                 return 0;
               }
@@ -294,156 +307,162 @@ function SurveySearch() {
       </div>
 
       {/* 카드 목록 */}
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'flex-start',
-          gap: '8px',
-          height: '100%',
-        }}
+      <InfiniteScroll
+        dataLength={filteredData.length}
+        next={next}
+        hasMore={hasMore}
+        loader={<h4>loading</h4>}
       >
-        {filteredData.map((card) => (
-          <div
-            key={card.surveyNo}
-            onClick={() => openCardModal(card)}
-            onKeyPress={() => openCardModal(card)}
-            role="button"
-            tabIndex={0}
-          >
-            {/* 카드를 클릭하면 해당 카드 정보를 전달하여 모달 열기 */}
-            <Card
-              variant="outlined"
-              sx={{
-                minWidth: 100,
-                maxWidth: 150,
-                minHeight: 80,
-                border: 2,
-                borderColor: '#BCBCBC',
-                borderRadius: 5,
-              }}
-              style={textStyle}
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'flex-start',
+            gap: '8px',
+            height: '100%',
+          }}
+        >
+          {filteredData.map((card) => (
+            <div
+              key={card.surveyNo}
+              onClick={() => openCardModal(card)}
+              onKeyPress={() => openCardModal(card)}
+              role="button"
+              tabIndex={0}
             >
-              <CardContent
+              {/* 카드를 클릭하면 해당 카드 정보를 전달하여 모달 열기 */}
+              <Card
+                variant="outlined"
                 sx={{
-                  padding: '8px',
-                  justifyContent: 'space-between',
+                  minWidth: 100,
+                  maxWidth: 150,
+                  minHeight: 80,
+                  border: 2,
+                  borderColor: '#BCBCBC',
+                  borderRadius: 5,
                 }}
+                style={textStyle}
               >
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  justifyContent="space-around"
-                  paddingBottom="12px"
+                <CardContent
+                  sx={{
+                    padding: '8px',
+                    justifyContent: 'space-between',
+                  }}
                 >
-                  <Chip
-                    icon={
-                      <GroupsIcon
-                        sx={{
-                          fontSize: '15px',
-                        }}
-                      />
-                    }
-                    label={card.surveyAttendCount}
-                    // variant="outlined"
-                    sx={{
-                      fontSize: '12px',
-                      width: '60px',
-                      height: '20px',
-                      fontWeight: 600,
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    justifyContent="space-around"
+                    paddingBottom="12px"
+                  >
+                    <Chip
+                      icon={
+                        <GroupsIcon
+                          sx={{
+                            fontSize: '15px',
+                          }}
+                        />
+                      }
+                      label={card.surveyAttendCount}
+                      sx={{
+                        fontSize: '12px',
+                        width: '60px',
+                        height: '20px',
+                        fontWeight: 600,
+                        justifyContent: 'space-between',
+                      }}
+                      style={textStyle}
+                    />
+
+                    <Chip
+                      label={card.surveyStatusName}
+                      color={getChipColor(card.surveyStatusName)}
+                      variant="outlined"
+                      sx={{
+                        width: '50px',
+                        height: '20px',
+                        fontSize: '10px',
+                        fontWeight: 600,
+                        '& .MuiChip-label': {
+                          padding: 0,
+                        },
+                      }}
+                      style={textStyle}
+                    />
+                  </Stack>
+                  {/* 카드 내용 */}
+                  <div
+                    style={{
+                      display: 'flex',
                       justifyContent: 'space-between',
+                      alignItems: 'center',
+                      fontSize: 12,
+                      color: 'text.secondary',
+                      marginBottom: '10px',
+                      fontWeight: 600,
+                      fontFamily: fontFamily,
+                    }}
+                  >
+                    {card.surveyClosingAt.slice(0, 10)}
+                  </div>
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    sx={{
+                      fontSize: 18,
+                      fontWeight: 600,
+                      marginBottom: '8px',
+                      cursor: 'pointer',
                     }}
                     style={textStyle}
-                  />
-
-                  <Chip
-                    label={card.surveyStatusName}
-                    color={getChipColor(card.surveyStatusName)} // 상태에 따른 색상 사용
-                    variant="outlined"
+                  >
+                    {card.surveyNo}
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    component="div"
                     sx={{
-                      width: '50px',
-                      height: '20px',
-                      fontSize: '10px',
+                      fontSize: 18,
                       fontWeight: 600,
-                      '& .MuiChip-label': {
-                        padding: 0,
+                      marginBottom: '8px',
+                      cursor: 'pointer',
+                    }}
+                    style={textStyle}
+                  >
+                    {card.surveyTitle}
+                  </Typography>
+                  {/* 작성자 표시 */}
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontSize: 11,
+                      '& > span:not(:last-child)': {
+                        marginRight: '8px',
+                      },
+                    }}
+                  />
+                  {/* 태그 등 카드에 관한 내용 표시 */}
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontSize: 11,
+                      '& > span:not(:last-child)': {
+                        marginRight: '8px',
                       },
                     }}
                     style={textStyle}
-                  />
-                </Stack>
-                {/* 카드 내용 */}
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    fontSize: 12,
-                    color: 'text.secondary',
-                    marginBottom: '10px',
-                    fontWeight: 600,
-                    fontFamily: fontFamily,
-                  }}
-                >
-                  {card.surveyClosingAt.slice(0, 10)}
-                </div>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{
-                    fontSize: 18,
-                    fontWeight: 600,
-                    marginBottom: '8px',
-                    cursor: 'pointer',
-                  }}
-                  style={textStyle}
-                >
-                  {card.surveyNo}
-                </Typography>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{
-                    fontSize: 18,
-                    fontWeight: 600,
-                    marginBottom: '8px',
-                    cursor: 'pointer',
-                  }}
-                  style={textStyle}
-                >
-                  {card.surveyTitle}
-                </Typography>
-                {/* 작성자 표시 */}
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontSize: 11,
-                    '& > span:not(:last-child)': {
-                      marginRight: '8px',
-                    },
-                  }}
-                />
-                {/* 태그 등 카드에 관한 내용 표시 */}
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontSize: 11,
-                    '& > span:not(:last-child)': {
-                      marginRight: '8px',
-                    },
-                  }}
-                  style={textStyle}
-                >
-                  {card.tag &&
-                    card.tag.map((tag, index) => (
-                      <span key={index}>#{tag}</span>
-                    ))}
-                </Typography>
-              </CardContent>
-            </Card>
-          </div>
-        ))}
-      </Box>
+                  >
+                    {card.tag &&
+                      card.tag.map((tag, index) => (
+                        <span key={index}>#{tag}</span>
+                      ))}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </div>
+          ))}
+        </Box>
+      </InfiniteScroll>
       <Modal
         open={openModal}
         onClose={closeCardModal}
@@ -489,14 +508,19 @@ function SurveySearch() {
             <p id="modal-description" style={textStyle}>
               {selectedCard ? selectedCard.surveyDiscription : ''}
             </p>
+            <Button onClick={() => navigate('/survey/Search')}>결과보기</Button>
+            <Button onClick={() => navigate('/survey/Search')}>참여하기</Button>
             <Button onClick={closeCardModal}>닫기</Button>
           </div>
         </Fade>
       </Modal>
-      <div ref={ref}></div>
+
       <Floating />
     </Container>
   );
 }
 
 export default SurveySearch;
+function fetchData() {
+  throw new Error('Function not implemented.');
+}

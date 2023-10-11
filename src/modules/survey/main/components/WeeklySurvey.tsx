@@ -1,4 +1,3 @@
-// Import Swiper React components
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -17,13 +16,8 @@ import {
   Modal,
   Fade,
 } from '@mui/material';
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import 'swiper/css/pagination';
-import 'swiper/swiper-bundle.css';
+
 import '../../../../global.css';
-// import required modules
 
 function WeeklySurvey() {
   const styles = {
@@ -55,7 +49,6 @@ function WeeklySurvey() {
     tag: Array<string>;
     surveyAttendCount: number;
     isDeleted: boolean;
-    // 기타 카드에 필요한 속성들을 추가로 정의
   };
   const [openModal, setOpenModal] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
@@ -77,7 +70,7 @@ function WeeklySurvey() {
       try {
         // weekly 데이터
         const weeklyResponse = await axios.get(
-          'http://localhost:8080/survey/weekly'
+          'http://localhost:8080/surveys/weekly'
         );
 
         if (weeklyResponse.data.length > 0) {
@@ -86,7 +79,7 @@ function WeeklySurvey() {
         } else {
           // weekly 데이터가 없으면 recent 데이터
           const recentResponse = await axios.get(
-            'http://localhost:8080/survey/recent'
+            'http://localhost:8080/surveys/recent'
           );
           setCardList(recentResponse.data);
         }
@@ -109,8 +102,8 @@ function WeeklySurvey() {
   };
 
   const swiperParams: SwiperOptions = {
-    slidesPerView: 'auto', // 한 번에 보여질 슬라이드 수
-    spaceBetween: 5, // 슬라이드 간의 간격 (옵션)
+    slidesPerView: 'auto',
+    spaceBetween: 5,
     breakpoints: {
       1050: {
         slidesPerView: 5,
@@ -118,15 +111,15 @@ function WeeklySurvey() {
       870: {
         slidesPerView: 4,
       },
-      // 화면 너비가 768px 이상일 때 3개의 슬라이드 보이기
+
       730: {
         slidesPerView: 3,
       },
-      // 화면 너비가 480px 이상 768px 미만일 때 2개의 슬라이드 보이기
+
       511: {
         slidesPerView: 2,
       },
-      // 화면 너비가 480px 미만일 때 1개의 슬라이드 보이기
+
       0: {
         slidesPerView: 1.8,
       },
@@ -187,7 +180,6 @@ function WeeklySurvey() {
                             />
                           }
                           label={card.surveyAttendCount}
-                          // variant="outlined"
                           sx={{
                             fontSize: '12px',
                             width: '60px',
@@ -198,11 +190,9 @@ function WeeklySurvey() {
                           style={textStyle}
                         />
 
-                        {/* <Stack spacing={1} alignItems="center">
-                            <Stack direction="row" spacing={1}> */}
                         <Chip
                           label={card.surveyStatusName}
-                          color={getChipColor(card.surveyStatusName)} // 상태에 따른 색상 사용
+                          color={getChipColor(card.surveyStatusName)}
                           variant="outlined"
                           sx={{
                             width: '50px',
@@ -231,6 +221,19 @@ function WeeklySurvey() {
                       >
                         {card.surveyClosingAt.slice(0, 10)}
                       </div>
+                      <Typography
+                        variant="h5"
+                        component="div"
+                        sx={{
+                          fontSize: 18,
+                          fontWeight: 600,
+                          marginBottom: '8px',
+                          cursor: 'pointer',
+                        }}
+                        style={textStyle}
+                      >
+                        {card.surveyNo}
+                      </Typography>
 
                       <Typography
                         variant="h5"
@@ -310,6 +313,8 @@ function WeeklySurvey() {
           <p id="modal-description" style={textStyle}>
             {selectedCard ? selectedCard.surveyDiscription : ''}
           </p>
+          <Button onClick={() => navigate('/survey/Search')}>결과보기</Button>
+          <Button onClick={() => navigate('/survey/Search')}>참여하기</Button>
           <Button onClick={closeCardModal}>닫기</Button>
         </div>
       </Modal>

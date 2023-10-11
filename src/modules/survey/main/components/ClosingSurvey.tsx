@@ -1,4 +1,3 @@
-// Import Swiper React components
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -17,13 +16,8 @@ import {
   Modal,
   Fade,
 } from '@mui/material';
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import 'swiper/css/pagination';
-import 'swiper/swiper-bundle.css';
+
 import '../../../../global.css';
-// import required modules
 
 function ClosingSurvey() {
   const styles = {
@@ -51,7 +45,6 @@ function ClosingSurvey() {
     tag: Array<string>;
     surveyAttendCount: number;
     isDeleted: boolean;
-    // 기타 카드에 필요한 속성들을 추가로 정의
   };
 
   const fontFamily = "'Noto Sans KR', sans-serif";
@@ -65,8 +58,8 @@ function ClosingSurvey() {
 
   useEffect(() => {
     const data = async () => {
-      const card = await axios.get('http://localhost:8080/survey/closing');
-      console.log(card);
+      const card = await axios.get('http://localhost:8080/surveys/closing');
+
       setCardList(card.data);
     };
     data();
@@ -86,7 +79,6 @@ function ClosingSurvey() {
   const openCardModal = (card: CardData) => {
     setSelectedCard(card);
     setOpenModal(true);
-    console.log(openModal);
   };
 
   const closeCardModal = () => {
@@ -95,8 +87,8 @@ function ClosingSurvey() {
   };
 
   const swiperParams: SwiperOptions = {
-    slidesPerView: 'auto', // 한 번에 보여질 슬라이드 수
-    spaceBetween: 5, // 슬라이드 간의 간격 (옵션)
+    slidesPerView: 'auto',
+    spaceBetween: 5,
     breakpoints: {
       1050: {
         slidesPerView: 5,
@@ -104,15 +96,12 @@ function ClosingSurvey() {
       870: {
         slidesPerView: 4,
       },
-      // 화면 너비가 768px 이상일 때 3개의 슬라이드 보이기
       730: {
         slidesPerView: 3,
       },
-      // 화면 너비가 480px 이상 768px 미만일 때 2개의 슬라이드 보이기
       511: {
         slidesPerView: 2,
       },
-      // 화면 너비가 480px 미만일 때 1개의 슬라이드 보이기
       0: {
         slidesPerView: 1.8,
       },
@@ -136,13 +125,12 @@ function ClosingSurvey() {
             {cardList &&
               cardList.map((card) => (
                 <div
-                  key={card.surveyNo} // 수정된 부분: 배열 인덱스 대신 고유한 값을 key로 사용
+                  key={card.surveyNo}
                   onClick={() => setOpenModal(true)}
                   onKeyPress={() => openCardModal(card)}
                   role="button"
                   tabIndex={0}
                 >
-                  {/* 카드를 클릭하면 해당 카드 정보를 전달하여 모달 열기 */}
                   <SwiperSlide style={styles.Slide}>
                     <Card
                       variant="outlined"
@@ -181,7 +169,6 @@ function ClosingSurvey() {
                               />
                             }
                             label={card.surveyAttendCount}
-                            // variant="outlined"
                             sx={{
                               fontSize: '12px',
                               width: '60px',
@@ -192,11 +179,9 @@ function ClosingSurvey() {
                             style={textStyle}
                           />
 
-                          {/* <Stack spacing={1} alignItems="center">
-                            <Stack direction="row" spacing={1}> */}
                           <Chip
                             label={card.surveyStatusName}
-                            color={getChipColor(card.surveyStatusName)} // 상태에 따른 색상 사용
+                            color={getChipColor(card.surveyStatusName)}
                             variant="outlined"
                             sx={{
                               width: '50px',
@@ -225,7 +210,19 @@ function ClosingSurvey() {
                         >
                           {card.surveyClosingAt.slice(0, 10)}
                         </div>
-
+                        <Typography
+                          variant="h5"
+                          component="div"
+                          sx={{
+                            fontSize: 18,
+                            fontWeight: 600,
+                            marginBottom: '8px',
+                            cursor: 'pointer',
+                          }}
+                          style={textStyle}
+                        >
+                          {card.surveyNo}
+                        </Typography>
                         <Typography
                           variant="h5"
                           component="div"
@@ -305,6 +302,12 @@ function ClosingSurvey() {
               <p id="modal-description">
                 {selectedCard ? selectedCard.surveyDiscription : ''}
               </p>
+              <Button onClick={() => navigate('/survey/Search')}>
+                결과보기
+              </Button>
+              <Button onClick={() => navigate('/survey/Search')}>
+                참여하기
+              </Button>
               <Button onClick={closeCardModal}>닫기</Button>
             </div>
           </Fade>

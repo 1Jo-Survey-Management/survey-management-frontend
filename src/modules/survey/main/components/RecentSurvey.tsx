@@ -74,8 +74,7 @@ function RecentSurvey() {
 
   useEffect(() => {
     const data = async () => {
-      const card = await axios.get('http://localhost:8080/survey/recent');
-      console.log(card);
+      const card = await axios.get('http://localhost:8080/surveys/recent');
       setCardList(card.data);
     };
     data();
@@ -84,7 +83,6 @@ function RecentSurvey() {
   const openCardModal = (card: CardData) => {
     setSelectedCard(card);
     setOpenModal(true);
-    console.log(openModal);
   };
 
   const closeCardModal = () => {
@@ -220,7 +218,19 @@ function RecentSurvey() {
                         >
                           {card.surveyClosingAt.slice(0, 10)}
                         </div>
-
+                        <Typography
+                          variant="h5"
+                          component="div"
+                          sx={{
+                            fontSize: 18,
+                            fontWeight: 600,
+                            marginBottom: '8px',
+                            cursor: 'pointer',
+                          }}
+                          style={textStyle}
+                        >
+                          {card.surveyNo}
+                        </Typography>
                         <Typography
                           variant="h5"
                           component="div"
@@ -304,6 +314,12 @@ function RecentSurvey() {
               <p id="modal-description" style={textStyle}>
                 {selectedCard ? selectedCard.surveyDiscription : ''}
               </p>
+              <Button onClick={() => navigate('/survey/Search')}>
+                결과보기
+              </Button>
+              <Button onClick={() => navigate('/survey/Search')}>
+                참여하기
+              </Button>
               <Button onClick={closeCardModal}>닫기</Button>
             </div>
           </Fade>

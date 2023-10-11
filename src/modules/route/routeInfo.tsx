@@ -5,6 +5,7 @@ import Mypage from '../survey/mypage/MypageUserModify';
 import MypageParty from '../survey/mypage/MypagePartySurvey';
 import MypageWrite from '../survey/mypage/MypageWriteSurvey';
 import Search from '../survey/main/Search';
+import SurveySearch from '../survey/main/Search';
 
 export const pathInfo: { [key: string]: string[] }[] = [{ survey: ['main'] }];
 

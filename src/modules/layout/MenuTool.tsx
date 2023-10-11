@@ -10,10 +10,10 @@ import TextField from '@mui/material/TextField';
 
 function MenuTool() {
   const navigate = useNavigate();
-  // 메뉴의 열림/닫힘 상태를 관리하는 상태 변수
+  /* 메뉴의 열림/닫힘 상태를 관리하는 상태 변수 */
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  // 메뉴를 열기 위한 함수
+  /* 메뉴를 열기 위한 함수 */
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -22,7 +22,7 @@ function MenuTool() {
     setAnchorEl(null);
   };
 
-  // 메뉴를 닫기 위한 함수
+  /* 메뉴를 닫기 위한 함수 */
   const handleMenuCloseGoWriteSurvey = () => {
     setAnchorEl(null);
     navigate('/survey/MypageWrite');
