@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import axios from 'axios';
 import Logo from './img/SurveyLogo.png';
 import LoginFig from './img/LoginFig.png';
-import LoginNaver from './LoginNaver';
+// import LoginNaver from './LoginNaver';
 // import Modal from './modal/BasicModal';
 import BasicModal from './modal/BasicModal';
 
@@ -65,6 +65,16 @@ const guestLogin = {
   color: '#9E9E9E',
 };
 
+const buttonStyle = {
+  border: 'none',
+  background: 'none',
+  cursor: 'pointer',
+};
+
+const imageStyle = {
+  width: '40%',
+};
+
 /**
  * @returns LoginDispay
  */
@@ -79,21 +89,104 @@ function LoginDisplay() {
    */
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-    const accessToken = searchParams.get('accessToken');
+    const accessCode = searchParams.get('code');
 
-    if (accessToken) {
-      console.log('AccessToken:', accessToken);
+    const redirectUri = 'http://localhost:8080/login/oauth2/code/naver';
 
-      axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    console.log('accessCode : ' + accessCode);
 
-      // 모달을 열기 위해 상태를 업데이트합니다.
-      setShowModal(true);
+    if (accessCode) {
+      axios
+        .get(redirectUri, {
+          params: {
+            code: accessCode,
+            state: 'STATE_STRING',
+          },
+        })
+        .then((response) => {
+          // code 보내서 백에서 인증하고 미완료회원 객체 가져옴(메일, accessToken)
+          const responseCheck = response;
+          console.log('responseCheck:', responseCheck);
+          const responseUserNo = responseCheck.data.content.userNo;
+          const responseAccessToken = responseCheck.data.content.accessToken;
+          const responseNickName = responseCheck.data.content.userNickname;
+          const localStorageAccessToken = localStorage.getItem('accessToken');
+
+          // 여기서도 분기를 만들어줘야함.
+          // 1. 완료된 회원
+          if (responseUserNo != null && responseNickName != null) {
+            // 회원은 존재하나 브라우저에서 로그인 한적이 없는 회원
+            if (
+              localStorageAccessToken == null ||
+              responseAccessToken !== localStorageAccessToken
+            ) {
+              // accessToken localStrage에 저장하기
+              localStorage.setItem('accessToken', responseAccessToken);
+
+              // axois default header에 넣기(Global)
+              axios.defaults.headers.common['Authorization'] =
+                'Bearer ' + responseAccessToken;
+              responseAccessToken;
+
+              console.log(
+                '로컬스토리지 accessToken 확인 : ' +
+                  localStorage.getItem('accessToken')
+              );
+
+              navigate('/survey/main');
+            }
+
+            // 현 브라우저에서 로그인 한적이 있어 localStorage에 토큰이 있는 회원
+            if (responseAccessToken === localStorageAccessToken) {
+              navigate('/survey/main');
+            }
+          }
+
+          // 2. 첫 로그인 시
+          if (responseUserNo != null) {
+            // accessToken localStrage에 저장하기
+            localStorage.setItem('accessToken', responseAccessToken);
+
+            console.log(
+              '로컬스토리지 accessToken 확인 : ' +
+                localStorage.getItem('accessToken')
+            );
+
+            // axois default header에 넣기(Global)
+            axios.defaults.headers.common['Authorization'] =
+              'Bearer ' + responseAccessToken;
+            responseAccessToken;
+
+            setShowModal(true);
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+
+      console.log('몇번요청됐나');
     }
-  }, [location]);
+  }, []);
 
   const goLogin = () => {
     navigate('/survey/main');
   };
+
+  const [isHovered, setIsHovered] = useState(false);
+
+  // OAuth 인증 요청 버튼 클릭 핸들러
+  const handleOAuthLogin = () => {
+    // OAuth 인증 페이지 URL
+    const authorizationUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=ukwEecKhMrJzOdjwpJfB&state=STATE_STRING&redirect_uri=http://localhost:3000/`;
+
+    // 사용자를 OAuth 인증 페이지로 리디렉션
+    window.location.href = authorizationUrl;
+  };
+
+  const getImageSrc = () =>
+    isHovered
+      ? `${process.env.PUBLIC_URL}/naverhover.png`
+      : `${process.env.PUBLIC_URL}/naverButton.png`;
 
   return (
     <Box component="div" sx={basicBox}>
@@ -111,7 +204,20 @@ function LoginDisplay() {
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={naverloginButton}>
-          <LoginNaver />
+          {/* <LoginNaver /> */}
+
+          <div>
+            <button
+              type="button"
+              onClick={handleOAuthLogin}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              style={buttonStyle}
+            >
+              <img src={getImageSrc()} style={imageStyle} alt="대체_텍스트" />
+            </button>
+            {/* {isModaled && <Modal onClose={() => setIsModaled(false)} />} */}
+          </div>
 
           {showModal && <BasicModal onClose={() => {}} />}
         </Box>

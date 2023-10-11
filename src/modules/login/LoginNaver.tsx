@@ -1,6 +1,6 @@
 // import axios from 'axios';
-import axios from 'axios';
 import React, { useState } from 'react';
+
 // import { useNavigate } from 'react-router-dom';
 // import Modal from './modal/BasicModal';
 
@@ -21,60 +21,27 @@ const imageStyle = {
  */
 function LoginNaver() {
   const [isHovered, setIsHovered] = useState(false);
-  const [isClientId, setIsClientId] = useState('');
-  // const navigate = useNavigate();
+
+  // OAuth 인증 요청 버튼 클릭 핸들러
+  const handleOAuthLogin = () => {
+    // OAuth 인증 페이지 URL
+    const authorizationUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=ukwEecKhMrJzOdjwpJfB&state=STATE_STRING&redirect_uri=http://localhost:8080/login/oauth2/code/naver`;
+
+    console.log('sdfsdf');
+    // 사용자를 OAuth 인증 페이지로 리디렉션
+    window.location.href = authorizationUrl;
+  };
 
   const getImageSrc = () =>
     isHovered
       ? `${process.env.PUBLIC_URL}/naverhover.png`
       : `${process.env.PUBLIC_URL}/naverButton.png`;
 
-  const handleNaverLogin = () => {
-    // window.location.href =
-    //   'https://nid.naver.com/oauth2.0/authorize?client_id=ukwEecKhMrJzOdjwpJfB&response_type=code&redirect_uri=http://localhost:8080/login/oauth2/code/naver';
-
-    axios
-      .post('http://localhost:8080/login/oauth2/code/naver/call')
-      .then((response) => {
-        // 서버로부터의 응답 처리
-        const respData = response.data;
-        console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
-        setIsClientId(`${respData.content}`);
-
-        console.log(`클라이언트아이디 : ${isClientId}`);
-
-        if (respData === '') {
-          console.log('API 요청 실패');
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    axios
-      .post('http://localhost:8080/login/oauth2/code/naver/accessback')
-      .then((response) => {
-        // 서버로부터의 응답 처리
-        const respData = response.data;
-        console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
-        setIsClientId(`${respData.content}`);
-
-        console.log(`클라이언트아이디 : ${isClientId}`);
-
-        if (respData === '') {
-          console.log('API 요청 실패');
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
   return (
     <div>
       <button
         type="button"
-        onClick={handleNaverLogin}
+        onClick={handleOAuthLogin}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={buttonStyle}

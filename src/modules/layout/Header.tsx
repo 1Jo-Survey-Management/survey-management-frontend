@@ -16,6 +16,7 @@ function Header() {
 
   const logout = () => {
     console.log('logout');
+
     navigate('/');
   };
 
