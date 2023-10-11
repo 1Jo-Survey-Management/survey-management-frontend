@@ -135,9 +135,6 @@ function RecentSurvey() {
               cardList.map((card) => (
                 <div
                   key={card.surveyNo} // 수정된 부분: 배열 인덱스 대신 고유한 값을 key로 사용
-                  onClick={() => setOpenModal(true)}
-                  onKeyPress={() => openCardModal(card)}
-                  role="button"
                   tabIndex={0}
                 >
                   {/* 카드를 클릭하면 해당 카드 정보를 전달하여 모달 열기 */}
@@ -153,6 +150,8 @@ function RecentSurvey() {
                         borderRadius: 5,
                       }}
                       style={textStyle}
+                      onClick={() => openCardModal(card)}
+                      role="button"
                     >
                       <CardContent
                         sx={{

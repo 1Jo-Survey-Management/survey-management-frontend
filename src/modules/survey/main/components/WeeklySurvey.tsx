@@ -25,7 +25,7 @@ import 'swiper/swiper-bundle.css';
 import '../../../../global.css';
 // import required modules
 
-function RecentSurvey() {
+function WeeklySurvey() {
   const styles = {
     CardSwiper: {
       width: '100%',
@@ -148,12 +148,7 @@ function RecentSurvey() {
         >
           {cardList &&
             cardList.map((card) => (
-              <div
-                key={card.surveyNo}
-                onClick={() => openCardModal(card)}
-                role="button"
-                tabIndex={0}
-              >
+              <div key={card.surveyNo} tabIndex={0}>
                 {/* 카드를 클릭하면 해당 카드 정보를 전달하여 모달 열기 */}
                 <SwiperSlide style={styles.Slide}>
                   <Card
@@ -167,6 +162,8 @@ function RecentSurvey() {
                       borderRadius: 5,
                     }}
                     style={textStyle}
+                    onClick={() => openCardModal(card)}
+                    role="button"
                   >
                     <CardContent
                       sx={{
@@ -269,61 +266,55 @@ function RecentSurvey() {
               </div>
             ))}
         </Box>
+      </Swiper>
 
-        <Modal
-          open={openModal}
-          onClose={closeCardModal}
-          aria-labelledby="modal-title"
-          aria-describedby="modal-description"
+      <Modal
+        open={openModal}
+        onClose={closeCardModal}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            backgroundColor: '#fff',
+            boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
+            width: '350px',
+            height: '500px',
+            padding: '16px',
+            outline: 0,
+            borderRadius: '8px',
+            textAlign: 'center',
           }}
         >
-          <Fade in={openModal}>
-            <div
-              style={{
-                backgroundColor: '#fff',
-                boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
-                width: '350px',
-                height: '500px',
-                padding: '16px',
-                outline: 0,
-                borderRadius: '8px',
-                textAlign: 'center',
-              }}
-            >
-              <h2 id="modal-title" style={textStyle}>
-                {selectedCard ? selectedCard.surveyTitle : ''}
-              </h2>
-              <p style={textStyle}>
-                날짜:
-                {selectedCard
-                  ? selectedCard.surveyPostAt.slice(0, 10)
-                  : ''}~{' '}
-                {selectedCard ? selectedCard.surveyClosingAt.slice(0, 10) : ''}
-              </p>
+          <h2 id="modal-title" style={textStyle}>
+            {selectedCard ? selectedCard.surveyTitle : ''}
+          </h2>
+          <p style={textStyle}>
+            날짜:
+            {selectedCard ? selectedCard.surveyPostAt.slice(0, 10) : ''}~{' '}
+            {selectedCard ? selectedCard.surveyClosingAt.slice(0, 10) : ''}
+          </p>
 
-              <p style={textStyle}>
-                작성자: {selectedCard ? selectedCard.userNickName : ''}
-              </p>
-              <p style={textStyle}>
-                태그: {selectedCard ? selectedCard.tag : ''}
-              </p>
-              <p style={textStyle}>
-                참석자 수: {selectedCard ? selectedCard.surveyAttendCount : ''}
-              </p>
-              <p id="modal-description" style={textStyle}>
-                {selectedCard ? selectedCard.surveyDiscription : ''}
-              </p>
-              <Button onClick={closeCardModal}>닫기</Button>
-            </div>
-          </Fade>
-        </Modal>
-      </Swiper>
+          <p style={textStyle}>
+            작성자: {selectedCard ? selectedCard.userNickName : ''}
+          </p>
+          <p style={textStyle}>태그: {selectedCard ? selectedCard.tag : ''}</p>
+          <p style={textStyle}>
+            참석자 수: {selectedCard ? selectedCard.surveyAttendCount : ''}
+          </p>
+          <p id="modal-description" style={textStyle}>
+            {selectedCard ? selectedCard.surveyDiscription : ''}
+          </p>
+          <Button onClick={closeCardModal}>닫기</Button>
+        </div>
+      </Modal>
     </div>
   );
 }
 
-export default RecentSurvey;
+export default WeeklySurvey;

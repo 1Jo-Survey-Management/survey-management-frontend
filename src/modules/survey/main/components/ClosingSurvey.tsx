@@ -155,6 +155,8 @@ function ClosingSurvey() {
                         borderRadius: 5,
                       }}
                       style={textStyle}
+                      onClick={() => openCardModal(card)}
+                      role="button"
                     >
                       <CardContent
                         sx={{

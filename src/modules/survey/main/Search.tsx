@@ -1,7 +1,7 @@
 import Container from '@mui/material/Container';
 import Floating from './components/Floating';
 import SurveyCard from './components/Card';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Paper from '@mui/material/Paper';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputBase from '@mui/material/InputBase';
@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
+import { useInView } from 'react-intersection-observer';
 import '../../../global.css';
 
 import {
@@ -61,21 +62,62 @@ function SurveySearch() {
     }
   };
 
+  const [ref, isView] = useInView();
+  const [page, setPage] = useState(1);
+
   const fontFamily = "'Noto Sans KR', sans-serif";
   const textStyle = {
     fontFamily: fontFamily,
   };
   const [cardList, setCardList] = useState<CardData[]>([]);
-  useEffect(() => {
-    const data = async () => {
-      const card = await axios.get('http://localhost:8080/survey/surveyall');
+  const getData = useCallback(async () => {
+    // 서버에서는 한 페이지당 3개의 데이터를 보내준다
+    await axios
+      .get(`http://localhost:8080/survey/surveyall?_page=${page}&_limit=3`)
+      .then((res) => {
+        // 기존 데이터에 새로 불러온 데이터를 합치고 page를 + 1시킴
+        setCardList([...res.data, ...cardList]);
+        setPage(page + 1);
+      });
+  }, [isView]);
 
-      setCardList(card.data);
-      setFilteredData(card.data);
-      console.log(card.data);
-    };
-    data();
+  useEffect(() => {
+    getData();
   }, []);
+
+  useEffect(() => {
+    if (isView) {
+      getData();
+    }
+  }, [isView]);
+  // useEffect(() => {
+  //   const data = async () => {
+  //     if (selectedState === '전체(모든 카드)') {
+  //       const card = await axios.get(`http://localhost:8080/survey/surveyall`);
+
+  //       setCardList(card.data);
+  //       setFilteredData(card.data);
+  //       console.log(card.data);
+  //     } else if (selectedState === '진행') {
+  //       const card = await axios.get(
+  //         `http://localhost:8080/survey/select-post`
+  //       );
+
+  //       setCardList(card.data);
+  //       setFilteredData(card.data);
+  //       console.log(card.data);
+  //     } else if (selectedState === '마감') {
+  //       const card = await axios.get(
+  //         `http://localhost:8080/survey/select-closing`
+  //       );
+
+  //       setCardList(card.data);
+  //       setFilteredData(card.data);
+  //       console.log(card.data);
+  //     }
+  //   };
+  //   data();
+  // }, [selectedState]);
 
   useEffect(() => {
     const sortedCardData = [...cardList].sort((a, b) => {
@@ -111,9 +153,6 @@ function SurveySearch() {
 
   const handleSearch = () => {
     const filtered = cardList.filter((card) => {
-      const includesOption =
-        searchOptions.length === 0 ||
-        searchOptions.some((option) => card.tag.includes(option));
       const includesSearchTerm =
         card.surveyTitle.includes(searchTerm) ||
         card.userNickName.includes(searchTerm) ||
@@ -122,10 +161,9 @@ function SurveySearch() {
         selectedState === '전체(모든 카드)' ||
         card.surveyStatusName === selectedState;
 
-      return includesOption && includesSearchTerm && matchesState;
+      return includesSearchTerm && matchesState;
     });
 
-    // "마감" 상태를 선택한 경우 "진행" 상태인 카드를 필터링에서 제외
     const filteredWithoutInProgress =
       selectedState === '마감'
         ? filtered.filter((card) => card.surveyStatusName !== '진행')
@@ -221,7 +259,6 @@ function SurveySearch() {
         >
           <MenuItem value="전체(모든 카드)">전체</MenuItem>
           <MenuItem value="진행">진행</MenuItem>
-          <MenuItem value="작성">작성</MenuItem>
           <MenuItem value="마감">마감</MenuItem>
         </Select>
 
@@ -456,7 +493,7 @@ function SurveySearch() {
           </div>
         </Fade>
       </Modal>
-
+      <div ref={ref}></div>
       <Floating />
     </Container>
   );
