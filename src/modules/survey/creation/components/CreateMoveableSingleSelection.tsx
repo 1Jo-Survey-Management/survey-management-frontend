@@ -83,18 +83,25 @@ function CreateMoveableSingleSelection({
    * @author 강명관
    */
   const handleAddMoveableSelection = () => {
-    const addSelection: SelectionProps = {
+    let addDefaultSelecetion: SelectionProps = {
       questionId: question.questionId,
       selectionId: new Date().getTime(),
-      questionMoveId: questions.indexOf(question) + CREATE_NEXT_QUESTION_INDEX,
       selectionValue: '',
       isMoveable: true,
       isEndOfSurvey: false,
     };
 
+    if (questions.length - 1 !== questions.indexOf(question)) {
+      addDefaultSelecetion = {
+        ...addDefaultSelecetion,
+        questionMoveId:
+          questions.indexOf(question) + CREATE_NEXT_QUESTION_INDEX,
+      };
+    }
+
     const updateQuestion: QuestionProps = {
       ...question,
-      selections: [...question.selections, addSelection],
+      selections: [...question.selections, addDefaultSelecetion],
     };
 
     setQuestions(findQuestionAndUpdateQuestions(updateQuestion));
