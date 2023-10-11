@@ -20,8 +20,10 @@ import {
 } from '../types/SurveyTypes';
 import SurveyInfoValidation from '../validator/SurveyInfoValidation';
 import QuestionValidation from '../validator/QuestionValidation';
-import SelectionValidation from '../validator/SelectionValidation';
 import { getValidationErrorMessage } from '../util/ValidatorUtil';
+import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
+import { OpenStatusEnum } from '../../enums/OpenStatusEnum';
+import { SurveyStatusEunm } from '../../enums/SurveyStatusEnum';
 
 function CreationSurvey() {
   const [surveyId] = useState<number>(new Date().getTime());
@@ -35,8 +37,8 @@ function CreationSurvey() {
     surveyTags: [],
     surveyDescription: '',
     surveyClosingAt: '',
-    openStatusNo: 1,
-    surveyStatusNo: 1,
+    openStatusNo: OpenStatusEnum.PUBLIC,
+    surveyStatusNo: SurveyStatusEunm.WRITING,
     userNo: null,
   });
 
@@ -46,7 +48,7 @@ function CreationSurvey() {
       questionId: new Date().getTime(),
       questionTitle: '',
       questionDescription: '',
-      questionType: '1',
+      questionType: QuestionTypeEnum.SINGLE_QUESTION,
       questionRequired: true,
       selections: [],
     },
@@ -60,7 +62,7 @@ function CreationSurvey() {
         questionId: new Date().getTime(),
         questionTitle: '',
         questionDescription: '',
-        questionType: '1',
+        questionType: QuestionTypeEnum.SINGLE_QUESTION,
         questionRequired: true,
         selections: [],
       },
@@ -124,62 +126,32 @@ function CreationSurvey() {
   };
 
   /**
-   * 문항의 선택지에 대해서 Validation 하기 위한 메서드 입니다.
+   * 일반문항(단일 선택형, 다중 선택형)의 선택지에 대해서 Validation 하기 위한 메서드 입니다.
    *
    * @param question 문항의 유형이 선택형인 문항
    * @returns validation error가 존재할 경우 false, 성공 true
    * @author 강명관
    */
-  const validationSelection = async (
-    selections: SelectionProps[]
-  ): Promise<boolean> => {
-    let selectionValidationCheck: boolean = true;
-
+  const validationGeneralSelection = (selections: SelectionProps[]) => {
     if (selections.length < 1) {
       Swal.fire({
         icon: 'error',
         title: '선택지는 최소 한개 이상 존재해야 합니다.',
       });
-      selectionValidationCheck = false;
-      return selectionValidationCheck;
+      return false;
     }
 
-    const selectionValidationPromise: Promise<void>[] = selections.map(
-      async (selection: SelectionProps) => {
-        if (!selectionValidationCheck) {
-          return;
-        }
-
-        const selectionValidation = new SelectionValidation(
-          selection.questionId,
-          selection.selectionId,
-          selection.selectionValue,
-          selection.isMoveable,
-          selection.isEndOfSurvey,
-          selection.questionMoveId
-        );
-
-        const selectionErrors = await validate(selectionValidation);
-
-        if (selectionErrors.length > 0) {
-          const errorMessage: string[] = getValidationErrorMessage(
-            selectionValidation,
-            selectionErrors
-          );
-
-          Swal.fire({
-            icon: 'error',
-            title: '입력되지 않은 사항이 존재합니다.',
-            text: `${errorMessage}`,
-          });
-          selectionValidationCheck = false;
-        }
+    return selections.every((selection) => {
+      if (!selection.selectionValue) {
+        return false;
       }
-    );
 
-    await Promise.all(selectionValidationPromise);
+      if (selection.isEndOfSurvey || selection.isMoveable) {
+        return false;
+      }
 
-    return selectionValidationCheck;
+      return true;
+    });
   };
 
   /**
@@ -191,18 +163,19 @@ function CreationSurvey() {
    * @returns validation error가 존재할 경우 false, 성공 true
    * @author 강명관
    */
-  const validationMoveableSelection = (
-    selections: SelectionProps[]
-  ): boolean => {
-    let moveableSelectionValidationCheck: boolean = true;
-
-    selections.forEach((selection) => {
-      if (!moveableSelectionValidationCheck) {
-        return;
+  const validationMoveableSelection = (selections: SelectionProps[]): boolean =>
+    selections.every((selection) => {
+      if (!selection.isMoveable || !selection.selectionValue) {
+        Swal.fire({
+          icon: 'error',
+          title: '선택지 정보가 잘못되었습니다.',
+          text: '선택지 정보가 잘못되었습니다. 다시 시도해 주세요.',
+        });
+        return false;
       }
 
       if (
-        (!selection.isEndOfSurvey && !selection.questionMoveId) ||
+        (!selection.isEndOfSurvey && selection.questionMoveId === undefined) ||
         (selection.isEndOfSurvey && selection.questionMoveId)
       ) {
         Swal.fire({
@@ -210,98 +183,129 @@ function CreationSurvey() {
           title: '입력되지 않은 사항이 존재합니다.',
           text: '선택시 문항 이동에 대한 값이 제대로 입력되지 않았습니다.',
         });
-        moveableSelectionValidationCheck = false;
+        return false;
       }
+
+      return true;
     });
 
-    return moveableSelectionValidationCheck;
-  };
-
   /**
-   * 문항들에 대한 Validation 을 진행하는 메서드 입니다.
+   * 문항에 대한 validation을 진행하기 위한 메서드 입니다.
    *
-   * @returns validation error가 존재할 경우 false, 성공 true
+   * @param validQuestions validation을 진행한 questions
+   * @returns 모든 validation이 통과하면 true
    * @author 강명관
    */
-  const validationQuestion = async (): Promise<boolean> => {
-    let questionValidationCheck: boolean = true;
-
-    if (questions.length < 1) {
+  const validationQuestion = async (validQuestions: QuestionProps[]) => {
+    if (validQuestions.length < 1) {
       Swal.fire({
         icon: 'error',
         title: '입력되지 않은 사항이 존재합니다.',
         text: `문항의 개수는 최소 1개 이상입니다.`,
       });
-      questionValidationCheck = false;
-      return questionValidationCheck;
+      return false;
     }
 
-    const questionSelectionType: string[] = ['1', '2', '3'];
+    const validationResultPromise = validQuestions.map(async (question) => {
+      const questionValidation = new QuestionValidation(
+        question.surveyId,
+        question.questionId,
+        question.questionTitle,
+        question.questionRequired,
+        question.questionType,
+        question.selections,
+        question.questionDescription
+      );
 
-    const questionValidationPromise: Promise<void>[] = questions.map(
-      async (question) => {
-        const questionValidation = new QuestionValidation(
-          question.surveyId,
-          question.questionId,
-          question.questionTitle,
-          question.questionRequired,
-          question.questionType,
-          question.selections,
-          question.questionDescription
-        );
-
-        const questionErrors = await validate(questionValidation);
-        if (questionErrors.length > 0) {
-          const errorMessage: string[] = getValidationErrorMessage(
-            questionValidation,
-            questionErrors
-          );
-          Swal.fire({
-            icon: 'error',
-            title: '입력되지 않은 사항이 존재합니다.',
-            text: `${errorMessage}`,
-          });
-          questionValidationCheck = false;
-        }
+      const questionErrors = await validate(questionValidation);
+      if (questionErrors.length > 0) {
+        return false;
       }
+
+      return true;
+    });
+
+    const validationResults: boolean[] = await Promise.all(
+      validationResultPromise
     );
 
-    const selectionTypeQuestions: QuestionProps[] = questions.filter(
-      (question) => questionSelectionType.includes(question.questionType)
-    );
+    return validationResults.every(Boolean);
+  };
 
-    const selectionsArray: SelectionProps[] = [];
+  /**
+   * 모든 선택지(단일 선택형, 선택시 문항 이동형, 다중 선택형)에 대해서 선택지 정보를 검증하기 위한 메서드 입니다.
+   *
+   * @returns 성공시 true, 실패시 false
+   * @author 강명관
+   */
+  const totalSelectionValidation = (validQuestions: QuestionProps[]) => {
+    const questionSelectionType = [
+      QuestionTypeEnum.SINGLE_QUESTION.toString(),
+      QuestionTypeEnum.MOVEABLE_QUESTION.toString(),
+      QuestionTypeEnum.MULTIPLE_QUESTION.toString(),
+    ];
 
-    const selectionValidationPromise: Promise<void>[] =
-      selectionTypeQuestions.map(async (question) => {
-        if (!questionValidationCheck) {
-          return;
+    const totalSelectionValidationResult = validQuestions
+      .filter((question) =>
+        questionSelectionType.includes(question.questionType)
+      )
+      .map((selectionTypeQuestion) => {
+        if (
+          selectionTypeQuestion.questionType ===
+          QuestionTypeEnum.MOVEABLE_QUESTION
+        ) {
+          return validationMoveableSelection(selectionTypeQuestion.selections);
         }
-
-        if (question.questionType === '2') {
-          questionValidationCheck = validationMoveableSelection(
-            question.selections
-          );
-        }
-        selectionsArray.push(...question.selections);
+        return validationGeneralSelection(selectionTypeQuestion.selections);
       });
 
-    if (!questionValidationCheck) {
-      questionValidationCheck = false;
-      return questionValidationCheck;
-    }
+    return totalSelectionValidationResult.every(Boolean);
+  };
 
-    if (selectionsArray.length > 0) {
-      questionValidationCheck = await validationSelection(selectionsArray);
-    }
-
-    await Promise.all([
-      questionValidationPromise,
-      selectionValidationPromise,
-      questionValidationCheck,
+  /**
+   * 전체 하나의 설문 (설문 정보, 문항, 선택지)을 검증하기 위한 메서드 입니다.
+   *
+   * @return 전체 모든 validation이 통과하면 true, 실패할 경우 false
+   * @author 강명관
+   */
+  const validationSurvey = async (
+    validQuestions: QuestionProps[]
+  ): Promise<boolean> => {
+    const [surveyInfoResult, questionResult] = await Promise.all([
+      validationSurveyInfo(),
+      validationQuestion(validQuestions),
     ]);
 
-    return questionValidationCheck;
+    const selectionResult = totalSelectionValidation(validQuestions);
+
+    if (!surveyInfoResult) {
+      Swal.fire({
+        icon: 'error',
+        title: '설문 정보가 올바르지 않습니다.',
+        text: `설문 작성 정보를 다시 확인해주세요`,
+      });
+      return false;
+    }
+
+    if (!questionResult) {
+      Swal.fire({
+        icon: 'error',
+        title: '문항 정보가 올바르지 않습니다.',
+        text: `문항 작성 정보를 다시 확인해주세요`,
+      });
+      return false;
+    }
+
+    if (!selectionResult) {
+      Swal.fire({
+        icon: 'error',
+        title: '선택지 정보가 올바르지 않습니다.',
+        text: `선태지 작성 정보를 다시 확인해주세요`,
+      });
+      return false;
+    }
+
+    return true;
   };
 
   /**
@@ -316,11 +320,7 @@ function CreationSurvey() {
      */
     surveyInfo.userNo = '1';
 
-    const [surveyInfoValidationResult, questionValidationResult] =
-      await Promise.all([validationSurveyInfo(), validationQuestion()]);
-
-    const validationResult: boolean =
-      surveyInfoValidationResult && questionValidationResult;
+    const validationResult = await validationSurvey(questions);
 
     if (!validationResult) {
       return;
@@ -463,7 +463,12 @@ function CreationSurvey() {
 
         <Button variant="contained">개시하기</Button>
       </Box>
-      <FloatingActionButtons onClickAddQuestion={handleAddQuestion} />
+      <FloatingActionButtons
+        onClickAddQuestion={handleAddQuestion}
+        surveyInfo={surveyInfo}
+        surveyImage={surveyImage || undefined}
+        questions={questions}
+      />
     </Container>
   );
 }
