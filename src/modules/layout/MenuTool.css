@@ -9,8 +9,6 @@
 
   width: 100%;
   height: 150px;
-
-  background-color: aqua;
 }
 
 .nickname-input {
@@ -31,6 +29,4 @@
 
   width: 100%;
   height: 300px;
-
-  background-color: aquamarine;
 }

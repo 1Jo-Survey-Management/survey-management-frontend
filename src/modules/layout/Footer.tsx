@@ -1,4 +1,3 @@
-// Footer.tsx
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import './Footer.css';
@@ -12,10 +11,11 @@ function Footer() {
         bottom: 0,
         width: '100%',
         height: 100,
+        backgroundColor: (theme) => theme.palette.primary.main,
+        marginTop: '500px',
       }}
     >
-      {/* Footer 내용 */}
-      <p className="footer-logo">푸터</p>
+      <p className="footer-logo">Footer</p>
     </AppBar>
   );
 }
