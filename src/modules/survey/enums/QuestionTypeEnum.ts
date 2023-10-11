@@ -7,7 +7,7 @@
  * @author 강명관
  */
 // eslint-disable-next-line no-shadow
-export enum QuestionTypeEnum {
+export const enum QuestionTypeEnum {
   SINGLE_QUESTION = '1',
   MOVEABLE_QUESTION = '2',
   MULTIPLE_QUESTION = '3',
