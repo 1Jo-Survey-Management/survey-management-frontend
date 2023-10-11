@@ -1,9 +1,22 @@
-import { Box, Fab } from '@mui/material';
-import React from 'react';
+import {
+  AppBar,
+  Box,
+  Dialog,
+  Fab,
+  IconButton,
+  Slide,
+  Toolbar,
+  Typography,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import React, { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { TransitionProps } from '@mui/material/transitions';
+import SurveyPreview from '../../preview/routers/SurveyPreview';
+import { QuestionProps, SurveyInfoProps } from '../types/SurveyTypes';
 
 const styles = {
   fabBox: {
@@ -19,11 +32,36 @@ const styles = {
     height: '44px',
     marginBottom: '8px',
   },
+  previewModal: {
+    position: 'absolute' as const,
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  },
 };
 
 interface FloatingActionButtonsProps {
   onClickAddQuestion: () => void;
+  surveyInfo: SurveyInfoProps;
+  surveyImage: File | undefined;
+  questions: QuestionProps[];
 }
+
+const Transition = React.forwardRef(
+  (
+    props: TransitionProps & {
+      children: React.ReactElement;
+    },
+    ref: React.Ref<unknown>
+  ) => <Slide direction="up" ref={ref} {...props} />
+);
+
+Transition.displayName = 'previewDialogTransition';
 
 /**
  * 설문조사 작성 페이지 플로팅 버튼 컴포넌트 입니다.
@@ -35,7 +73,12 @@ interface FloatingActionButtonsProps {
  */
 function FloatingActionButtons({
   onClickAddQuestion,
+  surveyInfo,
+  surveyImage,
+  questions,
 }: FloatingActionButtonsProps) {
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+
   /**
    * 화면의 스크롤을 최상단으로 보내는 메서드 입니다.
    *
@@ -67,6 +110,14 @@ function FloatingActionButtons({
     onClickAddQuestion();
   };
 
+  const handleOpenPreviewModal = () => {
+    setIsPreviewModalOpen(true);
+  };
+
+  const handleClosePreviewModal = () => {
+    setIsPreviewModalOpen(false);
+  };
+
   return (
     <Box sx={styles.fabBox}>
       <Fab
@@ -93,9 +144,42 @@ function FloatingActionButtons({
       >
         <AddIcon />
       </Fab>
-      <Fab color="primary" aria-label="add" sx={styles.fabStyles}>
+      <Fab
+        color="primary"
+        aria-label="add"
+        sx={styles.fabStyles}
+        onClick={handleOpenPreviewModal}
+      >
         <VisibilityIcon />
       </Fab>
+
+      <Dialog
+        fullScreen
+        open={isPreviewModalOpen}
+        onClose={handleClosePreviewModal}
+        TransitionComponent={Transition}
+      >
+        <AppBar sx={{ position: 'relative' }}>
+          <Toolbar>
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+              미리보기
+            </Typography>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClosePreviewModal}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <SurveyPreview
+          surveyInfo={surveyInfo}
+          surveyImage={surveyImage || undefined}
+          questions={questions}
+        />
+      </Dialog>
     </Box>
   );
 }
