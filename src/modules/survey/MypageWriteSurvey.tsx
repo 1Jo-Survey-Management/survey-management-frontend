@@ -35,6 +35,8 @@ type CardData = {
   writer: string;
 };
 
+console.log('윈도우 온로드 체크');
+
 function getStatusText(surveyStatusNo: number) {
   switch (surveyStatusNo) {
     case 1:

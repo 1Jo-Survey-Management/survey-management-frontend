@@ -4,6 +4,7 @@ import LoginDisplay from '../login/LoginDisplay';
 import Mypage from '../survey/MypageUserModify';
 import MypageAttend from '../survey/MypageAttendSurvey';
 import MypageWrite from '../survey/MypageWriteSurvey';
+import AttendSurvey from '../survey/attend/routers/AttendSurvey';
 
 export const pathInfo: { [key: string]: string[] }[] = [{ survey: ['main'] }];
 
@@ -19,6 +20,8 @@ export const routeInfo = (path: string): React.ReactNode => {
       return <MypageAttend />;
     case '/survey/Mypage':
       return <Mypage />;
+    case '/survey/Attend':
+      return <AttendSurvey />;
     default:
       return <LoginDisplay />;
   }
