@@ -14,8 +14,6 @@ function AttendMultipleChoice() {
     <Card
       sx={{
         marginBottom: '30px',
-        // boxShadow:
-        //   '0 14px 28px rgba(0,0,0,0.22), 0 10px 10px rgba(0,0,0,0.19);',
       }}
     >
       <CardContent>

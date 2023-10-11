@@ -33,7 +33,6 @@ function AttendSingleChoice() {
             name="question"
             sx={{
               paddingTop: '10px',
-              //   paddingLeft: '20px',
             }}
           >
             <FormControlLabel
