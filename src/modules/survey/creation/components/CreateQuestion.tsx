@@ -112,12 +112,18 @@ function CreateQuestion({
 
     if (value === QuestionTypeEnum.MOVEABLE_QUESTION.toString()) {
       const currentQuestionIndex = questions.indexOf(question);
-
-      defaultSelection = {
-        ...defaultSelection,
-        questionMoveId: currentQuestionIndex + CREATE_NEXT_QUESTION_INDEX,
-        isMoveable: true,
-      };
+      if (questions.length - 1 === questions.indexOf(question)) {
+        defaultSelection = {
+          ...defaultSelection,
+          isMoveable: true,
+        };
+      } else {
+        defaultSelection = {
+          ...defaultSelection,
+          questionMoveId: currentQuestionIndex + CREATE_NEXT_QUESTION_INDEX,
+          isMoveable: true,
+        };
+      }
     }
 
     const updateQuestions: QuestionProps[] = questions.map((prevQuestion) => {
