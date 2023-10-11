@@ -21,7 +21,7 @@ import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
 
-type CardData = {
+interface CardData {
   surveyNo: number;
   surveyTitle: string;
   tagNames: string[];
@@ -33,7 +33,7 @@ type CardData = {
   surveyPostAt: string;
   openStatusNo: number;
   userNickname: string;
-};
+}
 
 function getStatusText(surveyStatusNo: number) {
   switch (surveyStatusNo) {
