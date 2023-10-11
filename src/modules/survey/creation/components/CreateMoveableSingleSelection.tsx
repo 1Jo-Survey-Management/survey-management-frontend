@@ -15,6 +15,7 @@ import {
   QuestionProps,
   SelectionProps,
 } from '../types/SurveyTypes';
+import { CREATE_NEXT_QUESTION_INDEX } from '../constant/SurveyCreationConstant';
 
 const primaryColor = '#3f50b5';
 
@@ -82,18 +83,25 @@ function CreateMoveableSingleSelection({
    * @author 강명관
    */
   const handleAddMoveableSelection = () => {
-    const addSelection: SelectionProps = {
+    let addDefaultSelecetion: SelectionProps = {
       questionId: question.questionId,
       selectionId: new Date().getTime(),
-      questionMoveId: questions.indexOf(question) + 2,
       selectionValue: '',
       isMoveable: true,
       isEndOfSurvey: false,
     };
 
+    if (questions.length - 1 !== questions.indexOf(question)) {
+      addDefaultSelecetion = {
+        ...addDefaultSelecetion,
+        questionMoveId:
+          questions.indexOf(question) + CREATE_NEXT_QUESTION_INDEX,
+      };
+    }
+
     const updateQuestion: QuestionProps = {
       ...question,
-      selections: [...question.selections, addSelection],
+      selections: [...question.selections, addDefaultSelecetion],
     };
 
     setQuestions(findQuestionAndUpdateQuestions(updateQuestion));
@@ -153,10 +161,11 @@ function CreateMoveableSingleSelection({
       return;
     }
 
-    let changedQuestionMoveId: number = questionIndex + 2;
+    let changedQuestionMoveId: number =
+      questionIndex + CREATE_NEXT_QUESTION_INDEX;
 
     if (selectedValue === NEXT_QUESTION) {
-      changedQuestionMoveId = questionIndex + 2;
+      changedQuestionMoveId = questionIndex + CREATE_NEXT_QUESTION_INDEX;
     } else {
       const selectedQuestionMoveId = Number(selectedValue);
       if (selectedQuestionMoveId > changedQuestionMoveId) {

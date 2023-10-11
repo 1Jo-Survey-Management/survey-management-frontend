@@ -16,6 +16,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import ImageIcon from '@mui/icons-material/Image';
 import { CreateSurveyInfoProps, SurveyInfoProps } from '../types/SurveyTypes';
+import { OpenStatusEnum } from '../../enums/OpenStatusEnum';
 
 const styles = {
   card: {
@@ -230,9 +231,9 @@ function CreateSurveyInfo({
           label="공개 여부"
           onChange={handleOpenStatusChange}
         >
-          <MenuItem value={1}>전체공개</MenuItem>
-          <MenuItem value={2}>회원공개</MenuItem>
-          <MenuItem value={3}>비공개</MenuItem>
+          <MenuItem value={OpenStatusEnum.PUBLIC}>전체공개</MenuItem>
+          <MenuItem value={OpenStatusEnum.ONLY_USER}>회원공개</MenuItem>
+          <MenuItem value={OpenStatusEnum.PRIVATE}>비공개</MenuItem>
         </Select>
       </FormControl>
     </Box>
