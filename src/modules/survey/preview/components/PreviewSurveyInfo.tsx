@@ -1,12 +1,21 @@
-import { Box, Card, CardContent, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  Chip,
+  Container,
+  Typography,
+} from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
 import React, { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { PreviewSurveyInfoProps } from '../types/PreviewSurveyTypes';
 
 const styles = {
   card: {
     boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
     marginBottom: '30px',
+    marginTop: '30px',
   },
   iamgeBox: {
     display: 'flex',
@@ -33,31 +42,38 @@ function PreviewSurveyInfo({
   }, []);
 
   return (
-    <Card sx={styles.card}>
-      <CardContent>
-        <Box>
-          <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
-            {surveyInfo.surveyTitle}
-          </Typography>
-        </Box>
-        {!selectedImage && (
-          <Box sx={styles.iamgeBox}>
-            <ImageIcon sx={{ fontSize: '30px', color: '#757575' }} />
-          </Box>
-        )}
-        {selectedImage && (
-          <div>
-            <Box sx={styles.iamgeBox}>
-              <img
-                src={selectedImage}
-                alt="업로드된 이미지"
-                style={{ ...styles.image, objectFit: 'contain' }}
-              />
+    <Container>
+      <Card sx={styles.card}>
+        <CardContent>
+          <Box>
+            <Box>
+              <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
+                {surveyInfo.surveyTitle}
+              </Typography>
             </Box>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+            {surveyInfo.surveyTags.map((tag) => (
+              <Chip key={uuidv4()} label={tag} />
+            ))}
+          </Box>
+          {!selectedImage && (
+            <Box sx={styles.iamgeBox}>
+              <ImageIcon sx={{ fontSize: '30px', color: '#757575' }} />
+            </Box>
+          )}
+          {selectedImage && (
+            <div>
+              <Box sx={styles.iamgeBox}>
+                <img
+                  src={selectedImage}
+                  alt="업로드된 이미지"
+                  style={{ ...styles.image, objectFit: 'contain' }}
+                />
+              </Box>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </Container>
   );
 }
 
