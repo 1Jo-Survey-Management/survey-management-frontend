@@ -8,7 +8,7 @@ function Body() {
 
   const containerStyle = {
     maxWidth: 'md',
-    height: '500px',
+    // height: '500px',
   };
 
   return (
