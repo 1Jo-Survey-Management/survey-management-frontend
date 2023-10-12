@@ -13,3 +13,11 @@ export interface PreviewSurveyInfoProps {
   surveyInfo: SurveyInfoProps;
   surveyImage: File | undefined;
 }
+
+export interface PreviewQuestionProps {
+  questions: QuestionProps[];
+}
+
+export interface PreviewEachQuestionProps {
+  question: QuestionProps;
+}
