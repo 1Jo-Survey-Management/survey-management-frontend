@@ -19,7 +19,6 @@ function Header() {
   };
 
   const logout = () => {
-<<<<<<< HEAD
     console.log('logout');
 
     axios
@@ -38,9 +37,6 @@ function Header() {
       .catch((error) => {
         console.error(error);
       });
-=======
-    navigate('/');
->>>>>>> 68c4604995063ab70fb46c3b5ad4290bb09a927e
   };
 
   const isHomePage = location.pathname === '/';

@@ -1,14 +1,11 @@
-<<<<<<< HEAD
 import React, { useEffect } from 'react';
-=======
-import React from 'react';
->>>>>>> 68c4604995063ab70fb46c3b5ad4290bb09a927e
 import Container from '@mui/material/Container';
 import axios from '../login/components/customApi';
 import CountdownTimer from '../login/components/CountdownTimer';
 import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
 
-<<<<<<< HEAD
 /**
  * 메인 함수 테스트(병합시 제거 예정)
  * @author 김선규
@@ -45,17 +42,10 @@ function Main() {
       );
     }
   };
-
-=======
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@mui/material';
-
-function Main() {
   const navigate = useNavigate();
   const goAttend = () => {
     navigate('/survey/Attend');
   };
->>>>>>> 68c4604995063ab70fb46c3b5ad4290bb09a927e
   return (
     <Container maxWidth="md">
       <button type="button" onClick={test}>

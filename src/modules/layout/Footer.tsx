@@ -8,14 +8,6 @@ import './Footer.css';
  */
 function Footer() {
   return (
-<<<<<<< HEAD
-    <AppBar position="static" color="primary">
-      <Toolbar>
-        <Typography variant="h6" color="inherit">
-          My Footer
-        </Typography>
-      </Toolbar>
-=======
     <AppBar
       position="fixed"
       sx={{
@@ -28,7 +20,6 @@ function Footer() {
       }}
     >
       <p className="footer-logo">Footer</p>
->>>>>>> 68c4604995063ab70fb46c3b5ad4290bb09a927e
     </AppBar>
   );
 }
