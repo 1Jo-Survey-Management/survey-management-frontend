@@ -16,6 +16,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import ImageIcon from '@mui/icons-material/Image';
 import { CreateSurveyInfoProps, SurveyInfoProps } from '../types/SurveyTypes';
+import { OpenStatusEnum } from '../../enums/OpenStatusEnum';
 
 const styles = {
   card: {
@@ -64,7 +65,9 @@ function CreateSurveyInfo({
   const oneWeekLater = new Date(today);
   oneWeekLater.setDate(oneWeekLater.getDate() + 7);
 
-  const todayFormatted = today.toISOString().split('T')[0];
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const tomorrowFormatted = tomorrow.toISOString().split('T')[0];
   const oneWeekLaterFormatted = oneWeekLater.toISOString().split('T')[0];
 
   useEffect(() => {
@@ -228,9 +231,9 @@ function CreateSurveyInfo({
           label="공개 여부"
           onChange={handleOpenStatusChange}
         >
-          <MenuItem value={1}>전체공개</MenuItem>
-          <MenuItem value={2}>회원공개</MenuItem>
-          <MenuItem value={3}>비공개</MenuItem>
+          <MenuItem value={OpenStatusEnum.PUBLIC}>전체공개</MenuItem>
+          <MenuItem value={OpenStatusEnum.ONLY_USER}>회원공개</MenuItem>
+          <MenuItem value={OpenStatusEnum.PRIVATE}>비공개</MenuItem>
         </Select>
       </FormControl>
     </Box>
@@ -284,7 +287,7 @@ function CreateSurveyInfo({
             name="surveyClosingAt"
             value={surveyInfo.surveyClosingAt}
             inputProps={{
-              min: todayFormatted,
+              min: tomorrowFormatted,
             }}
             onChange={handleSurveyInfoInputChange}
           />

@@ -27,6 +27,8 @@ import {
   SelectionProps,
 } from '../types/SurveyTypes';
 import CreateMoveableSingleSelection from './CreateMoveableSingleSelection';
+import { CREATE_NEXT_QUESTION_INDEX } from '../constant/SurveyCreationConstant';
+import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
 
 const styles = {
   dragIndicatorBox: {
@@ -53,6 +55,12 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     marginLeft: '5px',
+  },
+
+  questionBox: {
+    borderColor: '#3f50b5',
+    boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
+    marginBottom: '30px',
   },
 
   questionTitleBox: {
@@ -99,16 +107,23 @@ function CreateQuestion({
       selectionId: new Date().getTime(),
       selectionValue: '',
       isMoveable: false,
+      isEndOfSurvey: false,
     };
 
-    if (value === '2') {
+    if (value === QuestionTypeEnum.MOVEABLE_QUESTION.toString()) {
       const currentQuestionIndex = questions.indexOf(question);
-
-      defaultSelection = {
-        ...defaultSelection,
-        questionMoveId: currentQuestionIndex + 2,
-        isMoveable: true,
-      };
+      if (questions.length - 1 === questions.indexOf(question)) {
+        defaultSelection = {
+          ...defaultSelection,
+          isMoveable: true,
+        };
+      } else {
+        defaultSelection = {
+          ...defaultSelection,
+          questionMoveId: currentQuestionIndex + CREATE_NEXT_QUESTION_INDEX,
+          isMoveable: true,
+        };
+      }
     }
 
     const updateQuestions: QuestionProps[] = questions.map((prevQuestion) => {
@@ -277,26 +292,28 @@ function CreateQuestion({
           displayEmpty
           onChange={handleQuestionTypeChange}
         >
-          <MenuItem value="1">단일 선택형</MenuItem>
-          <MenuItem value="2">단일 선택형 (선택시 문항 이동)</MenuItem>
-          <MenuItem value="3">복수 선택형</MenuItem>
-          <MenuItem value="4">주관식 단답형</MenuItem>
-          <MenuItem value="5">주관식 서술형</MenuItem>
+          <MenuItem value={QuestionTypeEnum.SINGLE_QUESTION}>
+            단일 선택형
+          </MenuItem>
+          <MenuItem value={QuestionTypeEnum.MOVEABLE_QUESTION}>
+            단일 선택형 (선택시 문항 이동)
+          </MenuItem>
+          <MenuItem value={QuestionTypeEnum.MULTIPLE_QUESTION}>
+            복수 선택형
+          </MenuItem>
+          <MenuItem value={QuestionTypeEnum.SHORT_ANSWER}>
+            주관식 단답형
+          </MenuItem>
+          <MenuItem value={QuestionTypeEnum.SUBJECTIVE_DESCRIPTIVE_ANSWER}>
+            주관식 서술형
+          </MenuItem>
         </Select>
       </FormControl>
     </Box>
   );
 
   return (
-    <Card
-      variant="outlined"
-      sx={{
-        borderColor: '#3f50b5',
-        boxShadow:
-          '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
-        marginBottom: '30px',
-      }}
-    >
+    <Card variant="outlined" sx={styles.questionBox}>
       <CardContent>
         {dragIndicator}
         {deleteIconAndRequiredSwitch}
@@ -304,29 +321,34 @@ function CreateQuestion({
         {questionDescription}
         {selectQuestionType}
 
-        {question.questionType === '1' && (
+        {question.questionType === QuestionTypeEnum.SINGLE_QUESTION && (
           <CreateSingleSelection
             question={question}
             questions={questions}
             setQuestions={setQuestions}
           />
         )}
-        {question.questionType === '2' && (
+        {question.questionType === QuestionTypeEnum.MOVEABLE_QUESTION && (
           <CreateMoveableSingleSelection
             question={question}
             questions={questions}
             setQuestions={setQuestions}
           />
         )}
-        {question.questionType === '3' && (
+        {question.questionType === QuestionTypeEnum.MULTIPLE_QUESTION && (
           <CreateMultipleSelection
             question={question}
             questions={questions}
             setQuestions={setQuestions}
           />
         )}
-        {question.questionType === '4' && <CreateShortAnswer />}
-        {question.questionType === '5' && <CreateSubjectiveDescriptive />}
+        {question.questionType === QuestionTypeEnum.SHORT_ANSWER && (
+          <CreateShortAnswer />
+        )}
+        {question.questionType ===
+          QuestionTypeEnum.SUBJECTIVE_DESCRIPTIVE_ANSWER && (
+          <CreateSubjectiveDescriptive />
+        )}
       </CardContent>
     </Card>
   );

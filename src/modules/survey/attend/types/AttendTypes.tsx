@@ -9,14 +9,14 @@ export interface SurveyInfoProps {
   openStatusNo: number;
   surveyDescription: string;
   surveyStatusNo: number;
-  surveyPostAt?: string;
+  surveyPostAt?: string; // surveyPostAt?
   userNo: string | null;
 }
 
-export interface CreateSurveyInfoProps {
+export interface AttendSurveyInfoProps {
   surveyInfo: SurveyInfoProps;
-  setSurveyInfo: React.Dispatch<React.SetStateAction<SurveyInfoProps>>;
-  setSurveyImage: React.Dispatch<React.SetStateAction<File | undefined>>;
+  setAttendSurveyInfo: React.Dispatch<React.SetStateAction<SurveyInfoProps>>;
+  setAttendSurveyImage: React.Dispatch<React.SetStateAction<File | undefined>>;
 }
 
 export interface SelectionProps {
@@ -38,16 +38,16 @@ export interface QuestionProps {
   selections: SelectionProps[];
 }
 
-export interface CreateSelectionProps {
+export interface AttendSelectionProps {
   question: QuestionProps;
   questions: QuestionProps[];
-  setQuestions: React.Dispatch<React.SetStateAction<QuestionProps[]>>;
+  setAttendQuestions: React.Dispatch<React.SetStateAction<QuestionProps[]>>;
 }
 
-export interface CreateQuestionProps {
+export interface AttendQuestionProps {
   question: QuestionProps;
   questions: QuestionProps[];
-  setQuestions: React.Dispatch<React.SetStateAction<QuestionProps[]>>;
+  setAttendQuestions: React.Dispatch<React.SetStateAction<QuestionProps[]>>;
 }
 
 export interface SurveyProps {

@@ -11,10 +11,11 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import {
-  CreateQuestionProps,
+  CreateSelectionProps,
   QuestionProps,
   SelectionProps,
 } from '../types/SurveyTypes';
+import { CREATE_NEXT_QUESTION_INDEX } from '../constant/SurveyCreationConstant';
 
 const primaryColor = '#3f50b5';
 
@@ -56,7 +57,7 @@ function CreateMoveableSingleSelection({
   question,
   questions,
   setQuestions,
-}: CreateQuestionProps) {
+}: CreateSelectionProps) {
   /**
    * 문항 배열에서 업데이트할 배열을 찾아서 업데이트된 배열을 반환해주는 메서드 입니다.
    *
@@ -82,17 +83,25 @@ function CreateMoveableSingleSelection({
    * @author 강명관
    */
   const handleAddMoveableSelection = () => {
-    const addSelection: SelectionProps = {
+    let addDefaultSelecetion: SelectionProps = {
       questionId: question.questionId,
       selectionId: new Date().getTime(),
-      questionMoveId: questions.indexOf(question) + 2,
       selectionValue: '',
       isMoveable: true,
+      isEndOfSurvey: false,
     };
+
+    if (questions.length - 1 !== questions.indexOf(question)) {
+      addDefaultSelecetion = {
+        ...addDefaultSelecetion,
+        questionMoveId:
+          questions.indexOf(question) + CREATE_NEXT_QUESTION_INDEX,
+      };
+    }
 
     const updateQuestion: QuestionProps = {
       ...question,
-      selections: [...question.selections, addSelection],
+      selections: [...question.selections, addDefaultSelecetion],
     };
 
     setQuestions(findQuestionAndUpdateQuestions(updateQuestion));
@@ -134,25 +143,43 @@ function CreateMoveableSingleSelection({
     const questionIndex: number = questions.indexOf(question);
     const selectionIndex: number = question.selections.indexOf(changeSelection);
 
-    let changedQuestionMoveId: number = questionIndex + 2;
+    const updateSelections: SelectionProps[] = [...question.selections];
 
     if (selectedValue === END_OF_SURVEY) {
-      changedQuestionMoveId = questions.length;
-    } else if (selectedValue === NEXT_QUESTION) {
-      changedQuestionMoveId = questionIndex + 2;
+      updateSelections[selectionIndex] = {
+        ...updateSelections[selectionIndex],
+        questionMoveId: undefined,
+        isEndOfSurvey: true,
+      };
+
+      const updateQuestion = {
+        ...question,
+        selections: updateSelections,
+      };
+
+      setQuestions(findQuestionAndUpdateQuestions(updateQuestion));
+      return;
+    }
+
+    let changedQuestionMoveId: number =
+      questionIndex + CREATE_NEXT_QUESTION_INDEX;
+
+    if (selectedValue === NEXT_QUESTION) {
+      changedQuestionMoveId = questionIndex + CREATE_NEXT_QUESTION_INDEX;
     } else {
-      // changedQuestionMoveId = Number(event.target.value);
       const selectedQuestionMoveId = Number(selectedValue);
       if (selectedQuestionMoveId > changedQuestionMoveId) {
         changedQuestionMoveId = selectedQuestionMoveId;
       }
     }
 
-    const updateSelections: SelectionProps[] = [...question.selections];
-    updateSelections[selectionIndex] = {
+    const updatedSelection = {
       ...updateSelections[selectionIndex],
       questionMoveId: changedQuestionMoveId,
+      isEndOfSurvey: false,
     };
+
+    updateSelections[selectionIndex] = updatedSelection;
 
     const updateQuestion = {
       ...question,
@@ -230,13 +257,17 @@ function CreateMoveableSingleSelection({
               <FormControl sx={{ minWidth: '200px' }}>
                 <Select
                   id="demo-simple-select"
-                  value={selection.questionMoveId?.toString()}
+                  value={
+                    selection.isEndOfSurvey
+                      ? END_OF_SURVEY
+                      : selection.questionMoveId?.toString() || ''
+                  }
                   onChange={(event: SelectChangeEvent) =>
                     handelSetQuestionNumber(selection, event)
                   }
                 >
                   {questions
-                    .slice(questions.indexOf(question) + 1) // 현재 인덱스 이후의 항목만 선택
+                    .slice(questions.indexOf(question) + 1)
                     .map((que, queIndex) => (
                       <MenuItem
                         key={que.questionId}
@@ -245,7 +276,10 @@ function CreateMoveableSingleSelection({
                         {questions.indexOf(question) + queIndex + 2}번
                       </MenuItem>
                     ))}
-                  <MenuItem value={NEXT_QUESTION}>다음 문항</MenuItem>
+
+                  {questions.indexOf(question) !== questions.length - 1 && (
+                    <MenuItem value={NEXT_QUESTION}>다음 문항</MenuItem>
+                  )}
                   <MenuItem value={END_OF_SURVEY}>종료</MenuItem>
                 </Select>
               </FormControl>

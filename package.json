@@ -15,6 +15,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
+<<<<<<< HEAD
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@types/react-router-dom": "^5.3.3",
@@ -28,8 +29,21 @@
     "react-dom": "^17.0.0 || ^18.0.0",
     "react-oauth": "^0.0.1",
     "react-query": "^3.39.3",
+=======
+    "@types/node": "^16.18.48",
+    "@types/react-dom": "^18.2.7",
+    "@types/react-router-dom": "^5.3.3",
+    "axios": "^1.5.0",
+    "class-transformer": "0.5.1",
+    "class-validator": "^0.14.0",
+    "create-react-app": "^5.0.1",
+    "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-dom": "^18.2.0",
+>>>>>>> 68c4604995063ab70fb46c3b5ad4290bb09a927e
     "react-router-dom": "^6.15.0",
     "styled-components": "^5.3.11",
+    "sweetalert2": "^11.7.31",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -62,7 +76,11 @@
     ]
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@types/node": "^20.8.4",
+=======
+    "@types/react-beautiful-dnd": "^13.1.5",
+>>>>>>> 68c4604995063ab70fb46c3b5ad4290bb09a927e
     "@typescript-eslint/eslint-plugin": "^6.7.0",
     "@typescript-eslint/parser": "^6.7.0",
     "eslint": "^8.49.0",
