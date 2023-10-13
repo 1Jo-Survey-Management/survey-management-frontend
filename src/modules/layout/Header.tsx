@@ -4,6 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
+import axios from '../login/components/customApi';
 
 function Header() {
   const location = useLocation();
@@ -17,13 +18,25 @@ function Header() {
   const logout = () => {
     console.log('logout');
 
-    navigate('/');
+    axios
+      .get('/login/logout')
+      .then((response) => {
+        const respData = response.data;
+        console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
+        axios.defaults.headers.common['Authorization'] = null;
+
+        if (respData === '') {
+          console.log('API 요청 실패');
+        }
+
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
-  // 현재 경로가 '/'이면 로그아웃 버튼을 숨깁니다.
   const isHomePage = location.pathname === '/';
-
-  console.log(`헤더에서 여기 어디${location.pathname}`);
 
   return (
     <AppBar position="static">

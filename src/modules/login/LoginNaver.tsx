@@ -1,8 +1,5 @@
-// import axios from 'axios';
 import React, { useState } from 'react';
-
-// import { useNavigate } from 'react-router-dom';
-// import Modal from './modal/BasicModal';
+import { client_id, state, redirect_uri } from '../login/config/config.json';
 
 const buttonStyle = {
   border: 'none',
@@ -22,13 +19,9 @@ const imageStyle = {
 function LoginNaver() {
   const [isHovered, setIsHovered] = useState(false);
 
-  // OAuth 인증 요청 버튼 클릭 핸들러
   const handleOAuthLogin = () => {
-    // OAuth 인증 페이지 URL
-    const authorizationUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=ukwEecKhMrJzOdjwpJfB&state=STATE_STRING&redirect_uri=http://localhost:8080/login/oauth2/code/naver`;
+    const authorizationUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${client_id}&state=${state}&redirect_uri=${redirect_uri}`;
 
-    console.log('sdfsdf');
-    // 사용자를 OAuth 인증 페이지로 리디렉션
     window.location.href = authorizationUrl;
   };
 
@@ -48,7 +41,6 @@ function LoginNaver() {
       >
         <img src={getImageSrc()} style={imageStyle} alt="대체_텍스트" />
       </button>
-      {/* {isModaled && <Modal onClose={() => setIsModaled(false)} />} */}
     </div>
   );
 }

@@ -1,18 +1,13 @@
-/**
- * 로그인 화면
- * @author 김선규
- */
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
-import axios from 'axios';
+import axios from '../login/components/customApi';
 import Logo from './img/SurveyLogo.png';
 import LoginFig from './img/LoginFig.png';
-// import LoginNaver from './LoginNaver';
-// import Modal from './modal/BasicModal';
 import BasicModal from './modal/BasicModal';
+import moment from 'moment';
+import LoginNaver from './LoginNaver';
 
 const emptyBoxSimple = {
   height: 20,
@@ -76,31 +71,29 @@ const imageStyle = {
 };
 
 /**
+ * 로그인 화면
+ * @author 김선규
  * @returns LoginDispay
  */
 function LoginDisplay() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [showModal, setShowModal] = useState(false); // 모달 가시성 상태 추가
+  const [showModal, setShowModal] = useState(false);
 
-  /**
-   * 로그인 화면에 AccessToken이 같이 오는 것은 회원가입의 상황밖에 없다
-   * 따라서 AccessToken을 같이 받는 즉시 모달창으로 회원가입을 실행한다.
-   */
   useEffect(() => {
+    const localStorageAccessToken = localStorage.getItem('accessToken');
     const searchParams = new URLSearchParams(location.search);
     const accessCode = searchParams.get('code');
 
-    const redirectUri = 'http://localhost:8080/login/oauth2/code/naver';
+    const redirectUri = '/login/oauth2/code/naver';
 
-    console.log('accessCode : ' + accessCode);
-
+    //Authorization code를 받으면 백 서버로 요청을 보내준다.
     if (accessCode) {
       axios
         .get(redirectUri, {
           params: {
             code: accessCode,
-            state: 'STATE_STRING',
+            state: 'STATE_STRING', // 보안을 위한 state
           },
         })
         .then((response) => {
@@ -110,9 +103,9 @@ function LoginDisplay() {
           const responseUserNo = responseCheck.data.content.userNo;
           const responseAccessToken = responseCheck.data.content.accessToken;
           const responseNickName = responseCheck.data.content.userNickname;
-          const localStorageAccessToken = localStorage.getItem('accessToken');
+          const responseExpiresIn = responseCheck.data.content.expiresIn;
+          const responseRefreshToken = responseCheck.data.content.refreshToken;
 
-          // 여기서도 분기를 만들어줘야함.
           // 1. 완료된 회원
           if (responseUserNo != null && responseNickName != null) {
             // 회원은 존재하나 브라우저에서 로그인 한적이 없는 회원
@@ -120,18 +113,31 @@ function LoginDisplay() {
               localStorageAccessToken == null ||
               responseAccessToken !== localStorageAccessToken
             ) {
-              // accessToken localStrage에 저장하기
-              localStorage.setItem('accessToken', responseAccessToken);
+              // 토큰 만료시간 계산해서 넣기
+              if (responseExpiresIn) {
+                const currentTime = moment(); // 현재 시간을 Moment 객체로 가져옴
+                const calculatedExpiresAt = currentTime.add(
+                  responseExpiresIn,
+                  'seconds'
+                );
+
+                const exchangeExpiresAt = calculatedExpiresAt.format(
+                  'YYYY-MM-DD HH:mm:ss'
+                );
+
+                // accessToken, refreshToken, expiresIn localStrage에 저장하기
+                localStorage.setItem('accessToken', responseAccessToken);
+                localStorage.setItem('expiresIn', exchangeExpiresAt);
+                localStorage.setItem('refreshToken', responseRefreshToken);
+              }
+
+              const expiresAt = localStorage.getItem('expiresIn');
+
+              console.log('유효시간 확인 : ' + expiresAt);
 
               // axois default header에 넣기(Global)
               axios.defaults.headers.common['Authorization'] =
                 'Bearer ' + responseAccessToken;
-              responseAccessToken;
-
-              console.log(
-                '로컬스토리지 accessToken 확인 : ' +
-                  localStorage.getItem('accessToken')
-              );
 
               navigate('/survey/main');
             }
@@ -147,10 +153,23 @@ function LoginDisplay() {
             // accessToken localStrage에 저장하기
             localStorage.setItem('accessToken', responseAccessToken);
 
-            console.log(
-              '로컬스토리지 accessToken 확인 : ' +
-                localStorage.getItem('accessToken')
-            );
+            // 토큰 만료시간 계산해서 넣기
+            if (responseExpiresIn) {
+              const currentTime = moment(); // 현재 시간을 Moment 객체로 가져옴
+              const calculatedExpiresAt = currentTime.add(
+                responseExpiresIn,
+                'seconds'
+              );
+
+              const exchangeExpiresAt = calculatedExpiresAt.format(
+                'YYYY-MM-DD HH:mm:ss'
+              );
+
+              // accessToken, refreshToken, expiresIn localStrage에 저장하기
+              localStorage.setItem('accessToken', responseAccessToken);
+              localStorage.setItem('expiresIn', exchangeExpiresAt);
+              localStorage.setItem('refreshToken', responseRefreshToken);
+            }
 
             // axois default header에 넣기(Global)
             axios.defaults.headers.common['Authorization'] =
@@ -163,30 +182,12 @@ function LoginDisplay() {
         .catch((error) => {
           console.error('Error:', error);
         });
-
-      console.log('몇번요청됐나');
     }
   }, []);
 
   const goLogin = () => {
     navigate('/survey/main');
   };
-
-  const [isHovered, setIsHovered] = useState(false);
-
-  // OAuth 인증 요청 버튼 클릭 핸들러
-  const handleOAuthLogin = () => {
-    // OAuth 인증 페이지 URL
-    const authorizationUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=ukwEecKhMrJzOdjwpJfB&state=STATE_STRING&redirect_uri=http://localhost:3000/`;
-
-    // 사용자를 OAuth 인증 페이지로 리디렉션
-    window.location.href = authorizationUrl;
-  };
-
-  const getImageSrc = () =>
-    isHovered
-      ? `${process.env.PUBLIC_URL}/naverhover.png`
-      : `${process.env.PUBLIC_URL}/naverButton.png`;
 
   return (
     <Box component="div" sx={basicBox}>
@@ -199,25 +200,11 @@ function LoginDisplay() {
             NoName Survey
           </h1>
         </Box>
-        {/* 임시 지정 공백, 차후 디자인 수정 예정 */}
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={naverloginButton}>
-          {/* <LoginNaver /> */}
-
-          <div>
-            <button
-              type="button"
-              onClick={handleOAuthLogin}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              style={buttonStyle}
-            >
-              <img src={getImageSrc()} style={imageStyle} alt="대체_텍스트" />
-            </button>
-            {/* {isModaled && <Modal onClose={() => setIsModaled(false)} />} */}
-          </div>
+          <LoginNaver />
 
           {showModal && <BasicModal onClose={() => {}} />}
         </Box>

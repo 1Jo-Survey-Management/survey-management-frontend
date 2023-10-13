@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
-// import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import axios from 'axios';
+import axios from '../components/customApi';
 import { useNavigate } from 'react-router-dom';
 import RadioButton from '../components/RowRadioButtonsGroup';
 import InputNickName from '../components/NameInput';
 import GetBirth from '../components/BasicDatePicker';
 import StyledButton from '../components/StyledButton';
+import { Moment } from 'moment';
+import moment from 'moment';
 
 const style = {
   position: 'absolute' as const,
@@ -44,6 +44,8 @@ interface FormData {
   userBirth: string;
   userNickname: string;
   userGender: string;
+  expiresIn: Moment;
+  refreshToken: string;
 }
 
 /**
@@ -60,9 +62,10 @@ export default function BasicModal({ onClose }: ModalProps) {
     userNickname: '',
     userGender: '',
     userBirth: '',
+    expiresIn: moment(),
+    refreshToken: '',
   });
 
-  // 각 입력 필드에 대한 데이터 업데이트 함수
   const handleNickNameChange = (value: string) => {
     setFormData({ ...formData, userNickname: value });
   };
@@ -76,30 +79,28 @@ export default function BasicModal({ onClose }: ModalProps) {
   };
 
   const handleClose = () => {
-    onClose(); // onClose 함수를 호출하여 모달을 닫음
-    setOpen(false); // 모달 상태를 닫힌 상태로 업데이트
+    onClose();
+    setOpen(false);
   };
 
   console.log(open);
 
-  // 회원가입 API 요청
   const handleSubmit = () => {
     if (
       formData.userNickname === '' ||
       formData.userBirth === '' ||
       formData.userGender === ''
     ) {
-      console.log('하나라도 비어있으면 안돼');
     } else {
-      // formData 객체를 UserInfo 객체로 변환
       const userInfo = {
         userNickname: formData.userNickname,
         userBirth: formData.userBirth,
         userGender: formData.userGender,
-        // 나머지 필드도 필요에 따라 추가
+        expiresIn: localStorage.getItem('expiresIn'),
+        refreshToken: localStorage.getItem('refreshToken'),
       };
       axios
-        .post('http://localhost:8080/login/regist', userInfo, {
+        .post('/login/regist', userInfo, {
           headers: {
             'Content-Type': 'application/json', // JSON 데이터 전송을 위한 헤더 설정
           },
@@ -113,9 +114,7 @@ export default function BasicModal({ onClose }: ModalProps) {
             console.log('API 요청 실패');
           }
 
-          navigate(
-            `/survey/main?accessToken=${respData.content.accessToken}&&userNo=${respData.content.userNo}`
-          );
+          navigate(`/survey/main`);
         })
         .catch((error) => {
           console.error(error);
@@ -131,6 +130,8 @@ export default function BasicModal({ onClose }: ModalProps) {
 
     // 회원가입 취소하면 회원가입하기 위해 만들어 두었던 데이터베이스 폼도 요청보내서 삭제
     // 발급 받았던 액세스 토큰도 삭제할 수 있으면 삭제
+
+    // 미완성 PR이후 마지막으로 고쳐서 올리겠습니다..
     return handleClose();
   };
 

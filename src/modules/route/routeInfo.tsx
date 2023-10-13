@@ -11,8 +11,6 @@ import Mypage from '../survey/Mypage';
  * @returns
  */
 export const routeInfo = (path: string) => {
-  console.log('라우트인포');
-
   switch (path) {
     case '/survey/main':
       return <SurveyMain />;
