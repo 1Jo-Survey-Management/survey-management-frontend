@@ -14,15 +14,11 @@ const containerStyle = {
  */
 function Body() {
   const location = useLocation();
-<<<<<<< HEAD
-  console.log(location.pathname);
-=======
 
   const containerStyle = {
     maxWidth: 'md',
     // height: '500px',
   };
->>>>>>> 68c4604995063ab70fb46c3b5ad4290bb09a927e
 
   return (
     <Container style={containerStyle}>{routeInfo(location.pathname)}</Container>

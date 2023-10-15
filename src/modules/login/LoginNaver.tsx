@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { client_id, state, redirect_uri } from '../login/config/config.json';
+import config from './config/config.json';
 
 const buttonStyle = {
   border: 'none',
@@ -20,7 +20,7 @@ function LoginNaver() {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleOAuthLogin = () => {
-    const authorizationUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${client_id}&state=${state}&redirect_uri=${redirect_uri}`;
+    const authorizationUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${config.clientId}&state=${config.state}&redirect_uri=${config.redirectUri}`;
 
     window.location.href = authorizationUrl;
   };

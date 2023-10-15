@@ -1,6 +1,6 @@
 {
   "server": "http://localhost:8080/",
-  "client_id": "ukwEecKhMrJzOdjwpJfB",
+  "clientId": "ukwEecKhMrJzOdjwpJfB",
   "state": "STATE_STRING",
-  "redirect_uri": "http://localhost:3000/"
+  "redirectUri": "http://localhost:3000/"
 }
