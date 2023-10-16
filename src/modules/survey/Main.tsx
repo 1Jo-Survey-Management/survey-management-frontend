@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import Container from '@mui/material/Container';
 import axios from '../login/components/customApi';
-import CountdownTimer from '../login/components/CountdownTimer';
-import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 
@@ -20,27 +18,20 @@ function Main() {
         console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
 
         if (respData === '') {
+          alert('로그인이 필요합니다!');
           console.log('API 요청 실패');
         }
       })
       .catch((error) => {
+        alert('로그인이 필요합니다!');
         console.error(error);
       });
   };
 
   const tokenExpires = () => {
     const expiresInString = localStorage.getItem('expiresIn');
-    const expiresInDate = expiresInString ? moment(expiresInString) : null;
 
     console.log('expiresin : ' + expiresInString);
-
-    {
-      expiresInDate ? (
-        <CountdownTimer targetDate={expiresInDate}></CountdownTimer>
-      ) : (
-        console.log('no expiresInDate in')
-      );
-    }
   };
   const navigate = useNavigate();
   const goAttend = () => {

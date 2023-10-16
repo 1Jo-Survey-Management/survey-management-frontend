@@ -3,12 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
-import axios from '../login/components/customApi';
+import axios from './components/customApi';
 import Logo from './img/SurveyLogo.png';
 import LoginFig from './img/LoginFig.png';
 import BasicModal from './modal/BasicModal';
 import moment from 'moment';
 import LoginNaver from './LoginNaver';
+import config from './config/config.json';
 
 const emptyBoxSimple = {
   height: 20,
@@ -86,10 +87,22 @@ function LoginDisplay() {
     const searchParams = new URLSearchParams(location.search);
     const accessCode = searchParams.get('code');
 
+    console.log('accessCode 로그가 남아있나 : ' + accessCode);
+    console.log('localStorageAccessToken : ' + localStorageAccessToken);
+
     const redirectUri = '/login/oauth2/code/naver';
+
+    // accessToken이 유효한지 api를 통해서 확인하기 (로그인 했는데 로그아웃 안했을때)
+    if (localStorageAccessToken != null && !accessCode) {
+      console.log('axios 맨처음 쏘는곳 찾기1');
+      const authorizationUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${config.clientId}&state=${config.state}&redirect_uri=${config.redirectUri}`;
+
+      window.location.href = authorizationUrl;
+    }
 
     //Authorization code를 받으면 백 서버로 요청을 보내준다.
     if (accessCode) {
+      console.log('axios 맨처음 쏘는곳 찾기');
       axios
         .get(redirectUri, {
           params: {
@@ -107,14 +120,44 @@ function LoginDisplay() {
           const responseExpiresIn = responseCheck.data.content.expiresIn;
           const responseRefreshToken = responseCheck.data.content.refreshToken;
 
+          console.log('responseUserNo : ' + responseUserNo);
+          console.log('responseAccessToken :' + responseAccessToken);
+          console.log('responseNickName :' + responseNickName);
+          console.log('responseExpiresIn :' + responseExpiresIn);
+          console.log('responseRefreshToken : ' + responseRefreshToken);
+
           // 1. 완료된 회원
           if (responseUserNo != null && responseNickName != null) {
             // 회원은 존재하나 브라우저에서 로그인 한적이 없는 회원
+
             if (
               localStorageAccessToken == null ||
               responseAccessToken !== localStorageAccessToken
             ) {
-              // 토큰 만료시간 계산해서 넣기
+              console.log(
+                '회원은 존재하나 브라우저에서 로그인 한적이 없는 회원'
+              );
+
+              // accessToken, refreshToken, expiresIn localStrage에 저장하기
+              localStorage.setItem('accessToken', responseAccessToken);
+              localStorage.setItem('expiresIn', responseExpiresIn);
+              localStorage.setItem('refreshToken', responseRefreshToken);
+
+              const expiresAt = localStorage.getItem('expiresIn');
+
+              console.log('유효시간 확인 : ' + expiresAt);
+
+              // axois default header에 넣기(Global)
+              axios.defaults.headers.common['Authorization'] =
+                'Bearer ' + responseAccessToken;
+
+              navigate('/survey/main');
+              return;
+            }
+            // 회원도 존재하고 브라우저에 로그인도 했었던 회원
+            else {
+              console.log('회원도 존재하고 브라우저에 로그인도 했었던 회원');
+
               if (responseExpiresIn) {
                 const currentTime = moment(); // 현재 시간을 Moment 객체로 가져옴
                 const calculatedExpiresAt = currentTime.add(
@@ -143,34 +186,36 @@ function LoginDisplay() {
               navigate('/survey/main');
             }
 
+            console.log(
+              '백에서 온 토큰 : ' +
+                responseAccessToken +
+                '스토리지에 있는 토큰 : ' +
+                localStorageAccessToken
+            );
+
             // 현 브라우저에서 로그인 한적이 있어 localStorage에 토큰이 있는 회원
             if (responseAccessToken === localStorageAccessToken) {
               navigate('/survey/main');
             }
+            // 토큰이 유효하지 않으면 다시 로그인해야해서 로컬스토리지 다지움
+            else {
+              localStorage.removeItem('accessToken');
+              localStorage.removeItem('refreshToken');
+              localStorage.removeItem('expiresIn');
+
+              console.log('다시 로그인하기');
+              navigate('/');
+            }
           }
 
           // 2. 첫 로그인 시
-          if (responseUserNo != null) {
-            // accessToken localStrage에 저장하기
+          if (responseUserNo != null && !responseNickName) {
+            console.log('첫 로그인!');
+
+            // accessToken, refreshToken, expiresIn localStrage에 저장하기
             localStorage.setItem('accessToken', responseAccessToken);
-
-            // 토큰 만료시간 계산해서 넣기
-            if (responseExpiresIn) {
-              const currentTime = moment(); // 현재 시간을 Moment 객체로 가져옴
-              const calculatedExpiresAt = currentTime.add(
-                responseExpiresIn,
-                'seconds'
-              );
-
-              const exchangeExpiresAt = calculatedExpiresAt.format(
-                'YYYY-MM-DD HH:mm:ss'
-              );
-
-              // accessToken, refreshToken, expiresIn localStrage에 저장하기
-              localStorage.setItem('accessToken', responseAccessToken);
-              localStorage.setItem('expiresIn', exchangeExpiresAt);
-              localStorage.setItem('refreshToken', responseRefreshToken);
-            }
+            localStorage.setItem('expiresIn', responseExpiresIn);
+            localStorage.setItem('refreshToken', responseRefreshToken);
 
             // axois default header에 넣기(Global)
             axios.defaults.headers.common['Authorization'] =
@@ -179,6 +224,7 @@ function LoginDisplay() {
 
             setShowModal(true);
           }
+          // 브라우저에 로그인 안했는데
         })
         .catch((error) => {
           console.error('Error:', error);
