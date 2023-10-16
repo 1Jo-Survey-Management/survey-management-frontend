@@ -7,9 +7,13 @@ import MypageWrite from '../survey/MypageWriteSurvey';
 import AttendSurvey from '../survey/attend/routers/AttendSurvey';
 import CreationSurvey from '../survey/creation/routers/CreateationSurvey';
 
-export const pathInfo: { [key: string]: string[] }[] = [{ survey: ['main'] }];
-
-export const routeInfo = (path: string): React.ReactNode => {
+/**
+ * 각 페이지에 대한 라우팅 경로 설정입니다
+ * @author 김선규
+ * @param path
+ * @returns
+ */
+export const routeInfo = (path: string) => {
   switch (path) {
     case '/survey/main':
       return <SurveyMain />;
