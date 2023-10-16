@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Container from '@mui/material/Container';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import axios from './components/customApi';
@@ -94,7 +93,6 @@ function LoginDisplay() {
 
     // accessToken이 유효한지 api를 통해서 확인하기 (로그인 했는데 로그아웃 안했을때)
     if (localStorageAccessToken != null && !accessCode) {
-      console.log('axios 맨처음 쏘는곳 찾기1');
       const authorizationUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${config.clientId}&state=${config.state}&redirect_uri=${config.redirectUri}`;
 
       window.location.href = authorizationUrl;
