@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.11.1",
+    "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
-    "@mui/icons-material": "^5.14.8",
-    "@mui/material": "^5.14.8",
-    "@mui/styled-engine-sc": "^5.14.8",
+    "@mui/icons-material": "^5.14.9",
+    "@mui/lab": "^5.0.0-alpha.145",
+    "@mui/material": "^5.14.10",
+    "@mui/styled-engine-sc": "^5.14.10",
+    "@mui/x-date-pickers": "^6.14.0",
     "@mui/x-charts": "^6.0.0-alpha.15",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -23,17 +25,26 @@
     "class-transformer": "0.5.1",
     "class-validator": "^0.14.0",
     "create-react-app": "^5.0.1",
-    "date-fns": "^2.30.0",
-    "react": "^18.2.0",
+    "dayjs": "^1.11.10",
+    "i": "^0.3.7",
+    "moment": "^2.29.4",
+    "react": "^17.0.0 || ^18.0.0",
     "react-beautiful-dnd": "^13.1.1",
-    "react-dom": "^18.2.0",
-    "react-infinite-scroll-component": "^6.1.0",
+    "react-cookie": "^6.1.1",
+    "react-dom": "^17.0.0 || ^18.0.0",
+    "react-oauth": "^0.0.1",
+    "react-query": "^3.39.3",
     "react-router-dom": "^6.15.0",
     "styled-components": "^5.3.11",
     "sweetalert2": "^11.7.31",
     "swiper": "^10.2.0",
     "typescript": "^4.9.5",
+    "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -60,8 +71,11 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^20.8.4",
     "@types/react-beautiful-dnd": "^13.1.5",
+    "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
     "eslint": "^8.49.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.0.0",
@@ -77,5 +91,6 @@
     "prettier": "^3.0.3",
     "react-scripts": "^5.0.1",
     "typescript": "^4.9.5"
-  }
+  },
+  "proxy": "http://localhost:8080/"
 }

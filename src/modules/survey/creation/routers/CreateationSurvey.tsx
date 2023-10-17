@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // import React, { useState } from 'react';
 // import Container from '@mui/material/Container';
 // import { Box, Button } from '@mui/material';
@@ -24,6 +25,37 @@
 // import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
 // import { OpenStatusEnum } from '../../enums/OpenStatusEnum';
 // import { SurveyStatusEunm } from '../../enums/SurveyStatusEnum';
+=======
+/** @jsxImportSource @emotion/react */
+
+import React, { useState } from 'react';
+import Container from '@mui/material/Container';
+import { Box, Button } from '@mui/material';
+import axios from 'axios';
+import { validate } from 'class-validator';
+import Swal from 'sweetalert2';
+import {
+  DragDropContext,
+  Droppable,
+  DragEndDetails,
+  Draggable,
+} from 'react-beautiful-dnd';
+/** @jsxImportSource @emotion/react */
+import CreateQuestion from '../components/CreateQuestion';
+import FloatingActionButtons from '../components/FloatingActionButtons';
+import CreateSurveyInfo from '../components/CreateSurveyInfo';
+import {
+  QuestionProps,
+  SelectionProps,
+  SurveyInfoProps,
+} from '../types/SurveyTypes';
+import SurveyInfoValidation from '../validator/SurveyInfoValidation';
+import QuestionValidation from '../validator/QuestionValidation';
+import { getValidationErrorMessage } from '../util/ValidatorUtil';
+import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
+import { OpenStatusEnum } from '../../enums/OpenStatusEnum';
+import { SurveyStatusEunm } from '../../enums/SurveyStatusEnum';
+>>>>>>> origin/develop
 
 // function CreationSurvey() {
 //   const [surveyId] = useState<number>(new Date().getTime());

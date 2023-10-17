@@ -16,7 +16,8 @@
     "noEmit": true,
     "jsx": "react-jsx",
     // class-Validator 에서 경고메세지를 처리하기 위한 설정
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "types": ["@emotion/react/types/css-prop"]
   },
   "include": ["src"]
 }
