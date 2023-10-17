@@ -26,7 +26,7 @@ function Header() {
       .then((response) => {
         const respData = response.data;
         console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
-        axios.defaults.headers.common['Authorization'] = null;
+        axios.defaults.headers.common.Authorization = null;
 
         if (respData === '') {
           console.log('API 요청 실패');

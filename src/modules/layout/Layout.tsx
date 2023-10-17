@@ -3,12 +3,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { useLocation } from 'react-router-dom';
 import Header from './Header';
 import Body from './Body';
-<<<<<<< HEAD
-// import Footer from './Footer';
-=======
 import LoginPage from '../login/LoginDisplay';
 import axios from '../login/components/customApi';
->>>>>>> origin/develop
 
 /**
  * 페이지의 Header, Body, Footer를 모아놓은 Layout 입니다.
@@ -27,10 +23,8 @@ export default function Layout() {
   return (
     <>
       <CssBaseline />
-<<<<<<< HEAD
       <Header />
       <Body />
-=======
 
       {isLoginPage ? (
         <LoginPage />
@@ -41,7 +35,6 @@ export default function Layout() {
           {/* <Footer /> */}
         </>
       )}
->>>>>>> origin/develop
     </>
   );
 }
