@@ -1,8 +1,8 @@
 import Container from '@mui/material/Container';
-import Floating from './components/Floating';
+import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
@@ -22,7 +22,7 @@ import {
   Fade,
 } from '@mui/material';
 import GroupsIcon from '@mui/icons-material/Groups';
-import { useNavigate } from 'react-router-dom';
+import Floating from './components/Floating';
 
 type CardData = {
   surveyNo: number;
@@ -33,6 +33,7 @@ type CardData = {
   surveyClosingAt: string;
   userNickName: string;
   userImage: string;
+  userNo: Array<number>;
   surveyStatusName: string;
   openStatusName: string;
   tag: Array<string>;
@@ -42,7 +43,7 @@ type CardData = {
 
 function SurveySearch(this: any) {
   const navigate = useNavigate();
-  const [searchOptions, setSearchOptions] = useState<string[]>([]);
+  // const [searchOptions, setSearchOptions] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filteredData, setFilteredData] = useState<CardData[]>([]);
   const [selectedState, setSelectedState] = useState<string>('전체(모든 카드)');
@@ -61,7 +62,7 @@ function SurveySearch(this: any) {
 
   const fontFamily = "'Noto Sans KR', sans-serif";
   const textStyle = {
-    fontFamily: fontFamily,
+    fontFamily,
   };
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -73,7 +74,7 @@ function SurveySearch(this: any) {
     const fetchData = async () => {
       if (selectedState === '전체(모든 카드)') {
         const response = await axios.get(
-          `http://localhost:8080/surveys/surveyall?page=${page}`
+          `http://localhost:8000/surveys/surveyall?page=${page}`
         );
         if (response.data.length === 0) {
           setHasMore(false);
@@ -87,7 +88,7 @@ function SurveySearch(this: any) {
         }
       } else if (selectedState === '진행') {
         const response = await axios.get(
-          `http://localhost:8080/surveys/select-post?page=${page}`
+          `http://localhost:8000/surveys/select-post?page=${page}`
         );
 
         if (response.data.length === 0) {
@@ -102,7 +103,7 @@ function SurveySearch(this: any) {
         }
       } else if (selectedState === '마감') {
         const response = await axios.get(
-          `http://localhost:8080/surveys/select-closing?page=${page}`
+          `http://localhost:8000/surveys/select-closing?page=${page}`
         );
 
         if (response.data.length === 0) {
@@ -144,14 +145,14 @@ function SurveySearch(this: any) {
     setFilteredData(sortedCardData);
   }, []);
 
-  const handleSearchOptionChange = (
-    event: SelectChangeEvent<string | string[]>
-  ) => {
-    const newValue = Array.isArray(event.target.value)
-      ? event.target.value
-      : [event.target.value];
-    setSearchOptions(newValue);
-  };
+  // const handleSearchOptionChange = (
+  //   event: SelectChangeEvent<string | string[]>
+  // ) => {
+  //   const newValue = Array.isArray(event.target.value)
+  //     ? event.target.value
+  //     : [event.target.value];
+  //   setSearchOptions(newValue);
+  // };
 
   const removePage = () => {
     setPage(0);
@@ -201,7 +202,6 @@ function SurveySearch(this: any) {
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
       <h1 style={textStyle}>전체 설문</h1>
-      {/* <SurveyCard /> */}
 
       {/* 검색어 입력란 */}
       <Paper
@@ -283,10 +283,10 @@ function SurveySearch(this: any) {
           }}
           onClick={() => {
             // 초기화 버튼 클릭 시 검색 옵션 및 검색어 초기화
-            setSearchOptions([]);
+            // setSearchOptions([]);/
             setSearchTerm('');
+            removePage();
             setSelectedState('전체(모든 카드)');
-            removePage;
 
             // 모든 카드 데이터로 필터링 초기화
             const sortedCardData = [...filteredData].sort((a, b) => {
@@ -400,7 +400,7 @@ function SurveySearch(this: any) {
                       color: 'text.secondary',
                       marginBottom: '10px',
                       fontWeight: 600,
-                      fontFamily: fontFamily,
+                      fontFamily,
                     }}
                   >
                     {card.surveyClosingAt.slice(0, 10)}
@@ -453,9 +453,7 @@ function SurveySearch(this: any) {
                     style={textStyle}
                   >
                     {card.tag &&
-                      card.tag.map((tag, index) => (
-                        <span key={index}>#{tag}</span>
-                      ))}
+                      card.tag.map((tag) => <span key={tag}>#{tag}</span>)}
                   </Typography>
                 </CardContent>
               </Card>
@@ -521,6 +519,3 @@ function SurveySearch(this: any) {
 }
 
 export default SurveySearch;
-function fetchData() {
-  throw new Error('Function not implemented.');
-}

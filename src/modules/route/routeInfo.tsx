@@ -1,10 +1,11 @@
 import * as React from 'react';
 import SurveyMain from '../survey/main/Main';
+import Search from '../survey/main/Search';
 import LoginDisplay from '../login/LoginDisplay';
-import Mypage from '../survey/MypageUserModify';
+import Mypage from '../survey/mypage/MypageUserModify';
 import MypageAttend from '../survey/MypageAttendSurvey';
-import MypageWrite from '../survey/MypageWriteSurvey';
-import CreationSurvey from '../survey/creation/routers/CreateationSurvey';
+// import CreationSurvey from '../survey/creation/routers/CreateationSurvey';
+import StatisticsPage from '../survey/statistic/StatisticsPage';
 
 export const pathInfo: { [key: string]: string[] }[] = [{ survey: ['main'] }];
 
@@ -16,14 +17,14 @@ export function routeInfo(path: string) {
       return <LoginDisplay />;
     case '/survey/Search':
       return <Search />;
-    case '/survey/MypageWrite':
-      return <MypageWrite />;
     case '/survey/MypageAttend':
       return <MypageAttend />;
     case '/survey/Mypage':
       return <Mypage />;
-    case '/survey/register':
-      return <CreationSurvey />;
+    // case '/survey/register':
+    //   return <CreationSurvey />;
+    case '/survey/statistics':
+      return <StatisticsPage />;
     default:
       return <LoginDisplay />;
   }

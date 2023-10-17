@@ -12,7 +12,7 @@ function Main() {
   const navigate = useNavigate();
   const fontFamily = "'Noto Sans KR', sans-serif";
   const textStyle = {
-    fontFamily: fontFamily,
+    fontFamily,
   };
 
   return (

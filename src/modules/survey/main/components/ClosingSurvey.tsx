@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
-import React from 'react';
 import GroupsIcon from '@mui/icons-material/Groups';
 import {
   Button,
@@ -40,6 +39,7 @@ function ClosingSurvey() {
     surveyClosingAt: string;
     userNickName: string;
     userImage: string;
+    userNo: Array<number>;
     surveyStatusName: string;
     openStatusName: string;
     tag: Array<string>;
@@ -49,7 +49,7 @@ function ClosingSurvey() {
 
   const fontFamily = "'Noto Sans KR', sans-serif";
   const textStyle = {
-    fontFamily: fontFamily,
+    fontFamily,
   };
   const [openModal, setOpenModal] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
@@ -58,7 +58,7 @@ function ClosingSurvey() {
 
   useEffect(() => {
     const data = async () => {
-      const card = await axios.get('http://localhost:8080/surveys/closing');
+      const card = await axios.get('http://localhost:8000/surveys/closing');
 
       setCardList(card.data);
     };
@@ -85,6 +85,14 @@ function ClosingSurvey() {
     setSelectedCard(null);
     setOpenModal(false);
   };
+
+  // const reParticipation = () => {
+  //   if(    ) {
+  //     alert('본인이 작성한 설문에는 참여할 수 없습니다.')
+  //   } else {
+  //     (() => navigate('/survey/Search'))
+  //   }
+  // }
 
   const swiperParams: SwiperOptions = {
     slidesPerView: 'auto',
@@ -194,7 +202,6 @@ function ClosingSurvey() {
                             }}
                           />
                         </Stack>
-                        {/* </Stack> */}
 
                         <div
                           style={{
@@ -205,7 +212,7 @@ function ClosingSurvey() {
                             color: 'text.secondary',
                             fontWeight: 600,
                             marginBottom: '0px',
-                            fontFamily: fontFamily,
+                            fontFamily,
                           }}
                         >
                           {card.surveyClosingAt.slice(0, 10)}
@@ -221,7 +228,8 @@ function ClosingSurvey() {
                           }}
                           style={textStyle}
                         >
-                          {card.surveyNo}
+                          {/* {card.userNo} */}
+                          {/* {card.surveyNo} */}
                         </Typography>
                         <Typography
                           variant="h5"
@@ -247,8 +255,8 @@ function ClosingSurvey() {
                           }}
                           style={textStyle}
                         >
-                          {card.tag.map((tag, index) => (
-                            <span key={index}>{tag}</span>
+                          {card.tag.map((tag) => (
+                            <span key={tag}>{tag}</span>
                           ))}
                         </Typography>
                       </CardContent>
@@ -305,7 +313,9 @@ function ClosingSurvey() {
               <Button onClick={() => navigate('/survey/Search')}>
                 결과보기
               </Button>
-              <Button onClick={() => navigate('/survey/Search')}>
+              <Button
+              // onClick={(reParticipation)}
+              >
                 참여하기
               </Button>
               <Button onClick={closeCardModal}>닫기</Button>

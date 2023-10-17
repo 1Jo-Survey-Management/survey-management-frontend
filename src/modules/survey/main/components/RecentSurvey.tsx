@@ -1,10 +1,9 @@
 // Import Swiper React components
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
-import React from 'react';
 import GroupsIcon from '@mui/icons-material/Groups';
 import {
   Button,
@@ -38,7 +37,7 @@ function RecentSurvey() {
   };
   const fontFamily = "'Noto Sans KR', sans-serif";
   const textStyle = {
-    fontFamily: fontFamily,
+    fontFamily,
   };
 
   type CardData = {
@@ -50,6 +49,7 @@ function RecentSurvey() {
     surveyClosingAt: string;
     userNickName: string;
     userImage: string;
+    userNo: Array<number>;
     surveyStatusName: string;
     openStatusName: string;
     tag: Array<string>;
@@ -74,7 +74,7 @@ function RecentSurvey() {
 
   useEffect(() => {
     const data = async () => {
-      const card = await axios.get('http://localhost:8080/surveys/recent');
+      const card = await axios.get('http://localhost:8000/surveys/recent');
       setCardList(card.data);
     };
     data();
@@ -133,7 +133,6 @@ function RecentSurvey() {
               cardList.map((card) => (
                 <div
                   key={card.surveyNo} // 수정된 부분: 배열 인덱스 대신 고유한 값을 key로 사용
-                  tabIndex={0}
                 >
                   {/* 카드를 클릭하면 해당 카드 정보를 전달하여 모달 열기 */}
                   <SwiperSlide style={styles.Slide}>
@@ -213,11 +212,24 @@ function RecentSurvey() {
                             color: 'text.secondary',
                             fontWeight: 600,
                             marginBottom: '0px',
-                            fontFamily: fontFamily,
+                            fontFamily,
                           }}
                         >
                           {card.surveyClosingAt.slice(0, 10)}
                         </div>
+                        <Typography
+                          variant="h5"
+                          component="div"
+                          sx={{
+                            fontSize: 18,
+                            fontWeight: 600,
+                            marginBottom: '8px',
+                            cursor: 'pointer',
+                          }}
+                          style={textStyle}
+                        >
+                          {/* {card.userNo}  */}
+                        </Typography>
                         <Typography
                           variant="h5"
                           component="div"
@@ -255,8 +267,9 @@ function RecentSurvey() {
                           }}
                           style={textStyle}
                         >
-                          {card.tag.map((tag, index) => (
-                            <span key={index}>{tag}</span>
+                          #
+                          {card.tag.map((tag) => (
+                            <span key={tag}>{tag}</span>
                           ))}
                         </Typography>
                       </CardContent>

@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
-import React from 'react';
 import GroupsIcon from '@mui/icons-material/Groups';
 import {
   Button,
@@ -14,7 +13,6 @@ import {
   Chip,
   Stack,
   Modal,
-  Fade,
 } from '@mui/material';
 
 import '../../../../global.css';
@@ -32,7 +30,7 @@ function WeeklySurvey() {
   };
   const fontFamily = "'Noto Sans KR', sans-serif";
   const textStyle = {
-    fontFamily: fontFamily,
+    fontFamily,
   };
 
   type CardData = {
@@ -44,6 +42,7 @@ function WeeklySurvey() {
     surveyClosingAt: string;
     userNickName: string;
     userImage: string;
+    userNo: Array<number>;
     surveyStatusName: string;
     openStatusName: string;
     tag: Array<string>;
@@ -70,7 +69,7 @@ function WeeklySurvey() {
       try {
         // weekly 데이터
         const weeklyResponse = await axios.get(
-          'http://localhost:8080/surveys/weekly'
+          'http://localhost:8000/surveys/weekly'
         );
 
         if (weeklyResponse.data.length > 0) {
@@ -79,10 +78,15 @@ function WeeklySurvey() {
         } else {
           // weekly 데이터가 없으면 recent 데이터
           const recentResponse = await axios.get(
-            'http://localhost:8080/surveys/recent'
+            'http://localhost:8000/surveys/recent'
           );
           setCardList(recentResponse.data);
         }
+        setCardList((prevCardList) =>
+          prevCardList
+            .slice()
+            .sort((a, b) => b.surveyAttendCount - a.surveyAttendCount)
+        );
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -141,7 +145,7 @@ function WeeklySurvey() {
         >
           {cardList &&
             cardList.map((card) => (
-              <div key={card.surveyNo} tabIndex={0}>
+              <div key={card.surveyNo}>
                 {/* 카드를 클릭하면 해당 카드 정보를 전달하여 모달 열기 */}
                 <SwiperSlide style={styles.Slide}>
                   <Card
@@ -216,7 +220,7 @@ function WeeklySurvey() {
                           color: 'text.secondary',
                           fontWeight: 600,
                           marginBottom: '0px',
-                          fontFamily: fontFamily,
+                          fontFamily,
                         }}
                       >
                         {card.surveyClosingAt.slice(0, 10)}
@@ -232,7 +236,7 @@ function WeeklySurvey() {
                         }}
                         style={textStyle}
                       >
-                        {card.surveyNo}
+                        {/* {card.surveyNo} */}
                       </Typography>
 
                       <Typography
@@ -259,8 +263,8 @@ function WeeklySurvey() {
                         }}
                         style={textStyle}
                       >
-                        {card.tag.map((tag, index) => (
-                          <span key={index}>#{tag}</span>
+                        {card.tag.map((tag) => (
+                          <span key={tag}>#{tag}</span>
                         ))}
                       </Typography>
                     </CardContent>
