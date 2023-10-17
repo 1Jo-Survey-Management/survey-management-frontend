@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FormControl,
   FormLabel,
@@ -8,8 +8,31 @@ import {
   Card,
   CardContent,
 } from '@mui/material';
+import { SurveyItem } from '../types/AttendTypes';
 
-function AttendSingleChoice() {
+interface AttendSingleChoiceProps {
+  surveyData: SurveyItem[];
+  questionNo: number;
+}
+
+function AttendSingleChoice({
+  surveyData,
+  questionNo,
+}: AttendSingleChoiceProps) {
+  const [selectedValue, setSelectedValue] = useState<string | null>('');
+
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedValue(event.target.value);
+  };
+
+  // 문항과 선택지를 필터링하기 위한 로직
+  const currentQuestion = surveyData.find(
+    (item) => item.surveyQuestionNo === questionNo
+  );
+  const relatedSelections = surveyData.filter(
+    (item) => item.surveyQuestionNo === questionNo && item.selectionValue
+  );
+
   return (
     <Card
       sx={{
@@ -26,30 +49,25 @@ function AttendSingleChoice() {
               color: 'black',
             }}
           >
-            1. 설문 1번 문항 제목 단일선택
+            {currentQuestion?.surveyQuestionTitle}
           </FormLabel>
           <RadioGroup
             aria-label="문항"
-            name="question"
+            name={`question-${questionNo}`}
+            value={selectedValue}
+            onChange={handleRadioChange}
             sx={{
               paddingTop: '10px',
             }}
           >
-            <FormControlLabel
-              value="선택지1"
-              control={<Radio />}
-              label="선택지1 내용(단일선택)"
-            />
-            <FormControlLabel
-              value="선택지2"
-              control={<Radio />}
-              label="선택지2 내용(단일선택)"
-            />
-            <FormControlLabel
-              value="선택지3"
-              control={<Radio />}
-              label="선택지3 내용(단일선택)"
-            />
+            {relatedSelections.map((item) => (
+              <FormControlLabel
+                key={item.selectionNo}
+                value={item.selectionValue || ''}
+                control={<Radio />}
+                label={item.selectionValue || ''}
+              />
+            ))}
           </RadioGroup>
         </FormControl>
       </CardContent>

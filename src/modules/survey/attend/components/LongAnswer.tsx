@@ -1,7 +1,21 @@
 import React from 'react';
 import { Card, CardContent, TextField } from '@mui/material';
+import { SurveyItem } from '../types/AttendTypes';
 
-function LongAnswer() {
+interface LongAnswerProps {
+  surveyData: SurveyItem[];
+  questionNo: number;
+}
+
+function LongAnswer({ surveyData, questionNo }: LongAnswerProps) {
+  const currentQuestion = surveyData.find(
+    (item) => item.surveyQuestionNo === questionNo
+  );
+
+  if (!currentQuestion) {
+    return null; // 혹은 다른 적절한 처리
+  }
+
   return (
     <Card
       sx={{
@@ -11,32 +25,31 @@ function LongAnswer() {
       <CardContent>
         <p
           style={{
-            fontSize: '18px',
+            fontSize: '0.9rem',
             fontWeight: '600',
             margin: '0',
-            marginBottom: '5px',
+            marginBottom: '10px',
           }}
         >
-          4. 책을 읽고 난 후 소감 적기
+          {currentQuestion.surveyQuestionTitle}
         </p>
         <p
           style={{
-            fontSize: '15px',
+            fontSize: '0.8rem',
             fontWeight: '600',
             color: '#00000088',
-            margin: '10px',
-            marginBottom: '30px',
-            paddingLeft: '18px',
+            margin: '8px',
+            paddingLeft: '10px',
           }}
         >
-          ex. LongAnswer 최대 2000자
+          {currentQuestion.surveyQuestionDescription}
         </p>
         <TextField
           label="답변 입력란"
           variant="outlined"
           fullWidth
           multiline
-          rows={6}
+          rows={10} // LongAnswer이기 때문에 행의 수를 조금 더 늘립니다.
         />
       </CardContent>
     </Card>

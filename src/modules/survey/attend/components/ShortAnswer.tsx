@@ -1,7 +1,21 @@
 import React from 'react';
 import { Card, CardContent, TextField } from '@mui/material';
+import { SurveyItem } from '../types/AttendTypes';
 
-function ShortAnswer() {
+interface ShortAnswerProps {
+  surveyData: SurveyItem[];
+  questionNo: number;
+}
+
+function ShortAnswer({ surveyData, questionNo }: ShortAnswerProps) {
+  const currentQuestion = surveyData.find(
+    (item) => item.surveyQuestionNo === questionNo
+  );
+
+  if (!currentQuestion) {
+    return null; // 혹은 다른 적절한 처리
+  }
+
   return (
     <Card
       sx={{
@@ -11,32 +25,31 @@ function ShortAnswer() {
       <CardContent>
         <p
           style={{
-            fontSize: '18px',
+            fontSize: '0.9rem',
             fontWeight: '600',
-            color: 'black',
-            margin: 0,
+            margin: '0',
+            marginBottom: '10px',
           }}
         >
-          3. 귀하의 학교를 입력해주세요.
+          {currentQuestion.surveyQuestionTitle}
         </p>
         <p
           style={{
-            fontSize: '15px',
+            fontSize: '0.8rem',
             fontWeight: '600',
             color: '#00000088',
-            margin: '10px',
-            marginBottom: '30px',
-            paddingLeft: '18px',
+            margin: '8px',
+            paddingLeft: '10px',
           }}
         >
-          ex. ShortAnswer 문항 부가 설명
+          {currentQuestion.surveyQuestionDescription}
         </p>
         <TextField
-          label="답변 입력란 (최대 100자)"
+          label="답변 입력란"
           variant="outlined"
           fullWidth
           multiline
-          maxRows={4}
+          rows={1}
         />
       </CardContent>
     </Card>
