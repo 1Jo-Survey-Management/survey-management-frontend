@@ -25,7 +25,7 @@ export default function RowRadioButtonsGroup({ onChange }: InputGenderProps) {
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setGender(value);
-    onChange(value); // 데이터 변경 함수 호출하여 값 전달
+    onChange(value);
   };
 
   return (

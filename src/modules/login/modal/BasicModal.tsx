@@ -83,8 +83,6 @@ export default function BasicModal({ onClose }: ModalProps) {
     setOpen(false);
   };
 
-  console.log(open);
-
   const handleSubmit = () => {
     if (
       formData.userNickname === '' ||
@@ -106,12 +104,9 @@ export default function BasicModal({ onClose }: ModalProps) {
           },
         })
         .then((response) => {
-          // 서버로부터의 응답 처리
           const respData = response.data;
-          console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
-
           if (respData === '') {
-            console.log('API 요청 실패');
+            console.error('API 요청 실패');
           }
 
           navigate(`/survey/main`);

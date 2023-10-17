@@ -6,7 +6,6 @@ import axios from './components/customApi';
 import Logo from './img/SurveyLogo.png';
 import LoginFig from './img/LoginFig.png';
 import BasicModal from './modal/BasicModal';
-import moment from 'moment';
 import LoginNaver from './LoginNaver';
 import config from './config/config.json';
 
@@ -87,7 +86,6 @@ function LoginDisplay() {
 
     //Authorization code를 받으면 백 서버로 요청을 보내준다.
     if (accessCode) {
-      console.log('axios 맨처음 쏘는곳 찾기');
       axios
         .get(redirectUri, {
           params: {
@@ -98,7 +96,6 @@ function LoginDisplay() {
         .then((response) => {
           // code 보내서 백에서 인증하고 미완료회원 객체 가져옴(메일, accessToken)
           const responseCheck = response;
-          console.log('responseCheck:', responseCheck);
           const responseUserNo = responseCheck.data.content.userNo;
           const responseAccessToken = responseCheck.data.content.accessToken;
           const responseImage = responseCheck.data.content.userImage;
@@ -126,9 +123,6 @@ function LoginDisplay() {
               localStorage.setItem('accessToken', responseAccessToken);
               localStorage.setItem('expiresIn', responseExpiresIn);
 
-              const expiresAt = localStorage.getItem('expiresIn');
-              console.log('유효시간 확인 : ' + expiresAt);
-
               axios.defaults.headers.common['Authorization'] =
                 'Bearer ' + responseAccessToken;
 
@@ -146,9 +140,6 @@ function LoginDisplay() {
                 localStorage.setItem('expiresIn', responseExpiresIn);
               }
 
-              const expiresAt = localStorage.getItem('expiresIn');
-              console.log('유효시간 확인 : ' + expiresAt);
-
               axios.defaults.headers.common['Authorization'] =
                 'Bearer ' + responseAccessToken;
 
@@ -157,6 +148,8 @@ function LoginDisplay() {
 
             // 현 브라우저에서 로그인 한적이 있어 localStorage에 토큰이 있는 회원
             if (responseAccessToken === localStorageAccessToken) {
+              axios.defaults.headers.common['Authorization'] =
+                'Bearer ' + responseAccessToken;
               navigate('/survey/main');
             }
             // 토큰이 유효하지 않으면 다시 로그인해야해서 로컬스토리지 다지움
@@ -168,15 +161,12 @@ function LoginDisplay() {
               localStorage.removeItem('expiresIn');
               localStorage.removeItem('refreshToken');
 
-              console.log('다시 로그인');
               navigate('/');
             }
           }
 
           // 2. 첫 로그인 시
           if (responseUserNo != null && !responseNickName) {
-            console.log('첫 로그인!');
-
             // localStrage에 회원 프로필 정보 저장하기
             localStorage.setItem('userNo', responseUserNo);
             localStorage.setItem('userNickname', responseNickName);
