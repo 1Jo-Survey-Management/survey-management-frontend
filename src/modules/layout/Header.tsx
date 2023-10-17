@@ -5,6 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
+import axios from '../login/components/customApi';
 
 import MenuTool from './MenuTool';
 import './Header.css';
@@ -18,7 +19,24 @@ function Header() {
   };
 
   const logout = () => {
-    navigate('/');
+    console.log('logout');
+
+    axios
+      .get('/login/logout')
+      .then((response) => {
+        const respData = response.data;
+        console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
+        axios.defaults.headers.common['Authorization'] = null;
+
+        if (respData === '') {
+          console.log('API 요청 실패');
+        }
+
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const isHomePage = location.pathname === '/';
