@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import React, { useEffect } from 'react';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -17,6 +19,7 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 
+import { css } from '@emotion/react';
 import CreateSingleSelection from './CreateSingleSelection';
 import CreateMultipleSelection from './CreateMultipleSelection';
 import CreateShortAnswer from './CreatShortAnswer';
@@ -31,54 +34,76 @@ import { CREATE_NEXT_QUESTION_INDEX } from '../constant/SurveyCreationConstant';
 import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
 
 const styles = {
-  dragIndicatorBox: {
+  dragIndicatorBox: css({
     margin: '0 auto',
     display: 'flex',
     justifyContent: 'center',
     position: 'relative',
     top: '-15px',
-  },
+  }),
 
-  iconAndSwitchContainer: {
+  dragIcon: css({
+    transform: 'rotate(90deg);',
+    color: '#b2b2b2',
+  }),
+
+  iconAndSwitchContainer: css({
     display: 'flex',
     justifyContent: 'flex-end',
     marginTop: '-15px',
-  },
+  }),
 
-  iconAndSwitchBox: {
+  iconAndSwitchBox: css({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  },
+  }),
 
-  switchBox: {
+  switchBox: css({
     display: 'flex',
     alignItems: 'center',
     marginLeft: '5px',
-  },
+  }),
 
-  questionBox: {
+  questionBox: css({
     borderColor: '#3f50b5',
     boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
     marginBottom: '30px',
-  },
+  }),
 
-  questionTitleBox: {
+  questionTitleBox: css({
     display: 'flex',
     alignItems: 'center',
-  },
+  }),
 
-  questionDescriptionBox: {
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: '10px',
-  },
-
-  selectQuestionTypeBox: {
+  questionDescriptionBox: css({
     display: 'flex',
     alignItems: 'center',
     marginTop: '10px',
-  },
+  }),
+
+  selectQuestionTypeBox: css({
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: '10px',
+  }),
+
+  questionTypeSelectBox: css({
+    flexGrow: 1,
+  }),
+
+  questionInputBox: css({
+    flexGrow: 1,
+  }),
+
+  textStyle: css({
+    marginRight: '10px',
+    fontWeight: 'bold',
+  }),
+
+  requiredText: css({
+    marginRight: '-7px',
+  }),
 };
 
 /**
@@ -217,16 +242,14 @@ function CreateQuestion({
   };
 
   const dragIndicator = (
-    <Box sx={styles.dragIndicatorBox}>
-      <DragIndicatorIcon
-        sx={{ transform: 'rotate(90deg);', color: '#b2b2b2' }}
-      />
+    <Box css={styles.dragIndicatorBox}>
+      <DragIndicatorIcon css={styles.dragIcon} />
     </Box>
   );
 
   const deleteIconAndRequiredSwitch = (
-    <Box sx={styles.iconAndSwitchContainer}>
-      <Box sx={styles.iconAndSwitchBox}>
+    <Box css={styles.iconAndSwitchContainer}>
+      <Box css={styles.iconAndSwitchBox}>
         <Tooltip
           title="Delete"
           onClick={() => handleRemoveQuestion(question.questionId)}
@@ -236,8 +259,8 @@ function CreateQuestion({
           </IconButton>
         </Tooltip>
         <FormGroup>
-          <Box sx={styles.switchBox}>
-            <Typography sx={{ marginRight: '-7px' }}>필수</Typography>
+          <Box css={styles.switchBox}>
+            <Typography css={styles.requiredText}>필수</Typography>
             <Switch
               defaultChecked
               onChange={() => handleRequiredSwitchChange(question)}
@@ -249,13 +272,11 @@ function CreateQuestion({
   );
 
   const questionTitle = (
-    <Box sx={styles.questionTitleBox}>
-      <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
-        문항 제목
-      </Typography>
+    <Box css={styles.questionTitleBox}>
+      <Typography css={styles.textStyle}>문항 제목</Typography>
       <Input
         placeholder="문항 제목을 입력해주세요."
-        sx={{ flexGrow: 1 }}
+        css={styles.questionInputBox}
         value={question.questionTitle}
         name="questionTitle"
         onChange={(event) => handelQuestionInputChange(event)}
@@ -264,13 +285,11 @@ function CreateQuestion({
   );
 
   const questionDescription = (
-    <Box sx={styles.questionDescriptionBox}>
-      <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
-        문항 설명
-      </Typography>
+    <Box css={styles.questionDescriptionBox}>
+      <Typography css={styles.textStyle}>문항 설명</Typography>
       <Input
         placeholder="문항 설명을 입력해주세요."
-        sx={{ flexGrow: 1 }}
+        css={styles.questionInputBox}
         name="questionDescription"
         value={question.questionDescription}
         onChange={(event) => handelQuestionInputChange(event)}
@@ -279,12 +298,10 @@ function CreateQuestion({
   );
 
   const selectQuestionType = (
-    <Box sx={styles.selectQuestionTypeBox}>
-      <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
-        문항 유형
-      </Typography>
+    <Box css={styles.selectQuestionTypeBox}>
+      <Typography css={styles.textStyle}>문항 유형</Typography>
 
-      <FormControl sx={{ flexGrow: '1' }}>
+      <FormControl css={styles.questionTypeSelectBox}>
         <Select
           id="demo-simple-select"
           name="questionType"
@@ -313,7 +330,7 @@ function CreateQuestion({
   );
 
   return (
-    <Card variant="outlined" sx={styles.questionBox}>
+    <Card variant="outlined" css={styles.questionBox}>
       <CardContent>
         {dragIndicator}
         {deleteIconAndRequiredSwitch}

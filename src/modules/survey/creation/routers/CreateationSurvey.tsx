@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import React, { useState } from 'react';
 import Container from '@mui/material/Container';
 import { Box, Button } from '@mui/material';
@@ -10,6 +12,7 @@ import {
   DragEndDetails,
   Draggable,
 } from 'react-beautiful-dnd';
+/** @jsxImportSource @emotion/react */
 import CreateQuestion from '../components/CreateQuestion';
 import FloatingActionButtons from '../components/FloatingActionButtons';
 import CreateSurveyInfo from '../components/CreateSurveyInfo';

@@ -1,7 +1,10 @@
+/** @jsxImportSource @emotion/react */
+
 import { Box, Checkbox, Input } from '@mui/material';
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { css } from '@emotion/react';
 import {
   CreateSelectionProps,
   QuestionProps,
@@ -11,25 +14,34 @@ import {
 const primaryColor = '#3f50b5';
 
 const styles = {
-  selectionBox: {
+  selectionBox: css({
     display: 'flex',
     alingItems: 'center',
-  },
-  removeAndAddIconBox: {
+  }),
+  removeAndAddIconBox: css({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'end',
     width: '53px',
-  },
-  icon: {
+  }),
+  plusIcon: css({
     color: primaryColor,
     border: `solid 1px ${primaryColor}`,
     borderRadius: '5px',
     cursor: 'pointer',
-  },
-  input: {
+  }),
+
+  removeIcon: css({
+    color: primaryColor,
+    border: `solid 1px ${primaryColor}`,
+    borderRadius: '5px',
+    cursor: 'pointer',
+    marginLeft: '5px',
+  }),
+
+  input: css({
     flexGrow: 1,
-  },
+  }),
 };
 
 /**
@@ -143,21 +155,21 @@ function CreateMultipleSelection({
     <div>
       {question.selections.map((selection, index) => (
         <div key={selection.selectionId}>
-          <Box sx={styles.selectionBox}>
-            <Box sx={styles.removeAndAddIconBox}>
+          <Box css={styles.selectionBox}>
+            <Box css={styles.removeAndAddIconBox}>
               {index === question.selections.length - 1 && (
-                <AddIcon sx={styles.icon} onClick={handleAddSelection} />
+                <AddIcon css={styles.plusIcon} onClick={handleAddSelection} />
               )}
 
               <RemoveIcon
-                sx={{ ...styles.icon, marginLeft: '5px' }}
+                css={styles.removeIcon}
                 onClick={() => handleRemoveSelection(selection.selectionId)}
               />
             </Box>
             <Checkbox disabled />
             <Input
               placeholder="문항을 입력해주세요."
-              sx={styles.input}
+              css={styles.input}
               value={selection.selectionValue}
               onChange={(event) => handleSelectionValueChange(selection, event)}
             />

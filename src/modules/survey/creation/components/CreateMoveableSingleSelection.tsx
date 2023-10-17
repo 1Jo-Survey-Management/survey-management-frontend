@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -10,6 +12,7 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
+import { css } from '@emotion/react';
 import {
   CreateSelectionProps,
   QuestionProps,
@@ -20,27 +23,43 @@ import { CREATE_NEXT_QUESTION_INDEX } from '../constant/SurveyCreationConstant';
 const primaryColor = '#3f50b5';
 
 const styles = {
-  icon: {
+  icon: css({
     color: primaryColor,
     border: `solid 1px ${primaryColor}`,
     borderRadius: '5px',
     cursor: 'pointer',
-  },
-  input: {
+  }),
+  removeIcon: css({
+    color: primaryColor,
+    border: `solid 1px ${primaryColor}`,
+    borderRadius: '5px',
+    cursor: 'pointer',
+    marginLeft: '5px',
+  }),
+  input: css({
     flexGrow: 0.8,
-  },
-  removeAndAddIconBox: {
+  }),
+  removeAndAddIconBox: css({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'end',
     width: '53px',
-  },
-  selectionBox: {
+  }),
+  selectionBox: css({
     display: 'flex',
     alingItems: 'center',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-  },
+  }),
+
+  moveQuestionBox: css({
+    marginTop: '10px',
+    marginLeft: 'auto',
+  }),
+
+  moveQuestionSelectionBox: css({
+    minWidth: '200px',
+  }),
 };
 
 const NEXT_QUESTION: string = 'nextQuestion';
@@ -225,17 +244,17 @@ function CreateMoveableSingleSelection({
     <div>
       {question.selections.map((selection, index) => (
         <div key={selection.selectionId}>
-          <Box sx={styles.selectionBox}>
-            <Box sx={styles.removeAndAddIconBox}>
+          <Box css={styles.selectionBox}>
+            <Box css={styles.removeAndAddIconBox}>
               {index === question.selections.length - 1 && (
                 <AddIcon
-                  sx={styles.icon}
+                  css={styles.icon}
                   onClick={handleAddMoveableSelection}
                 />
               )}
 
               <RemoveIcon
-                sx={{ ...styles.icon, marginLeft: '5px' }}
+                css={styles.removeIcon}
                 onClick={() =>
                   handleRemoveMoveableSelection(selection.selectionId)
                 }
@@ -245,16 +264,11 @@ function CreateMoveableSingleSelection({
             <Input
               placeholder="문항을 입력해주세요."
               value={selection.selectionValue}
-              sx={styles.input}
+              css={styles.input}
               onChange={(event) => handleSelectionValueChange(selection, event)}
             />
-            <Box
-              sx={{
-                marginTop: '10px',
-                marginLeft: 'auto',
-              }}
-            >
-              <FormControl sx={{ minWidth: '200px' }}>
+            <Box css={styles.moveQuestionBox}>
+              <FormControl css={styles.moveQuestionSelectionBox}>
                 <Select
                   id="demo-simple-select"
                   value={
