@@ -1,30 +1,33 @@
+/** @jsxImportSource @emotion/react */
+
 import { Card, CardContent, TextField } from '@mui/material';
 import React from 'react';
+import { css } from '@emotion/react';
 import { PreviewEachQuestionProps } from '../types/PreviewSurveyTypes';
 
 const styles = {
-  questionBox: {
+  questionBox: css({
     marginBottom: '30px',
-  },
+  }),
 
-  questionTitle: {
+  questionTitle: css({
     fontSize: '0.9rem',
     fontWeight: '600',
     marginBottom: '10px',
     color: 'black',
-  },
+  }),
 
-  questionDescription: {
+  questionDescription: css({
     fontSize: '0.8rem',
     fontWeight: '600',
     color: '#00000088',
     margin: '8px',
     paddingLeft: '10px',
-  },
+  }),
 
-  selectionText: {
+  selectionText: css({
     fontSize: '0.7rem',
-  },
+  }),
 };
 
 /**
@@ -39,16 +42,14 @@ function PreviewSubjectiveDescriptionQuestion({
   question,
 }: PreviewEachQuestionProps) {
   return (
-    <Card sx={styles.questionBox}>
+    <Card css={styles.questionBox}>
       <CardContent>
-        <p style={styles.questionTitle}>
+        <p css={styles.questionTitle}>
           {question.questionTitle ? question.questionTitle : '제목 없는 문항'}
         </p>
 
         {question.questionDescription && (
-          <p style={styles.questionDescription}>
-            {question.questionDescription}
-          </p>
+          <p css={styles.questionDescription}>{question.questionDescription}</p>
         )}
 
         <TextField

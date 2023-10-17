@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import {
   Box,
   Card,
@@ -15,41 +17,83 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ImageIcon from '@mui/icons-material/Image';
+import { css } from '@emotion/react';
 import { CreateSurveyInfoProps, SurveyInfoProps } from '../types/SurveyTypes';
 import { OpenStatusEnum } from '../../enums/OpenStatusEnum';
 
 const styles = {
-  card: {
+  card: css({
     boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
     marginBottom: '30px',
-  },
-  iamgeBox: {
+  }),
+
+  iamgeBox: css({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     border: '1px dashed #D1D1D1',
     height: '140px',
     marginBottom: '10px',
-  },
-  image: { width: '100%', height: '100%', objectFit: 'contain' },
-  surveyTitleBox: {
+  }),
+
+  noImageIcon: css({
+    fontSize: '30px',
+    color: '#757575',
+  }),
+
+  image: css({ width: '100%', height: '100%', objectFit: 'contain' }),
+
+  uploadImage: css({
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
+  }),
+
+  surveyTitleBox: css({
     display: 'flex',
     alignItems: 'center',
     marginBottom: '10px',
-  },
+  }),
 
-  surveyDescriptionBox: {
+  surveyDescriptionBox: css({
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
     marginTop: '10px',
-  },
+  }),
 
-  selectQuestionTypeBox: {
+  selectQuestionTypeBox: css({
     display: 'flex',
     alignItems: 'center',
     marginTop: '10px',
-  },
+  }),
+
+  textStyle: css({
+    marginRight: '10px',
+    fontWeight: 'bold',
+  }),
+
+  inputStyle: css({
+    flexGrow: '1',
+  }),
+
+  tagSelectContainer: css({
+    marginBottom: '10px',
+  }),
+
+  tagSelectBox: css({
+    width: '100%',
+  }),
+
+  tagChipBox: css({
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 0.5,
+  }),
+
+  dateInputStyle: css({
+    marginTop: '10px',
+  }),
 };
 
 const tagNames = ['일상', '업무', '공지', '중요', '기타'];
@@ -161,13 +205,11 @@ function CreateSurveyInfo({
   };
 
   const surveyTitle = (
-    <Box sx={styles.surveyTitleBox}>
-      <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
-        설문 제목
-      </Typography>
+    <Box css={styles.surveyTitleBox}>
+      <Typography css={styles.textStyle}>설문 제목</Typography>
       <Input
         placeholder="설문 제목을 입력해주세요."
-        sx={{ flexGrow: 1 }}
+        css={styles.inputStyle}
         name="surveyTitle"
         value={surveyInfo.surveyTitle}
         onChange={handleSurveyInfoInputChange}
@@ -176,8 +218,8 @@ function CreateSurveyInfo({
   );
 
   const surveyTagSelectBox = (
-    <div style={{ marginBottom: '10px' }}>
-      <FormControl sx={{ width: '100%' }}>
+    <div css={styles.tagSelectContainer}>
+      <FormControl css={styles.tagSelectBox}>
         <InputLabel id="demo-multiple-chip-label">태그</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
@@ -187,7 +229,7 @@ function CreateSurveyInfo({
           onChange={handleTagChange}
           input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
           renderValue={(selectedValue) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            <Box css={styles.tagChipBox}>
               {selectedValue.map((value, index) => (
                 <Chip key={value} label={tagNames[index]} />
               ))}
@@ -205,13 +247,11 @@ function CreateSurveyInfo({
   );
 
   const surveyDescription = (
-    <Box sx={styles.surveyDescriptionBox}>
-      <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
-        설문 설명
-      </Typography>
+    <Box css={styles.surveyDescriptionBox}>
+      <Typography css={styles.textStyle}>설문 설명</Typography>
       <Input
         placeholder="문항 설명을 입력해주세요."
-        sx={{ flexGrow: 1 }}
+        css={styles.inputStyle}
         name="surveyDescription"
         value={surveyInfo.surveyDescription}
         onChange={handleSurveyInfoInputChange}
@@ -240,33 +280,28 @@ function CreateSurveyInfo({
   );
 
   return (
-    <Card sx={styles.card}>
+    <Card css={styles.card}>
       <CardContent>
         {surveyTitle}
 
         <Box sx={{ marginBottom: '20px' }}>
           {!selectedImage && (
-            <Box sx={styles.iamgeBox}>
-              <ImageIcon sx={{ fontSize: '30px', color: '#757575' }} />
+            <Box css={styles.iamgeBox}>
+              <ImageIcon css={styles.noImageIcon} />
             </Box>
           )}
           {selectedImage && (
             <div>
-              <Box sx={styles.iamgeBox}>
+              <Box css={styles.iamgeBox}>
                 <img
                   src={selectedImage}
                   alt="업로드된 이미지"
-                  style={{ ...styles.image, objectFit: 'contain' }}
+                  css={styles.uploadImage}
                 />
               </Box>
             </div>
           )}
-          <input
-            style={{ backgroundColor: '#ffffff', border: 'none' }}
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-          />
+          <input type="file" accept="image/*" onChange={handleImageUpload} />
         </Box>
 
         {surveyTagSelectBox}
@@ -276,9 +311,7 @@ function CreateSurveyInfo({
             marginBottom: '10px',
           }}
         >
-          <Typography sx={{ fontWeight: 'bold', marginBottom: '10px' }}>
-            설문조사 마감일 지정
-          </Typography>
+          <Typography css={styles.textStyle}>설문조사 마감일 지정</Typography>
 
           <TextField
             id="date"
@@ -289,6 +322,7 @@ function CreateSurveyInfo({
             inputProps={{
               min: tomorrowFormatted,
             }}
+            css={styles.dateInputStyle}
             onChange={handleSurveyInfoInputChange}
           />
         </Box>

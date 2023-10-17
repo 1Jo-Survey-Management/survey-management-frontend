@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import React, { useState } from 'react';
 import Container from '@mui/material/Container';
 import { Box, Button } from '@mui/material';
@@ -10,6 +12,8 @@ import {
   DragEndDetails,
   Draggable,
 } from 'react-beautiful-dnd';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import CreateQuestion from '../components/CreateQuestion';
 import FloatingActionButtons from '../components/FloatingActionButtons';
 import CreateSurveyInfo from '../components/CreateSurveyInfo';
@@ -24,6 +28,11 @@ import { getValidationErrorMessage } from '../util/ValidatorUtil';
 import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
 import { OpenStatusEnum } from '../../enums/OpenStatusEnum';
 import { SurveyStatusEunm } from '../../enums/SurveyStatusEnum';
+
+const testStyle = css({
+  color: 'red',
+  fontSize: '100px',
+});
 
 function CreationSurvey() {
   const [surveyId] = useState<number>(new Date().getTime());

@@ -1,21 +1,37 @@
+/** @jsxImportSource @emotion/react */
+
 import { Box, Card, CardContent, Container, Typography } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
 import React, { useEffect, useState } from 'react';
+import { css } from '@emotion/react';
 import { PreviewSurveyInfoProps } from '../types/PreviewSurveyTypes';
 
 const styles = {
-  card: {
+  card: css({
     marginBottom: '30px',
     marginTop: '30px',
-  },
-  iamgeBox: {
+  }),
+
+  surveyInfoTitileStyle: css({
+    fontWeight: 'bold',
+    fontSize: '18px',
+    marginBottom: '10px',
+  }),
+
+  iamgeBox: css({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     height: '140px',
     marginBottom: '10px',
-  },
-  image: { width: '100%', height: '100%', objectFit: 'contain' },
+  }),
+
+  imageIcon: css({
+    fontSize: '30px',
+    color: '#757575',
+  }),
+
+  image: css({ width: '100%', height: '100%', objectFit: 'contain' }),
 };
 
 /**
@@ -43,16 +59,10 @@ function PreviewSurveyInfo({
 
   return (
     <Container>
-      <Card sx={styles.card}>
+      <Card css={styles.card}>
         <CardContent>
           <Box>
-            <Typography
-              sx={{
-                fontWeight: 'bold',
-                fontSize: '18px',
-                marginBottom: '10px',
-              }}
-            >
+            <Typography css={styles.surveyInfoTitileStyle}>
               {surveyInfo.surveyTitle
                 ? surveyInfo.surveyTitle
                 : '제목 없는 설문지'}
@@ -60,17 +70,17 @@ function PreviewSurveyInfo({
           </Box>
 
           {!selectedImage && (
-            <Box sx={styles.iamgeBox}>
-              <ImageIcon sx={{ fontSize: '30px', color: '#757575' }} />
+            <Box css={styles.iamgeBox}>
+              <ImageIcon css={styles.imageIcon} />
             </Box>
           )}
           {selectedImage && (
             <div>
-              <Box sx={styles.iamgeBox}>
+              <Box css={styles.iamgeBox}>
                 <img
                   src={selectedImage}
                   alt="업로드된 이미지"
-                  style={{ ...styles.image, objectFit: 'contain' }}
+                  css={styles.image}
                 />
               </Box>
             </div>
