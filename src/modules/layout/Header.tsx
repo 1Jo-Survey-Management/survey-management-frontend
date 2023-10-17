@@ -18,28 +18,27 @@ function Header() {
     navigate('/survey/main');
   };
 
+  const login = () => {
+    console.log('login');
+
+    navigate('/');
+  };
+
+  // 로그아웃 하면 localStorage의 accessToken을 지워주고 로그인 페이지로 redirect
   const logout = () => {
     console.log('logout');
 
-    axios
-      .get('/login/logout')
-      .then((response) => {
-        const respData = response.data;
-        console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
-        axios.defaults.headers.common['Authorization'] = null;
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('expiresIn');
 
-        if (respData === '') {
-          console.log('API 요청 실패');
-        }
+    axios.defaults.headers.common['Authorization'] = null;
 
-        navigate('/');
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    navigate('/');
   };
 
   const isHomePage = location.pathname === '/';
+  const hasAccessToken = localStorage.getItem('accessToken');
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -49,7 +48,11 @@ function Header() {
           <Typography variant="h6" onClick={goMain}>
             Logo survey
           </Typography>
-          {isHomePage ? null : (
+          {isHomePage || !hasAccessToken ? (
+            <Button onClick={login} color="inherit">
+              로그인
+            </Button>
+          ) : (
             <Button onClick={logout} color="inherit">
               로그아웃
             </Button>

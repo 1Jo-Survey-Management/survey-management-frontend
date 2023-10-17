@@ -16,8 +16,13 @@ export default function Layout() {
   useEffect(() => {
     const responseAcccessToken = localStorage.getItem('accessToken');
 
-    axios.defaults.headers.common.Authorization = `Bearer ${responseAcccessToken}`;
+    console.log('로컬스토리지 토큰 : ' + responseAcccessToken);
+
+    axios.defaults.headers.common['Authorization'] =
+      'Bearer ' + responseAcccessToken;
   }, []);
+
+  console.log('현재 위치 : ' + location.pathname);
 
   const isLoginPage = location.pathname === '/';
   return (
