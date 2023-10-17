@@ -13,7 +13,6 @@ import {
   Draggable,
 } from 'react-beautiful-dnd';
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import CreateQuestion from '../components/CreateQuestion';
 import FloatingActionButtons from '../components/FloatingActionButtons';
 import CreateSurveyInfo from '../components/CreateSurveyInfo';
