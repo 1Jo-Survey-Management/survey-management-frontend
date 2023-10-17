@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Box, Card, CardContent, Typography } from '@mui/material';
 import SurveyPieChart from './components/SurveyPieChart';
 import '../../../global.css';
+import WordCloud from './components/WordCloud';
 
 const styles = {
   card: {
