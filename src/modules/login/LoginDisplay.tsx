@@ -76,12 +76,9 @@ function LoginDisplay() {
     const searchParams = new URLSearchParams(location.search);
     const accessCode = searchParams.get('code');
 
-    console.log('accessCode 로그가 남아있나 : ' + accessCode);
-    console.log('localStorageAccessToken : ' + localStorageAccessToken);
-
     const redirectUri = '/login/oauth2/code/naver';
 
-    // accessToken이 유효한지 api를 통해서 확인하기 (로그인 했는데 로그아웃 안했을때)
+    // accessToken이 유효한지 api를 통해서 확인 (로그인 했는데 로그아웃 안했을때)
     if (localStorageAccessToken != null && !accessCode) {
       const authorizationUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${config.clientId}&state=${config.state}&redirect_uri=${config.redirectUri}`;
 
@@ -95,7 +92,7 @@ function LoginDisplay() {
         .get(redirectUri, {
           params: {
             code: accessCode,
-            state: 'STATE_STRING', // 보안을 위한 state
+            state: 'STATE_STRING',
           },
         })
         .then((response) => {
@@ -107,12 +104,6 @@ function LoginDisplay() {
           const responseImage = responseCheck.data.content.userImage;
           const responseNickName = responseCheck.data.content.userNickname;
           const responseExpiresIn = responseCheck.data.content.expiresIn;
-
-          console.log('responseUserNo : ' + responseUserNo);
-          console.log('responseAccessToken :' + responseAccessToken);
-          console.log('responseNickName :' + responseNickName);
-          console.log('responseImage :' + responseImage);
-          console.log('responseExpiresIn :' + responseExpiresIn);
 
           localStorage.setItem('userNo', responseUserNo);
           localStorage.setItem('userNickname', responseNickName);
@@ -128,10 +119,6 @@ function LoginDisplay() {
               localStorageAccessToken == null ||
               responseAccessToken !== localStorageAccessToken
             ) {
-              console.log(
-                '회원은 존재하나 브라우저에서 로그인 한적이 없는 회원'
-              );
-
               // localStrage에 회원 프로필 정보 저장하기
               localStorage.setItem('userNo', responseUserNo);
               localStorage.setItem('userNickname', responseNickName);
@@ -140,10 +127,8 @@ function LoginDisplay() {
               localStorage.setItem('expiresIn', responseExpiresIn);
 
               const expiresAt = localStorage.getItem('expiresIn');
-
               console.log('유효시간 확인 : ' + expiresAt);
 
-              // axois default header에 넣기(Global)
               axios.defaults.headers.common['Authorization'] =
                 'Bearer ' + responseAccessToken;
 
@@ -152,19 +137,7 @@ function LoginDisplay() {
             }
             // 회원도 존재하고 브라우저에 로그인도 했었던 회원
             else {
-              console.log('회원도 존재하고 브라우저에 로그인도 했었던 회원');
-
               if (responseExpiresIn) {
-                const currentTime = moment(); // 현재 시간을 Moment 객체로 가져옴
-                const calculatedExpiresAt = currentTime.add(
-                  responseExpiresIn,
-                  'seconds'
-                );
-
-                const exchangeExpiresAt = calculatedExpiresAt.format(
-                  'YYYY-MM-DD HH:mm:ss'
-                );
-
                 // localStrage에 회원 프로필 정보 저장하기
                 localStorage.setItem('userNo', responseUserNo);
                 localStorage.setItem('userNickname', responseNickName);
@@ -174,22 +147,13 @@ function LoginDisplay() {
               }
 
               const expiresAt = localStorage.getItem('expiresIn');
-
               console.log('유효시간 확인 : ' + expiresAt);
 
-              // axois default header에 넣기(Global)
               axios.defaults.headers.common['Authorization'] =
                 'Bearer ' + responseAccessToken;
 
               navigate('/survey/main');
             }
-
-            console.log(
-              '백에서 온 토큰 : ' +
-                responseAccessToken +
-                '스토리지에 있는 토큰 : ' +
-                localStorageAccessToken
-            );
 
             // 현 브라우저에서 로그인 한적이 있어 localStorage에 토큰이 있는 회원
             if (responseAccessToken === localStorageAccessToken) {
@@ -204,7 +168,7 @@ function LoginDisplay() {
               localStorage.removeItem('expiresIn');
               localStorage.removeItem('refreshToken');
 
-              console.log('다시 로그인하기');
+              console.log('다시 로그인');
               navigate('/');
             }
           }
@@ -220,14 +184,12 @@ function LoginDisplay() {
             localStorage.setItem('accessToken', responseAccessToken);
             localStorage.setItem('expiresIn', responseExpiresIn);
 
-            // axois default header에 넣기(Global)
             axios.defaults.headers.common['Authorization'] =
               'Bearer ' + responseAccessToken;
             responseAccessToken;
 
             setShowModal(true);
           }
-          // 브라우저에 로그인 안했는데
         })
         .catch((error) => {
           console.error('Error:', error);

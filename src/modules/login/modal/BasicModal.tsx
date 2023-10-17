@@ -102,7 +102,7 @@ export default function BasicModal({ onClose }: ModalProps) {
       axios
         .post('/login/regist', userInfo, {
           headers: {
-            'Content-Type': 'application/json', // JSON 데이터 전송을 위한 헤더 설정
+            'Content-Type': 'application/json',
           },
         })
         .then((response) => {
@@ -123,15 +123,6 @@ export default function BasicModal({ onClose }: ModalProps) {
   };
 
   const cancelSubmit = () => {
-    console.log('회원가입 안함');
-
-    // 여기에다 회원가입 안하면 안된다는 모달 띄움
-    // 그 모달에서도 취소하면 토큰 취소하고 브라우저의 로그인 쿠키도 삭제
-
-    // 회원가입 취소하면 회원가입하기 위해 만들어 두었던 데이터베이스 폼도 요청보내서 삭제
-    // 발급 받았던 액세스 토큰도 삭제할 수 있으면 삭제
-
-    // 미완성 PR이후 마지막으로 고쳐서 올리겠습니다..
     return handleClose();
   };
 
