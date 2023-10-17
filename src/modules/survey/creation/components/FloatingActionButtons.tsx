@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import {
   AppBar,
   Box,
@@ -15,34 +17,34 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { TransitionProps } from '@mui/material/transitions';
+import { css } from '@emotion/react';
 import SurveyPreview from '../../preview/routers/SurveyPreview';
 import { QuestionProps, SurveyInfoProps } from '../types/SurveyTypes';
 
 const styles = {
-  fabBox: {
+  fabBox: css({
     position: 'fixed',
     bottom: '10px',
     right: '10px',
     display: 'flex',
     flexDirection: 'column',
     zIndex: '1',
-  },
-  fabStyles: {
+  }),
+
+  fabStyles: css({
     width: '44px',
     height: '44px',
     marginBottom: '8px',
-  },
-  previewModal: {
-    position: 'absolute' as const,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  },
+  }),
+
+  appBar: css({
+    position: 'relative',
+  }),
+
+  previewTitle: css({
+    ml: 2,
+    flex: 1,
+  }),
 };
 
 interface FloatingActionButtonsProps {
@@ -119,11 +121,11 @@ function FloatingActionButtons({
   };
 
   return (
-    <Box sx={styles.fabBox}>
+    <Box css={styles.fabBox}>
       <Fab
         color="primary"
         aria-label="add"
-        sx={styles.fabStyles}
+        css={styles.fabStyles}
         onClick={scrollToTop}
       >
         <ArrowDropUpIcon />
@@ -131,7 +133,7 @@ function FloatingActionButtons({
       <Fab
         color="primary"
         aria-label="add"
-        sx={styles.fabStyles}
+        css={styles.fabStyles}
         onClick={scrollToBottom}
       >
         <ArrowDropDownIcon />
@@ -139,7 +141,7 @@ function FloatingActionButtons({
       <Fab
         color="primary"
         aria-label="add"
-        sx={styles.fabStyles}
+        css={styles.fabStyles}
         onClick={handleAddQuestion}
       >
         <AddIcon />
@@ -147,7 +149,7 @@ function FloatingActionButtons({
       <Fab
         color="primary"
         aria-label="add"
-        sx={styles.fabStyles}
+        css={styles.fabStyles}
         onClick={handleOpenPreviewModal}
       >
         <VisibilityIcon />
@@ -159,9 +161,9 @@ function FloatingActionButtons({
         onClose={handleClosePreviewModal}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative' }}>
+        <AppBar css={styles.appBar}>
           <Toolbar>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+            <Typography css={styles.previewTitle} variant="h6" component="div">
               미리보기
             </Typography>
             <IconButton

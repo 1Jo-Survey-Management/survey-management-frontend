@@ -3,7 +3,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { useLocation } from 'react-router-dom';
 import Header from './Header';
 import Body from './Body';
-import Footer from './Footer';
 import LoginPage from '../login/LoginDisplay';
 import axios from '../login/components/customApi';
 
@@ -17,8 +16,7 @@ export default function Layout() {
   useEffect(() => {
     const responseAcccessToken = localStorage.getItem('accessToken');
 
-    axios.defaults.headers.common['Authorization'] =
-      'Bearer ' + responseAcccessToken;
+    axios.defaults.headers.common.Authorization = `Bearer ${responseAcccessToken}`;
   }, []);
 
   const isLoginPage = location.pathname === '/';
@@ -32,7 +30,7 @@ export default function Layout() {
         <>
           <Header />
           <Body />
-          <Footer />
+          {/* <Footer /> */}
         </>
       )}
     </>
