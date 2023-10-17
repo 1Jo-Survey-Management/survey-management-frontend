@@ -29,11 +29,6 @@ import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
 import { OpenStatusEnum } from '../../enums/OpenStatusEnum';
 import { SurveyStatusEunm } from '../../enums/SurveyStatusEnum';
 
-const testStyle = css({
-  color: 'red',
-  fontSize: '100px',
-});
-
 function CreationSurvey() {
   const [surveyId] = useState<number>(new Date().getTime());
 
