@@ -61,16 +61,6 @@ const guestLogin = {
   color: '#9E9E9E',
 };
 
-const buttonStyle = {
-  border: 'none',
-  background: 'none',
-  cursor: 'pointer',
-};
-
-const imageStyle = {
-  width: '40%',
-};
-
 /**
  * 로그인 화면
  * @author 김선규
@@ -114,15 +104,21 @@ function LoginDisplay() {
           console.log('responseCheck:', responseCheck);
           const responseUserNo = responseCheck.data.content.userNo;
           const responseAccessToken = responseCheck.data.content.accessToken;
+          const responseImage = responseCheck.data.content.userImage;
           const responseNickName = responseCheck.data.content.userNickname;
           const responseExpiresIn = responseCheck.data.content.expiresIn;
-          const responseRefreshToken = responseCheck.data.content.refreshToken;
 
           console.log('responseUserNo : ' + responseUserNo);
           console.log('responseAccessToken :' + responseAccessToken);
           console.log('responseNickName :' + responseNickName);
+          console.log('responseImage :' + responseImage);
           console.log('responseExpiresIn :' + responseExpiresIn);
-          console.log('responseRefreshToken : ' + responseRefreshToken);
+
+          localStorage.setItem('userNo', responseUserNo);
+          localStorage.setItem('userNickname', responseNickName);
+          localStorage.setItem('userImage', responseImage);
+          localStorage.setItem('accessToken', responseAccessToken);
+          localStorage.setItem('expiresIn', responseExpiresIn);
 
           // 1. 완료된 회원
           if (responseUserNo != null && responseNickName != null) {
@@ -136,10 +132,12 @@ function LoginDisplay() {
                 '회원은 존재하나 브라우저에서 로그인 한적이 없는 회원'
               );
 
-              // accessToken, refreshToken, expiresIn localStrage에 저장하기
+              // localStrage에 회원 프로필 정보 저장하기
+              localStorage.setItem('userNo', responseUserNo);
+              localStorage.setItem('userNickname', responseNickName);
+              localStorage.setItem('userImage', responseImage);
               localStorage.setItem('accessToken', responseAccessToken);
               localStorage.setItem('expiresIn', responseExpiresIn);
-              localStorage.setItem('refreshToken', responseRefreshToken);
 
               const expiresAt = localStorage.getItem('expiresIn');
 
@@ -167,10 +165,12 @@ function LoginDisplay() {
                   'YYYY-MM-DD HH:mm:ss'
                 );
 
-                // accessToken, refreshToken, expiresIn localStrage에 저장하기
+                // localStrage에 회원 프로필 정보 저장하기
+                localStorage.setItem('userNo', responseUserNo);
+                localStorage.setItem('userNickname', responseNickName);
+                localStorage.setItem('userImage', responseImage);
                 localStorage.setItem('accessToken', responseAccessToken);
-                localStorage.setItem('expiresIn', exchangeExpiresAt);
-                localStorage.setItem('refreshToken', responseRefreshToken);
+                localStorage.setItem('expiresIn', responseExpiresIn);
               }
 
               const expiresAt = localStorage.getItem('expiresIn');
@@ -197,9 +197,12 @@ function LoginDisplay() {
             }
             // 토큰이 유효하지 않으면 다시 로그인해야해서 로컬스토리지 다지움
             else {
+              localStorage.removeItem('userNo');
+              localStorage.removeItem('userNickname');
+              localStorage.removeItem('userImage');
               localStorage.removeItem('accessToken');
-              localStorage.removeItem('refreshToken');
               localStorage.removeItem('expiresIn');
+              localStorage.removeItem('refreshToken');
 
               console.log('다시 로그인하기');
               navigate('/');
@@ -210,10 +213,12 @@ function LoginDisplay() {
           if (responseUserNo != null && !responseNickName) {
             console.log('첫 로그인!');
 
-            // accessToken, refreshToken, expiresIn localStrage에 저장하기
+            // localStrage에 회원 프로필 정보 저장하기
+            localStorage.setItem('userNo', responseUserNo);
+            localStorage.setItem('userNickname', responseNickName);
+            localStorage.setItem('userImage', responseImage);
             localStorage.setItem('accessToken', responseAccessToken);
             localStorage.setItem('expiresIn', responseExpiresIn);
-            localStorage.setItem('refreshToken', responseRefreshToken);
 
             // axois default header에 넣기(Global)
             axios.defaults.headers.common['Authorization'] =

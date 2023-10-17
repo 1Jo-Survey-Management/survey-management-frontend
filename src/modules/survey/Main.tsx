@@ -28,10 +28,21 @@ function Main() {
       });
   };
 
-  const tokenExpires = () => {
-    const expiresInString = localStorage.getItem('expiresIn');
+  const userProfile = () => {
+    axios
+      .post('/login/user')
+      .then((response) => {
+        // 서버로부터의 응답 처리
+        const respData = response.data;
+        console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
 
-    console.log('expiresin : ' + expiresInString);
+        if (respData === '') {
+          console.log('API 요청 실패');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
   const navigate = useNavigate();
   const goAttend = () => {
@@ -42,8 +53,8 @@ function Main() {
       <button type="button" onClick={test}>
         API 요청
       </button>
-      <button type="button" onClick={tokenExpires}>
-        토큰유효시간
+      <button type="button" onClick={userProfile}>
+        회원프로필요청
       </button>
       <h1>This is main</h1>
       <Button onClick={goAttend}>참여하기 버튼</Button>
