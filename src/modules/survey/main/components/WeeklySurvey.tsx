@@ -69,7 +69,7 @@ function WeeklySurvey() {
       try {
         // weekly 데이터
         const weeklyResponse = await axios.get(
-          'http://localhost:8000/surveys/weekly'
+          'http://localhost:8080/surveys/weekly'
         );
 
         if (weeklyResponse.data.length > 0) {
@@ -78,7 +78,7 @@ function WeeklySurvey() {
         } else {
           // weekly 데이터가 없으면 recent 데이터
           const recentResponse = await axios.get(
-            'http://localhost:8000/surveys/recent'
+            'http://localhost:8080/surveys/recent'
           );
           setCardList(recentResponse.data);
         }
