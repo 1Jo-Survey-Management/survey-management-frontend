@@ -216,7 +216,7 @@ function RecentSurvey() {
                             fontFamily,
                           }}
                         >
-                          {card.surveyClosingAt.slice(0, 10)}
+                          {card.surveyClosingAt}
                         </div>
                         <Typography
                           variant="h5"
@@ -310,10 +310,8 @@ function RecentSurvey() {
               </h2>
               <p style={textStyle}>
                 날짜:
-                {selectedCard
-                  ? selectedCard.surveyPostAt.slice(0, 10)
-                  : ''}~{' '}
-                {selectedCard ? selectedCard.surveyClosingAt.slice(0, 10) : ''}
+                {selectedCard ? selectedCard.surveyPostAt : ''}~{' '}
+                {selectedCard ? selectedCard.surveyClosingAt : ''}
               </p>
 
               <p style={textStyle}>
