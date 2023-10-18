@@ -4,6 +4,7 @@ import SurveyPieChart from './components/SurveyPieChart';
 import AnswerList from './components/AnswerList';
 import { GooglePie } from './components/GooglePie';
 import '../../../global.css';
+import WordCloud from './components/WordCloud';
 
 const styles = {
   card: {
