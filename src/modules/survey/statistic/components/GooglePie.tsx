@@ -1,25 +1,10 @@
-import * as React from 'react';
-import { Box, Card, CardContent, Typography } from '@mui/material';
-import SurveyPieChart from './components/SurveyPieChart';
-import AnswerList from './components/AnswerList';
-import { GooglePie } from './components/GooglePie';
-import '../../../global.css';
-import WordCloud from './components/WordCloud';
-
-const styles = {
-  card: {
-    boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
-    marginBottom: '30px',
-  },
-};
-const fontFamily = "'Noto Sans KR', sans-serif";
-const textStyle = {
-  fontFamily,
-};
+import React from 'react';
+import { Chart } from 'react-google-charts';
 
 interface surveyData {
   surveyNo: number;
   surveyTitle: string;
+  surveyQuestionNo: number;
   surveyQuestion: string;
   surveyQuestionType: number;
   surveyAnswerCount: number;
@@ -32,6 +17,7 @@ const surveyData: surveyData[] = [
   {
     surveyNo: 1,
     surveyTitle: '카페 이용 조사',
+    surveyQuestionNo: 1,
     surveyQuestion: '가장 선호하는 음료는 무엇입니까?',
     surveyQuestionType: 1,
     surveyAnswerCount: 50,
@@ -42,6 +28,7 @@ const surveyData: surveyData[] = [
   {
     surveyNo: 1,
     surveyTitle: '카페 이용 조사',
+    surveyQuestionNo: 1,
     surveyQuestion: '가장 선호하는 음료는 무엇입니까?',
     surveyQuestionType: 1,
     surveyAnswerCount: 50,
@@ -52,6 +39,7 @@ const surveyData: surveyData[] = [
   {
     surveyNo: 1,
     surveyTitle: '카페 이용 조사',
+    surveyQuestionNo: 1,
     surveyQuestion: '가장 선호하는 음료는 무엇입니까?',
     surveyQuestionType: 1,
     surveyAnswerCount: 50,
@@ -62,6 +50,7 @@ const surveyData: surveyData[] = [
   {
     surveyNo: 1,
     surveyTitle: '카페 이용 조사',
+    surveyQuestionNo: 1,
     surveyQuestion: '가장 선호하는 음료는 무엇입니까?',
     surveyQuestionType: 1,
     surveyAnswerCount: 50,
@@ -71,34 +60,8 @@ const surveyData: surveyData[] = [
   },
 ];
 
-export default function StatisticsPage() {
+export function GooglePie() {
   return (
-    <Card sx={styles.card}>
-      <CardContent>
-        <Box>
-          {/* <Typography style={textStyle}>
-            <h1>설문조사 결과보기</h1>
-          </Typography> */}
-          <Typography style={textStyle} sx={{ textAlign: 'center' }}>
-            <h2>카페 이용 조사</h2>
-          </Typography>
-
-          <Typography style={textStyle}>
-            <h4>1. 가장 선호하는 음료는 무엇입니까?</h4>
-          </Typography>
-          <GooglePie />
-
-          <Typography style={textStyle}>
-            <h4>1. 가장 선호하는 음료는 무엇입니까?</h4>
-          </Typography>
-          <WordCloud />
-
-          <Typography style={textStyle}>
-            <h4>1-2. 선호하는 이유는 무엇입니까?</h4>
-          </Typography>
-          <AnswerList />
-        </Box>
-      </CardContent>
-    </Card>
+    <Chart chartType="PieChart" data={surveyData} width="100%" height="400px" />
   );
 }

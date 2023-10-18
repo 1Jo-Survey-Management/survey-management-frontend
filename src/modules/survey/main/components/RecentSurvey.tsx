@@ -35,6 +35,7 @@ function RecentSurvey() {
       height: '150px',
     },
   };
+
   const fontFamily = "'Noto Sans KR', sans-serif";
   const textStyle = {
     fontFamily,
