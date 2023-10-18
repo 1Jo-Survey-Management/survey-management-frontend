@@ -42,10 +42,12 @@ const options: Options = {
   },
 };
 
-const WordCloud: React.FC = () => (
-  <div style={{ width: '500px', height: '500px' }}>
-    <ReactWordcloud words={wordCloudData} options={options} />
-  </div>
-);
+function WordCloud() {
+  return (
+    <div style={{ width: '500px', height: '500px' }}>
+      <ReactWordcloud words={wordCloudData} options={options} />
+    </div>
+  );
+}
 
 export default WordCloud;

@@ -82,15 +82,16 @@ export default function StatisticsPage() {
           <Typography style={textStyle} sx={{ textAlign: 'center' }}>
             <h2>카페 이용 조사</h2>
           </Typography>
-          <Typography style={textStyle}>
-            <h4>1. 가장 선호하는 음료는 무엇입니까?</h4>
-          </Typography>
-          <SurveyPieChart />
 
           <Typography style={textStyle}>
             <h4>1. 가장 선호하는 음료는 무엇입니까?</h4>
           </Typography>
           <GooglePie />
+
+          <Typography style={textStyle}>
+            <h4>1. 가장 선호하는 음료는 무엇입니까?</h4>
+          </Typography>
+          <WordCloud />
 
           <Typography style={textStyle}>
             <h4>1-2. 선호하는 이유는 무엇입니까?</h4>
