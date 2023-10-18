@@ -71,21 +71,41 @@ const surveyData: surveyData[] = [
 
 export default function StatisticsPage() {
   return (
-    <Card sx={styles.card}>
-      <CardContent>
-        <Box>
-          {/* <Typography style={textStyle}>
+    <>
+      <Card sx={styles.card}>
+        <CardContent>
+          <Box>
+            {/* <Typography style={textStyle}>
             <h1>설문조사 결과보기</h1>
           </Typography> */}
-          <Typography style={textStyle} sx={{ textAlign: 'center' }}>
-            <h2>카페 이용 조사</h2>
-          </Typography>
-          <Typography style={textStyle}>
-            <h4>1. 가장 선호하는 음료는 무엇입니까?</h4>
-          </Typography>
-          <SurveyPieChart />
-        </Box>
-      </CardContent>
-    </Card>
+            <Typography style={textStyle} sx={{ textAlign: 'center' }}>
+              <h2>카페 이용 조사</h2>
+            </Typography>
+          </Box>
+        </CardContent>
+      </Card>
+
+      <Card sx={styles.card}>
+        <CardContent>
+          <Box>
+            <Typography style={textStyle}>
+              <h4>1. 가장 선호하는 음료는 무엇입니까?</h4>
+            </Typography>
+            <SurveyPieChart />
+          </Box>
+        </CardContent>
+      </Card>
+
+      <Card sx={styles.card}>
+        <CardContent>
+          <Box>
+            <Typography style={textStyle}>
+              <h4>2. 단답형 문항</h4>
+            </Typography>
+            <WordCloud />
+          </Box>
+        </CardContent>
+      </Card>
+    </>
   );
 }
