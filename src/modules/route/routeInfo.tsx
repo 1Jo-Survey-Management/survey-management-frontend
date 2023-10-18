@@ -6,6 +6,7 @@ import MypageAttend from '../survey/MypageAttendSurvey';
 import MypageWrite from '../survey/MypageWriteSurvey';
 import AttendSurvey from '../survey/attend/routers/AttendSurvey';
 import CreationSurvey from '../survey/creation/routers/CreateationSurvey';
+import ModifySurvey from '../survey/modify/routers/ModifySurvey';
 
 /**
  * 각 페이지에 대한 라우팅 경로 설정입니다
@@ -29,6 +30,8 @@ export const routeInfo = (path: string) => {
       return <AttendSurvey />;
     case '/survey/register':
       return <CreationSurvey />;
+    case '/survey/modify':
+      return <ModifySurvey />;
     default:
       return <LoginDisplay />;
   }
