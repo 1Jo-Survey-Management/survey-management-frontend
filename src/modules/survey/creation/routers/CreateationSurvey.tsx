@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Container from '@mui/material/Container';
 import { Box, Button } from '@mui/material';
-import axios from 'axios';
+import axios from '../../../login/components/customApi';
 import { validate } from 'class-validator';
 import Swal from 'sweetalert2';
 import {
