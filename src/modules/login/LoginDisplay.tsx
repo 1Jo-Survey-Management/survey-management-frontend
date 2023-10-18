@@ -3,11 +3,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
+import moment from 'moment';
 import axios from '../login/components/customApi';
 import Logo from './img/SurveyLogo.png';
 import LoginFig from './img/LoginFig.png';
 import BasicModal from './modal/BasicModal';
-import moment from 'moment';
 import LoginNaver from './LoginNaver';
 
 const emptyBoxSimple = {
@@ -88,7 +88,7 @@ function LoginDisplay() {
 
     const redirectUri = '/login/oauth2/code/naver';
 
-    //Authorization code를 받으면 백 서버로 요청을 보내준다.
+    // Authorization code를 받으면 백 서버로 요청을 보내준다.
     if (accessCode) {
       axios
         .get(redirectUri, {
@@ -134,11 +134,10 @@ function LoginDisplay() {
 
               const expiresAt = localStorage.getItem('expiresIn');
 
-              console.log('유효시간 확인 : ' + expiresAt);
+              console.log(`유효시간 확인 : ${expiresAt}`);
 
               // axois default header에 넣기(Global)
-              axios.defaults.headers.common['Authorization'] =
-                'Bearer ' + responseAccessToken;
+              axios.defaults.headers.common.Authorization = `Bearer ${responseAccessToken}`;
 
               navigate('/survey/main');
             }
@@ -173,8 +172,7 @@ function LoginDisplay() {
             }
 
             // axois default header에 넣기(Global)
-            axios.defaults.headers.common['Authorization'] =
-              'Bearer ' + responseAccessToken;
+            axios.defaults.headers.common.Authorization = `Bearer ${responseAccessToken}`;
             responseAccessToken;
 
             setShowModal(true);

@@ -30,6 +30,8 @@ export const routeInfo = (path: string) => {
       return <AttendSurvey />;
     case '/survey/statistics':
       return <StatisticsPage />;
+    case '/survey/register':
+      return <CreationSurvey />;
     default:
       return <LoginDisplay />;
   }

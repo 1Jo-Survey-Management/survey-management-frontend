@@ -13,7 +13,7 @@ const refresh = async (
   const expireAt = localStorage.getItem('expiresIn');
   //   const testExpireAt = '2010-07-09'; -> 토큰 만료됐을때 테스트해볼 코드
   let accessToken = localStorage.getItem('accessToken');
-  let oldAccessToken = localStorage.getItem('accessToken');
+  const oldAccessToken = localStorage.getItem('accessToken');
 
   if (moment(expireAt).diff(moment()) < 0 && refreshToken) {
     console.log('토큰 만료, 토큰 갱신 실행');
@@ -24,7 +24,7 @@ const refresh = async (
 
     try {
       const response = await axios.post(`/login/refreshtoken`, body);
-      const data = response.data;
+      const { data } = response;
 
       console.log(`API 요청 : ${JSON.stringify(data, null, 2)}`);
 

@@ -1,19 +1,8 @@
 import * as React from 'react';
-import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
+import { PieChart } from '@mui/x-charts/PieChart';
 
 export default function SurveyPieChart() {
-  interface surveyData {
-    surveyNo: number;
-    surveyTitle: string;
-    surveyQuestion: string;
-    surveyQuestionType: number;
-    surveyAnswerCount: number;
-    surveyAnswerSelection: string;
-    surveyAnswerSelectionNo: number;
-    surveyAnswerSelectionCount: number;
-  }
-
-  const surveyData: surveyData[] = [
+  const surveyData = [
     {
       surveyNo: 1,
       surveyTitle: '카페 이용 조사',
@@ -27,6 +16,7 @@ export default function SurveyPieChart() {
     {
       surveyNo: 1,
       surveyTitle: '카페 이용 조사',
+      surveyQuestionNo: 1,
       surveyQuestion: '가장 선호하는 음료는 무엇입니까?',
       surveyQuestionType: 1,
       surveyAnswerCount: 50,
@@ -55,8 +45,9 @@ export default function SurveyPieChart() {
       surveyAnswerSelectionCount: 7,
     },
   ];
-  const seriesData = surveyData.map((data, index) => ({
-    id: index,
+
+  // Transforming surveyData into the appropriate format for the PieChart
+  const seriesData = surveyData.map((data) => ({
     value: data.surveyAnswerSelectionCount,
     label: data.surveyAnswerSelection,
   }));
@@ -65,17 +56,14 @@ export default function SurveyPieChart() {
     <PieChart
       series={[
         {
-          arcLabel: (item) => `${item.label} (${item.value})`,
-          arcLabelMinAngle: 45,
           data: seriesData,
         },
       ]}
       sx={{
-        [`& .${pieArcLabelClasses.root}`]: {
-          fill: 'white',
-          fontWeight: 'bold',
-        },
+        textAlign: 'center',
+        width: '100%',
       }}
+      height={200}
     />
   );
 }

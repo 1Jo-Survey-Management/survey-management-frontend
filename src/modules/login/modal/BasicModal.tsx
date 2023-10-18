@@ -3,14 +3,13 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import axios from '../components/customApi';
 import { useNavigate } from 'react-router-dom';
+import moment, { Moment } from 'moment';
+import axios from '../components/customApi';
 import RadioButton from '../components/RowRadioButtonsGroup';
 import InputNickName from '../components/NameInput';
 import GetBirth from '../components/BasicDatePicker';
 import StyledButton from '../components/StyledButton';
-import { Moment } from 'moment';
-import moment from 'moment';
 
 const style = {
   position: 'absolute' as const,
