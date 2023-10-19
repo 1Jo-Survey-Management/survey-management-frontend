@@ -39,7 +39,7 @@ const responsiveOptions: Options = {
   },
 };
 
-const WordCloud = () => {
+function WordCloud() {
   return (
     <div
       style={{
@@ -51,7 +51,7 @@ const WordCloud = () => {
       <ReactWordcloud words={wordCloudData} options={responsiveOptions} />
     </div>
   );
-};
+}
 
 export default WordCloud;
 

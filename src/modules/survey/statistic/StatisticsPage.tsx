@@ -9,9 +9,10 @@ import {
 } from '@mui/material';
 import SurveyPieChart from './components/SurveyPieChart';
 import AnswerList from './components/AnswerList';
-import { GooglePie } from './components/GooglePie';
+import GooglePieChart from './components/GooglePieChart';
 import '../../../global.css';
 import WordCloud from './components/WordCloud';
+import { GooglePie } from './components/GooglePie';
 
 const styles = {
   card: {
