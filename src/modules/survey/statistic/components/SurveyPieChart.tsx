@@ -63,7 +63,6 @@ export default function SurveyPieChart() {
         textAlign: 'center',
         width: '100%',
       }}
-      height={200}
     />
   );
 }
