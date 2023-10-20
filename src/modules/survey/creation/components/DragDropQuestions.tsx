@@ -13,6 +13,14 @@ interface DragDropQuestionProps {
   setQuestions: React.Dispatch<React.SetStateAction<QuestionProps[]>>;
 }
 
+/**
+ * Drag And Drop 가능한 문항 리스트 컴포넌트 입니다.
+ *
+ * @component
+ * @param questions 문항 배열
+ * @param setQuestions 문항 배열의 useState 입니다.
+ * @returns
+ */
 function DragDropQuestion({ questions, setQuestions }: DragDropQuestionProps) {
   /**
    * Drag Drop을 통해 컴포넌트의 순서가 변경되는 것을 상태로 관리하기 위한 메서드 입니다.
