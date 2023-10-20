@@ -58,4 +58,4 @@ function WordCloud() {
   );
 }
 
-export default WordCloud;
+// export default WordCloud;

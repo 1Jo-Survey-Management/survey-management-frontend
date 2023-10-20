@@ -21,7 +21,7 @@ function Main() {
       <WeeklySurvey />
       <h2 style={textStyle}>
         최근 등록된 설문
-        <Button onClick={() => navigate('/survey/Search')}>전체 보기</Button>
+        <Button onClick={() => navigate('/survey/search')}>전체 보기</Button>
       </h2>
 
       <RecentSurvey />

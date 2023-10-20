@@ -84,9 +84,26 @@ export default function AnswerList() {
                 {row.Answer}
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {incrementalArray.map((row) => (
+              <TableRow
+                component="th"
+                scope="row"
+                key={row.count}
+                //   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row" width={100}>
+                  {row.count}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {row.surveySubjectiveAnswer}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 }

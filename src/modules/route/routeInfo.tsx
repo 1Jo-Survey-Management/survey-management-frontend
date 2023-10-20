@@ -20,7 +20,7 @@ export const routeInfo = (path: string) => {
       return <SurveyMain />;
     case '/login/LoginDisplay':
       return <LoginDisplay />;
-    case '/survey/Search':
+    case '/survey/search':
       return <Search />;
     case '/survey/MypageAttend':
       return <MypageAttend />;
