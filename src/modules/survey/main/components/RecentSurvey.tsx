@@ -56,7 +56,6 @@ function RecentSurvey() {
     tag: Array<string>;
     surveyAttendCount: number;
     isDeleted: boolean;
-    // 기타 카드에 필요한 속성들을 추가로 정의
   };
   const [openModal, setOpenModal] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
@@ -75,7 +74,7 @@ function RecentSurvey() {
 
   useEffect(() => {
     const data = async () => {
-      const card = await axios.get('http://localhost:8000/surveys/recent');
+      const card = await axios.get('http://localhost:8080/surveys/recent');
       setCardList(card.data);
     };
     data();
@@ -185,8 +184,6 @@ function RecentSurvey() {
                             style={textStyle}
                           />
 
-                          {/* <Stack spacing={1} alignItems="center">
-                            <Stack direction="row" spacing={1}> */}
                           <Chip
                             label={card.surveyStatusName}
                             color={getChipColor(card.surveyStatusName)} // 상태에 따른 색상 사용
@@ -326,7 +323,7 @@ function RecentSurvey() {
               <p id="modal-description" style={textStyle}>
                 {selectedCard ? selectedCard.surveyDiscription : ''}
               </p>
-              <Button onClick={() => navigate('/survey/Search')}>
+              <Button onClick={() => navigate(`/survey/statistics`)}>
                 결과보기
               </Button>
               <Button onClick={() => navigate('/survey/Search')}>

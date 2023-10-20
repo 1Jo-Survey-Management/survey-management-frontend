@@ -33,10 +33,10 @@ export default function StatisticsPage() {
           </Typography>
           <GooglePieChart />
 
-          <Typography style={textStyle}>
+          {/* <Typography style={textStyle}>
             <h4>1. 가장 선호하는 음료는 무엇입니까?</h4>
           </Typography>
-          <WordCloud />
+          <WordCloud /> */}
 
           <Typography style={textStyle}>
             <h4>1-2. 선호하는 이유는 무엇입니까?</h4>

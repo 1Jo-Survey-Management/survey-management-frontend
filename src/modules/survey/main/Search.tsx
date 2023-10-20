@@ -74,7 +74,7 @@ function SurveySearch(this: any) {
     const fetchData = async () => {
       if (selectedState === '전체(모든 카드)') {
         const response = await axios.get(
-          `http://localhost:8000/surveys/surveyall?page=${page}`
+          `http://localhost:8080/surveys/surveyall?page=${page}`
         );
         if (response.data.length === 0) {
           setHasMore(false);
@@ -88,7 +88,7 @@ function SurveySearch(this: any) {
         }
       } else if (selectedState === '진행') {
         const response = await axios.get(
-          `http://localhost:8000/surveys/select-post?page=${page}`
+          `http://localhost:8080/surveys/select-post?page=${page}`
         );
 
         if (response.data.length === 0) {
