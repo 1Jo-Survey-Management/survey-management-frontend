@@ -1,6 +1,5 @@
 import axios from 'axios';
 import config from '../config/config.json';
-import { refresh } from './RefreshToken';
 
 /**
  * intercepter를 통하여 토큰 만료시 refreshToken으로 자동 갱신하기 위한 axois 커스텀 컴포넌트입니다
@@ -11,7 +10,5 @@ const Api = axios.create({
   timeout: 10000,
   params: {},
 });
-
-Api.interceptors.request.use(refresh);
 
 export default Api;
