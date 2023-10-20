@@ -1,28 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, TextField } from '@mui/material';
 import { SurveyItem } from '../types/AttendTypes';
 
 interface LongAnswerProps {
   surveyData: SurveyItem[];
   questionNo: number;
+  onAnswerChange: (answer: string) => void;
 }
 
-function LongAnswer({ surveyData, questionNo }: LongAnswerProps) {
+function LongAnswer({
+  surveyData,
+  questionNo,
+  onAnswerChange,
+}: LongAnswerProps) {
+  const [answer, setAnswer] = useState<string>('');
+
+  const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = event.target.value;
+    setAnswer(newValue);
+    onAnswerChange(newValue);
+  };
+
   const currentQuestion = surveyData.find(
     (item) => item.surveyQuestionNo === questionNo
   );
 
   if (!currentQuestion) {
-    return null; // 혹은 다른 적절한 처리
+    return null;
   }
 
   return (
     <Card
+      id={`question-${questionNo}`}
       sx={{
         marginBottom: '30px',
       }}
     >
       <CardContent>
+        {!answer && currentQuestion?.required && (
+          <h1
+            style={{
+              fontSize: '9px',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              height: '10px',
+              color: 'red',
+              margin: '0',
+              padding: '0',
+            }}
+          >
+            * 필수 응답 문항입니다.
+          </h1>
+        )}
         <p
           style={{
             fontSize: '0.9rem',
@@ -49,7 +78,9 @@ function LongAnswer({ surveyData, questionNo }: LongAnswerProps) {
           variant="outlined"
           fullWidth
           multiline
-          rows={10} // LongAnswer이기 때문에 행의 수를 조금 더 늘립니다.
+          rows={10}
+          value={answer}
+          onChange={handleTextChange}
         />
       </CardContent>
     </Card>

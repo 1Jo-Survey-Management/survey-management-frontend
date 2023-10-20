@@ -1,28 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, TextField } from '@mui/material';
 import { SurveyItem } from '../types/AttendTypes';
 
 interface ShortAnswerProps {
   surveyData: SurveyItem[];
   questionNo: number;
+  onAnswerChange: (answer: string) => void;
 }
 
-function ShortAnswer({ surveyData, questionNo }: ShortAnswerProps) {
+function ShortAnswer({
+  surveyData,
+  questionNo,
+  onAnswerChange,
+}: ShortAnswerProps) {
+  const [answer, setAnswer] = useState<string>('');
+
+  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    setAnswer(newValue);
+    onAnswerChange(newValue);
+  };
+
   const currentQuestion = surveyData.find(
     (item) => item.surveyQuestionNo === questionNo
   );
 
   if (!currentQuestion) {
-    return null; // 혹은 다른 적절한 처리
+    return null;
   }
 
   return (
     <Card
+      id={`question-${questionNo}`}
       sx={{
         marginBottom: '30px',
       }}
     >
       <CardContent>
+        {!answer && currentQuestion?.required && (
+          <h1
+            style={{
+              fontSize: '9px',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              height: '10px',
+              color: 'red',
+              margin: '0',
+              padding: '0',
+            }}
+          >
+            * 필수 응답 문항입니다.
+          </h1>
+        )}
         <p
           style={{
             fontSize: '0.9rem',
@@ -44,13 +73,7 @@ function ShortAnswer({ surveyData, questionNo }: ShortAnswerProps) {
         >
           {currentQuestion.surveyQuestionDescription}
         </p>
-        <TextField
-          label="답변 입력란"
-          variant="outlined"
-          fullWidth
-          multiline
-          rows={1}
-        />
+        <TextField fullWidth value={answer} onChange={handleTextChange} />
       </CardContent>
     </Card>
   );

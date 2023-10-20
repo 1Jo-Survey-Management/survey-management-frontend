@@ -1,3 +1,9 @@
+export interface SelectionItem {
+  selectionValue: string;
+  selectionNo: number;
+  // 필요하면 여기에 추가적인 속성들을 추가할 수 있습니다.
+}
+
 export interface SurveyItem {
   surveyTitle: string;
   surveyImage: string;
@@ -12,6 +18,7 @@ export interface SurveyItem {
   required: boolean;
   endOfSurvey: boolean;
   movable: boolean;
+  selections?: SelectionItem[]; // 수정된 부분
 }
 
 export interface SurveyData {

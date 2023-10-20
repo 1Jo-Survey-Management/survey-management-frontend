@@ -13,22 +13,34 @@ import { SurveyItem } from '../types/AttendTypes';
 interface AttendMultipleChoiceProps {
   surveyData: SurveyItem[];
   questionNo: number;
+  onAnswerChange: (
+    answers: Array<{ selectionValue: string; selectionNo: number }>
+  ) => void;
 }
 
 function AttendMultipleChoice({
   surveyData,
   questionNo,
+  onAnswerChange,
 }: AttendMultipleChoiceProps) {
-  const [checkedValues, setCheckedValues] = useState<string[]>([]);
+  const [checkedValues, setCheckedValues] = useState<
+    Array<{ selectionValue: string; selectionNo: number }>
+  >([]);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      setCheckedValues((prev) => [...prev, event.target.value]);
-    } else {
-      setCheckedValues((prev) =>
-        prev.filter((val) => val !== event.target.value)
-      );
-    }
+    const newValue = {
+      selectionValue: event.target.value,
+      selectionNo: Number(event.target.name),
+    };
+
+    const newValues = event.target.checked
+      ? [...checkedValues, newValue]
+      : checkedValues.filter(
+          (val) => val.selectionValue !== event.target.value
+        );
+
+    setCheckedValues(newValues);
+    onAnswerChange(newValues);
   };
 
   const questionItems = surveyData.filter(
@@ -38,16 +50,32 @@ function AttendMultipleChoice({
   const mainQuestion = questionItems[0];
 
   if (!mainQuestion) {
-    return null; // 혹은 다른 적절한 처리
+    return null;
   }
 
   return (
     <Card
+      id={`question-${questionNo}`}
       sx={{
         marginBottom: '30px',
       }}
     >
       <CardContent>
+        {!checkedValues.length && mainQuestion.required && (
+          <h1
+            style={{
+              fontSize: '9px',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              height: '10px',
+              color: 'red',
+              margin: '0',
+              padding: '0',
+            }}
+          >
+            * 필수 응답 문항입니다.
+          </h1>
+        )}
         <FormControl component="fieldset">
           <FormLabel
             component="legend"
@@ -70,9 +98,12 @@ function AttendMultipleChoice({
                 key={item.selectionNo}
                 control={
                   <Checkbox
-                    checked={checkedValues.includes(item.selectionValue || '')}
+                    checked={checkedValues.some(
+                      (v) => v.selectionValue === (item.selectionValue || '')
+                    )}
                     onChange={handleCheckboxChange}
                     value={item.selectionValue || ''}
+                    name={item.selectionNo.toString()}
                   />
                 }
                 label={item.selectionValue || ''}

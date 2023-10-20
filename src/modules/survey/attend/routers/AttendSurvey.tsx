@@ -2,10 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { Button, Container, Stack } from '@mui/material';
 import axios from 'axios';
 import AttendSingleChoice from '../components/AttendSingleChoice';
+import { SurveyData } from '../types/AttendTypes';
 import AttendMultipleChoice from '../components/AttendMultipleChoice';
 import ShortAnswer from '../components/ShortAnswer';
 import LongAnswer from '../components/LongAnswer';
-import { SurveyData } from '../types/AttendTypes';
+
+interface UserResponse {
+  surveyQuestionTitle: string;
+  selectionValue: string | null;
+  userNo: number;
+  surveyNo: number;
+  surveyQuestionNo: number;
+  questionTypeNo: number;
+  selectionNo: number;
+  surveySubjectiveAnswer: string | null;
+}
 
 function AttendSurvey() {
   const [surveyData, setSurveyData] = useState<SurveyData>({
@@ -14,19 +25,18 @@ function AttendSurvey() {
     errorResponse: null,
   });
 
+  const USER_NO = 1;
+  const SURVEY_NO = 2;
+
   useEffect(() => {
-    // 데이터를 불러오는 API 호출
     axios
       .get<SurveyData>(
         'http://localhost:8000/api/for-attend/surveys/survey-data'
       )
       .then((response) => {
-        // 서버에서 받은 데이터 중 surveyNo가 2인 데이터만 필터링
         const filteredData = response.data.content
-          .filter((item) => item.surveyNo === 6)
-          .sort((a, b) => a.surveyQuestionNo - b.surveyQuestionNo); // surveyQuestionNo를 기준으로 오름차순 정렬
-
-        console.log('surveyNo가 2인 데이터들만 필터링: ', filteredData);
+          .filter((item) => item.surveyNo === 2)
+          .sort((a, b) => a.surveyQuestionNo - b.surveyQuestionNo);
         setSurveyData({
           ...response.data,
           content: filteredData,
@@ -36,6 +46,133 @@ function AttendSurvey() {
         console.error('Error fetching survey data:', error);
       });
   }, []);
+
+  const [userResponses, setUserResponses] = useState<UserResponse[]>([]);
+
+  const handleAnswerChange =
+    (questionNo: number) =>
+    (
+      answerOrAnswers:
+        | Array<{ selectionValue: string; selectionNo: number }>
+        | string
+    ) => {
+      const currentQuestionData = surveyData.content.find(
+        (item) => item.surveyQuestionNo === questionNo
+      );
+
+      if (!currentQuestionData) {
+        console.error('Question not found');
+        return;
+      }
+
+      const newResponses: UserResponse[] = [];
+
+      if (
+        Array.isArray(answerOrAnswers) &&
+        typeof answerOrAnswers[0] === 'object'
+      ) {
+        // 객관식 복수 선택인 경우
+        answerOrAnswers.forEach((selection) => {
+          newResponses.push({
+            surveyQuestionTitle: currentQuestionData.surveyQuestionTitle,
+            selectionValue: selection.selectionValue,
+            userNo: USER_NO,
+            surveyNo: SURVEY_NO,
+            surveyQuestionNo: currentQuestionData.surveyQuestionNo,
+            questionTypeNo: currentQuestionData.questionTypeNo,
+            selectionNo: selection.selectionNo, // 여기에서 직접 selectionNo를 가져옵니다.
+            surveySubjectiveAnswer: null, // 기본 값을 null로 설정
+          });
+        });
+      } else if (currentQuestionData.questionTypeNo > 2) {
+        // 주관식 답변인 경우
+        newResponses.push({
+          surveyQuestionTitle: currentQuestionData.surveyQuestionTitle,
+          selectionValue: null,
+          userNo: USER_NO,
+          surveyNo: SURVEY_NO,
+          surveyQuestionNo: currentQuestionData.surveyQuestionNo,
+          questionTypeNo: currentQuestionData.questionTypeNo,
+          selectionNo: 0,
+          surveySubjectiveAnswer: answerOrAnswers as string, // 주관식 답변은 string 타입이므로 형변환
+        });
+      } else if (typeof answerOrAnswers === 'string') {
+        // 나머지 경우
+        const answerString = answerOrAnswers;
+        newResponses.push({
+          surveyQuestionTitle: currentQuestionData.surveyQuestionTitle,
+          selectionValue: answerString,
+          userNo: USER_NO,
+          surveyNo: SURVEY_NO,
+          surveyQuestionNo: currentQuestionData.surveyQuestionNo,
+          questionTypeNo: currentQuestionData.questionTypeNo,
+          selectionNo: currentQuestionData.selectionNo,
+          surveySubjectiveAnswer: null,
+        });
+      }
+
+      setUserResponses((prev) => {
+        let updatedResponses = prev.filter(
+          (response) =>
+            response.surveyQuestionNo !== currentQuestionData.surveyQuestionNo
+        );
+        updatedResponses = [...updatedResponses, ...newResponses];
+        return updatedResponses;
+      });
+    };
+
+  const handleSubmit = async () => {
+    // 필수 응답 문항 체크
+    // eslint-disable-next-line no-restricted-syntax
+    for (const item of surveyData.content) {
+      if (item.required) {
+        const responseExists = userResponses.find(
+          (response) => response.surveyQuestionNo === item.surveyQuestionNo
+        );
+        if (
+          !responseExists ||
+          (item.questionTypeNo > 2 &&
+            (!responseExists.surveySubjectiveAnswer ||
+              responseExists.surveySubjectiveAnswer.trim() === ''))
+        ) {
+          alert('필수 응답 문항에 답변하세요.');
+          const targetElement = document.getElementById(
+            `question-${item.surveyQuestionNo}`
+          );
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            console.error(
+              'Target element not found for question:',
+              item.surveyQuestionNo
+            );
+          }
+          return;
+        }
+      }
+    }
+
+    const isConfirmed = window.confirm('설문을 제출하시겠습니까?');
+    if (!isConfirmed) return;
+
+    try {
+      const response = await axios.post(
+        'http://localhost:8000/api/for-attend/surveys/save-responses',
+        userResponses
+      );
+
+      if (response.data.success) {
+        alert('설문 응답이 성공적으로 전송되었습니다.');
+      } else if (response.data.errorCode === 'ERROR_SAVING_SURVEY') {
+        alert('설문 응답 저장 중 오류가 발생했습니다.');
+      } else {
+        alert('오류가 발생했습니다. 다시 시도해주세요.');
+      }
+    } catch (error) {
+      console.error('Error submitting data:', error);
+      alert('서버와의 통신 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
 
   const uniqueQuestions = Array.from(
     new Set(surveyData.content.map((item) => item.surveyQuestionNo))
@@ -48,9 +185,8 @@ function AttendSurvey() {
         const question = surveyData.content.find(
           (item) => item.surveyQuestionNo === questionNo
         );
-        // question 값이 존재하는지 체크하기
         if (!question) {
-          return null; // 혹은 다른 적절한 처리
+          return null;
         }
 
         const { questionTypeNo } = question;
@@ -61,6 +197,7 @@ function AttendSurvey() {
                 key={questionNo}
                 surveyData={surveyData.content}
                 questionNo={questionNo}
+                onAnswerChange={handleAnswerChange(questionNo)}
               />
             );
           case 2:
@@ -69,6 +206,7 @@ function AttendSurvey() {
                 key={questionNo}
                 surveyData={surveyData.content}
                 questionNo={questionNo}
+                onAnswerChange={handleAnswerChange(questionNo)}
               />
             );
           case 3:
@@ -77,6 +215,7 @@ function AttendSurvey() {
                 key={questionNo}
                 surveyData={surveyData.content}
                 questionNo={questionNo}
+                onAnswerChange={handleAnswerChange(questionNo)}
               />
             );
           case 4:
@@ -85,19 +224,22 @@ function AttendSurvey() {
                 key={questionNo}
                 surveyData={surveyData.content}
                 questionNo={questionNo}
+                onAnswerChange={handleAnswerChange(questionNo)}
               />
             );
           default:
             return null;
         }
       })}
-      <Stack
-        direction="row"
-        spacing={2}
-        style={{ display: 'flex', justifyContent: 'space around' }}
-      >
-        <Button variant="contained">제출하기</Button>
-        <Button variant="contained">돌아가기</Button>
+      <Stack spacing={2}>
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={handleSubmit}
+        >
+          설문 제출
+        </Button>
       </Stack>
     </Container>
   );
