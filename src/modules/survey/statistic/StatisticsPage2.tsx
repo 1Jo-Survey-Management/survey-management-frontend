@@ -70,24 +70,129 @@ const rankData = [
   { rank: 0, menu: '우유', num: 5 },
 ];
 
+interface Selection {
+  userNickname: string;
+  surveyNo: number;
+  surveyTitle: string;
+  surveyQuestionNo: number;
+  surveyQuestionTitle: string;
+  questionTypeNo: number;
+  selectionNo: number;
+  selectionValue: string;
+  selectionCount: number;
+  surveySubjectiveAnswer: string;
+}
+
 export default function StatisticsPage() {
-  useEffect(() => {
-    axios
-      .post('/statistic/render')
-      .then((response) => {
-        const respData = response.data;
-        console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
+  // 전체 정보 상태 관리
+  const [selectStat, setSelectStat] = useState<Selection[]>([]);
+  // const [options, setOptions] = useState({
+  //   legend: 'right',
+  // });
 
-        if (respData === '') {
-          console.log('API 요청 실패');
-        }
+  const questionAnswerCount = (data: Selection[]): number => {
+    let sum = 0;
+    data.forEach((item) => {
+      sum += item.selectionCount;
+    });
+    return sum;
+  };
+
+  const extractChartData = (data: Selection[]): [string, unknown][] =>
+    data.map((item) => [item.selectionValue, item.selectionCount]);
+
+  // 전체 설문지 페이지에 뿌려질 데이터 (맨 처음 데이터 가져옴)
+  const userNickname = selectStat[0].userNickname;
+  const totalSelectionCount = questionAnswerCount(selectStat);
+  const surveyTitle = selectStat[0].surveyTitle;
+  const surveyNo = selectStat[0].surveyNo;
+
+  // 문항 번호로 카드를 반복해서 만들고, 문항 유형 번호로 어떤 컴포넌트를 내보낼지 정한다
+  // // 문항 전체 수 계산
+  // const surveyQuestionAll = (data: Selection[]): number => {
+  //   let maxNum = 0;
+  //   data.forEach((item, index) => {
+  //     let currentNum = item.surveyQuestionNo;
+
+  //     if (index < data.length - 1) {
+  //         let nextNum = data[index + 1].surveyQuestionNo;
+
+  //         if (nextNum > currentNum) {
+  //             maxNum = nextNum;
+  //         }
+  //     }
+  // });
+  //   return maxNum;
+  // };
+
+  //-----------------------------------------------------
+  const question = (data: Selection[]): any => {
+    let result = new Map();
+
+    data.forEach((item) => {
+      const surveyQuestionNo = item.surveyQuestionNo;
+      const questionTypeNo = item.questionTypeNo;
+
+      if (!result.has(surveyQuestionNo)) {
+        result.set(surveyQuestionNo, new Set());
+      }
+
+      result.get(surveyQuestionNo).add(questionTypeNo);
+    });
+    // 결과를 필요한 형식으로 변환
+    const finalResult = Array.from(result).map(
+      ([surveyQuestionNo, questionTypeSet]) => ({
+        surveyQuestionNo,
+        questionTypeNo: Array.from(questionTypeSet),
       })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
+    );
 
-  const [surveyImage, setSurveyImage] = useState<File>();
+    return finalResult;
+  };
+
+  //--------------------------------------------------
+
+  const surveyBranch = (data: Selection[]): any => {
+    const result = question(selectStat);
+
+    result.forEach(
+      (item: { surveyQuestionNo: number; questionTypeNo: number }) => {
+        item.surveyQuestionNo;
+
+        switch (item.questionTypeNo) {
+          case 1:
+            // questionTypeNo가 1인 경우에 대한 작업 수행
+            break;
+          case 2:
+            // questionTypeNo가 2인 경우에 대한 작업 수행
+            break;
+          // 다른 questionTypeNo case도 추가할 수 있습니다.
+          default:
+            // 기본 동작
+            break;
+        }
+      }
+    );
+  };
+
+  // 구글 차트에 필요한 데이터
+  const chartData = extractChartData(selectStat);
+  chartData.unshift(['selectionValue', 'selectionCount']);
+
+  useEffect(() => {
+    // 전체 정보 API 요청
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/survey/result?surveyno=1&questionno=1`
+        );
+        setSelectStat(response.data);
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+    };
+    fetchData();
+  }, []);
 
   // const [surveyInfo, setSurveyInfo] = useState<SurveyInfoProps>({
   //   surveyId,
@@ -111,7 +216,7 @@ export default function StatisticsPage() {
         <CardContent>
           <Box>
             <Typography style={textStyle} sx={styles.titleText}>
-              <h1>카페 이용 조사</h1>
+              <h1>{}</h1>
               <Divider />
             </Typography>
             <Typography style={textStyle} sx={styles.surveyInfo}>
@@ -125,14 +230,7 @@ export default function StatisticsPage() {
               <Button variant="contained">참여하기</Button>&nbsp;&nbsp;&nbsp;
               <Button variant="contained">돌아가기</Button>&nbsp;&nbsp;&nbsp;
             </Typography>
-
-            {/* 설문 번호: 1  설문 작성자: 김선규  설문 개시일: 2023-10-19 */}
-            {/* <Divider /> */}
             <br />
-
-            {/* 설문 이미지 넣기 */}
-            {/* 구분선 하나 넣기 */}
-            {/* 설문지 설명 넣기 */}
           </Box>
         </CardContent>
       </Card>
