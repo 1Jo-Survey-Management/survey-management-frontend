@@ -56,3 +56,8 @@ export interface SurveyProps {
   questions: QuestionProps[];
   selections: SelectionProps[];
 }
+
+export interface DragDropQuestionProps {
+  questions: QuestionProps[];
+  setQuestions: React.Dispatch<React.SetStateAction<QuestionProps[]>>;
+}

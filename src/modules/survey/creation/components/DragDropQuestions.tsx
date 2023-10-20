@@ -5,13 +5,8 @@ import {
   Droppable,
   DragEndDetails,
 } from 'react-beautiful-dnd';
-import { QuestionProps } from '../types/SurveyTypes';
+import { DragDropQuestionProps, QuestionProps } from '../types/SurveyTypes';
 import CreateQuestion from './CreateQuestion';
-
-interface DragDropQuestionProps {
-  questions: QuestionProps[];
-  setQuestions: React.Dispatch<React.SetStateAction<QuestionProps[]>>;
-}
 
 /**
  * Drag And Drop 가능한 문항 리스트 컴포넌트 입니다.
@@ -20,6 +15,7 @@ interface DragDropQuestionProps {
  * @param questions 문항 배열
  * @param setQuestions 문항 배열의 useState 입니다.
  * @returns
+ * @author 강명관
  */
 function DragDropQuestion({ questions, setQuestions }: DragDropQuestionProps) {
   /**
