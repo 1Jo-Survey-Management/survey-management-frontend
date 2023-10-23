@@ -1,44 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Chart } from 'react-google-charts';
-import axios from 'axios';
+import { PieData } from '../types/SurveyStatistics';
 import '../../../../global.css';
-
-interface Selection {
-  surveyNo: number;
-  surveyTitle: string;
-  surveyQuestionNo: number;
-  surveyQuestionTitle: string;
-  questionTypeNo: number;
-  selectionNo: number;
-  selectionValue: string;
-  selectionCount: number;
-  surveySubjectiveAnswer: string;
-}
 
 const fontFamily = "'Noto Sans KR', sans-serif";
 const textStyle = {
   fontFamily,
 };
 
-export default function GooglePieChart() {
-  const [selectStat, setSelectStat] = useState<Selection[]>([]);
+interface GooglePieChartProps {
+  selectionAnswer: PieData[];
+}
+
+export default function GooglePieChart({
+  selectionAnswer,
+}: GooglePieChartProps) {
   const [options, setOptions] = useState({
     legend: 'right',
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/survey/result?surveyno=1&questionno=1`
-        );
-        setSelectStat(response.data);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      }
-    };
-    fetchData();
-
     const handleResize = () => {
       if (window.innerWidth < 620) {
         setOptions({
@@ -56,7 +37,7 @@ export default function GooglePieChart() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const questionAnswerCount = (data: Selection[]): number => {
+  const questionAnswerCount = (data: PieData[]): number => {
     let sum = 0;
     data.forEach((item) => {
       sum += item.selectionCount;
@@ -64,20 +45,21 @@ export default function GooglePieChart() {
     return sum;
   };
 
-  const totalSelectionCount = questionAnswerCount(selectStat);
+  const totalSelectionCount = questionAnswerCount(selectionAnswer);
 
-  const extractChartData = (data: Selection[]): [string, unknown][] =>
+  const extractChartData = (data: PieData[]): [string, unknown][] =>
     data.map((item) => [item.selectionValue, item.selectionCount]);
 
-  const chartData = extractChartData(selectStat);
+  const chartData = extractChartData(selectionAnswer);
   chartData.unshift(['selectionValue', 'selectionCount']);
 
+  console.log(chartData);
   return (
     <div style={{ width: '100%', minWidth: '330px' }}>
       <p style={textStyle}>응답 수: {totalSelectionCount}</p>
       <Chart
         chartType="PieChart"
-        data={chartData}
+        data={chartData} // [['selectionValue', 'selectionCount'], ['아메리카노', 1], ['라뗴',]]
         width="100%"
         height="400px"
         options={options}

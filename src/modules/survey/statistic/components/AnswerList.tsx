@@ -6,50 +6,32 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { ListData } from '../types/SurveyStatistics';
 import '../../../../global.css';
 
-export default function AnswerList() {
+interface SubjectiveAnswerProps {
+  SubjectiveAnswer: ListData[];
+}
+
+export default function AnswerList({
+  SubjectiveAnswer,
+}: SubjectiveAnswerProps) {
   const fontFamily = "'Noto Sans KR', sans-serif";
   const textStyle = {
     fontFamily,
   };
 
-  interface Selection {
-    surveyNo: number;
-    surveyTitle: string;
-    surveyQuestionNo: number;
-    surveyQuestionTitle: string;
-    questionTypeNo: number;
-    selectionNo: number;
-    selectionValue: string;
-    selectionCount: number;
-    surveySubjectiveAnswer: string;
-  }
-
-  const [selectStat, setSelectStat] = useState<Selection[]>([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        `http://localhost:8080/survey/result?surveyno=1&questionno=2`
-      );
-      setSelectStat(response.data);
-    };
-    fetchData();
-  }, []);
-
   const createIncrementalArray = (
-    data: Selection[]
-  ): { count: number; surveySubjectiveAnswer: string }[] => {
+    data: ListData[]
+  ): { count: number; Answer: string }[] => {
     let count = 1;
     return data.map((item) => ({
       count: count++,
-      surveySubjectiveAnswer: item.surveySubjectiveAnswer,
+      Answer: item.surveySubjectiveAnswer,
     }));
   };
-  const incrementalArray = createIncrementalArray(selectStat);
-  const responseCount = selectStat.length;
+  const incrementalArray = createIncrementalArray(SubjectiveAnswer);
+  const responseCount = SubjectiveAnswer.length;
   return (
     <div>
       <p style={textStyle}>응답 수 : {responseCount}</p>
@@ -77,7 +59,7 @@ export default function AnswerList() {
                   {row.count}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {row.surveySubjectiveAnswer}
+                  {row.Answer}
                 </TableCell>
               </TableRow>
             ))}
