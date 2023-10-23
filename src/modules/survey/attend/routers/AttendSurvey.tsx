@@ -25,30 +25,37 @@ function AttendSurvey() {
     errorResponse: null,
   });
 
+  const [hiddenQuestions, setHiddenQuestions] = useState<number[]>([]);
+  const [userResponses, setUserResponses] = useState<UserResponse[]>([]);
   const USER_NO = 1;
   const SURVEY_NO = 2;
 
-  useEffect(() => {
-    axios
-      .get<SurveyData>(
-        'http://localhost:8000/api/for-attend/surveys/survey-data'
-      )
-      .then((response) => {
-        const filteredData = response.data.content
-          .filter((item) => item.surveyNo === 2)
-          .sort((a, b) => a.surveyQuestionNo - b.surveyQuestionNo);
-        setSurveyData({
-          ...response.data,
-          content: filteredData,
-        });
-      })
-      .catch((error) => {
-        console.error('Error fetching survey data:', error);
-      });
-  }, []);
+  const handleSelectionClick = (
+    selectedQuestionNo: number,
+    moveToQuestionNo: number,
+    isMovable: boolean
+  ) => {
+    if (isMovable) {
+      // 숨겨야 할 문항 번호의 배열 설정
+      setHiddenQuestions(
+        Array.from(
+          { length: moveToQuestionNo - selectedQuestionNo - 1 },
+          (_, i) => i + selectedQuestionNo + 1
+        )
+      );
 
-  const [userResponses, setUserResponses] = useState<UserResponse[]>([]);
-
+      // 지정된 문항으로 스크롤 이동
+      const targetElement = document.getElementById(
+        `question-${moveToQuestionNo}`
+      );
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // 숨겨진 문항들을 다시 보여주기 위해 배열 초기화
+      setHiddenQuestions([]);
+    }
+  };
   const handleAnswerChange =
     (questionNo: number) =>
     (
@@ -56,6 +63,11 @@ function AttendSurvey() {
         | Array<{ selectionValue: string; selectionNo: number }>
         | string
     ) => {
+      console.log('handleAnswerChange called with:', {
+        questionNo,
+        answerOrAnswers,
+      }); // 이 부분을 추가합니다.
+
       const currentQuestionData = surveyData.content.find(
         (item) => item.surveyQuestionNo === questionNo
       );
@@ -121,6 +133,75 @@ function AttendSurvey() {
       });
     };
 
+  const renderQuestion = (questionNo: number) => {
+    const question = surveyData.content.find(
+      (item) => item.surveyQuestionNo === questionNo
+    );
+    if (!question) return null;
+
+    const { questionTypeNo } = question;
+    switch (questionTypeNo) {
+      case 1:
+        return (
+          <AttendSingleChoice
+            key={questionNo}
+            surveyData={surveyData.content}
+            questionNo={questionNo}
+            onAnswerChange={handleAnswerChange(questionNo)}
+            handleSelectionClick={handleSelectionClick} // 함수 자체만 전달합니다.
+          />
+        );
+      case 3:
+        return (
+          <AttendMultipleChoice
+            key={questionNo}
+            surveyData={surveyData.content}
+            questionNo={questionNo}
+            onAnswerChange={handleAnswerChange(questionNo)}
+          />
+        );
+      case 4:
+        return (
+          <ShortAnswer
+            key={questionNo}
+            surveyData={surveyData.content}
+            questionNo={questionNo}
+            onAnswerChange={handleAnswerChange(questionNo)}
+          />
+        );
+      case 5:
+        return (
+          <LongAnswer
+            key={questionNo}
+            surveyData={surveyData.content}
+            questionNo={questionNo}
+            onAnswerChange={handleAnswerChange(questionNo)}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  useEffect(() => {
+    axios
+      .get<SurveyData>(
+        'http://localhost:8000/api/for-attend/surveys/survey-data'
+      )
+      .then((response) => {
+        const filteredData = response.data.content
+          .filter((item) => item.surveyNo === 2)
+          .sort((a, b) => a.surveyQuestionNo - b.surveyQuestionNo);
+        setSurveyData({
+          ...response.data,
+          content: filteredData,
+        });
+      })
+      .catch((error) => {
+        console.error('Error fetching survey data:', error);
+      });
+  }, []);
+
   const handleSubmit = async () => {
     // 필수 응답 문항 체크
     // eslint-disable-next-line no-restricted-syntax
@@ -182,54 +263,10 @@ function AttendSurvey() {
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
       <h1 style={{ fontSize: '25px' }}>플랫폼 만족도 조사</h1>
       {uniqueQuestions.map((questionNo) => {
-        const question = surveyData.content.find(
-          (item) => item.surveyQuestionNo === questionNo
-        );
-        if (!question) {
-          return null;
+        if (!hiddenQuestions.includes(questionNo)) {
+          return renderQuestion(questionNo);
         }
-
-        const { questionTypeNo } = question;
-        switch (questionTypeNo) {
-          case 1:
-            return (
-              <AttendSingleChoice
-                key={questionNo}
-                surveyData={surveyData.content}
-                questionNo={questionNo}
-                onAnswerChange={handleAnswerChange(questionNo)}
-              />
-            );
-          case 2:
-            return (
-              <AttendMultipleChoice
-                key={questionNo}
-                surveyData={surveyData.content}
-                questionNo={questionNo}
-                onAnswerChange={handleAnswerChange(questionNo)}
-              />
-            );
-          case 3:
-            return (
-              <ShortAnswer
-                key={questionNo}
-                surveyData={surveyData.content}
-                questionNo={questionNo}
-                onAnswerChange={handleAnswerChange(questionNo)}
-              />
-            );
-          case 4:
-            return (
-              <LongAnswer
-                key={questionNo}
-                surveyData={surveyData.content}
-                questionNo={questionNo}
-                onAnswerChange={handleAnswerChange(questionNo)}
-              />
-            );
-          default:
-            return null;
-        }
+        return null;
       })}
       <Stack spacing={2}>
         <Button

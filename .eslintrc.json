@@ -18,7 +18,19 @@
     "import/no-unresolved": "off",
     "import/prefer-default-export": "off",
     "react/jsx-props-no-spreading": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off"
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "**/*.test.js",
+          "**/*.spec.js",
+          "webpack.config.js"
+        ],
+        "optionalDependencies": false,
+        "peerDependencies": false
+      }
+    ]
   },
   "settings": {
     "react": {
