@@ -70,7 +70,8 @@ const rankData = [
   { rank: 0, menu: '우유', num: 5 },
 ];
 
-interface Selection {
+export interface Selection {
+  surveyPostAt: string;
   userNickname: string;
   surveyNo: number;
   surveyTitle: string;
@@ -83,132 +84,107 @@ interface Selection {
   surveySubjectiveAnswer: string;
 }
 
-export default function StatisticsPage() {
+export default function StatisticsPage2() {
   // 전체 정보 상태 관리
   const [selectStat, setSelectStat] = useState<Selection[]>([]);
-  // const [options, setOptions] = useState({
-  //   legend: 'right',
-  // });
+  const [userNickname, setUserNickname] = useState('');
+  const [totalSelectionCount, setTotalSelectionCount] = useState<number>();
+  const [surveyTitle, setSurveyTitle] = useState('');
+  const [surveyNo, setSurveyNo] = useState();
+  const [surveyPostAt, setSurveyPostAt] = useState('');
 
+  useEffect(() => {
+    // 전체 정보 API 요청
+    const fetchData = () => {
+      axios
+        .get(`http://localhost:8080/survey/resultall?surveyno=1`)
+        .then((response) => {
+          setSelectStat(response.data.content);
+          setUserNickname(response.data.content[0].userNickname);
+
+          const count = questionAnswerCount(response.data.content);
+          setTotalSelectionCount(count);
+          setSurveyTitle(response.data.content[0].surveyTitle);
+          setSurveyNo(response.data.content[0].surveyNo);
+          setSurveyPostAt(response.data.content[0].surveyPostAt);
+
+          console.log(`API 요청 : ${JSON.stringify(response, null, 2)}`);
+          console.log('설문지 제목 : ' + response.data.content[0].surveyTitle);
+        })
+        .catch((error) => {
+          console.error('Error fetching data: ', error);
+        });
+    };
+
+    fetchData();
+  }, []);
+
+  // ----------------------------------------- 전체 참여자 수
   const questionAnswerCount = (data: Selection[]): number => {
-    let sum = 0;
+    let sum = -1;
     data.forEach((item) => {
       sum += item.selectionCount;
     });
     return sum;
   };
 
-  const extractChartData = (data: Selection[]): [string, unknown][] =>
-    data.map((item) => [item.selectionValue, item.selectionCount]);
-
-  // 전체 설문지 페이지에 뿌려질 데이터 (맨 처음 데이터 가져옴)
-  const userNickname = selectStat[0].userNickname;
-  const totalSelectionCount = questionAnswerCount(selectStat);
-  const surveyTitle = selectStat[0].surveyTitle;
-  const surveyNo = selectStat[0].surveyNo;
-
-  // 문항 번호로 카드를 반복해서 만들고, 문항 유형 번호로 어떤 컴포넌트를 내보낼지 정한다
-  // // 문항 전체 수 계산
-  // const surveyQuestionAll = (data: Selection[]): number => {
-  //   let maxNum = 0;
-  //   data.forEach((item, index) => {
-  //     let currentNum = item.surveyQuestionNo;
-
-  //     if (index < data.length - 1) {
-  //         let nextNum = data[index + 1].surveyQuestionNo;
-
-  //         if (nextNum > currentNum) {
-  //             maxNum = nextNum;
-  //         }
-  //     }
-  // });
-  //   return maxNum;
-  // };
-
-  //-----------------------------------------------------
-  const question = (data: Selection[]): any => {
-    let result = new Map();
-
+  //------------------- 문항 별로 지정된 타입으로 컴포넌트 불러오기
+  const surveyBranch = (data: Selection[]): any => {
     data.forEach((item) => {
       const surveyQuestionNo = item.surveyQuestionNo;
       const questionTypeNo = item.questionTypeNo;
 
-      if (!result.has(surveyQuestionNo)) {
-        result.set(surveyQuestionNo, new Set());
+      switch (questionTypeNo) {
+        case 1:
+          console.log(' 케이스 1번 실행 : ' + JSON.stringify(item, null, 2));
+          return <GooglePie width={pieChartWidth} />;
+          break;
+        case 2:
+          <GooglePie width={pieChartWidth} />;
+          break;
+        case 3:
+          <GooglePie width={pieChartWidth} />;
+          break;
+        case 4:
+          console.log(' 케이스 4번 실행 : ' + JSON.stringify(item, null, 2));
+          break;
+        case 5:
+          <GooglePie width={pieChartWidth} />;
+          break;
+        default:
+          // 기본 동작
+          break;
       }
-
-      result.get(surveyQuestionNo).add(questionTypeNo);
     });
-    // 결과를 필요한 형식으로 변환
-    const finalResult = Array.from(result).map(
-      ([surveyQuestionNo, questionTypeSet]) => ({
-        surveyQuestionNo,
-        questionTypeNo: Array.from(questionTypeSet),
-      })
-    );
 
-    return finalResult;
+    // result.forEach(
+    //   (item: { surveyQuestionNo: number; questionTypeNo: number }) => {
+    // surveyQuestionNo가 1인 항목을 필터링하여 새로운 객체 배열을 생성
+    // const filteredData = selectStat.filter(
+    //   (set) => set.surveyQuestionNo === item.surveyQuestionNo
+    // );
+    // // 필터링된 항목을 가지고 객체 배열을 준비(보내줘야할 객체)
+    // const surveyQuestionData = filteredData.map((item) => ({
+    //   userNickname: item.userNickname,
+    //   surveyNo: item.surveyNo,
+    //   surveyTitle: item.surveyTitle,
+    //   surveyQuestionNo: item.surveyQuestionNo,
+    //   surveyQuestionTitle: item.surveyQuestionTitle,
+    //   questionTypeNo: item.questionTypeNo,
+    //   selectionNo: item.selectionNo,
+    //   selectionValue: item.selectionValue,
+    //   selectionCount: item.selectionCount,
+    //   surveySubjectiveAnswer: item.surveySubjectiveAnswer,
+    // }));
+    // console.log('questionTypeNo : ' + item.questionTypeNo);
+
+    // }
+    // );
   };
-
-  //--------------------------------------------------
-
-  const surveyBranch = (data: Selection[]): any => {
-    const result = question(selectStat);
-
-    result.forEach(
-      (item: { surveyQuestionNo: number; questionTypeNo: number }) => {
-        item.surveyQuestionNo;
-
-        switch (item.questionTypeNo) {
-          case 1:
-            // questionTypeNo가 1인 경우에 대한 작업 수행
-            break;
-          case 2:
-            // questionTypeNo가 2인 경우에 대한 작업 수행
-            break;
-          // 다른 questionTypeNo case도 추가할 수 있습니다.
-          default:
-            // 기본 동작
-            break;
-        }
-      }
-    );
-  };
-
-  // 구글 차트에 필요한 데이터
-  const chartData = extractChartData(selectStat);
-  chartData.unshift(['selectionValue', 'selectionCount']);
-
-  useEffect(() => {
-    // 전체 정보 API 요청
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/survey/result?surveyno=1&questionno=1`
-        );
-        setSelectStat(response.data);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  // const [surveyInfo, setSurveyInfo] = useState<SurveyInfoProps>({
-  //   surveyId,
-  //   surveyInfoId: new Date().getTime(),
-  //   surveyTitle: '',
-  //   surveyTags: [],
-  //   surveyDescription: '',
-  //   surveyClosingAt: '',
-  //   openStatusNo: OpenStatusEnum.PUBLIC,
-  //   surveyStatusNo: SurveyStatusEunm.WRITING,
-  //   userNo: null,
-  // });
 
   const isSmallScreen = useMediaQuery('(max-width: 500px)');
   const pieChartWidth = isSmallScreen ? '100%' : '500px';
-  const wordCloudWidth = isSmallScreen ? '100%' : '500px';
+  // const wordCloudWidth = isSmallScreen ? '100%' : '500px';
 
   return (
     <>
@@ -216,14 +192,15 @@ export default function StatisticsPage() {
         <CardContent>
           <Box>
             <Typography style={textStyle} sx={styles.titleText}>
-              <h1>{}</h1>
+              <h1>{surveyTitle}</h1>
               <Divider />
             </Typography>
             <Typography style={textStyle} sx={styles.surveyInfo}>
               <p>
-                설문 번호: 1 &nbsp;&nbsp;&nbsp; 설문 작성자: 김선규
-                &nbsp;&nbsp;&nbsp; 설문 개시일: 2023-10-19 &nbsp;&nbsp;&nbsp;
-                설문 참여자 수: 100
+                설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
+                {userNickname}
+                &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt}{' '}
+                &nbsp;&nbsp;&nbsp; 설문 참여자 수: {totalSelectionCount}
               </p>
               <br />
               <br />
@@ -235,81 +212,49 @@ export default function StatisticsPage() {
         </CardContent>
       </Card>
 
-      <Card sx={styles.card}>
-        <CardContent sx={styles.cardContent}>
-          <Box>
-            <Typography style={textStyle} sx={styles.typography}>
-              <h4>1. 매장에서 가장 선호하는 음료는?</h4>
-            </Typography>
-            <Typography style={textStyle} sx={styles.surveyInfo}>
-              <p>문항 번호: 1 &nbsp;&nbsp;&nbsp; 문항 참여자 수: 100</p>
-            </Typography>
-            <Divider />
-            <GooglePie width={pieChartWidth} />
-          </Box>
-        </CardContent>
-      </Card>
+      {selectStat.map((item, index) => {
+        const surveyQuestionNo = item.surveyQuestionNo;
+        const questionTypeNo = item.questionTypeNo;
 
-      <Card sx={styles.card}>
-        <CardContent sx={styles.cardContent}>
-          <Box>
-            <Typography style={textStyle} sx={styles.typography}>
-              <h4> 2. 추가했으면 하는 메뉴는? </h4>
-            </Typography>
-            <Typography style={textStyle} sx={styles.surveyInfo}>
-              <p>문항 번호: 2 &nbsp;&nbsp;&nbsp; 문항 참여자 수: 94</p>
-            </Typography>
-            <Divider />
-          </Box>
-
-          <Grid container spacing={2}>
-            {/* 왼쪽 그리드 아이템: 이미지 */}
-            <Grid item xs={12} sm={12} md={6}>
-              <Box sx={{ width: wordCloudWidth, margin: '0 auto' }}>
-                <WordCloud />
-              </Box>
-            </Grid>
-
-            <Grid item xs={12} sm={12} md={6}>
-              <Box
-                sx={{
-                  width: '100%',
-                  marginTop: '50px',
-                  maxHeight: '300px', // 원하는 최대 높이 설정
-                  overflow: 'auto', // 스크롤 활성화
-                }}
-              >
-                <NumOneType data={rankData} />
-              </Box>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-
-      <Card sx={styles.card}>
-        <CardContent sx={styles.cardContent}>
-          <Box>
-            <Typography style={textStyle} sx={styles.typography}>
-              <h4> 3. 매장에 대하여 바라는점?</h4>
-            </Typography>
-            <Typography style={textStyle} sx={styles.surveyInfo}>
-              문항 번호: 3 &nbsp;&nbsp;&nbsp; 문항 참여자 수: 60
-            </Typography>
-            <Divider />
-            <Box
-              sx={{
-                width: '100%',
-                marginTop: '50px',
-                marginBottom: '50px',
-                maxHeight: '300px', // 원하는 최대 높이 설정
-                overflow: 'auto', // 스크롤 활성화
-              }}
-            >
-              <AnswerList />
-            </Box>
-          </Box>
-        </CardContent>
-      </Card>
+        switch (questionTypeNo) {
+          case 1:
+            return (
+              <Card sx={styles.cardTitle}>
+                <CardContent>
+                  <Box>
+                    <div key={index}>
+                      <GooglePie width={pieChartWidth} />
+                    </div>
+                  </Box>
+                </CardContent>
+              </Card>
+            );
+          case 2:
+            return (
+              <div key={index}>
+                <GooglePie width={pieChartWidth} />
+              </div>
+            );
+          case 3:
+            return (
+              <div key={index}>
+                <GooglePie width={pieChartWidth} />
+              </div>
+            );
+          case 4:
+            console.log(' 케이스 4번 실행 : ' + JSON.stringify(item, null, 2));
+            return <div key={index}>{/* 추가 작업 수행 */}</div>;
+          case 5:
+            return (
+              <div key={index}>
+                <GooglePie width={pieChartWidth} />
+              </div>
+            );
+          default:
+            // 기본 동작
+            return null;
+        }
+      })}
     </>
   );
 }
