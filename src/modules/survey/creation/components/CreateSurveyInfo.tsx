@@ -101,6 +101,7 @@ const tagNames = ['일상', '업무', '공지', '중요', '기타'];
 function CreateSurveyInfo({
   surveyInfo,
   setSurveyInfo,
+  previewImage,
   setSurveyImage,
 }: CreateSurveyInfoProps) {
   const [selectedImage, setSelectedImage] = useState<string>('');
@@ -119,6 +120,10 @@ function CreateSurveyInfo({
       ...prevSurveyInfo,
       surveyClosingAt: oneWeekLaterFormatted,
     }));
+
+    if (previewImage) {
+      setSelectedImage(previewImage);
+    }
   }, []);
 
   /**
@@ -174,6 +179,8 @@ function CreateSurveyInfo({
     const selectedCount = tagValueArray.length;
 
     if (selectedCount > maxTagCount) {
+      console.log('여기 걸리는건가?');
+      console.log(tagValueArray);
       const limitedSelection = tagValueArray.slice(0, maxTagCount);
       setSurveyInfo({
         ...surveyInfo,
@@ -230,14 +237,17 @@ function CreateSurveyInfo({
           input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
           renderValue={(selectedValue) => (
             <Box css={styles.tagChipBox}>
-              {selectedValue.map((value, index) => (
-                <Chip key={value} label={tagNames[index]} />
+              {selectedValue.map((value: unknown) => (
+                <Chip
+                  key={tagNames[value as number]}
+                  label={tagNames[value as number]}
+                />
               ))}
             </Box>
           )}
         >
           {tagNames.map((tag, index) => (
-            <MenuItem key={tag} value={index + 1}>
+            <MenuItem key={tag} value={index}>
               {tag}
             </MenuItem>
           ))}
@@ -297,6 +307,7 @@ function CreateSurveyInfo({
                   src={selectedImage}
                   alt="업로드된 이미지"
                   css={styles.uploadImage}
+                  id="surveyImage"
                 />
               </Box>
             </div>
