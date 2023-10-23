@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import ReactWordcloud, { Options } from 'react-wordcloud';
 import {
   Box,
   Card,
@@ -11,12 +10,14 @@ import {
 } from '@mui/material';
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
-import WordCloud from './components/WordCloud';
+
 import { GooglePie } from './components/GooglePie';
 import axios from 'axios';
 import Divider from '@mui/material/Divider';
 import NumOneType from './SurveyQuestionType/NumOneType';
 import TitleFig from './imgs/surveyTitlepng.png';
+import WordCloud from './components/WordCloud';
+import { Word } from 'react-wordcloud';
 
 const styles = {
   card: {
@@ -70,7 +71,7 @@ const rankData = [
   { rank: 0, menu: '우유', num: 5 },
 ];
 
-export interface Selection {
+interface Selection {
   surveyPostAt: string;
   userNickname: string;
   surveyNo: number;
@@ -82,6 +83,8 @@ export interface Selection {
   selectionValue: string;
   selectionCount: number;
   surveySubjectiveAnswer: string;
+  surveySubjectiveAnswerCount: number;
+  surveyWriter: string;
 }
 
 export default function StatisticsPage2() {
@@ -92,18 +95,19 @@ export default function StatisticsPage2() {
   const [surveyTitle, setSurveyTitle] = useState('');
   const [surveyNo, setSurveyNo] = useState();
   const [surveyPostAt, setSurveyPostAt] = useState('');
+  const [surveyWriter, setSurveyWriter] = useState('');
+
+  const [allItems, setAllItems] = useState([]);
 
   useEffect(() => {
     // 전체 정보 API 요청
-    const fetchData = () => {
-      axios
+    const fetchData = async () => {
+      await axios
         .get(`http://localhost:8080/survey/resultall?surveyno=1`)
         .then((response) => {
           setSelectStat(response.data.content);
           setUserNickname(response.data.content[0].userNickname);
-
-          const count = questionAnswerCount(response.data.content);
-          setTotalSelectionCount(count);
+          setTotalSelectionCount(response.data.content[0].totalAttend);
           setSurveyTitle(response.data.content[0].surveyTitle);
           setSurveyNo(response.data.content[0].surveyNo);
           setSurveyPostAt(response.data.content[0].surveyPostAt);
@@ -119,67 +123,42 @@ export default function StatisticsPage2() {
     fetchData();
   }, []);
 
-  // ----------------------------------------- 전체 참여자 수
-  const questionAnswerCount = (data: Selection[]): number => {
-    let sum = -1;
-    data.forEach((item) => {
-      sum += item.selectionCount;
-    });
-    return sum;
-  };
+  useEffect(() => {
+    setAllItems(surveyBranch(selectStat));
 
-  //------------------- 문항 별로 지정된 타입으로 컴포넌트 불러오기
-  const surveyBranch = (data: Selection[]): any => {
-    data.forEach((item) => {
-      const surveyQuestionNo = item.surveyQuestionNo;
-      const questionTypeNo = item.questionTypeNo;
-
-      switch (questionTypeNo) {
-        case 1:
-          console.log(' 케이스 1번 실행 : ' + JSON.stringify(item, null, 2));
-          return <GooglePie width={pieChartWidth} />;
-          break;
-        case 2:
-          <GooglePie width={pieChartWidth} />;
-          break;
-        case 3:
-          <GooglePie width={pieChartWidth} />;
-          break;
-        case 4:
-          console.log(' 케이스 4번 실행 : ' + JSON.stringify(item, null, 2));
-          break;
-        case 5:
-          <GooglePie width={pieChartWidth} />;
-          break;
-        default:
-          // 기본 동작
-          break;
+    // response.data.content 배열을 순회하며 surveyWriter가 1인 경우를 찾음
+    selectStat.forEach((item) => {
+      if (item.surveyWriter != null) {
+        console.log('작성자이름? : ' + item.surveyWriter);
+        setSurveyWriter(item.surveyWriter);
       }
     });
+  }, [selectStat]);
 
-    // result.forEach(
-    //   (item: { surveyQuestionNo: number; questionTypeNo: number }) => {
-    // surveyQuestionNo가 1인 항목을 필터링하여 새로운 객체 배열을 생성
-    // const filteredData = selectStat.filter(
-    //   (set) => set.surveyQuestionNo === item.surveyQuestionNo
-    // );
-    // // 필터링된 항목을 가지고 객체 배열을 준비(보내줘야할 객체)
-    // const surveyQuestionData = filteredData.map((item) => ({
-    //   userNickname: item.userNickname,
-    //   surveyNo: item.surveyNo,
-    //   surveyTitle: item.surveyTitle,
-    //   surveyQuestionNo: item.surveyQuestionNo,
-    //   surveyQuestionTitle: item.surveyQuestionTitle,
-    //   questionTypeNo: item.questionTypeNo,
-    //   selectionNo: item.selectionNo,
-    //   selectionValue: item.selectionValue,
-    //   selectionCount: item.selectionCount,
-    //   surveySubjectiveAnswer: item.surveySubjectiveAnswer,
-    // }));
-    // console.log('questionTypeNo : ' + item.questionTypeNo);
+  //------------------- 문항별 응답 배열로 묶기
+  const surveyBranch = (data: Selection[]): any => {
+    console.log('surveyBranch 들어옴 : ' + data);
 
-    // }
-    // );
+    const itemGroups: { [key: string]: Selection[] } = {};
+
+    data.forEach((item) => {
+      const surveyQuestionNo = item.surveyQuestionNo;
+
+      console.log('surveyQuestionNo : ' + surveyQuestionNo);
+
+      if (!itemGroups[surveyQuestionNo]) {
+        // 해당 문항 번호에 해당하는 배열이 없으면 새로 생성
+        itemGroups[surveyQuestionNo] = [];
+
+        console.log('새로생성됨');
+      }
+
+      // 해당 문항 번호의 배열에 item 추가
+      itemGroups[surveyQuestionNo].push(item);
+    });
+
+    // itemGroups 객체에 각 문항 번호별로 묶인 배열이 생성됨
+    return itemGroups;
   };
 
   const isSmallScreen = useMediaQuery('(max-width: 500px)');
@@ -198,7 +177,7 @@ export default function StatisticsPage2() {
             <Typography style={textStyle} sx={styles.surveyInfo}>
               <p>
                 설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
-                {userNickname}
+                {surveyWriter}
                 &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt}{' '}
                 &nbsp;&nbsp;&nbsp; 설문 참여자 수: {totalSelectionCount}
               </p>
@@ -212,48 +191,102 @@ export default function StatisticsPage2() {
         </CardContent>
       </Card>
 
-      {selectStat.map((item, index) => {
-        const surveyQuestionNo = item.surveyQuestionNo;
-        const questionTypeNo = item.questionTypeNo;
+      {/* 문항별 유형에 맞는 컴포넌트에 유형에 맞는 배열 전달하기 */}
+      {Object.keys(allItems).map((questionNo: any) => {
+        console.log('실행됨');
 
-        switch (questionTypeNo) {
-          case 1:
-            return (
-              <Card sx={styles.cardTitle}>
-                <CardContent>
-                  <Box>
-                    <div key={index}>
-                      <GooglePie width={pieChartWidth} />
-                    </div>
-                  </Box>
-                </CardContent>
-              </Card>
-            );
-          case 2:
-            return (
-              <div key={index}>
-                <GooglePie width={pieChartWidth} />
-              </div>
-            );
-          case 3:
-            return (
-              <div key={index}>
-                <GooglePie width={pieChartWidth} />
-              </div>
-            );
-          case 4:
-            console.log(' 케이스 4번 실행 : ' + JSON.stringify(item, null, 2));
-            return <div key={index}>{/* 추가 작업 수행 */}</div>;
-          case 5:
-            return (
-              <div key={index}>
-                <GooglePie width={pieChartWidth} />
-              </div>
-            );
-          default:
-            // 기본 동작
-            return null;
+        const itemsForQuestion: Selection[] = allItems[questionNo];
+        const questionTypeNo = itemsForQuestion[0].questionTypeNo;
+
+        console.log(
+          `문항 번호 ${questionNo}, 문항 유형 ${questionTypeNo}`,
+          itemsForQuestion
+        );
+
+        //-------------------------------------------------- 객관식 Count
+        const countSelections = (itemsForQuestion: any[]) => {
+          let totalSelectionCount = 0;
+
+          itemsForQuestion.forEach((item: { selectionCount: number }) => {
+            totalSelectionCount += item.selectionCount;
+          });
+
+          return totalSelectionCount;
+        };
+
+        //-------------------------------------------------- 주관식 Count
+        const countSubjectiveAnswerCount = (itemsForQuestion: any[]) => {
+          let totalSurveySubjectiveAnswerCount = -1;
+
+          itemsForQuestion.forEach(
+            (item: { surveySubjectiveAnswerCount: number }) => {
+              totalSurveySubjectiveAnswerCount +=
+                item.surveySubjectiveAnswerCount;
+            }
+          );
+
+          return totalSelectionCount;
+        };
+
+        //-------------------------------------------------- 구글 차트 데이터 보내기 위한 배열
+        const extractChartData = (data: Selection[]): [string, unknown][] => {
+          return data.map((item) => [item.selectionValue, item.selectionCount]);
+        };
+        //-chartData로 <GoogleChard data={chartDat}/> 이런식으로 쓰면댐
+        const chartData = extractChartData(itemsForQuestion);
+        let chartDataMessage = '';
+        if (questionTypeNo === 1) {
+          chartDataMessage = '1번으로 차트 데이터 보내기 : ' + chartData;
         }
+
+        // --------------------------------------------------
+        return (
+          <Card sx={styles.cardTitle} key={questionNo}>
+            <CardContent>
+              <Box>
+                <Typography style={textStyle} sx={styles.titleText}>
+                  <h4>
+                    {itemsForQuestion[0].surveyQuestionNo} .{' '}
+                    {itemsForQuestion[0].surveyQuestionTitle}
+                  </h4>
+                  <Divider />
+                </Typography>
+                <Typography style={textStyle} sx={styles.surveyInfo}>
+                  <p>
+                    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
+                    {itemsForQuestion[0].selectionCount != 0
+                      ? countSelections(itemsForQuestion)
+                      : countSubjectiveAnswerCount(itemsForQuestion)}
+                  </p>
+                  <br />
+                </Typography>
+                <br />
+
+                {/* --------------------------------- 구글 차트 보내는 곳  */}
+                {questionTypeNo === 1 && chartDataMessage && (
+                  <div>{chartDataMessage}</div>
+                )}
+
+                {/* 
+                 {questionTypeNo === 2 && ()}
+          {questionTypeNo === 3 && (
+            // Add code for question type 3
+          )} */}
+                {questionTypeNo === 4 && (
+                  <WordCloud
+                    wordCloud={itemsForQuestion.map((item) => ({
+                      text: item.surveySubjectiveAnswer,
+                      value: item.questionTypeNo,
+                    }))}
+                  />
+                )}
+                {/* {questionTypeNo === 5 && (
+            // Add code for question type 5
+          )}  */}
+              </Box>
+            </CardContent>
+          </Card>
+        );
       })}
     </>
   );

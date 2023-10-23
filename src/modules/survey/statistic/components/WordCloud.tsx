@@ -1,18 +1,40 @@
-import React from 'react';
-import ReactWordcloud, { Options } from 'react-wordcloud';
+import React, { useEffect, useState } from 'react';
+import ReactWordcloud, { Options, Word } from 'react-wordcloud';
 
-const wordCloudData = [
-  { text: '플랫화이트', value: 100 },
-  { text: '바닐라라떼', value: 80 },
-  { text: '인삼차', value: 70 },
-  { text: '코카콜라', value: 50 },
-  { text: '우리집물', value: 70 },
-  { text: '우유', value: 5 },
-  { text: '프라프치노', value: 100 },
-  { text: '우리집강아지가먹던물', value: 10 },
-  { text: '환타', value: 20 },
-  { text: '더치커피', value: 10 },
-];
+// const [wordCloud, setWordCloud] = useState<Word[]>([]);
+
+interface WordCloudProps {
+  wordCloud: Word[];
+}
+
+// useEffect로 가져온 객체의 각 응답별 text를 wordCloudData에 저장하도록 한다.
+
+// useEffect(() => {
+// console.log('props 체크 : ' + wordCloud);
+// 각 응답별 단답형 뽑아서 newText에 넣어서 세팅하기
+// setWordCloudData(updateWordCloudData(wordCloudData, newText, incrementValue));
+// }, []);
+
+function updateWordCloudData(
+  wordCloudData: any[],
+  newText: string,
+  incrementValue: number
+) {
+  // newText와 동일한 텍스트가 이미 배열에 있는지 확인합니다.
+  const existingWord = wordCloudData.find(
+    (item: { text: any }) => item.text === newText
+  );
+
+  if (existingWord) {
+    // 이미 있는 단어인 경우, 해당 단어의 값을 증가시킵니다.
+    existingWord.value += incrementValue;
+  } else {
+    // 새로운 단어인 경우, 배열에 새로운 항목을 추가합니다.
+    wordCloudData.push({ text: newText, value: incrementValue });
+  }
+
+  return wordCloudData;
+}
 
 const responsiveOptions: Options = {
   fontFamily: 'Arial',
@@ -44,7 +66,24 @@ const responsiveOptions: Options = {
   },
 };
 
-function WordCloud() {
+function WordCloud({ wordCloud }: WordCloudProps) {
+  console.log('워드 클라우드 들어옴' + JSON.stringify(wordCloud, null, 2));
+
+  const [wordCloudData, setWordCloudData] = useState<Word[]>([]);
+
+  const incrementValue = 0; // 동적으로 받은 증가할 값을 지정
+
+  useEffect(() => {
+    const updatedWordCloud = wordCloud.map((word) => {
+      return {
+        ...word,
+        text: word.text,
+      };
+    });
+
+    setWordCloudData(updatedWordCloud);
+  }, [wordCloud, incrementValue]);
+
   return (
     <div
       style={{
