@@ -2,11 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Chart } from 'react-google-charts';
 import '../../../../global.css';
 
-const fontFamily = "'Noto Sans KR', sans-serif";
-const textStyle = {
-  fontFamily,
-};
-
 interface GooglePieChartProps {
   selectionAnswer: [string, number][];
 }
@@ -41,21 +36,12 @@ export default function GooglePieChart({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const questionAnswerCount = (data: [string, number][]): number => {
-    let sum = 0;
-    data.forEach((item) => {
-      sum += item.length;
-    });
-    return sum;
-  };
-
   const extractChartData = (data: [string, number][]): [string, unknown][] =>
     data.map((item) => [item[0], item[1]]);
 
   const aggregateData = (data: any[]) => {
     const aggregatedData = [];
     const map = new Map();
-    // eslint-disable-next-line no-restricted-syntax
     for (const item of data) {
       if (map.has(item[0])) {
         const index = map.get(item[0]);
@@ -77,7 +63,7 @@ export default function GooglePieChart({
     <div style={{ width: '100%', minWidth: '330px' }}>
       <Chart
         chartType="PieChart"
-        data={aggregatedChartData} // [['selectionValue', 'selectionCount'], ['아메리카노', 1], ['라뗴',2]]
+        data={aggregatedChartData}
         width="100%"
         height="400px"
         options={options}
