@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import '../../../../global.css';
 import { Selection } from '../types/SurveyStatisticTypes';
@@ -19,10 +20,14 @@ export default function AnswerList({ selectList }: selectionList) {
   const textStyle = {
     fontFamily,
   };
+  const [selectStat, setSelectStat] = useState<Selection[]>([]);
   const [selectStats, setSelectStats] = useState<Selection[]>([]);
 
   useEffect(() => {
-    // selectStat가 변경될 때만 실행되며, updateArrayList를 생성하고 selectStats를 업데이트합니다.
+    setSelectStat(selectList);
+  }, [selectList]);
+
+  useEffect(() => {
     const updateArrayLists = selectList.reduce((acc, word) => {
       return updateArrayList(acc, word.surveySubjectiveAnswer);
     }, selectStats);
