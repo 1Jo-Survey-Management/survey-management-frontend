@@ -79,9 +79,28 @@ function LoginDisplay() {
 
     // accessToken이 유효한지 api를 통해서 확인 (로그인 했는데 로그아웃 안했을때)
     if (localStorageAccessToken != null && !accessCode) {
-      const authorizationUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${config.clientId}&state=${config.state}&redirect_uri=${config.redirectUri}`;
+      axios.defaults.headers.common['Authorization'] =
+      'Bearer ' + localStorageAccessToken;
 
-      window.location.href = authorizationUrl;
+      // 액세스 토큰이 유효한지 api를 쏴서 확인하면서 로그인 처리
+      axios
+      .post('/user/go')
+      .then((response) => {
+        // 서버로부터의 응답 처리
+        const respData = response.data;
+        console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
+
+        if (respData === '') {
+          alert('로그인이 필요합니다!');
+          console.log('API 요청 실패');
+        }
+      })
+      .catch((error) => {
+        alert('로그인이 필요합니다!');
+        console.error(error);
+      });
+
+      navigate('/survey/main');
     }
 
     //Authorization code를 받으면 백 서버로 요청을 보내준다.
