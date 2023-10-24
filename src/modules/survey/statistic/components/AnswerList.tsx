@@ -91,10 +91,9 @@ export default function AnswerList({ selectList }: selectionList) {
         sx={{ maxHeight: 250 }}
         style={textStyle}
       >
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ minWidth: 300 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>답변 번호</TableCell>
               <TableCell>답변</TableCell>
               <TableCell>답변수</TableCell>
             </TableRow>
@@ -105,11 +104,8 @@ export default function AnswerList({ selectList }: selectionList) {
                 component="th"
                 scope="row"
                 key={index} // index를 사용
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell component="th" scope="row" width={100}>
-                  {index + 1} {/* 1부터 시작하는 번호로 표시 */}
-                </TableCell>
                 <TableCell component="th" scope="row">
                   {row.surveySubjectiveAnswer}
                 </TableCell>
