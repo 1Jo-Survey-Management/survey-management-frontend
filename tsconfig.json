@@ -19,7 +19,8 @@
     "experimentalDecorators": true,
     // AOS 사용을 위한 설정
     "typeRoots": ["node_modules/@types"],
-    "types": ["aos"]
+    "types": ["aos"],
+    "downlevelIteration": true
   },
   "include": ["src"]
 }

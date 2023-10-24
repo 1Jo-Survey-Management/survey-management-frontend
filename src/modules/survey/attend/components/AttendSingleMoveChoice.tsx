@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { SurveyItem } from '../types/AttendTypes';
 
-interface AttendSingleChoiceProps {
+interface AttendSingleMoveChoiceProps {
   surveyData: SurveyItem[];
   questionNo: number;
   onAnswerChange: (answer: string) => void;
@@ -23,12 +23,12 @@ interface AttendSingleChoiceProps {
   ) => void;
 }
 
-function AttendSingleChoice({
+function AttendSingleMoveChoice({
   surveyData,
   questionNo,
   onAnswerChange,
-  handleSelectionClick,
-}: AttendSingleChoiceProps) {
+  handleSelectionClick, // 이 부분을 추가합니다.
+}: AttendSingleMoveChoiceProps) {
   const [selectedValue, setSelectedValue] = useState<string | null>('');
 
   useEffect(() => {
@@ -40,7 +40,12 @@ function AttendSingleChoice({
       const { questionTypeNo, movable, surveyQuestionMoveNo } = selectedOption;
 
       if (selectedValue === null) {
-        handleSelectionClick(questionNo, questionNo, questionTypeNo, false);
+        handleSelectionClick(
+          questionNo,
+          surveyQuestionMoveNo,
+          questionTypeNo,
+          false
+        );
       } else if (movable) {
         handleSelectionClick(
           questionNo,
@@ -49,7 +54,12 @@ function AttendSingleChoice({
           true
         );
       } else {
-        handleSelectionClick(questionNo, questionNo, questionTypeNo, false);
+        handleSelectionClick(
+          questionNo,
+          surveyQuestionMoveNo,
+          questionTypeNo,
+          false
+        );
       }
     }
   }, [selectedValue]);
@@ -180,4 +190,4 @@ function AttendSingleChoice({
   );
 }
 
-export default AttendSingleChoice;
+export default AttendSingleMoveChoice;

@@ -7,6 +7,7 @@ import {
   Checkbox,
   Card,
   CardContent,
+  Typography,
 } from '@mui/material';
 import { SurveyItem } from '../types/AttendTypes';
 
@@ -67,7 +68,7 @@ function AttendMultipleChoice({
               fontSize: '9px',
               display: 'flex',
               justifyContent: 'flex-end',
-              height: '10px',
+              height: '15px',
               color: 'red',
               margin: '0',
               padding: '0',
@@ -80,7 +81,7 @@ function AttendMultipleChoice({
           <FormLabel
             component="legend"
             sx={{
-              fontSize: '18px',
+              fontSize: '1rem',
               fontWeight: '600',
               color: 'black',
               marginBottom: '10px',
@@ -88,26 +89,69 @@ function AttendMultipleChoice({
           >
             {mainQuestion.surveyQuestionTitle}
           </FormLabel>
+
+          <Typography
+            variant="body1"
+            sx={{
+              fontSize: '0.9rem',
+            }}
+          >
+            {mainQuestion.surveyQuestionDescription}
+          </Typography>
+
           <FormGroup
             sx={{
               paddingTop: '10px',
             }}
           >
             {questionItems.map((item) => (
-              <FormControlLabel
-                key={item.selectionNo}
-                control={
-                  <Checkbox
-                    checked={checkedValues.some(
-                      (v) => v.selectionValue === (item.selectionValue || '')
-                    )}
-                    onChange={handleCheckboxChange}
-                    value={item.selectionValue || ''}
-                    name={item.selectionNo.toString()}
-                  />
-                }
-                label={item.selectionValue || ''}
-              />
+              <div key={item.selectionNo}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      sx={{
+                        '& svg': {
+                          width: '18px',
+                          height: '18px',
+                        },
+                      }}
+                      checked={checkedValues.some(
+                        (v) => v.selectionValue === (item.selectionValue || '')
+                      )}
+                      onChange={handleCheckboxChange}
+                      value={item.selectionValue || ''}
+                      name={item.selectionNo.toString()}
+                    />
+                  }
+                  label={
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: checkedValues.some(
+                          (v) =>
+                            v.selectionValue === (item.selectionValue || '')
+                        )
+                          ? 'blue'
+                          : 'inherit',
+                        fontWeight: checkedValues.some(
+                          (v) =>
+                            v.selectionValue === (item.selectionValue || '')
+                        )
+                          ? 'bold'
+                          : 'normal',
+                        fontSize: checkedValues.some(
+                          (v) =>
+                            v.selectionValue === (item.selectionValue || '')
+                        )
+                          ? '0.9rem'
+                          : '0.8rem',
+                      }}
+                    >
+                      {item.selectionValue || ''}
+                    </Typography>
+                  }
+                />
+              </div>
             ))}
           </FormGroup>
         </FormControl>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Container, Stack } from '@mui/material';
 import axios from 'axios';
 import AttendSingleChoice from '../components/AttendSingleChoice';
+import AttendSingleMoveChoice from '../components/AttendSingleMoveChoice';
 import { SurveyData } from '../types/AttendTypes';
 import AttendMultipleChoice from '../components/AttendMultipleChoice';
 import ShortAnswer from '../components/ShortAnswer';
@@ -27,35 +28,53 @@ function AttendSurvey() {
 
   const [hiddenQuestions, setHiddenQuestions] = useState<number[]>([]);
   const [userResponses, setUserResponses] = useState<UserResponse[]>([]);
+  const [surveyTitle, setSurveyTitle] = useState<string | null>(null);
+
+  useState<number | null>(null);
+
   const USER_NO = 1;
   const SURVEY_NO = 2;
 
   const handleSelectionClick = (
     selectedQuestionNo: number,
     moveToQuestionNo: number,
+    questionTypeNo: number,
     isMovable: boolean
   ) => {
-    if (isMovable) {
-      // 숨겨야 할 문항 번호의 배열 설정
-      setHiddenQuestions(
-        Array.from(
-          { length: moveToQuestionNo - selectedQuestionNo - 1 },
-          (_, i) => i + selectedQuestionNo + 1
-        )
-      );
+    console.log(`selectedQuestionNo: ${selectedQuestionNo}`);
+    console.log(`moveToQuestionNo: ${moveToQuestionNo}`);
+    console.log(`questionTypeNo: ${questionTypeNo}`);
+    console.log(`isMovable: ${isMovable}`);
+    const newHiddenQuestions = [...hiddenQuestions];
 
-      // 지정된 문항으로 스크롤 이동
-      const targetElement = document.getElementById(
-        `question-${moveToQuestionNo}`
-      );
-      if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth' });
+    // movable=true이며, questionTypeNo가 2인 경우
+    if (isMovable && questionTypeNo === 2) {
+      // 현재 선택된 문항과 moveToQuestionNo 사이의 문항들을 숨김 처리합니다.
+      // eslint-disable-next-line no-plusplus
+      for (let i = selectedQuestionNo + 1; i < moveToQuestionNo; i++) {
+        if (!newHiddenQuestions.includes(i)) {
+          newHiddenQuestions.push(i);
+        }
       }
-    } else {
-      // 숨겨진 문항들을 다시 보여주기 위해 배열 초기화
-      setHiddenQuestions([]);
     }
+    // movable=false인 선택지가 선택된 경우, 그리고 해당 문항의 숨김 처리가 이미 되었다면
+    else if (!isMovable && questionTypeNo === 2 && moveToQuestionNo === 0) {
+      for (
+        let i = selectedQuestionNo + 1;
+        i <= hiddenQuestions[hiddenQuestions.length - 1];
+        // eslint-disable-next-line no-plusplus
+        i++
+      ) {
+        const index = newHiddenQuestions.indexOf(i);
+        if (index !== -1) {
+          newHiddenQuestions.splice(index, 1);
+        }
+      }
+    }
+
+    setHiddenQuestions(newHiddenQuestions);
   };
+
   const handleAnswerChange =
     (questionNo: number) =>
     (
@@ -63,11 +82,6 @@ function AttendSurvey() {
         | Array<{ selectionValue: string; selectionNo: number }>
         | string
     ) => {
-      console.log('handleAnswerChange called with:', {
-        questionNo,
-        answerOrAnswers,
-      }); // 이 부분을 추가합니다.
-
       const currentQuestionData = surveyData.content.find(
         (item) => item.surveyQuestionNo === questionNo
       );
@@ -75,6 +89,18 @@ function AttendSurvey() {
       if (!currentQuestionData) {
         console.error('Question not found');
         return;
+      }
+
+      if (currentQuestionData && currentQuestionData.questionTypeNo === 2) {
+        if (typeof answerOrAnswers === 'string') {
+          const answerString = answerOrAnswers;
+          if (!answerString) {
+            // 선택 해제 시
+            setHiddenQuestions((prevHidden) =>
+              prevHidden.filter((q) => q <= questionNo || q > questionNo + 1)
+            );
+          }
+        }
       }
 
       const newResponses: UserResponse[] = [];
@@ -134,6 +160,7 @@ function AttendSurvey() {
     };
 
   const renderQuestion = (questionNo: number) => {
+    // if (hiddenQuestions.includes(questionNo)) return null;
     const question = surveyData.content.find(
       (item) => item.surveyQuestionNo === questionNo
     );
@@ -149,6 +176,16 @@ function AttendSurvey() {
             questionNo={questionNo}
             onAnswerChange={handleAnswerChange(questionNo)}
             handleSelectionClick={handleSelectionClick} // 함수 자체만 전달합니다.
+          />
+        );
+      case 2:
+        return (
+          <AttendSingleMoveChoice
+            key={questionNo}
+            surveyData={surveyData.content}
+            questionNo={questionNo}
+            onAnswerChange={handleAnswerChange(questionNo)}
+            handleSelectionClick={handleSelectionClick}
           />
         );
       case 3:
@@ -184,18 +221,23 @@ function AttendSurvey() {
   };
 
   useEffect(() => {
+    console.log('useEffect running');
     axios
       .get<SurveyData>(
         'http://localhost:8000/api/for-attend/surveys/survey-data'
       )
       .then((response) => {
         const filteredData = response.data.content
-          .filter((item) => item.surveyNo === 2)
+          .filter((item) => item.surveyNo === 8)
           .sort((a, b) => a.surveyQuestionNo - b.surveyQuestionNo);
         setSurveyData({
           ...response.data,
           content: filteredData,
         });
+
+        if (response.data.success && filteredData.length > 0) {
+          setSurveyTitle(filteredData[0].surveyTitle);
+        }
       })
       .catch((error) => {
         console.error('Error fetching survey data:', error);
@@ -261,7 +303,11 @@ function AttendSurvey() {
 
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
-      <h1 style={{ fontSize: '25px' }}>플랫폼 만족도 조사</h1>
+      <h1
+        style={{ fontSize: '25px', display: 'flex', justifyContent: 'center' }}
+      >
+        {surveyTitle}
+      </h1>
       {uniqueQuestions.map((questionNo) => {
         if (!hiddenQuestions.includes(questionNo)) {
           return renderQuestion(questionNo);

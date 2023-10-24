@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, TextField } from '@mui/material';
+import { Card, CardContent, TextField, Typography } from '@mui/material';
 import { SurveyItem } from '../types/AttendTypes';
 
 interface LongAnswerProps {
@@ -43,7 +43,7 @@ function LongAnswer({
               fontSize: '9px',
               display: 'flex',
               justifyContent: 'flex-end',
-              height: '10px',
+              height: '15px',
               color: 'red',
               margin: '0',
               padding: '0',
@@ -54,7 +54,7 @@ function LongAnswer({
         )}
         <p
           style={{
-            fontSize: '0.9rem',
+            fontSize: '1rem',
             fontWeight: '600',
             margin: '0',
             marginBottom: '10px',
@@ -62,19 +62,19 @@ function LongAnswer({
         >
           {currentQuestion.surveyQuestionTitle}
         </p>
-        <p
-          style={{
-            fontSize: '0.8rem',
-            fontWeight: '600',
-            color: '#00000088',
-            margin: '8px',
-            paddingLeft: '10px',
+
+        <Typography
+          variant="body1"
+          sx={{
+            fontSize: '0.9rem',
+            marginBottom: '15px',
           }}
         >
-          {currentQuestion.surveyQuestionDescription}
-        </p>
+          {currentQuestion?.surveyQuestionDescription}
+        </Typography>
+
         <TextField
-          label="답변 입력란"
+          label="장문 답변 입력란"
           variant="outlined"
           fullWidth
           multiline
