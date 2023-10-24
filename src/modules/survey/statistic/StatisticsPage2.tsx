@@ -28,8 +28,10 @@ const styles = {
   cardTitle: {
     // styles here
   },
-  cardContent: {
-    // styles here
+  cardContent: {},
+  subjectContent: {
+    border: '1px solid #757575',
+    borderRadius: '3%',
   },
   typography: {
     // styles here
@@ -47,7 +49,7 @@ const textStyle = {
   fontFamily,
 };
 
-interface Selection {
+export interface Selection {
   surveyPostAt: string;
   userNickname: string;
   surveyNo: number;
@@ -229,9 +231,7 @@ export default function StatisticsPage2() {
                       ? countSelections(itemsForQuestion)
                       : countSubjectiveAnswerCount(itemsForQuestion)}
                   </p>
-                  <br />
                 </Typography>
-                <br />
 
                 {/* --------------------------------- 구글 차트 보내는 곳  */}
                 {questionTypeNo === 1 && chartDataMessage && (
@@ -244,16 +244,33 @@ export default function StatisticsPage2() {
             // Add code for question type 3
           )} */}
                 {questionTypeNo === 4 && (
-                  <WordCloud
-                    wordCloud={itemsForQuestion.map((item) => ({
-                      text: item.surveySubjectiveAnswer,
-                      value: item.questionTypeNo,
-                    }))}
-                  />
+                  <>
+                    <Typography style={textStyle} sx={styles.cardContent}>
+                      <p>단답형의 답들은 다음과 같은 것들이 있었습니다!</p>
+                    </Typography>
+                    <Box sx={styles.subjectContent}>
+                      <WordCloud
+                        wordCloud={itemsForQuestion.map((item) => ({
+                          text: item.surveySubjectiveAnswer,
+                          value: item.questionTypeNo,
+                        }))}
+                      />
+                    </Box>
+
+                    <AnswerList selectList={itemsForQuestion} />
+                  </>
                 )}
-                {/* {questionTypeNo === 5 && (
-            // Add code for question type 5
-          )}  */}
+
+                {questionTypeNo === 5 && (
+                  <>
+                    <Typography style={textStyle} sx={styles.cardContent}>
+                      <p>서술형의 답들은 다음과 같은 것들이 있었습니다!</p>
+                    </Typography>
+                    <Box>
+                      <AnswerList selectList={itemsForQuestion} />
+                    </Box>
+                  </>
+                )}
               </Box>
             </CardContent>
           </Card>
