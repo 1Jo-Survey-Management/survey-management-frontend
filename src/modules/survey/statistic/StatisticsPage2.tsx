@@ -35,8 +35,10 @@ const styles = {
     marginTop: '20px',
     borderRadius: '3%',
   },
-  cardContent: {
-    marginLeft: '30px',
+  cardContent: {},
+  subjectContent: {
+    border: '1px solid #757575',
+    borderRadius: '3%',
   },
   typography: {
     fontSize: '25px',
@@ -58,20 +60,7 @@ const textStyle = {
   fontFamily,
 };
 
-const rankData = [
-  { rank: 1, menu: '플랫화이트', num: 100 },
-  { rank: 2, menu: '프라프치노', num: 90 },
-  { rank: 3, menu: '우리집물', num: 80 },
-  { rank: 4, menu: '바닐라라떼', num: 70 },
-  { rank: 5, menu: '인삼차', num: 60 },
-  { rank: 6, menu: '코카콜라', num: 60 },
-  { rank: 7, menu: '환타', num: 20 },
-  { rank: 8, menu: '우리집강아지가먹던물', num: 10 },
-  { rank: 9, menu: '더치커피', num: 10 },
-  { rank: 0, menu: '우유', num: 5 },
-];
-
-interface Selection {
+export interface Selection {
   surveyPostAt: string;
   userNickname: string;
   surveyNo: number;
@@ -258,9 +247,7 @@ export default function StatisticsPage2() {
                       ? countSelections(itemsForQuestion)
                       : countSubjectiveAnswerCount(itemsForQuestion)}
                   </p>
-                  <br />
                 </Typography>
-                <br />
 
                 {/* --------------------------------- 구글 차트 보내는 곳  */}
                 {questionTypeNo === 1 && chartDataMessage && (
@@ -273,16 +260,33 @@ export default function StatisticsPage2() {
             // Add code for question type 3
           )} */}
                 {questionTypeNo === 4 && (
-                  <WordCloud
-                    wordCloud={itemsForQuestion.map((item) => ({
-                      text: item.surveySubjectiveAnswer,
-                      value: item.questionTypeNo,
-                    }))}
-                  />
+                  <>
+                    <Typography style={textStyle} sx={styles.cardContent}>
+                      <p>단답형의 답들은 다음과 같은 것들이 있었습니다!</p>
+                    </Typography>
+                    <Box sx={styles.subjectContent}>
+                      <WordCloud
+                        wordCloud={itemsForQuestion.map((item) => ({
+                          text: item.surveySubjectiveAnswer,
+                          value: item.questionTypeNo,
+                        }))}
+                      />
+                    </Box>
+
+                    <AnswerList selectList={itemsForQuestion} />
+                  </>
                 )}
-                {/* {questionTypeNo === 5 && (
-            // Add code for question type 5
-          )}  */}
+
+                {questionTypeNo === 5 && (
+                  <>
+                    <Typography style={textStyle} sx={styles.cardContent}>
+                      <p>서술형의 답들은 다음과 같은 것들이 있었습니다!</p>
+                    </Typography>
+                    <Box>
+                      <AnswerList selectList={itemsForQuestion} />
+                    </Box>
+                  </>
+                )}
               </Box>
             </CardContent>
           </Card>

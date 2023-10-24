@@ -27,7 +27,7 @@ function updateWordCloudData(
 
   if (existingWord) {
     // 이미 있는 단어인 경우, 해당 단어의 값을 증가시킵니다.
-    existingWord.value += incrementValue;
+    existingWord.value += incrementValue + 10;
   } else {
     // 새로운 단어인 경우, 배열에 새로운 항목을 추가합니다.
     wordCloudData.push({ text: newText, value: incrementValue });
@@ -44,7 +44,7 @@ const responsiveOptions: Options = {
   deterministic: false,
   enableOptimizations: false,
   enableTooltip: false,
-  fontSizes: [10, 60],
+  fontSizes: [10, 50],
   fontStyle: '',
   fontWeight: '',
   padding: 0,
@@ -53,7 +53,9 @@ const responsiveOptions: Options = {
   transitionDuration: 0,
   svgAttributes: {
     xmlns: 'http://www.w3.org/2000/svg',
-    viewBox: '40 0 700 700',
+    viewBox: '20 20 250 250',
+    height: '200',
+    width: '200',
   },
   textAttributes: {
     // fill: 'red',
@@ -74,21 +76,31 @@ function WordCloud({ wordCloud }: WordCloudProps) {
   const incrementValue = 0; // 동적으로 받은 증가할 값을 지정
 
   useEffect(() => {
-    const updatedWordCloud = wordCloud.map((word) => {
-      return {
-        ...word,
-        text: word.text,
-      };
-    });
+    // wordCloud 배열을 기반으로 wordCloudData 업데이트
+    const updatedWordCloudData = wordCloud.reduce((acc, word) => {
+      return updateWordCloudData(acc, word.text, incrementValue);
+    }, wordCloudData);
 
-    setWordCloudData(updatedWordCloud);
+    setWordCloudData(updatedWordCloudData);
   }, [wordCloud, incrementValue]);
+
+  // useEffect(() => {
+  //   const updatedWordCloud = wordCloud.map((word) => {
+  //     return {
+  //       ...word,
+  //       text: word.text,
+  //     };
+
+  //   });
+
+  //   setWordCloudData(updatedWordCloud);
+  // }, [wordCloud, incrementValue]);
 
   return (
     <div
       style={{
         width: '100%',
-        maxWidth: '500px',
+        maxWidth: '100%',
         height: 'auto',
       }}
     >
