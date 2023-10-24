@@ -39,14 +39,49 @@ export function getValidationErrorMessage<T extends Record<string, any>>(
 }
 
 /**
+ * 설문의 대표이미지에 대해서 파일 형식을 체크하는 메서드 입니다.
+ * JPEG, JPG, PNG 형식의 파일만 가능하게 설정되어 있습니다.
+ *
+ * @param fileName 파일의 이름
+ * @returns 성공 true, 실패 false
+ */
+const validationFileExtension = (fileName: string) => {
+  const allowedExtensions = ['jpeg', 'jpg', 'png'];
+
+  const lastIndex = fileName.lastIndexOf('.');
+
+  if (lastIndex === -1 || lastIndex === fileName.length - 1) {
+    return false;
+  }
+
+  const fileExtension = fileName.slice(lastIndex + 1).toLowerCase();
+
+  return allowedExtensions.includes(fileExtension);
+};
+
+/**
+ * 설문의 이미지 존재 여부를 검증하는 메서드 입니다.
+ *
+ * @param surveyImage File 타입의 이미지 파일
+ * @returns 성공 true, 실패 false
+ */
+const validationSurveyImage = (surveyImage: File | undefined) => {
+  if (surveyImage === undefined || surveyImage === null) {
+    return false;
+  }
+
+  return true;
+};
+
+/**
  * 설문에 대한 기본 정보를 Validation 체크하기 위한 메서드 입니다.
  *
  * @returns validation error가 존재할 경우 false, 성공 true
  * @author 강명관
  */
 const validationSurveyInfo = async (
-  surveyInfo: SurveyInfoProps,
-  surveyImage: File | undefined
+  surveyInfo: SurveyInfoProps
+  //   surveyImage: File | undefined
 ): Promise<boolean> => {
   let surveyInfoValidationCheck: boolean = true;
 
@@ -73,17 +108,6 @@ const validationSurveyInfo = async (
       title: '입력되지 않은 사항이 존재합니다.',
       text: `${errorMessage}`,
     });
-    surveyInfoValidationCheck = false;
-    return surveyInfoValidationCheck;
-  }
-
-  if (surveyImage === undefined || surveyImage === null) {
-    Swal.fire({
-      icon: 'error',
-      title: '입력되지 않은 사항이 존재합니다.',
-      text: `설문의 대표 이미지는 필수 입니다.`,
-    });
-
     surveyInfoValidationCheck = false;
     return surveyInfoValidationCheck;
   }
@@ -237,8 +261,26 @@ export const validationSurvey = async (
   validSurveyImage: File | undefined,
   validQuestions: QuestionProps[]
 ): Promise<boolean> => {
+  if (!validationSurveyImage(validSurveyImage)) {
+    Swal.fire({
+      icon: 'error',
+      title: '입력되지 않은 사항이 존재합니다.',
+      text: `설문의 대표 이미지는 필수 입니다.`,
+    });
+    return false;
+  }
+
+  if (validSurveyImage && !validationFileExtension(validSurveyImage.name)) {
+    Swal.fire({
+      icon: 'error',
+      title: '입력되지 않은 사항이 존재합니다.',
+      text: `설문 이미지는 JPG, JPEG, PNG 형식만 가능합니다`,
+    });
+    return false;
+  }
+
   const [surveyInfoResult, questionResult] = await Promise.all([
-    validationSurveyInfo(validSurveyInfo, validSurveyImage),
+    validationSurveyInfo(validSurveyInfo),
     validationQuestion(validQuestions),
   ]);
 
@@ -267,6 +309,53 @@ export const validationSurvey = async (
       icon: 'error',
       title: '선택지 정보가 올바르지 않습니다.',
       text: `선태지 작성 정보를 다시 확인해주세요`,
+    });
+    return false;
+  }
+
+  return true;
+};
+
+/**
+ * 전체 하나의 설문 (설문 정보, 문항, 선택지)을 검증하기 위한 메서드 입니다.
+ *
+ * @return 전체 모든 validation이 통과하면 true, 실패할 경우 false
+ * @author 강명관
+ */
+export const validationSurveyWithoutSurveyImage = async (
+  validSurveyInfo: SurveyInfoProps,
+  validQuestions: QuestionProps[]
+): Promise<boolean> => {
+  const [surveyInfoResult, questionResult] = await Promise.all([
+    validationSurveyInfo(validSurveyInfo),
+    validationQuestion(validQuestions),
+  ]);
+
+  const selectionResult = totalSelectionValidation(validQuestions);
+
+  if (!surveyInfoResult) {
+    Swal.fire({
+      icon: 'error',
+      title: '설문 정보가 올바르지 않습니다.',
+      text: `설문 작성 정보를 다시 확인해주세요`,
+    });
+    return false;
+  }
+
+  if (!questionResult) {
+    Swal.fire({
+      icon: 'error',
+      title: '문항 정보가 올바르지 않습니다.',
+      text: `문항 작성 정보를 다시 확인해주세요`,
+    });
+    return false;
+  }
+
+  if (!selectionResult) {
+    Swal.fire({
+      icon: 'error',
+      title: '선택지 정보가 올바르지 않습니다.',
+      text: `선택지 작성 정보를 다시 확인해주세요`,
     });
     return false;
   }
