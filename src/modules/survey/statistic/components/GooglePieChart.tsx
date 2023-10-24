@@ -1,44 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Chart } from 'react-google-charts';
-import axios from 'axios';
 import '../../../../global.css';
-
-interface Selection {
-  surveyNo: number;
-  surveyTitle: string;
-  surveyQuestionNo: number;
-  surveyQuestionTitle: string;
-  questionTypeNo: number;
-  selectionNo: number;
-  selectionValue: string;
-  selectionCount: number;
-  surveySubjectiveAnswer: string;
-}
 
 const fontFamily = "'Noto Sans KR', sans-serif";
 const textStyle = {
   fontFamily,
 };
 
-export default function GooglePieChart() {
-  const [selectStat, setSelectStat] = useState<Selection[]>([]);
+interface GooglePieChartProps {
+  selectionAnswer: [string, number][];
+}
+
+export default function GooglePieChart({
+  selectionAnswer,
+}: GooglePieChartProps) {
   const [options, setOptions] = useState({
     legend: 'right',
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/survey/result?surveyno=1&questionno=1`
-        );
-        setSelectStat(response.data);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      }
-    };
-    fetchData();
+    console.log('google Chart Data');
+    console.log(selectionAnswer);
+  }, [selectionAnswer]);
 
+  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 620) {
         setOptions({
@@ -56,28 +41,43 @@ export default function GooglePieChart() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const questionAnswerCount = (data: Selection[]): number => {
+  const questionAnswerCount = (data: [string, number][]): number => {
     let sum = 0;
     data.forEach((item) => {
-      sum += item.selectionCount;
+      sum += item.length;
     });
     return sum;
   };
 
-  const totalSelectionCount = questionAnswerCount(selectStat);
+  const extractChartData = (data: [string, number][]): [string, unknown][] =>
+    data.map((item) => [item[0], item[1]]);
 
-  const extractChartData = (data: Selection[]): [string, unknown][] =>
-    data.map((item) => [item.selectionValue, item.selectionCount]);
+  const aggregateData = (data: any[]) => {
+    const aggregatedData = [];
+    const map = new Map();
+    // eslint-disable-next-line no-restricted-syntax
+    for (const item of data) {
+      if (map.has(item[0])) {
+        const index = map.get(item[0]);
+        aggregatedData[index][1] += item[1];
+      } else {
+        map.set(item[0], aggregatedData.length);
+        aggregatedData.push([item[0], item[1]]);
+      }
+    }
+    return aggregatedData;
+  };
 
-  const chartData = extractChartData(selectStat);
-  chartData.unshift(['selectionValue', 'selectionCount']);
+  const chartData = extractChartData(selectionAnswer);
+
+  const aggregatedChartData = aggregateData(chartData);
+  aggregatedChartData.unshift(['selectionValue', 'selectionCount']);
 
   return (
     <div style={{ width: '100%', minWidth: '330px' }}>
-      <p style={textStyle}>응답 수: {totalSelectionCount}</p>
       <Chart
         chartType="PieChart"
-        data={chartData}
+        data={aggregatedChartData} // [['selectionValue', 'selectionCount'], ['아메리카노', 1], ['라뗴',2]]
         width="100%"
         height="400px"
         options={options}

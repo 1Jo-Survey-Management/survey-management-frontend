@@ -18,6 +18,7 @@ import NumOneType from './SurveyQuestionType/NumOneType';
 import TitleFig from './imgs/surveyTitlepng.png';
 import WordCloud from './components/WordCloud';
 import { Word } from 'react-wordcloud';
+import GooglePieChart from './components/GooglePieChart';
 
 const styles = {
   card: {
@@ -218,7 +219,7 @@ export default function StatisticsPage2() {
         };
 
         //-------------------------------------------------- 구글 차트 데이터 보내기 위한 배열
-        const extractChartData = (data: Selection[]): [string, unknown][] => {
+        const extractChartData = (data: Selection[]): [string, number][] => {
           return data.map((item) => [item.selectionValue, item.selectionCount]);
         };
         //-chartData로 <GoogleChard data={chartDat}/> 이런식으로 쓰면댐
@@ -251,7 +252,9 @@ export default function StatisticsPage2() {
 
                 {/* --------------------------------- 구글 차트 보내는 곳  */}
                 {questionTypeNo === 1 && chartDataMessage && (
-                  <div>{chartDataMessage}</div>
+                  <div>
+                    <GooglePieChart selectionAnswer={chartData} />
+                  </div>
                 )}
 
                 {/* 
