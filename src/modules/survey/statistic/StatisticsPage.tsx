@@ -116,6 +116,8 @@ export default function StatisticsPage2() {
     return itemGroups;
   };
 
+  const isSmallScreen = useMediaQuery('(max-width: 500px)');
+
   return (
     <>
       <Card sx={styles.cardTitle}>
