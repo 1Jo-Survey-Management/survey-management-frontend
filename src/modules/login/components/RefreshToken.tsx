@@ -12,7 +12,7 @@ const refresh = async (
   const refreshToken = localStorage.getItem('refreshToken');
   const expireAt = localStorage.getItem('expiresIn');
   let accessToken = localStorage.getItem('accessToken');
-  let oldAccessToken = localStorage.getItem('accessToken');
+  const oldAccessToken = localStorage.getItem('accessToken');
 
   if (moment(expireAt).diff(moment()) < 0 && refreshToken) {
     const body = {
@@ -22,7 +22,7 @@ const refresh = async (
 
     try {
       const response = await axios.post(`/login/refreshtoken`, body);
-      const data = response.data;
+      const { data } = response;
 
       if (data && data.content.accessToken) {
         accessToken = data.content.accessToken;

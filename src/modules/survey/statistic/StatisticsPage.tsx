@@ -1,90 +1,244 @@
-import * as React from 'react';
-import { Box, Card, CardContent, Typography } from '@mui/material';
-import SurveyPieChart from './components/SurveyPieChart';
+import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  useMediaQuery,
+  Button,
+} from '@mui/material';
+import AnswerList from './components/AnswerList';
 import '../../../global.css';
+import axios from 'axios';
+import Divider from '@mui/material/Divider';
+import TitleFig from './imgs/surveyTitlepng.png';
+import WordCloud from './components/WordCloud';
+import GooglePieChart from './components/GooglePieChart';
+import { Selection } from './types/SurveyStatisticTypes';
 
 const styles = {
   card: {
     boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
     marginBottom: '30px',
+    borderRadius: '3%',
+  },
+  cardTitle: {
+    backgroundImage: `url(${TitleFig})`,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+
+    boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
+    marginBottom: '30px',
+    marginTop: '20px',
+    borderRadius: '3%',
+  },
+  cardContent: {},
+  subjectContent: {
+    border: '1px solid #757575',
+    borderRadius: '3%',
+  },
+  typography: {
+    fontSize: '25px',
+    color: '#757575',
+  },
+  titleText: {
+    fontSize: '20px',
+    textAlign: 'center',
+  },
+  surveyInfo: {
+    fontSize: '15px',
+    textAlign: 'right',
   },
 };
+
 const fontFamily = "'Noto Sans KR', sans-serif";
 const textStyle = {
   fontFamily,
 };
 
-interface surveyData {
-  surveyNo: number;
-  surveyTitle: string;
-  surveyQuestion: string;
-  surveyQuestionType: number;
-  surveyAnswerCount: number;
-  surveyAnswerSelection: string;
-  surveyAnswerSelectionNo: number;
-  surveyAnswerSelectionCount: number;
-}
+export default function StatisticsPage2() {
+  const [selectStat, setSelectStat] = useState<Selection[]>([]);
+  const [userNickname, setUserNickname] = useState('');
+  const [totalSelectionCount, setTotalSelectionCount] = useState<number>();
+  const [surveyTitle, setSurveyTitle] = useState('');
+  const [surveyNo, setSurveyNo] = useState();
+  const [surveyPostAt, setSurveyPostAt] = useState('');
+  const [surveyWriter, setSurveyWriter] = useState('');
 
-const surveyData: surveyData[] = [
-  {
-    surveyNo: 1,
-    surveyTitle: '카페 이용 조사',
-    surveyQuestion: '가장 선호하는 음료는 무엇입니까?',
-    surveyQuestionType: 1,
-    surveyAnswerCount: 50,
-    surveyAnswerSelection: '아이스 아메리카노',
-    surveyAnswerSelectionNo: 1,
-    surveyAnswerSelectionCount: 25,
-  },
-  {
-    surveyNo: 1,
-    surveyTitle: '카페 이용 조사',
-    surveyQuestion: '가장 선호하는 음료는 무엇입니까?',
-    surveyQuestionType: 1,
-    surveyAnswerCount: 50,
-    surveyAnswerSelection: '카페라떼',
-    surveyAnswerSelectionNo: 1,
-    surveyAnswerSelectionCount: 10,
-  },
-  {
-    surveyNo: 1,
-    surveyTitle: '카페 이용 조사',
-    surveyQuestion: '가장 선호하는 음료는 무엇입니까?',
-    surveyQuestionType: 1,
-    surveyAnswerCount: 50,
-    surveyAnswerSelection: '과일 주스',
-    surveyAnswerSelectionNo: 3,
-    surveyAnswerSelectionCount: 8,
-  },
-  {
-    surveyNo: 1,
-    surveyTitle: '카페 이용 조사',
-    surveyQuestion: '가장 선호하는 음료는 무엇입니까?',
-    surveyQuestionType: 1,
-    surveyAnswerCount: 50,
-    surveyAnswerSelection: '차 종류',
-    surveyAnswerSelectionNo: 4,
-    surveyAnswerSelectionCount: 7,
-  },
-];
+  const [allItems, setAllItems] = useState([]);
 
-export default function StatisticsPage() {
+  useEffect(() => {
+    const fetchData = async () => {
+      await axios
+        .get(`http://localhost:8080/survey/resultall?surveyno=1`)
+        .then((response) => {
+          setSelectStat(response.data.content);
+          setUserNickname(response.data.content[0].userNickname);
+          setTotalSelectionCount(response.data.content[0].totalAttend);
+          setSurveyTitle(response.data.content[0].surveyTitle);
+          setSurveyNo(response.data.content[0].surveyNo);
+          setSurveyPostAt(response.data.content[0].surveyPostAt);
+        })
+        .catch((error) => {
+          console.error('Error fetching data: ', error);
+        });
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    setAllItems(surveyBranch(selectStat));
+
+    selectStat.forEach((item) => {
+      if (item.surveyWriter != null) {
+        setSurveyWriter(item.surveyWriter);
+      }
+    });
+  }, [selectStat]);
+
+  const surveyBranch = (data: Selection[]): any => {
+    const itemGroups: { [key: string]: Selection[] } = {};
+
+    data.forEach((item) => {
+      const surveyQuestionNo = item.surveyQuestionNo;
+
+      if (!itemGroups[surveyQuestionNo]) {
+        itemGroups[surveyQuestionNo] = [];
+      }
+      itemGroups[surveyQuestionNo].push(item);
+    });
+
+    return itemGroups;
+  };
+
+  const isSmallScreen = useMediaQuery('(max-width: 500px)');
+
   return (
-    <Card sx={styles.card}>
-      <CardContent>
-        <Box>
-          {/* <Typography style={textStyle}>
-            <h1>설문조사 결과보기</h1>
-          </Typography> */}
-          <Typography style={textStyle} sx={{ textAlign: 'center' }}>
-            <h2>카페 이용 조사</h2>
-          </Typography>
-          <Typography style={textStyle}>
-            <h4>1. 가장 선호하는 음료는 무엇입니까?</h4>
-          </Typography>
-          <SurveyPieChart />
-        </Box>
-      </CardContent>
-    </Card>
+    <>
+      <Card sx={styles.cardTitle}>
+        <CardContent>
+          <Box>
+            <Typography style={textStyle} sx={styles.titleText}>
+              <h1>{surveyTitle}</h1>
+              <Divider />
+            </Typography>
+            <Typography style={textStyle} sx={styles.surveyInfo}>
+              <p>
+                설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
+                {surveyWriter}
+                &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt}{' '}
+                &nbsp;&nbsp;&nbsp; 설문 참여자 수: {totalSelectionCount}
+              </p>
+              <br />
+              <br />
+              <Button variant="contained">참여하기</Button>&nbsp;&nbsp;&nbsp;
+              <Button variant="contained">돌아가기</Button>&nbsp;&nbsp;&nbsp;
+            </Typography>
+            <br />
+          </Box>
+        </CardContent>
+      </Card>
+      {Object.keys(allItems).map((questionNo: any) => {
+        const itemsForQuestion: Selection[] = allItems[questionNo];
+        const questionTypeNo = itemsForQuestion[0].questionTypeNo;
+
+        const countSelections = (itemsForQuestion: any[]) => {
+          let totalSelectionCount = 0;
+
+          itemsForQuestion.forEach((item: { selectionCount: number }) => {
+            totalSelectionCount += item.selectionCount;
+          });
+
+          return totalSelectionCount;
+        };
+
+        const countSubjectiveAnswerCount = (itemsForQuestion: any[]) => {
+          let totalSurveySubjectiveAnswerCount = -1;
+
+          itemsForQuestion.forEach(
+            (item: { surveySubjectiveAnswerCount: number }) => {
+              totalSurveySubjectiveAnswerCount +=
+                item.surveySubjectiveAnswerCount;
+            }
+          );
+
+          return totalSelectionCount;
+        };
+
+        const extractChartData = (data: Selection[]): [string, number][] => {
+          return data.map((item) => [item.selectionValue, item.selectionCount]);
+        };
+        const chartData = extractChartData(itemsForQuestion);
+
+        return (
+          <Card sx={styles.cardTitle} key={questionNo}>
+            <CardContent>
+              <Box>
+                <Typography style={textStyle} sx={styles.titleText}>
+                  <h4>
+                    {itemsForQuestion[0].surveyQuestionNo} .{' '}
+                    {itemsForQuestion[0].surveyQuestionTitle}
+                  </h4>
+                  <Divider />
+                </Typography>
+                <Typography style={textStyle} sx={styles.surveyInfo}>
+                  <p>
+                    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
+                    {itemsForQuestion[0].selectionCount != 0
+                      ? countSelections(itemsForQuestion)
+                      : countSubjectiveAnswerCount(itemsForQuestion)}
+                  </p>
+                </Typography>
+
+                {questionTypeNo === 1 && (
+                  <div>
+                    <GooglePieChart selectionAnswer={chartData} />
+                  </div>
+                )}
+                {questionTypeNo === 2 && (
+                  <div>
+                    <GooglePieChart selectionAnswer={chartData} />
+                  </div>
+                )}
+                {questionTypeNo === 3 && (
+                  <div>
+                    <GooglePieChart selectionAnswer={chartData} />
+                  </div>
+                )}
+                {questionTypeNo === 4 && (
+                  <>
+                    <Typography style={textStyle} sx={styles.cardContent}>
+                      <p>단답형의 답들은 다음과 같은 것들이 있었습니다!</p>
+                    </Typography>
+                    <Box sx={styles.subjectContent}>
+                      <WordCloud
+                        wordCloud={itemsForQuestion.map((item) => ({
+                          text: item.surveySubjectiveAnswer,
+                          value: item.questionTypeNo,
+                        }))}
+                      />
+                    </Box>
+
+                    <AnswerList selectList={itemsForQuestion} />
+                  </>
+                )}
+
+                {questionTypeNo === 5 && (
+                  <>
+                    <Typography style={textStyle} sx={styles.cardContent}>
+                      <p>서술형의 답들은 다음과 같은 것들이 있었습니다!</p>
+                    </Typography>
+                    <Box>
+                      <AnswerList selectList={itemsForQuestion} />
+                    </Box>
+                  </>
+                )}
+              </Box>
+            </CardContent>
+          </Card>
+        );
+      })}
+    </>
   );
 }

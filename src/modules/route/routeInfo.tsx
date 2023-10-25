@@ -18,7 +18,7 @@ export const routeInfo = (path: string) => {
   switch (path) {
     case '/login/LoginDisplay':
       return <LoginDisplay />;
-    case '/survey/Search':
+    case '/survey/search':
       return <Search />;
     case '/survey/MypageAttend':
       return <MypageAttend />;
@@ -32,6 +32,8 @@ export const routeInfo = (path: string) => {
       return <Main />;
     case '/survey/statistics':
       return <StatisticsPage />;
+    case '/survey/register':
+      return <CreationSurvey />;
     default:
       return <Main />;
   }

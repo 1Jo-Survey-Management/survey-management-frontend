@@ -105,6 +105,7 @@ function CreationSurvey() {
         surveyInfoValidation,
         surveyInfoErrors
       );
+
       Swal.fire({
         icon: 'error',
         title: '입력되지 않은 사항이 존재합니다.',
