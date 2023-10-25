@@ -85,7 +85,6 @@ function LoginDisplay() {
       axios
       .post('/login/user')
       .then((response) => {
-        // 서버로부터의 응답 처리
         const respData = response.data;
         console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
         alert('재로그인 완료');
@@ -133,11 +132,7 @@ function LoginDisplay() {
             state: 'STATE_STRING',
           },
         })
-        .then((response) => {
-          // code 보내서 백에서 인증하고 미완료회원 객체 가져옴(메일, accessToken)
-
-          console.log('데이터 넘어오는지 : ' + response.data.content.accessToken);
-          
+        .then((response) => {          
           const responseCheck = response;
           const responseUserNo = responseCheck.data.content.userNo;
           const responseAccessToken = responseCheck.data.content.accessToken;
@@ -208,9 +203,8 @@ function LoginDisplay() {
             }
           }
 
-          // 2. 첫 로그인 시
+          // 2. 첫 로그인 시 localStrage에 회원 프로필 정보 저장하기
           if (responseUserNo != null && !responseNickName) {
-            // localStrage에 회원 프로필 정보 저장하기
             localStorage.setItem('userNo', responseUserNo);
             localStorage.setItem('userNickname', responseNickName);
             localStorage.setItem('userImage', responseImage);
