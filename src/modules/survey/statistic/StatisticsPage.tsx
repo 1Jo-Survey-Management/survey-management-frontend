@@ -32,7 +32,7 @@ const styles = {
     marginTop: '20px',
     borderRadius: '3%',
   },
-  cardContent: {},
+  cardContent: {border: '1px solid #757575',borderRadius: '3%'},
   subjectContent: {
     border: '1px solid #757575',
     borderRadius: '3%',
@@ -199,7 +199,7 @@ export default function StatisticsPage2() {
                 <br/>
 
                 {questionTypeNo === 1 && (
-                  <Box>
+                  <Box  sx={styles.cardContent}>
                     <GooglePieChart selectionAnswer={chartData} />
                   </Box>
                 )}
@@ -215,8 +215,8 @@ export default function StatisticsPage2() {
                 )}
                 {questionTypeNo === 4 && (
                   <>
-                    <Typography style={textStyle} sx={styles.cardContent}>
-                      단답형의 답들은 다음과 같은 것들이 있었습니다!
+                    <Typography style={textStyle} >
+                      ## 단답형의 답들은 다음과 같은 것들이 있었습니다!
                     </Typography>
                     <Box sx={styles.subjectContent}>
                       <WordCloud
@@ -233,8 +233,8 @@ export default function StatisticsPage2() {
 
                 {questionTypeNo === 5 && (
                   <>
-                    <Typography style={textStyle} sx={styles.cardContent}>
-                      서술형의 답들은 다음과 같은 것들이 있었습니다!
+                    <Typography style={textStyle} >
+                      ## 서술형의 답들은 다음과 같은 것들이 있었습니다!
                     </Typography>
                     <Box>
                       <AnswerList selectList={itemsForQuestion} />

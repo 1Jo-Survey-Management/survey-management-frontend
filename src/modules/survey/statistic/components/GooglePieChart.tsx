@@ -60,7 +60,7 @@ export default function GooglePieChart({
   aggregatedChartData.unshift(['selectionValue', 'selectionCount']);
 
   return (
-    <div style={{ width: '100%', minWidth: '330px' , borderRadius: '3%'}}>
+
       <Chart
         chartType="PieChart"
         data={aggregatedChartData}
@@ -69,6 +69,6 @@ export default function GooglePieChart({
         options={options}
         style={{ marginTop: '0' }}
       />
-    </div>
+
   );
 }

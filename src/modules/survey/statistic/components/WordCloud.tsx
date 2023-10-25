@@ -26,7 +26,7 @@ function updateWordCloudData(
 const responsiveOptions: Options = {
   fontFamily: 'Arial',
   colors: ['#FF5733', '#FFA233', '#FFCC33', '#FF33E9', '#33FF5D', '#339BFF'],
-  rotations: 10,
+  rotations: 30,
   rotationAngles: [20, 10],
   deterministic: false,
   enableOptimizations: false,
