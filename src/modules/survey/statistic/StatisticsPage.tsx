@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
-import axios from 'axios';
+import axios from '../../login/components/customApi';
 import Divider from '@mui/material/Divider';
 import TitleFig from './imgs/surveyTitlepng.png';
 import WordCloud from './components/WordCloud';
@@ -42,7 +42,11 @@ const styles = {
     color: '#757575',
   },
   titleText: {
-    fontSize: '20px',
+    fontSize: '60px',
+    textAlign: 'center',
+  },
+  componentText: {
+    fontSize: '30px',
     textAlign: 'center',
   },
   surveyInfo: {
@@ -120,16 +124,16 @@ export default function StatisticsPage2() {
         <CardContent>
           <Box>
             <Typography style={textStyle} sx={styles.titleText}>
-              <h1>{surveyTitle}</h1>
+              {surveyTitle}
               <Divider />
             </Typography>
             <Typography style={textStyle} sx={styles.surveyInfo}>
-              <p>
+              
                 설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
                 {surveyWriter}
                 &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt}{' '}
                 &nbsp;&nbsp;&nbsp; 설문 참여자 수: {totalSelectionCount}
-              </p>
+              
               <br />
               <br />
               <Button variant="contained">참여하기</Button>&nbsp;&nbsp;&nbsp;
@@ -175,20 +179,20 @@ export default function StatisticsPage2() {
           <Card sx={styles.cardTitle} key={questionNo}>
             <CardContent>
               <Box>
-                <Typography style={textStyle} sx={styles.titleText}>
-                  <h4>
+                <Typography style={textStyle} sx={styles.componentText}>
+
                     {itemsForQuestion[0].surveyQuestionNo} .{' '}
                     {itemsForQuestion[0].surveyQuestionTitle}
-                  </h4>
+
                   <Divider />
                 </Typography>
                 <Typography style={textStyle} sx={styles.surveyInfo}>
-                  <p>
+                  
                     &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
                     {itemsForQuestion[0].selectionCount != 0
                       ? countSelections(itemsForQuestion)
                       : countSubjectiveAnswerCount(itemsForQuestion)}
-                  </p>
+                  
                 </Typography>
 
                 {questionTypeNo === 1 && (
@@ -209,7 +213,7 @@ export default function StatisticsPage2() {
                 {questionTypeNo === 4 && (
                   <>
                     <Typography style={textStyle} sx={styles.cardContent}>
-                      <p>단답형의 답들은 다음과 같은 것들이 있었습니다!</p>
+                      단답형의 답들은 다음과 같은 것들이 있었습니다!
                     </Typography>
                     <Box sx={styles.subjectContent}>
                       <WordCloud
@@ -227,7 +231,7 @@ export default function StatisticsPage2() {
                 {questionTypeNo === 5 && (
                   <>
                     <Typography style={textStyle} sx={styles.cardContent}>
-                      <p>서술형의 답들은 다음과 같은 것들이 있었습니다!</p>
+                      서술형의 답들은 다음과 같은 것들이 있었습니다!
                     </Typography>
                     <Box>
                       <AnswerList selectList={itemsForQuestion} />

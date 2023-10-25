@@ -84,11 +84,11 @@ export default function AnswerList({ selectList }: selectionList) {
           </TableHead>
           <TableBody>
             {selectStats.map((row, index) => (
-              <TableRow component="th" scope="row" key={index}>
-                <TableCell component="th" scope="row">
+              <TableRow key={index}>
+                <TableCell>
                   {row.surveySubjectiveAnswer}
                 </TableCell>
-                <TableCell component="th" scope="row">
+                <TableCell>
                   {row.surveySubjectiveAnswerCount}
                 </TableCell>
               </TableRow>
