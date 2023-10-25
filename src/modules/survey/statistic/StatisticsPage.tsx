@@ -48,6 +48,7 @@ const styles = {
   componentText: {
     fontSize: '30px',
     textAlign: 'center',
+    margin: '10px',
   },
   surveyInfo: {
     fontSize: '15px',
@@ -183,22 +184,24 @@ export default function StatisticsPage2() {
 
                     {itemsForQuestion[0].surveyQuestionNo} .{' '}
                     {itemsForQuestion[0].surveyQuestionTitle}
-
-                  <Divider />
+                    <br/>
                 </Typography>
+                <Divider />
+                
                 <Typography style={textStyle} sx={styles.surveyInfo}>
-                  
-                    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
+                  <br/>
+                    &nbsp;&nbsp;&nbsp;  설문 참여자 수:{' '}
+                    
                     {itemsForQuestion[0].selectionCount != 0
                       ? countSelections(itemsForQuestion)
-                      : countSubjectiveAnswerCount(itemsForQuestion)}
-                  
+                      : countSubjectiveAnswerCount(itemsForQuestion)}                  
                 </Typography>
+                <br/>
 
                 {questionTypeNo === 1 && (
-                  <div>
+                  <Box>
                     <GooglePieChart selectionAnswer={chartData} />
-                  </div>
+                  </Box>
                 )}
                 {questionTypeNo === 2 && (
                   <div>
