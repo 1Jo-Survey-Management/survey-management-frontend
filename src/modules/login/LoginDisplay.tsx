@@ -89,15 +89,37 @@ function LoginDisplay() {
         // 서버로부터의 응답 처리
         const respData = response.data;
         console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
+        alert('재로그인 완료');
+        const responseCheck = response;
+        const responseUserNo = responseCheck.data.content.userNo;
+        const responseAccessToken = responseCheck.data.content.accessToken;
+        const responseImage = responseCheck.data.content.userImage;
+        const responseNickName = responseCheck.data.content.userNickname;
+        const responseExpiresIn = responseCheck.data.content.expiresIn;
+
+        localStorage.setItem('userNo', responseUserNo);
+        localStorage.setItem('userNickname', responseNickName);
+        localStorage.setItem('userImage', responseImage);
+        localStorage.setItem('accessToken', responseAccessToken);
+        localStorage.setItem('expiresIn', responseExpiresIn);
 
         if (respData === '') {
           alert('로그인이 필요합니다!');
-          console.log('API 요청 실패');
+          console.error('API 응답 데이터 없음!');
         }
       })
       .catch((error) => {
         alert('로그인이 필요합니다!');
         console.error(error);
+        localStorage.removeItem('userNo');
+        localStorage.removeItem('userNickname');
+        localStorage.removeItem('userImage');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('expiresIn');
+        localStorage.removeItem('refreshToken');
+        console.error('API 요청 실패!');
+        navigate('/');
+
       });
 
       navigate('/survey/main');
@@ -114,6 +136,9 @@ function LoginDisplay() {
         })
         .then((response) => {
           // code 보내서 백에서 인증하고 미완료회원 객체 가져옴(메일, accessToken)
+
+          console.log('데이터 넘어오는지 : ' + response.data.content.accessToken);
+          
           const responseCheck = response;
           const responseUserNo = responseCheck.data.content.userNo;
           const responseAccessToken = responseCheck.data.content.accessToken;
