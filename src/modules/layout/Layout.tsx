@@ -26,7 +26,6 @@ export default function Layout() {
     <>
       <CssBaseline />
       <Header />
-      <Body />
 
       {isLoginPage ? (
         <LoginPage />

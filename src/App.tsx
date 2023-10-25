@@ -14,7 +14,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="*" element={<Layout />} />
         <Route element={<Layout />}>
           <Route path="/register" element={<CreateationSurvey />} />
           <Route path="/survey/modify/:surveyNo" element={<ModifySurvey />} />
