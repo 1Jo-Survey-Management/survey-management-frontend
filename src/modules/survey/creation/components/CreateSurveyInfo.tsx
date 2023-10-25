@@ -305,7 +305,7 @@ function CreateSurveyInfo({
               <Box css={styles.iamgeBox}>
                 <img
                   src={selectedImage}
-                  alt="업로드된 이미지"
+                  alt="설문 이미지"
                   css={styles.uploadImage}
                   id="surveyImage"
                 />
