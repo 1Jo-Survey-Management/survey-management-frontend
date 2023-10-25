@@ -14,13 +14,18 @@ import { SurveyItem } from '../types/AttendTypes';
 interface AttendSingleChoiceProps {
   surveyData: SurveyItem[];
   questionNo: number;
-  onAnswerChange: (answer: string) => void;
+  onAnswerChange: (answer: {
+    selectionValue: string;
+    selectionNo: number;
+    endOfSurvey: boolean;
+  }) => void;
   handleSelectionClick: (
     currentQuestionNo: number,
     moveToQuestionNo: number,
     questionTypeNo: number,
     isMovable: boolean,
-    isUnchecked: boolean
+    isUnchecked: boolean,
+    endOfSurvey: boolean
   ) => void;
 }
 
@@ -30,6 +35,10 @@ function AttendSingleChoice({
   onAnswerChange,
   handleSelectionClick,
 }: AttendSingleChoiceProps) {
+  const relatedSelections = surveyData.filter(
+    (item) => item.surveyQuestionNo === questionNo && item.selectionValue
+  );
+
   const [selectedValue, setSelectedValue] = useState<string | null>('');
   const [isUnchecked, setIsUnchecked] = useState<boolean>(false);
 
@@ -39,7 +48,8 @@ function AttendSingleChoice({
     );
 
     if (selectedOption) {
-      const { questionTypeNo, movable, surveyQuestionMoveNo } = selectedOption;
+      const { questionTypeNo, movable, surveyQuestionMoveNo, endOfSurvey } =
+        selectedOption;
 
       if (selectedValue === null) {
         handleSelectionClick(
@@ -47,7 +57,8 @@ function AttendSingleChoice({
           questionNo,
           questionTypeNo,
           false,
-          isUnchecked
+          isUnchecked,
+          endOfSurvey
         );
       } else if (movable) {
         handleSelectionClick(
@@ -55,7 +66,8 @@ function AttendSingleChoice({
           surveyQuestionMoveNo,
           questionTypeNo,
           true,
-          isUnchecked
+          isUnchecked,
+          endOfSurvey
         );
       } else {
         handleSelectionClick(
@@ -63,7 +75,8 @@ function AttendSingleChoice({
           questionNo,
           questionTypeNo,
           false,
-          isUnchecked
+          isUnchecked,
+          endOfSurvey
         );
       }
     }
@@ -71,35 +84,59 @@ function AttendSingleChoice({
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
+    const selectedOption = relatedSelections.find(
+      (opt) => opt.selectionValue === newValue
+    );
 
-    if (selectedValue === newValue) {
-      setSelectedValue(null);
-      onAnswerChange('');
-      setIsUnchecked(true); // 선택이 해제되었으므로 isUnchecked를 true로 설정합니다.
-    } else {
-      setSelectedValue(newValue);
-      onAnswerChange(newValue);
-      setIsUnchecked(false); // 새로운 값을 선택했으므로 isUnchecked를 false로 설정합니다.
+    if (selectedOption) {
+      if (selectedValue === newValue) {
+        setSelectedValue(null);
+        onAnswerChange({
+          selectionValue: '',
+          selectionNo: 0,
+          endOfSurvey: false,
+        });
+        setIsUnchecked(true);
+      } else {
+        setSelectedValue(newValue);
+        onAnswerChange({
+          selectionValue: newValue,
+          selectionNo: selectedOption.selectionNo,
+          endOfSurvey: selectedOption.endOfSurvey,
+        });
+        setIsUnchecked(false);
+      }
     }
   };
 
   const handleRadioToggle = (value: string) => {
-    if (selectedValue === value) {
-      setSelectedValue(null);
-      onAnswerChange('');
-      setIsUnchecked(true); // 선택이 해제되었으므로 isUnchecked를 true로 설정합니다.
-    } else {
-      setSelectedValue(value);
-      onAnswerChange(value);
-      setIsUnchecked(false); // 새로운 값을 선택했으므로 isUnchecked를 false로 설정합니다.
+    const selectedOption = relatedSelections.find(
+      (opt) => opt.selectionValue === value
+    );
+
+    if (selectedOption) {
+      if (selectedValue === value) {
+        setSelectedValue(null);
+        onAnswerChange({
+          selectionValue: '',
+          selectionNo: 0,
+          endOfSurvey: false,
+        });
+        setIsUnchecked(true);
+      } else {
+        setSelectedValue(value);
+        onAnswerChange({
+          selectionValue: value,
+          selectionNo: selectedOption.selectionNo,
+          endOfSurvey: selectedOption.endOfSurvey,
+        });
+        setIsUnchecked(false);
+      }
     }
   };
 
   const currentQuestion = surveyData.find(
     (item) => item.surveyQuestionNo === questionNo
-  );
-  const relatedSelections = surveyData.filter(
-    (item) => item.surveyQuestionNo === questionNo && item.selectionValue
   );
 
   return (

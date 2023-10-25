@@ -14,13 +14,18 @@ import { SurveyItem } from '../types/AttendTypes';
 interface AttendSingleMoveChoiceProps {
   surveyData: SurveyItem[];
   questionNo: number;
-  onAnswerChange: (answer: string) => void;
+  onAnswerChange: (answer: {
+    selectionValue: string;
+    selectionNo: number;
+    endOfSurvey: boolean;
+  }) => void;
   handleSelectionClick: (
     currentQuestionNo: number,
     moveToQuestionNo: number,
     questionTypeNo: number,
     isMovable: boolean,
-    isUnchecked: boolean
+    isUnchecked: boolean,
+    endOfSurvey: boolean
   ) => void;
 }
 
@@ -28,7 +33,7 @@ function AttendSingleMoveChoice({
   surveyData,
   questionNo,
   onAnswerChange,
-  handleSelectionClick, // isUnchecked,
+  handleSelectionClick,
 }: AttendSingleMoveChoiceProps) {
   const [selectedValue, setSelectedValue] = useState<string | null>('');
 
@@ -49,7 +54,8 @@ function AttendSingleMoveChoice({
     );
 
     if (selectedOption) {
-      const { questionTypeNo, movable, surveyQuestionMoveNo } = selectedOption;
+      const { questionTypeNo, movable, surveyQuestionMoveNo, endOfSurvey } =
+        selectedOption;
 
       if (selectedValue === null) {
         handleSelectionClick(
@@ -57,7 +63,8 @@ function AttendSingleMoveChoice({
           surveyQuestionMoveNo,
           questionTypeNo,
           false,
-          isUnchecked
+          isUnchecked,
+          endOfSurvey
         );
       } else if (movable) {
         handleSelectionClick(
@@ -65,7 +72,8 @@ function AttendSingleMoveChoice({
           surveyQuestionMoveNo,
           questionTypeNo,
           true,
-          isUnchecked
+          isUnchecked,
+          endOfSurvey
         );
       } else {
         handleSelectionClick(
@@ -73,7 +81,8 @@ function AttendSingleMoveChoice({
           surveyQuestionMoveNo,
           questionTypeNo,
           false,
-          isUnchecked
+          isUnchecked,
+          endOfSurvey
         );
       }
     }
@@ -81,30 +90,56 @@ function AttendSingleMoveChoice({
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
+    const selectedOption = relatedSelections.find(
+      (opt) => opt.selectionValue === newValue
+    );
 
-    if (selectedValue === newValue) {
-      setSelectedValue(null);
-      onAnswerChange('');
-      setIsUnchecked(true);
-    } else {
-      setSelectedValue(newValue);
-      onAnswerChange(newValue);
-      setIsUnchecked(false);
+    if (selectedOption) {
+      if (selectedValue === newValue) {
+        setSelectedValue(null);
+        onAnswerChange({
+          selectionValue: '',
+          selectionNo: 0,
+          endOfSurvey: false,
+        });
+        setIsUnchecked(true);
+      } else {
+        setSelectedValue(newValue);
+        onAnswerChange({
+          selectionValue: newValue,
+          selectionNo: selectedOption.selectionNo,
+          endOfSurvey: selectedOption.endOfSurvey,
+        });
+        setIsUnchecked(false);
+      }
     }
   };
 
   const handleRadioToggle = (value: string) => {
-    if (selectedValue === value) {
-      setSelectedValue(null);
-      onAnswerChange('');
-      setIsUnchecked(true);
-    } else {
-      setSelectedValue(value);
-      onAnswerChange(value);
-      setIsUnchecked(false);
+    const selectedOption = relatedSelections.find(
+      (opt) => opt.selectionValue === value
+    );
+
+    if (selectedOption) {
+      if (selectedValue === value) {
+        setSelectedValue(null);
+        onAnswerChange({
+          selectionValue: '',
+          selectionNo: 0,
+          endOfSurvey: false,
+        });
+        setIsUnchecked(true);
+      } else {
+        setSelectedValue(value);
+        onAnswerChange({
+          selectionValue: value,
+          selectionNo: selectedOption.selectionNo,
+          endOfSurvey: selectedOption.endOfSurvey,
+        });
+        setIsUnchecked(false);
+      }
     }
   };
-
   return (
     <Card id={`question-${questionNo}`} sx={{ marginBottom: '30px' }}>
       <CardContent>
