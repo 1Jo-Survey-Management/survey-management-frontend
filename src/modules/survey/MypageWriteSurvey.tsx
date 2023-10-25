@@ -20,6 +20,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
+import { useNavigate } from 'react-router-dom';
 
 interface CardData {
   surveyNo: number;
@@ -81,9 +82,15 @@ function Mypage() {
 
   const [state, setState] = useState('전체');
 
-  const userNo = 3;
+  const userNo = 1;
 
   const [searchQuery, setSearchQuery] = useState('');
+
+  const naviagte = useNavigate();
+
+  const handleClickSurveyModify = (surveyNo: number) => {
+    naviagte(`/survey/modify/${surveyNo}`);
+  };
 
   const handleChange = (event: SelectChangeEvent) => {
     setState(event.target.value);
@@ -91,7 +98,7 @@ function Mypage() {
 
   const fetchCardData = () => {
     axios
-      .get(`http://localhost:8000/api/my-surveys/${userNo}/write-surveys`)
+      .get(`http://localhost:8080/api/my-surveys/${userNo}/write-surveys`)
       .then((response) => {
         const cardData: CardData[] = response.data.content;
 
@@ -440,7 +447,11 @@ function Mypage() {
 
             {selectedCard && selectedCard.surveyStatusNo === 1 && (
               <>
-                <Button>수정하기</Button>
+                <Button
+                  onClick={() => handleClickSurveyModify(selectedCard.surveyNo)}
+                >
+                  수정하기
+                </Button>
                 <Button onClick={handleDeleteClick}>삭제하기</Button>
                 <Button>게시하기</Button>
               </>

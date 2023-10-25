@@ -19,7 +19,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { TransitionProps } from '@mui/material/transitions';
 import { css } from '@emotion/react';
 import SurveyPreview from '../../preview/routers/SurveyPreview';
-import { QuestionProps, SurveyInfoProps } from '../types/SurveyTypes';
+import { FloatingActionButtonsProps } from '../types/SurveyTypes';
 
 const styles = {
   fabBox: css({
@@ -47,13 +47,6 @@ const styles = {
   }),
 };
 
-interface FloatingActionButtonsProps {
-  onClickAddQuestion: () => void;
-  surveyInfo: SurveyInfoProps;
-  surveyImage: File | undefined;
-  questions: QuestionProps[];
-}
-
 const Transition = React.forwardRef(
   (
     props: TransitionProps & {
@@ -78,6 +71,7 @@ function FloatingActionButtons({
   surveyInfo,
   surveyImage,
   questions,
+  previewImageUrl,
 }: FloatingActionButtonsProps) {
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
@@ -180,6 +174,7 @@ function FloatingActionButtons({
           surveyInfo={surveyInfo}
           surveyImage={surveyImage || undefined}
           questions={questions}
+          previewImageUrl={previewImageUrl || undefined}
         />
       </Dialog>
     </Box>

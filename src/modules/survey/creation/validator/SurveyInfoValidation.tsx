@@ -54,10 +54,6 @@ export default class SurveyInfoValidation {
   @IsDate({ message: '올바른 날짜 형식이어야 합니다.' })
   surveyPostAt?: string;
 
-  @IsNotEmpty({ message: '사용자 번호는 필수 입력사항입니다.' })
-  @IsString({ message: '사용자 번호는 문자열이어야 합니다.' })
-  userNo: string;
-
   constructor(
     surveyId: number,
     surveyInfoId: number,
@@ -66,8 +62,7 @@ export default class SurveyInfoValidation {
     surveyTags: string[],
     openStatusNo: number,
     surveyDescription: string,
-    surveyStatusNo: number,
-    userNo: string
+    surveyStatusNo: number
   ) {
     this.surveyId = surveyId;
     this.surveyInfoId = surveyInfoId;
@@ -77,6 +72,5 @@ export default class SurveyInfoValidation {
     this.openStatusNo = openStatusNo;
     this.surveyDescription = surveyDescription;
     this.surveyStatusNo = surveyStatusNo;
-    this.userNo = userNo;
   }
 }
