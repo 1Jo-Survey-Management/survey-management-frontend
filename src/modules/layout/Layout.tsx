@@ -18,15 +18,12 @@ export default function Layout() {
 
     axios.defaults.headers.common['Authorization'] =
       'Bearer ' + responseAcccessToken;
-  }, []);
+  }, [location.pathname]);
 
   const isLoginPage = location.pathname === '/';
   return (
     <>
       <CssBaseline />
-      <Header />
-      <Body />
-
       {isLoginPage ? (
         <LoginPage />
       ) : (

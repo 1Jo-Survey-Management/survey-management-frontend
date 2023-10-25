@@ -7,7 +7,6 @@ import Logo from './img/SurveyLogo.png';
 import LoginFig from './img/LoginFig.png';
 import BasicModal from './modal/BasicModal';
 import LoginNaver from './LoginNaver';
-import config from './config/config.json';
 
 const emptyBoxSimple = {
   height: 20,
@@ -84,7 +83,7 @@ function LoginDisplay() {
 
       // 액세스 토큰이 유효한지 api를 쏴서 확인하면서 로그인 처리
       axios
-      .post('/user/go')
+      .post('/login/user')
       .then((response) => {
         // 서버로부터의 응답 처리
         const respData = response.data;
