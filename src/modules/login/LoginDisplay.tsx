@@ -31,7 +31,7 @@ const basicBox = {
 };
 
 const secBasicBox = {
-  width: 550,
+  width: 350,
   height: 400,
   backgroundColor: '#C2E9FF',
   borderRadius: '10px',
