@@ -1,12 +1,8 @@
+// Body.tsx
 import React from 'react';
 import Container from '@mui/material/Container';
 import { useLocation } from 'react-router-dom';
 import { routeInfo } from '../route/routeInfo';
-
-const containerStyle = {
-  maxWidth: 'md',
-  height: '500px',
-};
 
 /**
  * Layout의 Body입니다!
@@ -17,9 +13,10 @@ function Body() {
 
   const containerStyle = {
     maxWidth: 'md',
-    // height: '500px',
+    height: '500px',
   };
 
+  console.log(location.pathname);
   return (
     <Container style={containerStyle}>{routeInfo(location.pathname)}</Container>
   );
