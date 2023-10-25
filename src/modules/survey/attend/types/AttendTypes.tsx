@@ -1,4 +1,5 @@
 export interface SelectionItem {
+  value: string;
   selectionValue: string;
   selectionNo: number;
   // 필요하면 여기에 추가적인 속성들을 추가할 수 있습니다.

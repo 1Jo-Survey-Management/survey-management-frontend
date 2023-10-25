@@ -19,7 +19,8 @@ interface AttendSingleChoiceProps {
     currentQuestionNo: number,
     moveToQuestionNo: number,
     questionTypeNo: number,
-    isMovable: boolean
+    isMovable: boolean,
+    isUnchecked: boolean
   ) => void;
 }
 
@@ -30,6 +31,7 @@ function AttendSingleChoice({
   handleSelectionClick,
 }: AttendSingleChoiceProps) {
   const [selectedValue, setSelectedValue] = useState<string | null>('');
+  const [isUnchecked, setIsUnchecked] = useState<boolean>(false);
 
   useEffect(() => {
     const selectedOption = surveyData.find(
@@ -40,19 +42,32 @@ function AttendSingleChoice({
       const { questionTypeNo, movable, surveyQuestionMoveNo } = selectedOption;
 
       if (selectedValue === null) {
-        handleSelectionClick(questionNo, questionNo, questionTypeNo, false);
+        handleSelectionClick(
+          questionNo,
+          questionNo,
+          questionTypeNo,
+          false,
+          isUnchecked
+        );
       } else if (movable) {
         handleSelectionClick(
           questionNo,
           surveyQuestionMoveNo,
           questionTypeNo,
-          true
+          true,
+          isUnchecked
         );
       } else {
-        handleSelectionClick(questionNo, questionNo, questionTypeNo, false);
+        handleSelectionClick(
+          questionNo,
+          questionNo,
+          questionTypeNo,
+          false,
+          isUnchecked
+        );
       }
     }
-  }, [selectedValue]);
+  }, [selectedValue, isUnchecked]);
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
@@ -60,9 +75,11 @@ function AttendSingleChoice({
     if (selectedValue === newValue) {
       setSelectedValue(null);
       onAnswerChange('');
+      setIsUnchecked(true); // 선택이 해제되었으므로 isUnchecked를 true로 설정합니다.
     } else {
       setSelectedValue(newValue);
       onAnswerChange(newValue);
+      setIsUnchecked(false); // 새로운 값을 선택했으므로 isUnchecked를 false로 설정합니다.
     }
   };
 
@@ -70,9 +87,11 @@ function AttendSingleChoice({
     if (selectedValue === value) {
       setSelectedValue(null);
       onAnswerChange('');
+      setIsUnchecked(true); // 선택이 해제되었으므로 isUnchecked를 true로 설정합니다.
     } else {
       setSelectedValue(value);
       onAnswerChange(value);
+      setIsUnchecked(false); // 새로운 값을 선택했으므로 isUnchecked를 false로 설정합니다.
     }
   };
 

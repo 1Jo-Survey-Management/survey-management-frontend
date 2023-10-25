@@ -19,7 +19,8 @@ interface AttendSingleMoveChoiceProps {
     currentQuestionNo: number,
     moveToQuestionNo: number,
     questionTypeNo: number,
-    isMovable: boolean
+    isMovable: boolean,
+    isUnchecked: boolean
   ) => void;
 }
 
@@ -27,9 +28,20 @@ function AttendSingleMoveChoice({
   surveyData,
   questionNo,
   onAnswerChange,
-  handleSelectionClick, // 이 부분을 추가합니다.
+  handleSelectionClick, // isUnchecked,
 }: AttendSingleMoveChoiceProps) {
   const [selectedValue, setSelectedValue] = useState<string | null>('');
+
+  const currentQuestion = surveyData.find(
+    (item) => item.surveyQuestionNo === questionNo
+  );
+  const relatedSelections = surveyData.filter(
+    (item) => item.surveyQuestionNo === questionNo && item.selectionValue
+  );
+
+  const [isUnchecked, setIsUnchecked] = useState<boolean>(
+    currentQuestion?.required || false
+  );
 
   useEffect(() => {
     const selectedOption = surveyData.find(
@@ -44,25 +56,28 @@ function AttendSingleMoveChoice({
           questionNo,
           surveyQuestionMoveNo,
           questionTypeNo,
-          false
+          false,
+          isUnchecked
         );
       } else if (movable) {
         handleSelectionClick(
           questionNo,
           surveyQuestionMoveNo,
           questionTypeNo,
-          true
+          true,
+          isUnchecked
         );
       } else {
         handleSelectionClick(
           questionNo,
           surveyQuestionMoveNo,
           questionTypeNo,
-          false
+          false,
+          isUnchecked
         );
       }
     }
-  }, [selectedValue]);
+  }, [selectedValue, isUnchecked]);
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
@@ -70,9 +85,11 @@ function AttendSingleMoveChoice({
     if (selectedValue === newValue) {
       setSelectedValue(null);
       onAnswerChange('');
+      setIsUnchecked(true);
     } else {
       setSelectedValue(newValue);
       onAnswerChange(newValue);
+      setIsUnchecked(false);
     }
   };
 
@@ -80,23 +97,18 @@ function AttendSingleMoveChoice({
     if (selectedValue === value) {
       setSelectedValue(null);
       onAnswerChange('');
+      setIsUnchecked(true);
     } else {
       setSelectedValue(value);
       onAnswerChange(value);
+      setIsUnchecked(false);
     }
   };
-
-  const currentQuestion = surveyData.find(
-    (item) => item.surveyQuestionNo === questionNo
-  );
-  const relatedSelections = surveyData.filter(
-    (item) => item.surveyQuestionNo === questionNo && item.selectionValue
-  );
 
   return (
     <Card id={`question-${questionNo}`} sx={{ marginBottom: '30px' }}>
       <CardContent>
-        {!selectedValue && currentQuestion?.required && (
+        {isUnchecked && currentQuestion?.required && (
           <h1
             style={{
               fontSize: '9px',

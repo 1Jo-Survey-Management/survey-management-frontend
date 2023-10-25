@@ -26,7 +26,9 @@ function AttendSurvey() {
     errorResponse: null,
   });
 
-  const [hiddenQuestions, setHiddenQuestions] = useState<number[]>([]);
+  const [hiddenQuestions, setHiddenQuestions] = useState<
+    Record<number, number[]>
+  >({});
   const [userResponses, setUserResponses] = useState<UserResponse[]>([]);
   const [surveyTitle, setSurveyTitle] = useState<string | null>(null);
 
@@ -39,40 +41,33 @@ function AttendSurvey() {
     selectedQuestionNo: number,
     moveToQuestionNo: number,
     questionTypeNo: number,
-    isMovable: boolean
+    isMovable: boolean,
+    isUnchecked: boolean
   ) => {
-    console.log(`selectedQuestionNo: ${selectedQuestionNo}`);
-    console.log(`moveToQuestionNo: ${moveToQuestionNo}`);
-    console.log(`questionTypeNo: ${questionTypeNo}`);
-    console.log(`isMovable: ${isMovable}`);
-    const newHiddenQuestions = [...hiddenQuestions];
+    const currentHiddenQuestions = hiddenQuestions[selectedQuestionNo] || [];
 
-    // movable=true이며, questionTypeNo가 2인 경우
+    let newHiddenQuestions: number[] = [];
+
     if (isMovable && questionTypeNo === 2) {
-      // 현재 선택된 문항과 moveToQuestionNo 사이의 문항들을 숨김 처리합니다.
       // eslint-disable-next-line no-plusplus
       for (let i = selectedQuestionNo + 1; i < moveToQuestionNo; i++) {
-        if (!newHiddenQuestions.includes(i)) {
+        if (!currentHiddenQuestions.includes(i)) {
           newHiddenQuestions.push(i);
         }
       }
-    }
-    // movable=false인 선택지가 선택된 경우, 그리고 해당 문항의 숨김 처리가 이미 되었다면
-    else if (!isMovable && questionTypeNo === 2 && moveToQuestionNo === 0) {
-      for (
-        let i = selectedQuestionNo + 1;
-        i <= hiddenQuestions[hiddenQuestions.length - 1];
-        // eslint-disable-next-line no-plusplus
-        i++
-      ) {
-        const index = newHiddenQuestions.indexOf(i);
-        if (index !== -1) {
-          newHiddenQuestions.splice(index, 1);
-        }
-      }
+    } else if (
+      (!isMovable && questionTypeNo === 2 && moveToQuestionNo === 0) ||
+      isUnchecked
+    ) {
+      newHiddenQuestions = currentHiddenQuestions.filter(
+        (qNo) => qNo < moveToQuestionNo
+      );
     }
 
-    setHiddenQuestions(newHiddenQuestions);
+    setHiddenQuestions({
+      ...hiddenQuestions,
+      [selectedQuestionNo]: newHiddenQuestions,
+    });
   };
 
   const handleAnswerChange =
@@ -91,25 +86,13 @@ function AttendSurvey() {
         return;
       }
 
-      if (currentQuestionData && currentQuestionData.questionTypeNo === 2) {
-        if (typeof answerOrAnswers === 'string') {
-          const answerString = answerOrAnswers;
-          if (!answerString) {
-            // 선택 해제 시
-            setHiddenQuestions((prevHidden) =>
-              prevHidden.filter((q) => q <= questionNo || q > questionNo + 1)
-            );
-          }
-        }
-      }
-
       const newResponses: UserResponse[] = [];
 
+      // 객관식 복수 선택
       if (
         Array.isArray(answerOrAnswers) &&
         typeof answerOrAnswers[0] === 'object'
       ) {
-        // 객관식 복수 선택인 경우
         answerOrAnswers.forEach((selection) => {
           newResponses.push({
             surveyQuestionTitle: currentQuestionData.surveyQuestionTitle,
@@ -118,12 +101,16 @@ function AttendSurvey() {
             surveyNo: SURVEY_NO,
             surveyQuestionNo: currentQuestionData.surveyQuestionNo,
             questionTypeNo: currentQuestionData.questionTypeNo,
-            selectionNo: selection.selectionNo, // 여기에서 직접 selectionNo를 가져옵니다.
-            surveySubjectiveAnswer: null, // 기본 값을 null로 설정
+            selectionNo: selection.selectionNo,
+            surveySubjectiveAnswer: null,
           });
         });
-      } else if (currentQuestionData.questionTypeNo > 2) {
-        // 주관식 답변인 경우
+      }
+      // 주관식 답변 (단답 or 장문)
+      else if (
+        currentQuestionData.questionTypeNo === 4 ||
+        currentQuestionData.questionTypeNo === 5
+      ) {
         newResponses.push({
           surveyQuestionTitle: currentQuestionData.surveyQuestionTitle,
           selectionValue: null,
@@ -132,35 +119,41 @@ function AttendSurvey() {
           surveyQuestionNo: currentQuestionData.surveyQuestionNo,
           questionTypeNo: currentQuestionData.questionTypeNo,
           selectionNo: 0,
-          surveySubjectiveAnswer: answerOrAnswers as string, // 주관식 답변은 string 타입이므로 형변환
-        });
-      } else if (typeof answerOrAnswers === 'string') {
-        // 나머지 경우
-        const answerString = answerOrAnswers;
-        newResponses.push({
-          surveyQuestionTitle: currentQuestionData.surveyQuestionTitle,
-          selectionValue: answerString,
-          userNo: USER_NO,
-          surveyNo: SURVEY_NO,
-          surveyQuestionNo: currentQuestionData.surveyQuestionNo,
-          questionTypeNo: currentQuestionData.questionTypeNo,
-          selectionNo: currentQuestionData.selectionNo,
-          surveySubjectiveAnswer: null,
+          surveySubjectiveAnswer: answerOrAnswers as string,
         });
       }
+      // 객관식 단일 선택 or 객관식 단일 선택(movable=true)
+      else if (
+        typeof answerOrAnswers === 'string' &&
+        (currentQuestionData.questionTypeNo === 1 ||
+          currentQuestionData.questionTypeNo === 2)
+      ) {
+        const answerString = answerOrAnswers;
+        if (answerString) {
+          newResponses.push({
+            surveyQuestionTitle: currentQuestionData.surveyQuestionTitle,
+            selectionValue: answerString,
+            userNo: USER_NO,
+            surveyNo: SURVEY_NO,
+            surveyQuestionNo: currentQuestionData.surveyQuestionNo,
+            questionTypeNo: currentQuestionData.questionTypeNo,
+            selectionNo: currentQuestionData.selectionNo,
+            surveySubjectiveAnswer: null,
+          });
+        }
+      }
 
+      // 기존 응답 중 해당 질문의 응답을 제거하고 새로운 응답을 추가
       setUserResponses((prev) => {
-        let updatedResponses = prev.filter(
+        const updatedResponses = prev.filter(
           (response) =>
             response.surveyQuestionNo !== currentQuestionData.surveyQuestionNo
         );
-        updatedResponses = [...updatedResponses, ...newResponses];
-        return updatedResponses;
+        return [...updatedResponses, ...newResponses];
       });
     };
 
   const renderQuestion = (questionNo: number) => {
-    // if (hiddenQuestions.includes(questionNo)) return null;
     const question = surveyData.content.find(
       (item) => item.surveyQuestionNo === questionNo
     );
@@ -175,7 +168,7 @@ function AttendSurvey() {
             surveyData={surveyData.content}
             questionNo={questionNo}
             onAnswerChange={handleAnswerChange(questionNo)}
-            handleSelectionClick={handleSelectionClick} // 함수 자체만 전달합니다.
+            handleSelectionClick={handleSelectionClick}
           />
         );
       case 2:
@@ -245,7 +238,6 @@ function AttendSurvey() {
   }, []);
 
   const handleSubmit = async () => {
-    // 필수 응답 문항 체크
     // eslint-disable-next-line no-restricted-syntax
     for (const item of surveyData.content) {
       if (item.required) {
@@ -297,6 +289,8 @@ function AttendSurvey() {
     }
   };
 
+  // 모든 문항의 숨김 상태를 합친 배열 생성
+  const allHiddenQuestions = Object.values(hiddenQuestions).flat();
   const uniqueQuestions = Array.from(
     new Set(surveyData.content.map((item) => item.surveyQuestionNo))
   );
@@ -309,7 +303,7 @@ function AttendSurvey() {
         {surveyTitle}
       </h1>
       {uniqueQuestions.map((questionNo) => {
-        if (!hiddenQuestions.includes(questionNo)) {
+        if (!allHiddenQuestions.includes(questionNo)) {
           return renderQuestion(questionNo);
         }
         return null;
