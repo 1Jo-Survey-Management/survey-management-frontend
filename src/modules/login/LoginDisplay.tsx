@@ -87,8 +87,6 @@ function LoginDisplay() {
       .then((response) => {
         // 서버로부터의 응답 처리
         const respData = response.data;
-        console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
-        alert('재로그인 완료');
         const responseCheck = response;
         const responseUserNo = responseCheck.data.content.userNo;
         const responseAccessToken = responseCheck.data.content.accessToken;
@@ -134,10 +132,7 @@ function LoginDisplay() {
           },
         })
         .then((response) => {
-          // code 보내서 백에서 인증하고 미완료회원 객체 가져옴(메일, accessToken)
-
-          console.log('데이터 넘어오는지 : ' + response.data.content.accessToken);
-          
+          // code 보내서 백에서 인증하고 미완료회원 객체 가져옴(메일, accessToken)          
           const responseCheck = response;
           const responseUserNo = responseCheck.data.content.userNo;
           const responseAccessToken = responseCheck.data.content.accessToken;
