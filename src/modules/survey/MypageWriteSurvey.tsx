@@ -88,8 +88,8 @@ function Mypage() {
 
   const naviagte = useNavigate();
 
-  const handleClickSurveyModify = () => {
-    naviagte('survey/modify');
+  const handleClickSurveyModify = (surveyNo: number) => {
+    naviagte(`/survey/modify/${surveyNo}`);
   };
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -98,7 +98,7 @@ function Mypage() {
 
   const fetchCardData = () => {
     axios
-      .get(`http://localhost:8000/api/my-surveys/${userNo}/write-surveys`)
+      .get(`http://localhost:8080/api/my-surveys/${userNo}/write-surveys`)
       .then((response) => {
         const cardData: CardData[] = response.data.content;
 
@@ -447,7 +447,11 @@ function Mypage() {
 
             {selectedCard && selectedCard.surveyStatusNo === 1 && (
               <>
-                <Button onClick={handleClickSurveyModify}>수정하기</Button>
+                <Button
+                  onClick={() => handleClickSurveyModify(selectedCard.surveyNo)}
+                >
+                  수정하기
+                </Button>
                 <Button onClick={handleDeleteClick}>삭제하기</Button>
                 <Button>게시하기</Button>
               </>
