@@ -15,6 +15,7 @@ import TitleFig from './imgs/surveyTitlepng.png';
 import WordCloud from './components/WordCloud';
 import GooglePieChart from './components/GooglePieChart';
 import { Selection } from './types/SurveyStatisticTypes';
+import { json } from 'stream/consumers';
 
 const styles = {
   card: {
@@ -176,6 +177,21 @@ export default function StatisticsPage2() {
         };
         const chartData = extractChartData(itemsForQuestion);
 
+        const extractShortSubjectiveAnswer = (data: Selection[]): Selection[] => {
+          const filteredData = data.filter((item) => item.questionTypeNo === 4);
+
+          console.log('단답형 : '+JSON.stringify(filteredData,null,2));
+          return filteredData;
+        };
+        const shortSubData = extractShortSubjectiveAnswer(itemsForQuestion);
+
+        const extractLongSubjectiveAnswer = (data: Selection[]): Selection[] => {
+          const filteredData = data.filter((item) => item.questionTypeNo === 5);
+          console.log('서술형 : '+JSON.stringify(filteredData,null,2));
+          return filteredData;
+        };
+        const LongSubData = extractLongSubjectiveAnswer(itemsForQuestion);
+
         return (
           <Card sx={styles.cardTitle} key={questionNo}>
             <CardContent>
@@ -220,14 +236,14 @@ export default function StatisticsPage2() {
                     </Typography>
                     <Box sx={styles.subjectContent}>
                       <WordCloud
-                        wordCloud={itemsForQuestion.map((item) => ({
+                        wordCloud={shortSubData.map((item) => ({
                           text: item.surveySubjectiveAnswer,
                           value: item.questionTypeNo,
                         }))}
                       />
                     </Box>
 
-                    <AnswerList selectList={itemsForQuestion} />
+                    <AnswerList selectList={shortSubData} />
                   </>
                 )}
 
@@ -237,7 +253,7 @@ export default function StatisticsPage2() {
                       ## 서술형의 답들은 다음과 같은 것들이 있었습니다!
                     </Typography>
                     <Box>
-                      <AnswerList selectList={itemsForQuestion} />
+                      <AnswerList selectList={LongSubData} />
                     </Box>
                   </>
                 )}
