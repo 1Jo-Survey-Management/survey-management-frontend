@@ -31,17 +31,23 @@ type CardData = {
   surveyImage: string;
   surveyPostAt: string;
   surveyClosingAt: string;
+  userNo: number;
   userNickName: string;
   userImage: string;
-  userNo: Array<number>;
+  attendUserNo: Array<number>;
   surveyStatusName: string;
   openStatusName: string;
   tag: Array<string>;
   surveyAttendCount: number;
   isDeleted: boolean;
+  attendCheckList: boolean;
 };
 
-function SurveySearch(this: any) {
+const userInfo = {
+  loginUserNo: 1,
+};
+
+function SurveySearch() {
   const navigate = useNavigate();
   // const [searchOptions, setSearchOptions] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -52,7 +58,7 @@ function SurveySearch(this: any) {
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
       case '진행':
-        return 'primary';
+        return '#7F81B4';
       case '작성':
         return 'secondary';
       default:
@@ -60,10 +66,13 @@ function SurveySearch(this: any) {
     }
   };
 
-  const fontFamily = "'Noto Sans KR', sans-serif";
+  const fontFamily = "'Sunflower', sans-serif";
+  const contentFont = "'Poor Story', sans-serif";
   const textStyle = {
     fontFamily,
+    contentFont,
   };
+
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const next = () => {
@@ -103,7 +112,7 @@ function SurveySearch(this: any) {
         }
       } else if (selectedState === '마감') {
         const response = await axios.get(
-          `http://localhost:8000/surveys/select-closing?page=${page}`
+          `http://localhost:8080/surveys/select-closing?page=${page}`
         );
 
         if (response.data.length === 0) {
@@ -122,37 +131,28 @@ function SurveySearch(this: any) {
     fetchData();
   }, [page, selectedState]);
 
-  // useEffect(() => {
-  //   const sortedCardData = [...filteredData].sort((a, b) => {
-  //     // 날짜 형식을 startDate 객체로 변환
-  //     const dateA = new Date(a.surveyPostAt.replace('~', ''));
-  //     const dateB = new Date(b.surveyPostAt.replace('~', ''));
+  useEffect(() => {
+    const sortedCardData = [...filteredData].sort((a, b) => {
+      // 날짜 형식을 startDate 객체로 변환
+      const dateA = new Date(a.surveyPostAt.replace('~', ''));
+      const dateB = new Date(b.surveyPostAt.replace('~', ''));
 
-  //     if (a.surveyStatusName === '마감' && b.surveyStatusName !== '마감') {
-  //       return 1; // a가 "마감"이고 b가 "마감"이 아닌 경우, a가 b보다 뒤에 위치
-  //     }
-  //     if (a.surveyStatusName !== '마감' && b.surveyStatusName === '마감') {
-  //       return -1; // a가 "마감"이 아니고 b가 "마감"인 경우, a가 b보다 앞에 위치
-  //     }
+      if (a.surveyStatusName === '마감' && b.surveyStatusName !== '마감') {
+        return 1; // a가 "마감"이고 b가 "마감"이 아닌 경우, a가 b보다 뒤에 위치
+      }
+      if (a.surveyStatusName !== '마감' && b.surveyStatusName === '마감') {
+        return -1; // a가 "마감"이 아니고 b가 "마감"인 경우, a가 b보다 앞에 위치
+      }
 
-  //     // startDate 객체를 비교하여 정렬
-  //     if (dateA === dateB) {
-  //       return 0;
-  //     }
-  //     return dateA < dateB ? -1 : 1;
-  //   });
+      // startDate 객체를 비교하여 정렬
+      if (dateA === dateB) {
+        return 0;
+      }
+      return dateA < dateB ? -1 : 1;
+    });
 
-  //   setFilteredData(sortedCardData);
-  // }, []);
-
-  // const handleSearchOptionChange = (
-  //   event: SelectChangeEvent<string | string[]>
-  // ) => {
-  //   const newValue = Array.isArray(event.target.value)
-  //     ? event.target.value
-  //     : [event.target.value];
-  //   setSearchOptions(newValue);
-  // };
+    setFilteredData(sortedCardData);
+  }, []);
 
   const removePage = () => {
     setPage(0);
@@ -172,22 +172,22 @@ function SurveySearch(this: any) {
       return includesSearchTerm && matchesState;
     });
 
-    // const filteredWithoutInProgress =
-    //   selectedState === '마감'
-    //     ? filtered.filter((card) => card.surveyStatusName !== '진행')
-    //     : filtered;
+    const filteredWithoutInProgress =
+      selectedState === '마감'
+        ? filtered.filter((card) => card.surveyStatusName !== '진행')
+        : filtered;
 
-    // const sortedCardData = [...filteredWithoutInProgress].sort((a, b) => {
-    //   const dateA = new Date(a.surveyPostAt);
-    //   const dateB = new Date(b.surveyPostAt);
+    const sortedCardData = [...filteredWithoutInProgress].sort((a, b) => {
+      const dateA = new Date(a.surveyPostAt);
+      const dateB = new Date(b.surveyPostAt);
 
-    //   if (dateA === dateB) {
-    //     return 0;
-    //   }
-    //   return dateA > dateB ? -1 : 1;
-    // });
+      if (dateA === dateB) {
+        return 0;
+      }
+      return dateA > dateB ? -1 : 1;
+    });
 
-    // setFilteredData(sortedCardData);
+    setFilteredData(sortedCardData);
   };
   const openCardModal = (card: CardData) => {
     setSelectedCard(card);
@@ -199,9 +199,33 @@ function SurveySearch(this: any) {
     setOpenModal(false);
   };
 
+  // const cardColor = () => {
+  //   if (
+  //     selectedCard?.surveyStatusName === '마감' ||
+  //     !selectedCard?.attendCheckList ||
+  //     selectedCard.attendCheckList.some((item) => item === false) ||
+  //     selectedCard?.userNo === userInfo.loginUserNo
+  //   ) {
+  //     return '#FFEAEA';
+  //   }
+
+  //   return '#D3D4F5';
+  // };
+
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
-      <h1 style={textStyle}>전체 설문</h1>
+      <Typography
+        component="div"
+        sx={{
+          fontSize: 24,
+          fontWeight: 600,
+          marginBottom: '8px',
+          cursor: 'pointer',
+          fontFamily: contentFont,
+        }}
+      >
+        전체 설문
+      </Typography>
 
       {/* 검색어 입력란 */}
       <Paper
@@ -280,6 +304,8 @@ function SurveySearch(this: any) {
           variant="outlined"
           sx={{
             height: '35px',
+            border: 3,
+            borderColor: '#DADAFF',
           }}
           onClick={() => {
             // 초기화 버튼 클릭 시 검색 옵션 및 검색어 초기화
@@ -334,14 +360,13 @@ function SurveySearch(this: any) {
               <Card
                 variant="outlined"
                 sx={{
-                  minWidth: 100,
-                  maxWidth: 150,
-                  minHeight: 80,
-                  border: 2,
-                  borderColor: '#BCBCBC',
+                  width: '150px',
+                  height: '160px',
+                  border: 2.5,
+                  borderColor: '#FFEAEA',
                   borderRadius: 5,
+                  fontStyle: textStyle,
                 }}
-                style={textStyle}
               >
                 <CardContent
                   sx={{
@@ -370,13 +395,12 @@ function SurveySearch(this: any) {
                         height: '20px',
                         fontWeight: 600,
                         justifyContent: 'space-between',
+                        fontStyle: textStyle,
                       }}
-                      style={textStyle}
                     />
 
                     <Chip
                       label={card.surveyStatusName}
-                      color={getChipColor(card.surveyStatusName)}
                       variant="outlined"
                       sx={{
                         width: '50px',
@@ -386,6 +410,7 @@ function SurveySearch(this: any) {
                         '& .MuiChip-label': {
                           padding: 0,
                         },
+                        color: getChipColor(card.surveyStatusName),
                       }}
                       style={textStyle}
                     />
@@ -400,12 +425,11 @@ function SurveySearch(this: any) {
                       color: 'text.secondary',
                       marginBottom: '10px',
                       fontWeight: 600,
-                      fontFamily,
                     }}
                   >
                     {card.surveyClosingAt}
                   </div>
-                  <Typography
+                  {/* <Typography
                     variant="h5"
                     component="div"
                     sx={{
@@ -413,19 +437,24 @@ function SurveySearch(this: any) {
                       fontWeight: 600,
                       marginBottom: '8px',
                       cursor: 'pointer',
+                      fontStyle: textStyle,
                     }}
-                    style={textStyle}
                   >
                     {card.surveyNo}
-                  </Typography>
+                  </Typography> */}
                   <Typography
                     variant="h5"
                     component="div"
                     sx={{
-                      fontSize: 18,
+                      fontSize: 17,
                       fontWeight: 600,
                       marginBottom: '8px',
                       cursor: 'pointer',
+                      maxHeight: '45px', // 원하는 높이 설정
+                      overflow: 'hidden',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
                     }}
                     style={textStyle}
                   >
@@ -490,7 +519,7 @@ function SurveySearch(this: any) {
             </h2>
             <p style={textStyle}>
               날짜:
-              {selectedCard ? selectedCard.surveyPostAt : ''}~{' '}
+              {selectedCard ? selectedCard.surveyPostAt.slice(0, 10) : ''}~{' '}
               {selectedCard ? selectedCard.surveyClosingAt : ''}
             </p>
 
@@ -506,9 +535,50 @@ function SurveySearch(this: any) {
             <p id="modal-description" style={textStyle}>
               {selectedCard ? selectedCard.surveyDiscription : ''}
             </p>
-            <Button onClick={() => navigate('/survey/Search')}>결과보기</Button>
-            <Button onClick={() => navigate('/survey/Search')}>참여하기</Button>
-            <Button onClick={closeCardModal}>닫기</Button>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                marginTop: 'auto',
+              }}
+            >
+              <Button onClick={() => navigate('/survey/Search')}>
+                결과보기
+              </Button>
+
+              <Button
+                onClick={() => navigate('/survey/Search')}
+                disabled={
+                  selectedCard?.surveyStatusName === '마감' ||
+                  !selectedCard?.attendCheckList ||
+                  selectedCard.attendCheckList.some((item) => item === false) ||
+                  selectedCard?.userNo === userInfo.loginUserNo
+                }
+              >
+                참여하기
+              </Button>
+              {selectedCard?.attendCheckList &&
+                selectedCard.attendCheckList.includes(false) &&
+                selectedCard?.surveyStatusName !== '마감' && ( // Adjusted condition check
+                  <Typography variant="body2" style={{ color: 'red' }}>
+                    이미 참여한 설문에는 다시 참여할 수 없습니다.
+                  </Typography>
+                )}
+              {selectedCard?.userNo === userInfo.loginUserNo &&
+                selectedCard?.surveyStatusName !== '마감' && ( // Adjusted condition check
+                  <Typography variant="body2" style={{ color: 'red' }}>
+                    본인이 작성한 설문에는 참여할 수 없습니다.
+                  </Typography>
+                )}
+              {selectedCard?.surveyStatusName === '마감' && ( // Condition remains the same
+                <Typography variant="body2" style={{ color: 'red' }}>
+                  마감된 설문입니다.
+                </Typography>
+              )}
+
+              <Button onClick={closeCardModal}>닫기</Button>
+            </div>
           </div>
         </Fade>
       </Modal>

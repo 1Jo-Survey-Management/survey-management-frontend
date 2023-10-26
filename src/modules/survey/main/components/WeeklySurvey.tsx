@@ -25,12 +25,17 @@ function WeeklySurvey() {
     },
     Slide: {
       width: '100%',
-      height: '150px',
+      height: '170px',
     },
   };
-  const fontFamily = "'Noto Sans KR', sans-serif";
+  const fontFamily = "'Sunflower', sans-serif";
   const textStyle = {
     fontFamily,
+    textOverflow: 'ellipsis',
+  };
+
+  const userInfo = {
+    loginUserNo: 1,
   };
 
   type CardData = {
@@ -40,14 +45,16 @@ function WeeklySurvey() {
     surveyImage: string;
     surveyPostAt: string;
     surveyClosingAt: string;
+    userNo: number;
     userNickName: string;
     userImage: string;
-    userNo: Array<number>;
+    attendUserNo: Array<number>;
     surveyStatusName: string;
     openStatusName: string;
     tag: Array<string>;
     surveyAttendCount: number;
     isDeleted: boolean;
+    attendCheckList: boolean;
   };
   const [openModal, setOpenModal] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
@@ -56,7 +63,7 @@ function WeeklySurvey() {
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
       case '진행':
-        return 'primary';
+        return '#7F81B4';
       case '작성':
         return 'secondary';
       default:
@@ -130,6 +137,17 @@ function WeeklySurvey() {
     },
   };
 
+  // const cardColor = () => {
+  //   if (
+  //     !selectedCard?.attendCheckList ||
+  //     selectedCard.attendCheckList.some((item) => item === false) ||
+  //     selectedCard?.userNo === userInfo.loginUserNo
+  //   ) {
+  //     return '#FFEAEA';
+  //   }
+  //   return '#D3D4F5';
+  // };
+
   return (
     <div>
       <Swiper style={styles.CardSwiper} {...swiperParams}>
@@ -151,11 +169,10 @@ function WeeklySurvey() {
                   <Card
                     variant="outlined"
                     sx={{
-                      minWidth: 100,
-                      maxWidth: 150,
-                      height: '130px',
-                      border: 2,
-                      borderColor: '#BCBCBC',
+                      width: '150px',
+                      height: '160px',
+                      border: 2.5,
+                      borderColor: '#FFEAEA',
                       borderRadius: 5,
                     }}
                     style={textStyle}
@@ -196,7 +213,6 @@ function WeeklySurvey() {
 
                         <Chip
                           label={card.surveyStatusName}
-                          color={getChipColor(card.surveyStatusName)}
                           variant="outlined"
                           sx={{
                             width: '50px',
@@ -206,7 +222,9 @@ function WeeklySurvey() {
                             '& .MuiChip-label': {
                               padding: 0,
                             },
+                            color: getChipColor(card.surveyStatusName),
                           }}
+                          style={textStyle}
                         />
                       </Stack>
                       {/* </Stack> */}
@@ -243,10 +261,15 @@ function WeeklySurvey() {
                         variant="h5"
                         component="div"
                         sx={{
-                          fontSize: 18,
+                          fontSize: 17,
                           fontWeight: 600,
                           marginBottom: '8px',
                           cursor: 'pointer',
+                          maxHeight: '45px', // 원하는 높이 설정
+                          overflow: 'hidden',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
                         }}
                         style={textStyle}
                       >
@@ -303,7 +326,7 @@ function WeeklySurvey() {
           </h2>
           <p style={textStyle}>
             날짜:
-            {selectedCard ? selectedCard.surveyPostAt : ''}~{' '}
+            {selectedCard ? selectedCard.surveyPostAt.slice(0, 10) : ''}~{' '}
             {selectedCard ? selectedCard.surveyClosingAt : ''}
           </p>
 
@@ -317,9 +340,40 @@ function WeeklySurvey() {
           <p id="modal-description" style={textStyle}>
             {selectedCard ? selectedCard.surveyDiscription : ''}
           </p>
-          <Button onClick={() => navigate('/survey/Search')}>결과보기</Button>
-          <Button onClick={() => navigate('/survey/Search')}>참여하기</Button>
-          <Button onClick={closeCardModal}>닫기</Button>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              marginTop: 'auto',
+            }}
+          >
+            <Button onClick={() => navigate('/survey/Search')}>결과보기</Button>
+            <Button
+              onClick={() => navigate('/survey/Search')}
+              disabled={
+                !selectedCard?.attendCheckList ||
+                selectedCard.attendCheckList.some((item) => item === false) ||
+                selectedCard?.userNo === userInfo.loginUserNo
+              }
+            >
+              참여하기
+            </Button>
+            {selectedCard?.attendCheckList &&
+              selectedCard.attendCheckList.includes(false) && (
+                <Typography variant="body2" style={{ color: 'red' }}>
+                  이미 참여한 설문에는 다시 참여할 수 없습니다.
+                </Typography>
+              )}
+
+            {selectedCard?.userNo === userInfo.loginUserNo && (
+              <Typography variant="body2" style={{ color: 'red' }}>
+                본인이 작성한 설문에는 참여할 수 없습니다.
+              </Typography>
+            )}
+
+            <Button onClick={closeCardModal}>닫기</Button>
+          </div>
         </div>
       </Modal>
     </div>

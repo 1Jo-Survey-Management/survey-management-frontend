@@ -26,7 +26,7 @@ function ClosingSurvey() {
     },
     Slide: {
       width: '100%',
-      height: '150px',
+      height: '170px',
     },
   };
 
@@ -37,19 +37,21 @@ function ClosingSurvey() {
     surveyImage: string;
     surveyPostAt: string;
     surveyClosingAt: string;
+    userNo: number;
     userNickName: string;
     userImage: string;
-    userNo: Array<number>;
+    attendUserNo: Array<number>;
     surveyStatusName: string;
     openStatusName: string;
     tag: Array<string>;
     surveyAttendCount: number;
     isDeleted: boolean;
+    attend_check: boolean;
   };
-
-  const fontFamily = "'Noto Sans KR', sans-serif";
+  const fontFamily = "'Sunflower', sans-serif";
   const textStyle = {
     fontFamily,
+    textOverflow: 'ellipsis',
   };
   const [openModal, setOpenModal] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
@@ -68,7 +70,7 @@ function ClosingSurvey() {
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
       case '진행':
-        return 'primary';
+        return '#7F81B4';
       case '작성':
         return 'secondary';
       default:
@@ -116,6 +118,7 @@ function ClosingSurvey() {
     },
   };
 
+  const cardColor = () => '#E4E4E4';
   return (
     <div>
       <div>
@@ -143,11 +146,10 @@ function ClosingSurvey() {
                     <Card
                       variant="outlined"
                       sx={{
-                        minWidth: 100,
-                        maxWidth: 150,
-                        height: '130px',
-                        border: 2,
-                        borderColor: '#BCBCBC',
+                        width: '150px',
+                        height: '160px',
+                        border: 2.5,
+                        borderColor: cardColor,
                         borderRadius: 5,
                       }}
                       style={textStyle}
@@ -161,7 +163,6 @@ function ClosingSurvey() {
                         }}
                       >
                         {/* 카드 내용 */}
-
                         <Stack
                           direction="row"
                           spacing={1}
@@ -189,7 +190,6 @@ function ClosingSurvey() {
 
                           <Chip
                             label={card.surveyStatusName}
-                            color={getChipColor(card.surveyStatusName)}
                             variant="outlined"
                             sx={{
                               width: '50px',
@@ -199,9 +199,12 @@ function ClosingSurvey() {
                               '& .MuiChip-label': {
                                 padding: 0,
                               },
+                              color: getChipColor(card.surveyStatusName),
                             }}
+                            style={textStyle}
                           />
                         </Stack>
+                        {/* </Stack> */}
 
                         <div
                           style={{
@@ -228,17 +231,22 @@ function ClosingSurvey() {
                           }}
                           style={textStyle}
                         >
-                          {/* {card.userNo} */}
                           {/* {card.surveyNo} */}
                         </Typography>
+
                         <Typography
                           variant="h5"
                           component="div"
                           sx={{
-                            fontSize: 18,
+                            fontSize: 17,
                             fontWeight: 600,
                             marginBottom: '8px',
                             cursor: 'pointer',
+                            maxHeight: '45px', // 원하는 높이 설정
+                            overflow: 'hidden',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
                           }}
                           style={textStyle}
                         >
@@ -296,8 +304,9 @@ function ClosingSurvey() {
               </h2>
               <p style={textStyle}>
                 날짜:
-                {selectedCard ? selectedCard.surveyPostAt : ''}~{' '}
-                {selectedCard ? selectedCard.surveyClosingAt : ''}
+                {selectedCard
+                  ? selectedCard.surveyPostAt.slice(0, 10)
+                  : ''}~ {selectedCard ? selectedCard.surveyClosingAt : ''}
               </p>
 
               <p>작성자: {selectedCard ? selectedCard.userNickName : ''}</p>
@@ -308,15 +317,30 @@ function ClosingSurvey() {
               <p id="modal-description">
                 {selectedCard ? selectedCard.surveyDiscription : ''}
               </p>
-              <Button onClick={() => navigate('/survey/Search')}>
-                결과보기
-              </Button>
-              <Button
-              // onClick={(reParticipation)}
+
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  marginTop: 'auto',
+                }}
               >
-                참여하기
-              </Button>
-              <Button onClick={closeCardModal}>닫기</Button>
+                <Button onClick={() => navigate('/survey/Search')}>
+                  결과보기
+                </Button>
+                <Button onClick={() => navigate('/survey/Search')} disabled>
+                  참여하기
+                </Button>
+                <Typography
+                  variant="body2"
+                  style={{ color: 'red' }}
+                  fontSize="12px"
+                >
+                  마감된 설문입니다.
+                </Typography>
+                <Button onClick={closeCardModal}>닫기</Button>
+              </div>
             </div>
           </Fade>
         </Modal>

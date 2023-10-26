@@ -6,10 +6,16 @@ import Typography from '@mui/material/Typography';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import axios from '../login/components/customApi';
+import '../../global.css';
 
 import MenuTool from './MenuTool';
 import './Header.css';
 
+const fontFamily = "'Gaegu', sans-serif";
+
+const textStyle = {
+  fontFamily,
+};
 function Header() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -42,20 +48,29 @@ function Header() {
   const isHomePage = location.pathname === '/';
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <MenuTool />
-          <Typography variant="h6" onClick={goMain}>
-            Logo survey
-          </Typography>
-          {isHomePage ? null : (
-            <Button onClick={logout} color="inherit">
-              로그아웃
-            </Button>
-          )}
-        </Toolbar>
-      </AppBar>
+    <Box sx={{ flexGrow: 1 }} height={100} color="D3D4F5">
+      {/* <AppBar position="static"> */}
+      <Toolbar>
+        <MenuTool />
+        <Typography
+          onClick={goMain}
+          variant="h6"
+          fontSize="50px"
+          color="#AFB2F0"
+          sx={{ fontStyle: textStyle }}
+        >
+          Logo survey
+        </Typography>
+        {isHomePage ? null : (
+          <Button
+            onClick={logout}
+            sx={{ color: '#AFB2F0', fontStyle: textStyle, fontSize: '20px' }}
+          >
+            Logout
+          </Button>
+        )}
+      </Toolbar>
+      {/* </AppBar> */}
     </Box>
   );
 }

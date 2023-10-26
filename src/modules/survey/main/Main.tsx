@@ -10,9 +10,10 @@ import '../../../global.css';
 
 function Main() {
   const navigate = useNavigate();
-  const fontFamily = "'Noto Sans KR', sans-serif";
+  const fontFamily = "'Poor Story', sans-serif";
   const textStyle = {
     fontFamily,
+    color: '#464646',
   };
 
   return (
@@ -21,7 +22,9 @@ function Main() {
       <WeeklySurvey />
       <h2 style={textStyle}>
         최근 등록된 설문
-        <Button onClick={() => navigate('/survey/search')}>전체 보기</Button>
+        <Button onClick={() => navigate('/survey/search')} style={textStyle}>
+          전체 보기
+        </Button>
       </h2>
 
       <RecentSurvey />

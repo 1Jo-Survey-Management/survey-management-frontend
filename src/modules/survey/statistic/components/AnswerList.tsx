@@ -6,7 +6,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { ListData } from '../types/SurveyStatistics';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 import '../../../../global.css';
 import { Selection } from '../types/SurveyStatisticTypes';
 
@@ -86,10 +87,7 @@ export default function AnswerList({ selectList }: selectionList) {
             {selectStats.map((row, index) => (
               <TableRow component="th" scope="row" key={index}>
                 <TableCell component="th" scope="row">
-                  {row.Answer}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {row.surveySubjectiveAnswerCount}
+                  {row.surveySubjectiveAnswer}
                 </TableCell>
                 <TableCell component="th" scope="row">
                   {row.surveySubjectiveAnswerCount}
