@@ -70,6 +70,6 @@ export default function GooglePieChart({
         options={options}
         style={{ marginTop: '0' }}
       />
-
+    </div>
   );
 }
