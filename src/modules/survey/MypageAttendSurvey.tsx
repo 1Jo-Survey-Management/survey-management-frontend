@@ -79,7 +79,7 @@ function Mypage() {
 
   const [state, setState] = useState('전체');
 
-  const userNo = 3;
+  const userNo = 1;
 
   const [searchQuery, setSearchQuery] = useState('');
 

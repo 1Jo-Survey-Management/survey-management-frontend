@@ -18,14 +18,25 @@ export default function Layout() {
     console.log(`로컬스토리지 토큰 : ${responseAcccessToken}`);
     axios.defaults.headers.common.Authorization = `Bearer ${responseAcccessToken}`;
   }, []);
+
+  console.log(`현재 위치 : ${location.pathname}`);
+
+  const isLoginPage = location.pathname === '/';
   return (
     <>
       <CssBaseline />
-      <Header />
+
+      {isLoginPage ? (
+        <LoginPage />
+      ) : (
+        <>
+          <Header />
           <Container>
             <Outlet />
           </Container>
-          {/* <Footer /> */}      
+          {/* <Footer /> */}
+        </>
+      )}
     </>
   );
 }
