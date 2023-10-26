@@ -10,19 +10,19 @@ import ModifySurvey from './modules/survey/modify/routers/ModifySurvey';
 import CreateationSurvey from './modules/survey/creation/routers/CreateationSurvey';
 import LoginDisplay from './modules/login/LoginDisplay';
 import StatisticsPage from './modules/survey/statistic/StatisticsPage';
+import Main from './modules/survey/main/Main';
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<LoginDisplay />} />
         <Route element={<Layout />}>
           <Route path="/register" element={<CreateationSurvey />} />
           <Route path="/survey/modify/:surveyNo" element={<ModifySurvey />} />
-          {/**
-           * FIXME: redirect mypage 내가 작성한 설문 페이지로 변경 예정
-           */}
-           <Route path="/login/LoginDisplay" element={<LoginDisplay />} />
-           <Route path="/survey/statistics" element={<StatisticsPage />} />
+          <Route path="/login/LoginDisplay" element={<LoginDisplay />} />
+          <Route path="/survey/statistics" element={<StatisticsPage />} />
+          <Route path="/survey/main" element={<Main />} />
           <Route path="/survey/modify" element={<Navigate to="/login" />} />
         </Route>
       </Routes>
