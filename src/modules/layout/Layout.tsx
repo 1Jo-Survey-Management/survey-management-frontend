@@ -26,11 +26,12 @@ export default function Layout() {
     <>
       <CssBaseline />
 
+      <Header />
+
       {isLoginPage ? (
         <LoginPage />
       ) : (
         <>
-          <Header />
           <Container>
             <Outlet />
           </Container>
