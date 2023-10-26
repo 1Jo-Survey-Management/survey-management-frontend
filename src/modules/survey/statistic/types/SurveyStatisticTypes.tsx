@@ -1,14 +1,17 @@
 import React from 'react';
 
-export interface SurveyInfoProps {
-  surveyNo: number; //설문지번호
-  surveyTitle: string; //설문지제목
-  surveyDescription: string; //설문지설명
-  surveyQuestionTitle: string; //설문문항제목
-
+export interface Selection {
+  surveyPostAt: string;
+  userNickname: string;
+  surveyNo: number;
+  surveyTitle: string;
+  surveyQuestionNo: number;
+  surveyQuestionTitle: string;
   questionTypeNo: number;
   selectionNo: number;
   selectionValue: string;
   selectionCount: number;
-  questionAttendCount: number;
+  surveySubjectiveAnswer: string;
+  surveySubjectiveAnswerCount: number;
+  surveyWriter: string;
 }

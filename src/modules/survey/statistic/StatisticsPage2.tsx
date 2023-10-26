@@ -5,28 +5,35 @@ import {
   CardContent,
   Typography,
   useMediaQuery,
+  Grid,
   Button,
 } from '@mui/material';
+import { Word } from 'react-wordcloud';
+import AnswerList from './components/AnswerList';
 import '../../../global.css';
 
+import { GooglePie } from './components/GooglePie';
 import axios from 'axios';
 import Divider from '@mui/material/Divider';
-import { Word } from 'react-wordcloud';
-import { GooglePie } from './components/GooglePie';
-import TitleFig from './imgs/surveyTitlepng.png';
-import { PieData } from './types/SurveyStatistics';
-import GooglePieChart from './components/GooglePieChart';
-import AnswerList from './components/AnswerList';
 import NumOneType from './SurveyQuestionType/NumOneType';
-
+import TitleFig from './imgs/surveyTitlepng.png';
 import WordCloud from './components/WordCloud';
 
 const styles = {
   card: {
-    // styles here
+    boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
+    marginBottom: '30px',
+    borderRadius: '3%',
   },
   cardTitle: {
-    // styles here
+    backgroundImage: `url(${TitleFig})`, // 이미지 파일의 경로 설정
+    backgroundSize: 'cover', // 배경 이미지 크기 조절 옵션
+    backgroundRepeat: 'no-repeat', // 배경 이미지 반복 옵션
+
+    boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
+    marginBottom: '30px',
+    marginTop: '20px',
+    borderRadius: '3%',
   },
   cardContent: {},
   subjectContent: {
@@ -34,13 +41,17 @@ const styles = {
     borderRadius: '3%',
   },
   typography: {
-    // styles here
+    fontSize: '25px',
+    color: '#757575',
   },
   titleText: {
-    // styles here
+    fontSize: '20px',
+    textAlign: 'center',
+    // color: '#757575',
   },
   surveyInfo: {
-    // styles here
+    fontSize: '15px',
+    textAlign: 'right',
   },
 };
 
@@ -66,7 +77,9 @@ export interface Selection {
 }
 
 export default function StatisticsPage2() {
+  // 전체 정보 상태 관리
   const [selectStat, setSelectStat] = useState<Selection[]>([]);
+  const [userNickname, setUserNickname] = useState('');
   const [totalSelectionCount, setTotalSelectionCount] = useState<number>();
   const [surveyTitle, setSurveyTitle] = useState('');
   const [surveyNo, setSurveyNo] = useState();
@@ -137,6 +150,8 @@ export default function StatisticsPage2() {
     return itemGroups;
   };
 
+  const isSmallScreen = useMediaQuery('(max-width: 500px)');
+  const pieChartWidth = isSmallScreen ? '100%' : '500px';
   // const wordCloudWidth = isSmallScreen ? '100%' : '500px';
 
   return (

@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Chart } from 'react-google-charts';
-import { PieData } from '../types/SurveyStatistics';
 import '../../../../global.css';
 
-const fontFamily = "'Noto Sans KR', sans-serif";
-const textStyle = {
-  fontFamily,
-};
-
 interface GooglePieChartProps {
-  selectionAnswer: PieData[];
+  selectionAnswer: [string, number][];
 }
 
 export default function GooglePieChart({
@@ -18,6 +12,11 @@ export default function GooglePieChart({
   const [options, setOptions] = useState({
     legend: 'right',
   });
+
+  useEffect(() => {
+    console.log('google Chart Data');
+    console.log(selectionAnswer);
+  }, [selectionAnswer]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,29 +36,35 @@ export default function GooglePieChart({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const questionAnswerCount = (data: PieData[]): number => {
-    let sum = 0;
-    data.forEach((item) => {
-      sum += item.selectionCount;
-    });
-    return sum;
+  const extractChartData = (data: [string, number][]): [string, unknown][] =>
+    data.map((item) => [item[0], item[1]]);
+
+  const aggregateData = (data: any[]) => {
+    const aggregatedData = [];
+    const map = new Map();
+    for (const item of data) {
+      if (map.has(item[0])) {
+        const index = map.get(item[0]);
+        aggregatedData[index][1] += item[1];
+      } else {
+        map.set(item[0], aggregatedData.length);
+        aggregatedData.push([item[0], item[1]]);
+      }
+    }
+    return aggregatedData;
   };
 
-  const totalSelectionCount = questionAnswerCount(selectionAnswer);
-
-  const extractChartData = (data: PieData[]): [string, unknown][] =>
-    data.map((item) => [item.selectionValue, item.selectionCount]);
-
   const chartData = extractChartData(selectionAnswer);
-  chartData.unshift(['selectionValue', 'selectionCount']);
+
+  const aggregatedChartData = aggregateData(chartData);
+  aggregatedChartData.unshift(['selectionValue', 'selectionCount']);
 
   console.log(chartData);
   return (
     <div style={{ width: '100%', minWidth: '330px' }}>
-      <p style={textStyle}>응답 수: {totalSelectionCount}</p>
       <Chart
         chartType="PieChart"
-        data={chartData} // [['selectionValue', 'selectionCount'], ['아메리카노', 1], ['라뗴',]]
+        data={aggregatedChartData}
         width="100%"
         height="400px"
         options={options}

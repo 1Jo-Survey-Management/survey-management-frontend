@@ -6,7 +6,7 @@ import Mypage from '../survey/mypage/MypageUserModify';
 import MypageAttend from '../survey/MypageAttendSurvey';
 import AttendSurvey from '../survey/attend/routers/AttendSurvey';
 import CreationSurvey from '../survey/creation/routers/CreateationSurvey';
-import StatisticsPage from '../survey/statistic/StatisticsPage2';
+import StatisticsPage from '../survey/statistic/StatisticsPage';
 
 /**
  * 각 페이지에 대한 라우팅 경로 설정입니다
