@@ -27,7 +27,7 @@ const responsiveOptions: Options = {
   fontFamily: 'Arial',
   colors: ['#FF5733', '#FFA233', '#FFCC33', '#FF33E9', '#33FF5D', '#339BFF'],
   rotations: 30,
-  rotationAngles: [20, 10],
+  rotationAngles: [20, 50],
   deterministic: false,
   enableOptimizations: false,
   enableTooltip: false,
@@ -40,9 +40,9 @@ const responsiveOptions: Options = {
   transitionDuration: 0,
   svgAttributes: {
     xmlns: 'http://www.w3.org/2000/svg',
-    viewBox: '20 20 250 250',
-    height: '200',
-    width: '200',
+    viewBox: '55 50 250 250',
+    height: '300',
+    width: '381',
   },
   textAttributes: {
     fontWeight: 'bold',

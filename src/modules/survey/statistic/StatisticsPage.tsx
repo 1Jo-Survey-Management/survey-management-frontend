@@ -42,13 +42,15 @@ const styles = {
     color: '#757575',
   },
   titleText: {
-    fontSize: '60px',
+    fontSize: '40px',
     textAlign: 'center',
+    fontWeight: 'bold',
   },
   componentText: {
-    fontSize: '30px',
-    textAlign: 'center',
+    fontSize: '25px',
+    textAlign: 'left',
     margin: '10px',
+    fontWeight: 'bold',
   },
   surveyInfo: {
     fontSize: '15px',
@@ -74,7 +76,7 @@ export default function StatisticsPage() {
   useEffect(() => {
     const fetchData = async () => {
       await axios
-        .get(`http://localhost:8080/survey/resultall?surveyno=1`)
+        .get(`http://localhost:8080/api/survey/resultall?surveyno=1`)
         .then((response) => {
           setSelectStat(response.data.content);
           setTotalSelectionCount(response.data.content[0].totalAttend);
@@ -231,6 +233,7 @@ export default function StatisticsPage() {
                     <Typography style={textStyle} >
                       ## 단답형의 답들은 다음과 같은 것들이 있었습니다!
                     </Typography>
+                    <br/>
                     <Box sx={styles.subjectContent}>
                       <WordCloud
                         wordCloud={shortSubData.map((item) => ({
@@ -239,7 +242,10 @@ export default function StatisticsPage() {
                         }))}
                       />
                     </Box>
-
+                    <br/>
+                    <Typography style={textStyle} >
+                      답변 랭킹!!
+                    </Typography>
                     <AnswerList selectList={shortSubData} />
                   </>
                 )}
