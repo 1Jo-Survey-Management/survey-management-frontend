@@ -15,7 +15,6 @@ import TitleFig from './imgs/surveyTitlepng.png';
 import WordCloud from './components/WordCloud';
 import GooglePieChart from './components/GooglePieChart';
 import { Selection } from './types/SurveyStatisticTypes';
-import { json } from 'stream/consumers';
 
 const styles = {
   card: {
@@ -62,14 +61,13 @@ const textStyle = {
   fontFamily,
 };
 
-export default function StatisticsPage2() {
+export default function StatisticsPage() {
   const [selectStat, setSelectStat] = useState<Selection[]>([]);
-  const [userNickname, setUserNickname] = useState('');
   const [totalSelectionCount, setTotalSelectionCount] = useState<number>();
-  const [surveyTitle, setSurveyTitle] = useState('');
-  const [surveyNo, setSurveyNo] = useState();
-  const [surveyPostAt, setSurveyPostAt] = useState('');
-  const [surveyWriter, setSurveyWriter] = useState('');
+  const [surveyTitle, setSurveyTitle] = useState<string>();
+  const [surveyNo, setSurveyNo] = useState<number>();
+  const [surveyPostAt, setSurveyPostAt] = useState<string>();
+  const [surveyWriter, setSurveyWriter] = useState<string>();
 
   const [allItems, setAllItems] = useState([]);
 
@@ -79,7 +77,6 @@ export default function StatisticsPage2() {
         .get(`http://localhost:8080/survey/resultall?surveyno=1`)
         .then((response) => {
           setSelectStat(response.data.content);
-          setUserNickname(response.data.content[0].userNickname);
           setTotalSelectionCount(response.data.content[0].totalAttend);
           setSurveyTitle(response.data.content[0].surveyTitle);
           setSurveyNo(response.data.content[0].surveyNo);
