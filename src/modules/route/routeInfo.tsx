@@ -6,6 +6,7 @@ import Mypage from '../survey/mypage/MypageUserModify';
 import MypageAttend from '../survey/MypageAttendSurvey';
 import AttendSurvey from '../survey/attend/routers/AttendSurvey';
 import CreationSurvey from '../survey/creation/routers/CreateationSurvey';
+import ModifySurvey from '../survey/modify/routers/ModifySurvey';
 import StatisticsPage from '../survey/statistic/StatisticsPage';
 
 /**
@@ -28,8 +29,8 @@ export const routeInfo = (path: string) => {
       return <AttendSurvey />;
     case '/survey/register':
       return <CreationSurvey />;
-    case '/survey/main':
-      return <Main />;
+    case '/survey/modify':
+      return <ModifySurvey />;
     case '/survey/statistics':
       return <StatisticsPage />;
     case '/survey/register':

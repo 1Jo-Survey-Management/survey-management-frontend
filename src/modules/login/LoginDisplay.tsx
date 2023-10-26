@@ -122,7 +122,7 @@ function LoginDisplay() {
       navigate('/survey/main');
     }
 
-    //Authorization code를 받으면 백 서버로 요청을 보내준다.
+    // Authorization code를 받으면 백 서버로 요청을 보내준다.
     if (accessCode) {
       axios
         .get(redirectUri, {
@@ -168,21 +168,22 @@ function LoginDisplay() {
               return;
             }
             // 회원도 존재하고 브라우저에 로그인도 했었던 회원
-            else {
-              if (responseExpiresIn) {
-                // localStrage에 회원 프로필 정보 저장하기
-                localStorage.setItem('userNo', responseUserNo);
-                localStorage.setItem('userNickname', responseNickName);
-                localStorage.setItem('userImage', responseImage);
-                localStorage.setItem('accessToken', responseAccessToken);
-                localStorage.setItem('expiresIn', responseExpiresIn);
-              }
 
-              axios.defaults.headers.common['Authorization'] =
-                'Bearer ' + responseAccessToken;
-
-              navigate('/survey/main');
+            if (responseExpiresIn) {
+              // localStrage에 회원 프로필 정보 저장하기
+              localStorage.setItem('userNo', responseUserNo);
+              localStorage.setItem('userNickname', responseNickName);
+              localStorage.setItem('userImage', responseImage);
+              localStorage.setItem('accessToken', responseAccessToken);
+              localStorage.setItem('expiresIn', responseExpiresIn);
             }
+
+            const expiresAt = localStorage.getItem('expiresIn');
+            console.log(`유효시간 확인 : ${expiresAt}`);
+
+            // axios.defaults.headers.common.Authorization = `Bearer ${responseAccessToken}`;
+
+            navigate('/survey/main');
 
             // 현 브라우저에서 로그인 한적이 있어 localStorage에 토큰이 있는 회원
             if (responseAccessToken === localStorageAccessToken) {
@@ -212,9 +213,7 @@ function LoginDisplay() {
             localStorage.setItem('accessToken', responseAccessToken);
             localStorage.setItem('expiresIn', responseExpiresIn);
 
-            axios.defaults.headers.common['Authorization'] =
-              'Bearer ' + responseAccessToken;
-            responseAccessToken;
+            axios.defaults.headers.common.Authorization = `Bearer ${responseAccessToken}`;
 
             setShowModal(true);
           }

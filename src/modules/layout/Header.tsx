@@ -32,7 +32,7 @@ function Header() {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('expiresIn');
 
-    axios.defaults.headers.common['Authorization'] = null;
+    axios.defaults.headers.common.Authorization = null;
 
     navigate('/');
   };

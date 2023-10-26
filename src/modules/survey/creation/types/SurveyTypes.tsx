@@ -10,12 +10,12 @@ export interface SurveyInfoProps {
   surveyDescription: string;
   surveyStatusNo: number;
   surveyPostAt?: string;
-  userNo: string | null;
 }
 
 export interface CreateSurveyInfoProps {
   surveyInfo: SurveyInfoProps;
   setSurveyInfo: React.Dispatch<React.SetStateAction<SurveyInfoProps>>;
+  previewImage?: string;
   setSurveyImage: React.Dispatch<React.SetStateAction<File | undefined>>;
 }
 
@@ -55,4 +55,17 @@ export interface SurveyProps {
   surveyInfo: SurveyInfoProps;
   questions: QuestionProps[];
   selections: SelectionProps[];
+}
+
+export interface DragDropQuestionProps {
+  questions: QuestionProps[];
+  setQuestions: React.Dispatch<React.SetStateAction<QuestionProps[]>>;
+}
+
+export interface FloatingActionButtonsProps {
+  onClickAddQuestion: () => void;
+  surveyInfo: SurveyInfoProps;
+  surveyImage: File | undefined;
+  questions: QuestionProps[];
+  previewImageUrl?: string;
 }

@@ -16,10 +16,15 @@ function SurveyPreview({
   surveyInfo,
   surveyImage,
   questions,
+  previewImageUrl,
 }: PreviewSurveyProps) {
   return (
     <div>
-      <PreviewSurveyInfo surveyInfo={surveyInfo} surveyImage={surveyImage} />
+      <PreviewSurveyInfo
+        surveyInfo={surveyInfo}
+        surveyImage={surveyImage}
+        previewImageUrl={previewImageUrl || undefined}
+      />
       <PreviewQuestion questions={questions} />
     </div>
   );

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
+import { Container } from '@mui/material';
 import Header from './Header';
-import Body from './Body';
 import LoginPage from '../login/LoginDisplay';
 import axios from '../login/components/customApi';
 
@@ -15,21 +15,26 @@ export default function Layout() {
 
   useEffect(() => {
     const responseAcccessToken = localStorage.getItem('accessToken');
+    console.log(`로컬스토리지 토큰 : ${responseAcccessToken}`);
+    axios.defaults.headers.common.Authorization = `Bearer ${responseAcccessToken}`;
+  }, []);
 
-    axios.defaults.headers.common['Authorization'] =
-      'Bearer ' + responseAcccessToken;
-  }, [location.pathname]);
+  console.log(`현재 위치 : ${location.pathname}`);
 
   const isLoginPage = location.pathname === '/';
   return (
     <>
       <CssBaseline />
+      <Header />
+
       {isLoginPage ? (
         <LoginPage />
       ) : (
         <>
           <Header />
-          <Body />
+          <Container>
+            <Outlet />
+          </Container>
           {/* <Footer /> */}
         </>
       )}

@@ -46,10 +46,16 @@ const styles = {
 function PreviewSurveyInfo({
   surveyInfo,
   surveyImage,
+  previewImageUrl,
 }: PreviewSurveyInfoProps) {
   const [selectedImage, setSelectedImage] = useState<string>('');
 
   useEffect(() => {
+    if (surveyImage === undefined && previewImageUrl !== undefined) {
+      setSelectedImage(previewImageUrl);
+      return;
+    }
+
     if (surveyImage !== undefined) {
       const imageUrl: string = URL.createObjectURL(surveyImage);
 
@@ -77,11 +83,7 @@ function PreviewSurveyInfo({
           {selectedImage && (
             <div>
               <Box css={styles.iamgeBox}>
-                <img
-                  src={selectedImage}
-                  alt="업로드된 이미지"
-                  css={styles.image}
-                />
+                <img src={selectedImage} alt="설문 이미지" css={styles.image} />
               </Box>
             </div>
           )}
