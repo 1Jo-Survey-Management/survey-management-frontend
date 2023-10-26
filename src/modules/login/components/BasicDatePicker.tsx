@@ -18,24 +18,20 @@ interface InputBirthDateProps {
 export default function ResponsiveDatePickers({
   onChange,
 }: InputBirthDateProps) {
-  // const [selectedDateString, setSelectedDateString] = useState('');
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(
     dayjs('')
   );
 
   const handleDateChange = (date: dayjs.Dayjs | null) => {
     if (date === null) {
-      // null 값인 경우에 대한 처리
       setSelectedDate(date);
       console.log('No date selected');
     } else if (dayjs.isDayjs(date)) {
-      // dayjs 객체인 경우 Date 객체로 변환 후 처리
       const jsDate = date.toDate();
       const year = jsDate.getFullYear();
       const month = (jsDate.getMonth() + 1).toString().padStart(2, '0');
       const day = jsDate.getDate().toString().padStart(2, '0');
       const formattedDate = `${year}-${month}-${day}`;
-      console.log(formattedDate);
 
       setSelectedDate(date);
       onChange(formattedDate);

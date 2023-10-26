@@ -24,7 +24,6 @@ function Header() {
     navigate('/');
   };
 
-  // 로그아웃 하면 localStorage의 accessToken을 지워주고 로그인 페이지로 redirect
   const logout = () => {
     console.log('logout');
 

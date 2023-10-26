@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../../login/components/customApi';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -69,7 +69,7 @@ function WeeklySurvey() {
       try {
         // weekly 데이터
         const weeklyResponse = await axios.get(
-          'http://localhost:8000/surveys/weekly'
+          'http://localhost:8080/surveys/weekly'
         );
 
         if (weeklyResponse.data.length > 0) {
@@ -78,7 +78,7 @@ function WeeklySurvey() {
         } else {
           // weekly 데이터가 없으면 recent 데이터
           const recentResponse = await axios.get(
-            'http://localhost:8000/surveys/recent'
+            'http://localhost:8080/surveys/recent'
           );
           setCardList(recentResponse.data);
         }
@@ -223,7 +223,7 @@ function WeeklySurvey() {
                           fontFamily,
                         }}
                       >
-                        {card.surveyClosingAt.slice(0, 10)}
+                        {card.surveyClosingAt}
                       </div>
                       <Typography
                         variant="h5"
@@ -303,8 +303,8 @@ function WeeklySurvey() {
           </h2>
           <p style={textStyle}>
             날짜:
-            {selectedCard ? selectedCard.surveyPostAt.slice(0, 10) : ''}~{' '}
-            {selectedCard ? selectedCard.surveyClosingAt.slice(0, 10) : ''}
+            {selectedCard ? selectedCard.surveyPostAt : ''}~{' '}
+            {selectedCard ? selectedCard.surveyClosingAt : ''}
           </p>
 
           <p style={textStyle}>

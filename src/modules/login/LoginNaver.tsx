@@ -8,7 +8,7 @@ const buttonStyle = {
 };
 
 const imageStyle = {
-  width: '40%',
+  width: '60%',
 };
 
 /**
