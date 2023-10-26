@@ -43,7 +43,7 @@ export default function FloatingActionButtons() {
       <Fab
         sx={styles.fabStyles}
         color="primary"
-        onClick={() => navigate('/survey/')}
+        onClick={() => navigate('/survey/register')}
       >
         <AddIcon />
       </Fab>

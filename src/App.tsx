@@ -9,6 +9,7 @@ import Layout from './modules/layout/Layout';
 import ModifySurvey from './modules/survey/modify/routers/ModifySurvey';
 import CreateationSurvey from './modules/survey/creation/routers/CreateationSurvey';
 import LoginDisplay from './modules/login/LoginDisplay';
+import StatisticsPage from './modules/survey/statistic/StatisticsPage';
 
 function App() {
   return (
@@ -20,8 +21,9 @@ function App() {
           {/**
            * FIXME: redirect mypage 내가 작성한 설문 페이지로 변경 예정
            */}
+           <Route path="/login/LoginDisplay" element={<LoginDisplay />} />
+           <Route path="/survey/statistics" element={<StatisticsPage />} />
           <Route path="/survey/modify" element={<Navigate to="/login" />} />
-          <Route path="/login" element={<LoginDisplay />} />
         </Route>
       </Routes>
     </Router>

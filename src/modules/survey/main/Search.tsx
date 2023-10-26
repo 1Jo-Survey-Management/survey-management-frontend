@@ -74,7 +74,7 @@ function SurveySearch(this: any) {
     const fetchData = async () => {
       if (selectedState === '전체(모든 카드)') {
         const response = await axios.get(
-          `http://localhost:8000/surveys/surveyall?page=${page}`
+          `http://localhost:8080/surveys/surveyall?page=${page}`
         );
         if (response.data.length === 0) {
           setHasMore(false);
@@ -88,7 +88,7 @@ function SurveySearch(this: any) {
         }
       } else if (selectedState === '진행') {
         const response = await axios.get(
-          `http://localhost:8000/surveys/select-post?page=${page}`
+          `http://localhost:8080/surveys/select-post?page=${page}`
         );
 
         if (response.data.length === 0) {
@@ -122,28 +122,28 @@ function SurveySearch(this: any) {
     fetchData();
   }, [page, selectedState]);
 
-  useEffect(() => {
-    const sortedCardData = [...filteredData].sort((a, b) => {
-      // 날짜 형식을 startDate 객체로 변환
-      const dateA = new Date(a.surveyPostAt.replace('~', ''));
-      const dateB = new Date(b.surveyPostAt.replace('~', ''));
+  // useEffect(() => {
+  //   const sortedCardData = [...filteredData].sort((a, b) => {
+  //     // 날짜 형식을 startDate 객체로 변환
+  //     const dateA = new Date(a.surveyPostAt.replace('~', ''));
+  //     const dateB = new Date(b.surveyPostAt.replace('~', ''));
 
-      if (a.surveyStatusName === '마감' && b.surveyStatusName !== '마감') {
-        return 1; // a가 "마감"이고 b가 "마감"이 아닌 경우, a가 b보다 뒤에 위치
-      }
-      if (a.surveyStatusName !== '마감' && b.surveyStatusName === '마감') {
-        return -1; // a가 "마감"이 아니고 b가 "마감"인 경우, a가 b보다 앞에 위치
-      }
+  //     if (a.surveyStatusName === '마감' && b.surveyStatusName !== '마감') {
+  //       return 1; // a가 "마감"이고 b가 "마감"이 아닌 경우, a가 b보다 뒤에 위치
+  //     }
+  //     if (a.surveyStatusName !== '마감' && b.surveyStatusName === '마감') {
+  //       return -1; // a가 "마감"이 아니고 b가 "마감"인 경우, a가 b보다 앞에 위치
+  //     }
 
-      // startDate 객체를 비교하여 정렬
-      if (dateA === dateB) {
-        return 0;
-      }
-      return dateA < dateB ? -1 : 1;
-    });
+  //     // startDate 객체를 비교하여 정렬
+  //     if (dateA === dateB) {
+  //       return 0;
+  //     }
+  //     return dateA < dateB ? -1 : 1;
+  //   });
 
-    setFilteredData(sortedCardData);
-  }, []);
+  //   setFilteredData(sortedCardData);
+  // }, []);
 
   // const handleSearchOptionChange = (
   //   event: SelectChangeEvent<string | string[]>
@@ -172,22 +172,22 @@ function SurveySearch(this: any) {
       return includesSearchTerm && matchesState;
     });
 
-    const filteredWithoutInProgress =
-      selectedState === '마감'
-        ? filtered.filter((card) => card.surveyStatusName !== '진행')
-        : filtered;
+    // const filteredWithoutInProgress =
+    //   selectedState === '마감'
+    //     ? filtered.filter((card) => card.surveyStatusName !== '진행')
+    //     : filtered;
 
-    const sortedCardData = [...filteredWithoutInProgress].sort((a, b) => {
-      const dateA = new Date(a.surveyPostAt).getTime();
-      const dateB = new Date(b.surveyPostAt).getTime();
+    // const sortedCardData = [...filteredWithoutInProgress].sort((a, b) => {
+    //   const dateA = new Date(a.surveyPostAt);
+    //   const dateB = new Date(b.surveyPostAt);
 
-      if (dateA === dateB) {
-        return 0;
-      }
-      return dateA > dateB ? -1 : 1;
-    });
+    //   if (dateA === dateB) {
+    //     return 0;
+    //   }
+    //   return dateA > dateB ? -1 : 1;
+    // });
 
-    setFilteredData(sortedCardData);
+    // setFilteredData(sortedCardData);
   };
   const openCardModal = (card: CardData) => {
     setSelectedCard(card);
@@ -403,7 +403,7 @@ function SurveySearch(this: any) {
                       fontFamily,
                     }}
                   >
-                    {card.surveyClosingAt.slice(0, 10)}
+                    {card.surveyClosingAt}
                   </div>
                   <Typography
                     variant="h5"
@@ -490,8 +490,8 @@ function SurveySearch(this: any) {
             </h2>
             <p style={textStyle}>
               날짜:
-              {selectedCard ? selectedCard.surveyPostAt.slice(0, 10) : ''}~{' '}
-              {selectedCard ? selectedCard.surveyClosingAt.slice(0, 10) : ''}
+              {selectedCard ? selectedCard.surveyPostAt : ''}~{' '}
+              {selectedCard ? selectedCard.surveyClosingAt : ''}
             </p>
 
             <p style={textStyle}>

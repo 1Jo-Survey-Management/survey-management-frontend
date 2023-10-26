@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../../login/components/customApi';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -58,7 +58,7 @@ function ClosingSurvey() {
 
   useEffect(() => {
     const data = async () => {
-      const card = await axios.get('http://localhost:8000/surveys/closing');
+      const card = await axios.get('http://localhost:8080/surveys/closing');
 
       setCardList(card.data);
     };
@@ -215,7 +215,7 @@ function ClosingSurvey() {
                             fontFamily,
                           }}
                         >
-                          {card.surveyClosingAt.slice(0, 10)}
+                          {card.surveyClosingAt}
                         </div>
                         <Typography
                           variant="h5"
@@ -296,10 +296,8 @@ function ClosingSurvey() {
               </h2>
               <p style={textStyle}>
                 날짜:
-                {selectedCard
-                  ? selectedCard.surveyPostAt.slice(0, 10)
-                  : ''}~{' '}
-                {selectedCard ? selectedCard.surveyClosingAt.slice(0, 10) : ''}
+                {selectedCard ? selectedCard.surveyPostAt : ''}~{' '}
+                {selectedCard ? selectedCard.surveyClosingAt : ''}
               </p>
 
               <p>작성자: {selectedCard ? selectedCard.userNickName : ''}</p>

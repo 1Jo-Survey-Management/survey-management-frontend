@@ -1,5 +1,5 @@
 import * as React from 'react';
-import SurveyMain from '../survey/main/Main';
+import Main from '../survey/main/Main';
 import Search from '../survey/main/Search';
 import LoginDisplay from '../login/LoginDisplay';
 import Mypage from '../survey/mypage/MypageUserModify';
@@ -17,11 +17,9 @@ import StatisticsPage from '../survey/statistic/StatisticsPage';
  */
 export const routeInfo = (path: string) => {
   switch (path) {
-    case '/survey/main':
-      return <SurveyMain />;
     case '/login/LoginDisplay':
       return <LoginDisplay />;
-    case '/survey/Search':
+    case '/survey/search':
       return <Search />;
     case '/survey/MypageAttend':
       return <MypageAttend />;
@@ -35,7 +33,9 @@ export const routeInfo = (path: string) => {
       return <ModifySurvey />;
     case '/survey/statistics':
       return <StatisticsPage />;
+    case '/survey/register':
+      return <CreationSurvey />;
     default:
-      return <LoginDisplay />;
+      return <Main />;
   }
 };

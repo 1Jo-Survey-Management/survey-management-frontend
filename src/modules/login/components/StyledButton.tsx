@@ -8,7 +8,7 @@ interface ColorButtonsProps {
 }
 
 const defaultProps: Partial<ColorButtonsProps> = {
-  onClick: () => {}, // 아무 동작도 하지 않는 기본 콜백 함수를 설정
+  onClick: () => {},
 };
 
 const style = {
@@ -25,7 +25,7 @@ export default function StyledButton({
   buttonText,
   onClick,
 }: ColorButtonsProps) {
-  const handleClick = onClick; // 클릭 이벤트 핸들러가 지정되어 있다면 실행
+  const handleClick = onClick;
 
   return (
     <Stack spacing={2} direction="column" sx={style}>
