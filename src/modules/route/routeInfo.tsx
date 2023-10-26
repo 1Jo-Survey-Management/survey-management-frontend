@@ -1,11 +1,12 @@
 import * as React from 'react';
-import SurveyMain from '../survey/main/Main';
+import Main from '../survey/main/Main';
 import Search from '../survey/main/Search';
 import LoginDisplay from '../login/LoginDisplay';
 import Mypage from '../survey/mypage/MypageUserModify';
 import MypageAttend from '../survey/MypageAttendSurvey';
 import AttendSurvey from '../survey/attend/routers/AttendSurvey';
 import CreationSurvey from '../survey/creation/routers/CreateationSurvey';
+import ModifySurvey from '../survey/modify/routers/ModifySurvey';
 import StatisticsPage from '../survey/statistic/StatisticsPage';
 
 /**
@@ -16,8 +17,6 @@ import StatisticsPage from '../survey/statistic/StatisticsPage';
  */
 export const routeInfo = (path: string) => {
   switch (path) {
-    case '/survey/main':
-      return <SurveyMain />;
     case '/login/LoginDisplay':
       return <LoginDisplay />;
     case '/survey/search':
@@ -28,11 +27,15 @@ export const routeInfo = (path: string) => {
       return <Mypage />;
     case '/survey/Attend':
       return <AttendSurvey />;
+    case '/survey/register':
+      return <CreationSurvey />;
+    case '/survey/modify':
+      return <ModifySurvey />;
     case '/survey/statistics':
       return <StatisticsPage />;
     case '/survey/register':
       return <CreationSurvey />;
     default:
-      return <LoginDisplay />;
+      return <Main />;
   }
 };

@@ -23,13 +23,12 @@ export default function ComposedTextField({ onChange }: InputNickNameProps) {
     const { value } = event.target;
     setNickName(value);
 
-    // validation 체크 (예: 닉네임이 비어 있는지 확인)
     if (value.trim() === '' || value.trim() === null) {
-      setError(true); // 에러 발생
-      onChange(value); // 데이터 변경 함수 호출하여 값 전달
+      setError(true);
+      onChange(value);
     } else {
-      onChange(value); // 데이터 변경 함수 호출하여 값 전달
-      setError(false); // 에러 해제
+      onChange(value);
+      setError(false);
     }
   };
 
@@ -49,7 +48,7 @@ export default function ComposedTextField({ onChange }: InputNickNameProps) {
           aria-describedby="component-helper-text"
           value={nickName}
           onChange={handleInputChange}
-          error={error} // 에러 상태에 따라 스타일을 변경
+          error={error}
         />
         {error && (
           <FormHelperText id="component-helper-text" error>

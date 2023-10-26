@@ -24,28 +24,30 @@ function Header() {
     navigate('/survey/main');
   };
 
+  const login = () => {
+    console.log('login');
+
+    navigate('/');
+  };
+
   const logout = () => {
     console.log('logout');
 
-    axios
-      .get('/login/logout')
-      .then((response) => {
-        const respData = response.data;
-        console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
-        axios.defaults.headers.common.Authorization = null;
+    axios.get('/login/logout').then((response) => {
+      const respData = response.data;
+      console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
+      axios.defaults.headers.common.Authorization = null;
 
-        if (respData === '') {
-          console.log('API 요청 실패');
-        }
+      if (respData === '') {
+        console.log('API 요청 실패');
+      }
+    });
 
-        navigate('/');
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    navigate('/');
   };
 
   const isHomePage = location.pathname === '/';
+  const hasAccessToken = localStorage.getItem('accessToken');
 
   return (
     <Box sx={{ flexGrow: 1 }} height={100} color="D3D4F5">

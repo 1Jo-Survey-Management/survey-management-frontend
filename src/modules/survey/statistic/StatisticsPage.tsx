@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
-import axios from 'axios';
+import axios from '../../login/components/customApi';
 import Divider from '@mui/material/Divider';
 import TitleFig from './imgs/surveyTitlepng.png';
 import WordCloud from './components/WordCloud';
@@ -32,7 +32,7 @@ const styles = {
     marginTop: '20px',
     borderRadius: '3%',
   },
-  cardContent: {},
+  cardContent: { border: '1px solid #757575', borderRadius: '3%' },
   subjectContent: {
     border: '1px solid #757575',
     borderRadius: '3%',
@@ -42,8 +42,13 @@ const styles = {
     color: '#757575',
   },
   titleText: {
-    fontSize: '20px',
+    fontSize: '60px',
     textAlign: 'center',
+  },
+  componentText: {
+    fontSize: '30px',
+    textAlign: 'center',
+    margin: '10px',
   },
   surveyInfo: {
     fontSize: '15px',
@@ -56,14 +61,13 @@ const textStyle = {
   fontFamily,
 };
 
-export default function StatisticsPage2() {
+export default function StatisticsPage() {
   const [selectStat, setSelectStat] = useState<Selection[]>([]);
-  const [userNickname, setUserNickname] = useState('');
   const [totalSelectionCount, setTotalSelectionCount] = useState<number>();
-  const [surveyTitle, setSurveyTitle] = useState('');
-  const [surveyNo, setSurveyNo] = useState();
-  const [surveyPostAt, setSurveyPostAt] = useState('');
-  const [surveyWriter, setSurveyWriter] = useState('');
+  const [surveyTitle, setSurveyTitle] = useState<string>();
+  const [surveyNo, setSurveyNo] = useState<number>();
+  const [surveyPostAt, setSurveyPostAt] = useState<string>();
+  const [surveyWriter, setSurveyWriter] = useState<string>();
 
   const [allItems, setAllItems] = useState([]);
 
@@ -73,7 +77,6 @@ export default function StatisticsPage2() {
         .get(`http://localhost:8080/survey/resultall?surveyno=1`)
         .then((response) => {
           setSelectStat(response.data.content);
-          setUserNickname(response.data.content[0].userNickname);
           setTotalSelectionCount(response.data.content[0].totalAttend);
           setSurveyTitle(response.data.content[0].surveyTitle);
           setSurveyNo(response.data.content[0].surveyNo);
@@ -120,16 +123,14 @@ export default function StatisticsPage2() {
         <CardContent>
           <Box>
             <Typography style={textStyle} sx={styles.titleText}>
-              <h1>{surveyTitle}</h1>
+              {surveyTitle}
               <Divider />
             </Typography>
             <Typography style={textStyle} sx={styles.surveyInfo}>
-              <p>
-                설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
-                {surveyWriter}
-                &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt}{' '}
-                &nbsp;&nbsp;&nbsp; 설문 참여자 수: {totalSelectionCount}
-              </p>
+              설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
+              {surveyWriter}
+              &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt} &nbsp;&nbsp;&nbsp;
+              설문 참여자 수: {totalSelectionCount}
               <br />
               <br />
               <Button variant="contained">참여하기</Button>&nbsp;&nbsp;&nbsp;
@@ -170,30 +171,49 @@ export default function StatisticsPage2() {
           data.map((item) => [item.selectionValue, item.selectionCount]);
         const chartData = extractChartData(itemsForQuestion);
 
+        const extractShortSubjectiveAnswer = (
+          data: Selection[]
+        ): Selection[] => {
+          const filteredData = data.filter((item) => item.questionTypeNo === 4);
+
+          console.log(`단답형 : ${JSON.stringify(filteredData, null, 2)}`);
+          return filteredData;
+        };
+        const shortSubData = extractShortSubjectiveAnswer(itemsForQuestion);
+
+        const extractLongSubjectiveAnswer = (
+          data: Selection[]
+        ): Selection[] => {
+          const filteredData = data.filter((item) => item.questionTypeNo === 5);
+          console.log(`서술형 : ${JSON.stringify(filteredData, null, 2)}`);
+          return filteredData;
+        };
+        const LongSubData = extractLongSubjectiveAnswer(itemsForQuestion);
+
         return (
           <Card sx={styles.cardTitle} key={questionNo}>
             <CardContent>
               <Box>
-                <Typography style={textStyle} sx={styles.titleText}>
-                  <h4>
-                    {itemsForQuestion[0].surveyQuestionNo} .{' '}
-                    {itemsForQuestion[0].surveyQuestionTitle}
-                  </h4>
-                  <Divider />
+                <Typography style={textStyle} sx={styles.componentText}>
+                  {itemsForQuestion[0].surveyQuestionNo} .{' '}
+                  {itemsForQuestion[0].surveyQuestionTitle}
+                  <br />
                 </Typography>
+                <Divider />
+
                 <Typography style={textStyle} sx={styles.surveyInfo}>
-                  <p>
-                    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
-                    {itemsForQuestion[0].selectionCount != 0
-                      ? countSelections(itemsForQuestion)
-                      : countSubjectiveAnswerCount(itemsForQuestion)}
-                  </p>
+                  <br />
+                  &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
+                  {itemsForQuestion[0].selectionCount != 0
+                    ? countSelections(itemsForQuestion)
+                    : countSubjectiveAnswerCount(itemsForQuestion)}
                 </Typography>
+                <br />
 
                 {questionTypeNo === 1 && (
-                  <div>
+                  <Box sx={styles.cardContent}>
                     <GooglePieChart selectionAnswer={chartData} />
-                  </div>
+                  </Box>
                 )}
                 {questionTypeNo === 2 && (
                   <div>
@@ -207,29 +227,29 @@ export default function StatisticsPage2() {
                 )}
                 {questionTypeNo === 4 && (
                   <>
-                    <Typography style={textStyle} sx={styles.cardContent}>
-                      <p>단답형의 답들은 다음과 같은 것들이 있었습니다!</p>
+                    <Typography style={textStyle}>
+                      ## 단답형의 답들은 다음과 같은 것들이 있었습니다!
                     </Typography>
                     <Box sx={styles.subjectContent}>
                       <WordCloud
-                        wordCloud={itemsForQuestion.map((item) => ({
+                        wordCloud={shortSubData.map((item) => ({
                           text: item.surveySubjectiveAnswer,
                           value: item.questionTypeNo,
                         }))}
                       />
                     </Box>
 
-                    <AnswerList selectList={itemsForQuestion} />
+                    <AnswerList selectList={shortSubData} />
                   </>
                 )}
 
                 {questionTypeNo === 5 && (
                   <>
-                    <Typography style={textStyle} sx={styles.cardContent}>
-                      <p>서술형의 답들은 다음과 같은 것들이 있었습니다!</p>
+                    <Typography style={textStyle}>
+                      ## 서술형의 답들은 다음과 같은 것들이 있었습니다!
                     </Typography>
                     <Box>
-                      <AnswerList selectList={itemsForQuestion} />
+                      <AnswerList selectList={LongSubData} />
                     </Box>
                   </>
                 )}
