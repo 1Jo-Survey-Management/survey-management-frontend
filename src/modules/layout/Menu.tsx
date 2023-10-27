@@ -1,8 +1,22 @@
 /** @jsxImportSource @emotion/react */
 
-import { Avatar, Box, Divider, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from '@mui/material';
+import DraftsIcon from '@mui/icons-material/Drafts';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
+import { useNavigate } from 'react-router-dom';
 
 interface UserInfoProps {
   userNo: number | null;
@@ -33,7 +47,6 @@ const styels = {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    // height: '80px',
   }),
 
   avatarArea: css({
@@ -48,6 +61,11 @@ const styels = {
     width: 100,
     height: 100,
   }),
+
+  divider: css({
+    marginTop: '10px',
+    marginBottomL: '10px',
+  }),
 };
 
 function Menu({ toggleDrawer }: MenuProps) {
@@ -58,6 +76,8 @@ function Menu({ toggleDrawer }: MenuProps) {
   };
 
   const [userInfo, setUserInfo] = useState<UserInfoProps>(initUserInfo);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storageUserNo = localStorage.getItem(USER_NO);
@@ -73,6 +93,41 @@ function Menu({ toggleDrawer }: MenuProps) {
 
   const userInfoCheck = (checkedUserInfo: UserInfoProps) =>
     checkedUserInfo.userNo !== null && checkedUserInfo.userImage !== null;
+
+  /**
+   * 내가 참여한 설문 페이지로 이동하는 메서드 입니다.
+   *
+   * @author 강명관
+   */
+  const handleClickAttendSurvey = () => {
+    /**
+     * FIXME: router 지정 && 인가 사용자 검증 로직 -> 실패하면 로그인 페이지 리다이렉트
+     */
+    navigate('');
+  };
+
+  /**
+   * 내가 작성한 설문 페이지로 이동하는 메서드 입니다.
+   *
+   * @author 강명관
+   */
+  const handleClickWriteSurvey = () => {
+    /**
+     * FIXME: router 지정 && 인가 사용자 검증 로직 -> 실패하면 로그인 페이지 리다이렉트
+     */
+    navigate('');
+  };
+
+  /**
+   * 회원 정보 수정 페이지로 이동하는 메서드 입니다.
+   *
+   */
+  const handleClickModifyUser = () => {
+    /**
+     * FIXME: router 지정 && 인가 사용자 검증 로직 -> 실패하면 로그인 페이지 리다이렉트
+     */
+    navigate('');
+  };
 
   return (
     <Box
@@ -97,7 +152,36 @@ function Menu({ toggleDrawer }: MenuProps) {
         </Typography>
       </Box>
 
-      <Divider />
+      <Divider css={styels.divider} />
+
+      <nav aria-label="main mailbox folders">
+        <List>
+          <ListItem disablePadding>
+            <ListItemButton onClick={handleClickWriteSurvey}>
+              <ListItemIcon>
+                <EditNoteIcon />
+              </ListItemIcon>
+              <ListItemText primary="내가 작성한 설문" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={handleClickAttendSurvey}>
+              <ListItemIcon>
+                <DraftsIcon />
+              </ListItemIcon>
+              <ListItemText primary="내가 참여한 설문" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={handleClickModifyUser}>
+              <ListItemIcon>
+                <AssignmentIndIcon />
+              </ListItemIcon>
+              <ListItemText primary="회원 정보 수정" />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </nav>
     </Box>
   );
 }
