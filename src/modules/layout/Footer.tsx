@@ -1,6 +1,8 @@
-import React from 'react';
-import AppBar from '@mui/material/AppBar';
-import './Footer.css';
+// import React from 'react';
+// import AppBar from '@mui/material/AppBar';
+// import './Footer.css';
+
+
 
 /**
  * Layout의 Footer 입니다
@@ -24,4 +26,4 @@ function Footer() {
   );
 }
 
-export default Footer;
+// export default Footer;

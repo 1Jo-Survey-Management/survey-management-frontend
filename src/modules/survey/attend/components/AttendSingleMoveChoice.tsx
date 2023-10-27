@@ -1,8 +1,7 @@
 /**
- * AttendSingleChoice 컴포넌트.
- *
- * Material-UI 컴포넌트를 사용하여 단일 선택 설문 문항을 렌더링합니다.
- * 사용자는 제공된 선택 항목 중 하나를 선택하거나 선택을 취소할 수 있습니다.
+ * AttendSingleMoveChoice 컴포넌트는 단일 선택 가능한 문항에 대한 UI를 제공하며, 선택에 따라
+ * 다른 문항으로 이동할 수 있는 기능을 지원합니다.
+ * 이 컴포넌트는 MUI의 FormControl, FormLabel, RadioGroup, FormControlLabel, Radio 등의 컴포넌트를 사용하여 구현되었습니다.
  *
  * @component
  * @author 박창우
@@ -25,7 +24,7 @@ import {
 } from '@mui/material';
 import { SurveyItem } from '../types/AttendTypes';
 
-interface AttendSingleChoiceProps {
+interface AttendSingleMoveChoiceProps {
   surveyData: SurveyItem[];
   questionNo: number;
   onAnswerChange: (answer: {
@@ -43,18 +42,24 @@ interface AttendSingleChoiceProps {
   ) => void;
 }
 
-function AttendSingleChoice({
+function AttendSingleMoveChoice({
   surveyData,
   questionNo,
   onAnswerChange,
   handleSelectionClick,
-}: AttendSingleChoiceProps) {
+}: AttendSingleMoveChoiceProps) {
+  const [selectedValue, setSelectedValue] = useState<string | null>('');
+
+  const currentQuestion = surveyData.find(
+    (item) => item.surveyQuestionNo === questionNo
+  );
   const relatedSelections = surveyData.filter(
     (item) => item.surveyQuestionNo === questionNo && item.selectionValue
   );
 
-  const [selectedValue, setSelectedValue] = useState<string | null>('');
-  const [isUnchecked, setIsUnchecked] = useState<boolean>(false);
+  const [isUnchecked, setIsUnchecked] = useState<boolean>(
+    currentQuestion?.required || false
+  );
 
   /**
    * 선택된 옵션에 따른 이동 로직을 처리하는 함수입니다.
@@ -76,7 +81,7 @@ function AttendSingleChoice({
       if (selectedValue === null) {
         handleSelectionClick(
           questionNo,
-          questionNo,
+          surveyQuestionMoveNo,
           questionTypeNo,
           false,
           isUnchecked,
@@ -94,7 +99,7 @@ function AttendSingleChoice({
       } else {
         handleSelectionClick(
           questionNo,
-          questionNo,
+          surveyQuestionMoveNo,
           questionTypeNo,
           false,
           isUnchecked,
@@ -170,15 +175,10 @@ function AttendSingleChoice({
       }
     }
   };
-
-  const currentQuestion = surveyData.find(
-    (item) => item.surveyQuestionNo === questionNo
-  );
-
   return (
     <Card id={`question-${questionNo}`} sx={{ marginBottom: '30px' }}>
       <CardContent>
-        {!selectedValue && currentQuestion?.required && (
+        {isUnchecked && currentQuestion?.required && (
           <h1
             style={{
               fontSize: '9px',
@@ -272,4 +272,4 @@ function AttendSingleChoice({
   );
 }
 
-export default AttendSingleChoice;
+export default AttendSingleMoveChoice;
