@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
   Card,
@@ -70,11 +71,13 @@ export default function StatisticsPage() {
   const [surveyWriter, setSurveyWriter] = useState<string>();
 
   const [allItems, setAllItems] = useState([]);
+  const params = useParams();
+  const statSurveyNo = params.surveyNo;
 
   useEffect(() => {
     const fetchData = async () => {
       await axios
-        .get(`http://localhost:8080/survey/resultall?surveyno=1`)
+        .get(`http://localhost:8080/survey/resultall?surveyno=${statSurveyNo}`)
         .then((response) => {
           setSelectStat(response.data.content);
           setTotalSelectionCount(response.data.content[0].totalAttend);
@@ -90,6 +93,7 @@ export default function StatisticsPage() {
     fetchData();
   }, []);
 
+  console.log(selectStat);
   useEffect(() => {
     setAllItems(surveyBranch(selectStat));
 
@@ -204,7 +208,7 @@ export default function StatisticsPage() {
                 <Typography style={textStyle} sx={styles.surveyInfo}>
                   <br />
                   &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
-                  {itemsForQuestion[0].selectionCount != 0
+                  {itemsForQuestion[0].selectionCount !== 0
                     ? countSelections(itemsForQuestion)
                     : countSubjectiveAnswerCount(itemsForQuestion)}
                 </Typography>

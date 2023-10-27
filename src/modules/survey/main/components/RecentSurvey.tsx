@@ -341,7 +341,11 @@ function RecentSurvey() {
                   marginTop: 'auto',
                 }}
               >
-                <Button onClick={() => navigate('/survey/Search')}>
+                <Button
+                  onClick={() =>
+                    navigate(`/survey/statistics/${selectedCard?.surveyNo}`)
+                  }
+                >
                   결과보기
                 </Button>
 
@@ -359,13 +363,21 @@ function RecentSurvey() {
                 </Button>
                 {selectedCard?.attendCheckList &&
                   selectedCard.attendCheckList.includes(false) && (
-                    <Typography variant="body2" style={{ color: 'red' }}>
+                    <Typography
+                      variant="body2"
+                      style={{ color: 'red' }}
+                      fontSize="12px"
+                    >
                       이미 참여한 설문에는 다시 참여할 수 없습니다.
                     </Typography>
                   )}
 
                 {selectedCard?.userNo === userInfo.loginUserNo && (
-                  <Typography variant="body2" style={{ color: 'red' }}>
+                  <Typography
+                    variant="body2"
+                    style={{ color: 'red' }}
+                    fontSize="12px"
+                  >
                     본인이 작성한 설문에는 참여할 수 없습니다.
                   </Typography>
                 )}

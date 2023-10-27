@@ -33,7 +33,10 @@ export default function FloatingActionButtons() {
   return (
     <Box sx={styles.fabBox}>
       <Fab
-        sx={styles.fabStyles}
+        sx={{
+          ...styles.fabStyles,
+          backgroundColor: '#C5C7F2',
+        }}
         color="primary"
         aria-label="pageup"
         onClick={scrollToTop}
@@ -41,7 +44,10 @@ export default function FloatingActionButtons() {
         <ArrowDropUpIcon />
       </Fab>
       <Fab
-        sx={styles.fabStyles}
+        sx={{
+          ...styles.fabStyles,
+          backgroundColor: '#C5C7F2',
+        }}
         color="primary"
         onClick={() => navigate('/survey/register')}
       >

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from '../../../login/components/customApi';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -15,6 +14,7 @@ import {
   Modal,
   Fade,
 } from '@mui/material';
+import axios from '../../../login/components/customApi';
 
 import '../../../../global.css';
 
@@ -326,7 +326,11 @@ function ClosingSurvey() {
                   marginTop: 'auto',
                 }}
               >
-                <Button onClick={() => navigate('/survey/Search')}>
+                <Button
+                  onClick={() =>
+                    navigate(`/survey/statistics/${selectedCard?.surveyNo}`)
+                  }
+                >
                   결과보기
                 </Button>
                 <Button onClick={() => navigate('/survey/Search')} disabled>

@@ -12,6 +12,7 @@ import LoginDisplay from './modules/login/LoginDisplay';
 import MypageWriteSurvey from './modules/survey/MypageWriteSurvey';
 import StatisticsPage from './modules/survey/statistic/StatisticsPage';
 import Main from './modules/survey/main/Main';
+import Search from './modules/survey/main/Search';
 
 function App() {
   return (
@@ -22,11 +23,15 @@ function App() {
           <Route path="/survey/register" element={<CreateationSurvey />} />
           <Route path="/survey/modify/:surveyNo" element={<ModifySurvey />} />
           <Route path="/login/LoginDisplay" element={<LoginDisplay />} />
-          <Route path="/survey/statistics" element={<StatisticsPage />} />
+          <Route
+            path="/survey/statistics/:surveyNo"
+            element={<StatisticsPage />}
+          />
           <Route path="/survey/main" element={<Main />} />
           <Route path="/survey/modify" element={<Navigate to="/login" />} />
           <Route path="/login" element={<LoginDisplay />} />
           <Route path="/survey/mypage" element={<MypageWriteSurvey />} />
+          <Route path="/survey/search" element={<Search />} />
         </Route>
       </Routes>
     </Router>

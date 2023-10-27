@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from '../../../login/components/customApi';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -14,6 +13,7 @@ import {
   Stack,
   Modal,
 } from '@mui/material';
+import axios from '../../../login/components/customApi';
 
 import '../../../../global.css';
 
@@ -348,7 +348,13 @@ function WeeklySurvey() {
               marginTop: 'auto',
             }}
           >
-            <Button onClick={() => navigate('/survey/Search')}>결과보기</Button>
+            <Button
+              onClick={() =>
+                navigate(`/survey/statistics/${selectedCard?.surveyNo}`)
+              }
+            >
+              결과보기
+            </Button>
             <Button
               onClick={() => navigate('/survey/Search')}
               disabled={
@@ -361,13 +367,21 @@ function WeeklySurvey() {
             </Button>
             {selectedCard?.attendCheckList &&
               selectedCard.attendCheckList.includes(false) && (
-                <Typography variant="body2" style={{ color: 'red' }}>
+                <Typography
+                  variant="body2"
+                  style={{ color: 'red' }}
+                  fontSize="12px"
+                >
                   이미 참여한 설문에는 다시 참여할 수 없습니다.
                 </Typography>
               )}
 
             {selectedCard?.userNo === userInfo.loginUserNo && (
-              <Typography variant="body2" style={{ color: 'red' }}>
+              <Typography
+                variant="body2"
+                style={{ color: 'red' }}
+                fontSize="12px"
+              >
                 본인이 작성한 설문에는 참여할 수 없습니다.
               </Typography>
             )}

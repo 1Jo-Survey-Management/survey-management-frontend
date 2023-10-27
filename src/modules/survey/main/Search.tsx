@@ -199,17 +199,12 @@ function SurveySearch() {
     setOpenModal(false);
   };
 
-  // const cardColor = () => {
-  //   if (
-  //     selectedCard?.surveyStatusName === '마감' ||
-  //     !selectedCard?.attendCheckList ||
-  //     selectedCard.attendCheckList.some((item) => item === false) ||
-  //     selectedCard?.userNo === userInfo.loginUserNo
-  //   ) {
-  //     return '#FFEAEA';
+  // const cardColor = (selectedCard?.surveyStatusName) => {
+  //   if (selectedCard?.surveyStatusName === '마감') {
+  //     return '#E4E4E4';
   //   }
 
-  //   return '#D3D4F5';
+  //   return '#FFEAEA';
   // };
 
   return (
@@ -276,6 +271,8 @@ function SurveySearch() {
           }}
           sx={{
             height: '35px',
+            borderColor: '#DADAFF',
+            color: '#7F81B4',
           }}
           MenuProps={{
             anchorOrigin: {
@@ -288,7 +285,11 @@ function SurveySearch() {
             },
           }}
         >
-          <MenuItem value="전체(모든 카드)" onClick={removePage}>
+          <MenuItem
+            value="전체(모든 카드)"
+            onClick={removePage}
+            sx={{ fontStyle: textStyle.fontFamily }}
+          >
             전체
           </MenuItem>
           <MenuItem value="진행" onClick={removePage}>
@@ -303,9 +304,10 @@ function SurveySearch() {
           style={textStyle}
           variant="outlined"
           sx={{
-            height: '35px',
-            border: 3,
+            height: '30px',
+            border: 2,
             borderColor: '#DADAFF',
+            color: '#7F81B4',
           }}
           onClick={() => {
             // 초기화 버튼 클릭 시 검색 옵션 및 검색어 초기화
@@ -363,7 +365,7 @@ function SurveySearch() {
                   width: '150px',
                   height: '160px',
                   border: 2.5,
-                  borderColor: '#FFEAEA',
+                  borderColor: '#FFFACC',
                   borderRadius: 5,
                   fontStyle: textStyle,
                 }}
@@ -429,7 +431,7 @@ function SurveySearch() {
                   >
                     {card.surveyClosingAt}
                   </div>
-                  {/* <Typography
+                  <Typography
                     variant="h5"
                     component="div"
                     sx={{
@@ -441,7 +443,7 @@ function SurveySearch() {
                     }}
                   >
                     {card.surveyNo}
-                  </Typography> */}
+                  </Typography>
                   <Typography
                     variant="h5"
                     component="div"
@@ -543,12 +545,16 @@ function SurveySearch() {
                 marginTop: 'auto',
               }}
             >
-              <Button onClick={() => navigate('/survey/Search')}>
+              <Button
+                onClick={() =>
+                  navigate(`/survey/statistics/${selectedCard?.surveyNo}`)
+                }
+              >
                 결과보기
               </Button>
 
               <Button
-                onClick={() => navigate('/survey/Search')}
+                onClick={() => navigate('/survey/search')}
                 disabled={
                   selectedCard?.surveyStatusName === '마감' ||
                   !selectedCard?.attendCheckList ||
@@ -561,18 +567,30 @@ function SurveySearch() {
               {selectedCard?.attendCheckList &&
                 selectedCard.attendCheckList.includes(false) &&
                 selectedCard?.surveyStatusName !== '마감' && ( // Adjusted condition check
-                  <Typography variant="body2" style={{ color: 'red' }}>
+                  <Typography
+                    variant="body2"
+                    style={{ color: 'red' }}
+                    fontSize="12px"
+                  >
                     이미 참여한 설문에는 다시 참여할 수 없습니다.
                   </Typography>
                 )}
               {selectedCard?.userNo === userInfo.loginUserNo &&
                 selectedCard?.surveyStatusName !== '마감' && ( // Adjusted condition check
-                  <Typography variant="body2" style={{ color: 'red' }}>
+                  <Typography
+                    variant="body2"
+                    style={{ color: 'red' }}
+                    fontSize="12px"
+                  >
                     본인이 작성한 설문에는 참여할 수 없습니다.
                   </Typography>
                 )}
               {selectedCard?.surveyStatusName === '마감' && ( // Condition remains the same
-                <Typography variant="body2" style={{ color: 'red' }}>
+                <Typography
+                  variant="body2"
+                  style={{ color: 'red' }}
+                  fontSize="12px"
+                >
                   마감된 설문입니다.
                 </Typography>
               )}
