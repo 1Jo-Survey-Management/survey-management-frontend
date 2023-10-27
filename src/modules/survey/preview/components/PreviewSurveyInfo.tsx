@@ -1,30 +1,61 @@
-import { Box, Card, CardContent, Typography } from '@mui/material';
+/** @jsxImportSource @emotion/react */
+
+import { Box, Card, CardContent, Container, Typography } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
 import React, { useEffect, useState } from 'react';
+import { css } from '@emotion/react';
 import { PreviewSurveyInfoProps } from '../types/PreviewSurveyTypes';
 
 const styles = {
-  card: {
-    boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
+  card: css({
     marginBottom: '30px',
-  },
-  iamgeBox: {
+    marginTop: '30px',
+  }),
+
+  surveyInfoTitileStyle: css({
+    fontWeight: 'bold',
+    fontSize: '18px',
+    marginBottom: '10px',
+  }),
+
+  iamgeBox: css({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     height: '140px',
     marginBottom: '10px',
-  },
-  image: { width: '100%', height: '100%', objectFit: 'contain' },
+  }),
+
+  imageIcon: css({
+    fontSize: '30px',
+    color: '#757575',
+  }),
+
+  image: css({ width: '100%', height: '100%', objectFit: 'contain' }),
 };
 
+/**
+ * 설문 작성 중 미리보기에서 설문의 정보를 보여주는 컴포넌트 입니다.
+ *
+ * @param surveyInfo 설문에 대한 정보를 담고 있는 객체
+ * @param surveyImage 설문에 대한 대표 이미지 File
+ * @returns 미리보기 설문 정보
+ * @component
+ * @author 강명관
+ */
 function PreviewSurveyInfo({
   surveyInfo,
   surveyImage,
+  previewImageUrl,
 }: PreviewSurveyInfoProps) {
   const [selectedImage, setSelectedImage] = useState<string>('');
 
   useEffect(() => {
+    if (surveyImage === undefined && previewImageUrl !== undefined) {
+      setSelectedImage(previewImageUrl);
+      return;
+    }
+
     if (surveyImage !== undefined) {
       const imageUrl: string = URL.createObjectURL(surveyImage);
 
@@ -33,31 +64,40 @@ function PreviewSurveyInfo({
   }, []);
 
   return (
-    <Card sx={styles.card}>
-      <CardContent>
-        <Box>
-          <Typography sx={{ marginRight: '10px', fontWeight: 'bold' }}>
-            {surveyInfo.surveyTitle}
-          </Typography>
-        </Box>
-        {!selectedImage && (
-          <Box sx={styles.iamgeBox}>
-            <ImageIcon sx={{ fontSize: '30px', color: '#757575' }} />
+    <Container>
+      <Card css={styles.card}>
+        <CardContent>
+          <Box>
+            <Typography css={styles.surveyInfoTitileStyle}>
+              {surveyInfo.surveyTitle
+                ? surveyInfo.surveyTitle
+                : '제목 없는 설문지'}
+            </Typography>
           </Box>
-        )}
-        {selectedImage && (
-          <div>
-            <Box sx={styles.iamgeBox}>
-              <img
-                src={selectedImage}
-                alt="업로드된 이미지"
-                style={{ ...styles.image, objectFit: 'contain' }}
-              />
+
+          {!selectedImage && (
+            <Box css={styles.iamgeBox}>
+              <ImageIcon css={styles.imageIcon} />
             </Box>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+          )}
+          {selectedImage && (
+            <div>
+              <Box css={styles.iamgeBox}>
+                <img src={selectedImage} alt="설문 이미지" css={styles.image} />
+              </Box>
+            </div>
+          )}
+
+          <Box>
+            <Typography sx={{ fontSize: '14px', color: '#4a4a4a' }}>
+              {surveyInfo.surveyDescription
+                ? surveyInfo.surveyDescription
+                : '설문지 설명'}
+            </Typography>
+          </Box>
+        </CardContent>
+      </Card>
+    </Container>
   );
 }
 

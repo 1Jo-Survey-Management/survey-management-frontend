@@ -19,18 +19,7 @@
     "import/prefer-default-export": "off",
     "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "import/no-extraneous-dependencies": [
-      "error",
-      {
-        "devDependencies": [
-          "**/*.test.js",
-          "**/*.spec.js",
-          "webpack.config.js"
-        ],
-        "optionalDependencies": false,
-        "peerDependencies": false
-      }
-    ]
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }]
   },
   "settings": {
     "react": {
