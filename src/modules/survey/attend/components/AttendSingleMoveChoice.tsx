@@ -1,3 +1,16 @@
+/**
+ * AttendSingleMoveChoice 컴포넌트는 단일 선택 가능한 문항에 대한 UI를 제공하며, 선택에 따라
+ * 다른 문항으로 이동할 수 있는 기능을 지원합니다.
+ * 이 컴포넌트는 MUI의 FormControl, FormLabel, RadioGroup, FormControlLabel, Radio 등의 컴포넌트를 사용하여 구현되었습니다.
+ *
+ * @component
+ * @author 박창우
+ *
+ * @prop {SurveyItem[]} surveyData - 문항 및 선택 항목을 포함하는 설문 데이터입니다.
+ * @prop {number} questionNo - 현재 문항 번호입니다.
+ * @prop {function} onAnswerChange - 답변이 선택되거나 선택이 취소될 때 호출되는 콜백 함수입니다.
+ * @prop {function} handleSelectionClick - 선택 항목이 클릭될 때 호출되는 콜백 함수입니다.
+ */
 import React, { useEffect, useState } from 'react';
 import {
   FormControl,
@@ -48,6 +61,14 @@ function AttendSingleMoveChoice({
     currentQuestion?.required || false
   );
 
+  /**
+   * 선택된 옵션에 따른 이동 로직을 처리하는 함수입니다.
+   *
+   * @param selectedValue 사용자가 선택한 옵션 값
+   * @param isUnchecked 선택 항목이 체크되지 않았는지의 여부
+   * @returns 없음
+   * @author 박창우
+   */
   useEffect(() => {
     const selectedOption = surveyData.find(
       (opt) => opt.selectionValue === selectedValue
@@ -88,6 +109,13 @@ function AttendSingleMoveChoice({
     }
   }, [selectedValue, isUnchecked]);
 
+  /**
+   * 라디오 버튼 선택 변경 핸들러 함수입니다.
+   *
+   * @param event 라디오 버튼 이벤트 객체
+   * @returns 없음
+   * @author 박창우
+   */
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     const selectedOption = relatedSelections.find(
@@ -115,6 +143,13 @@ function AttendSingleMoveChoice({
     }
   };
 
+  /**
+   * 라디오 버튼의 선택 상태를 토글하는 함수입니다.
+   *
+   * @param value 라디오 버튼의 값
+   * @returns 없음
+   * @author 박창우
+   */
   const handleRadioToggle = (value: string) => {
     const selectedOption = relatedSelections.find(
       (opt) => opt.selectionValue === value

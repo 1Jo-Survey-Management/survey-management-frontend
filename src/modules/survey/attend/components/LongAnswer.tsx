@@ -1,3 +1,14 @@
+/**
+ * LongAnswer 컴포넌트는 사용자가 장문의 답변을 입력할 수 있는 UI를 제공합니다.
+ * 이 컴포넌트는 MUI의 Card, CardContent, TextField, Typography 컴포넌트를 사용하여 구현되었습니다.
+ *
+ * @prop {SurveyItem[]} surveyData - 문항 및 선택 항목을 포함하는 설문 데이터입니다.
+ * @prop {number} questionNo - 현재 문항 번호입니다.
+ * @prop {function} onAnswerChange - 답변이 선택되거나 선택이 취소될 때 호출되는 콜백 함수입니다.
+ *
+ * @component
+ * @author 박창우
+ */
 import React, { useState } from 'react';
 import { Card, CardContent, TextField, Typography } from '@mui/material';
 import { SurveyItem } from '../types/AttendTypes';
@@ -15,12 +26,25 @@ function LongAnswer({
 }: LongAnswerProps) {
   const [answer, setAnswer] = useState<string>('');
 
+  /**
+   * 사용자의 입력에 따라 텍스트 상태를 업데이트하는 함수입니다.
+   *
+   * @param event 사용자 입력 이벤트 객체
+   * @returns 없음
+   * @author 박창우
+   */
   const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = event.target.value;
     setAnswer(newValue);
     onAnswerChange(newValue);
   };
 
+  /**
+   * 현재 문항 데이터를 조회하는 함수입니다.
+   *
+   * @returns 현재 문항의 데이터 객체 또는 null
+   * @author 박창우
+   */
   const currentQuestion = surveyData.find(
     (item) => item.surveyQuestionNo === questionNo
   );

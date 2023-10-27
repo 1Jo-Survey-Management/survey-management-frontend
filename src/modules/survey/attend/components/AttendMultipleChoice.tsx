@@ -1,3 +1,14 @@
+/**
+ * AttendMultipleChoice 컴포넌트는 여러 개의 선택사항 중 여러 개를 선택할 수 있는 문항에 대한 UI를 제공합니다.
+ * 이 컴포넌트는 MUI의 FormControl, FormLabel, FormGroup, FormControlLabel, Checkbox 등의 컴포넌트를 사용하여 구현되었습니다.
+ *
+ * @prop {SurveyItem[]} surveyData - 문항 및 선택 항목을 포함하는 설문 데이터입니다.
+ * @prop {number} questionNo - 현재 문항 번호입니다.
+ * @prop {function} onAnswerChange - 답변이 선택되거나 선택이 취소될 때 호출되는 콜백 함수입니다.
+ *
+ * @component
+ * @author 박창우
+ */
 import React, { useState } from 'react';
 import {
   FormControl,
@@ -28,6 +39,13 @@ function AttendMultipleChoice({
     Array<{ selectionValue: string; selectionNo: number }>
   >([]);
 
+  /**
+   * 체크박스의 선택 상태 변경을 처리하는 함수입니다.
+   *
+   * @param event 체크박스의 이벤트 객체
+   * @returns 없음
+   * @author 박창우
+   */
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = {
       selectionValue: event.target.value,

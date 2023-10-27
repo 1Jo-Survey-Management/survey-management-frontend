@@ -1,3 +1,17 @@
+/**
+ * AttendSingleChoice 컴포넌트.
+ *
+ * Material-UI 컴포넌트를 사용하여 단일 선택 설문 문항을 렌더링합니다.
+ * 사용자는 제공된 선택 항목 중 하나를 선택하거나 선택을 취소할 수 있습니다.
+ *
+ * @component
+ * @author 박창우
+ *
+ * @prop {SurveyItem[]} surveyData - 문항 및 선택 항목을 포함하는 설문 데이터입니다.
+ * @prop {number} questionNo - 현재 문항 번호입니다.
+ * @prop {function} onAnswerChange - 답변이 선택되거나 선택이 취소될 때 호출되는 콜백 함수입니다.
+ * @prop {function} handleSelectionClick - 선택 항목이 클릭될 때 호출되는 콜백 함수입니다.
+ */
 import React, { useEffect, useState } from 'react';
 import {
   FormControl,
@@ -42,6 +56,14 @@ function AttendSingleChoice({
   const [selectedValue, setSelectedValue] = useState<string | null>('');
   const [isUnchecked, setIsUnchecked] = useState<boolean>(false);
 
+  /**
+   * 선택된 옵션에 따른 이동 로직을 처리하는 함수입니다.
+   *
+   * @param selectedValue 사용자가 선택한 옵션 값
+   * @param isUnchecked 선택 항목이 체크되지 않았는지의 여부
+   * @returns 없음
+   * @author 박창우
+   */
   useEffect(() => {
     const selectedOption = surveyData.find(
       (opt) => opt.selectionValue === selectedValue
@@ -82,6 +104,13 @@ function AttendSingleChoice({
     }
   }, [selectedValue, isUnchecked]);
 
+  /**
+   * 라디오 버튼 선택 변경 핸들러 함수입니다.
+   *
+   * @param event 라디오 버튼 이벤트 객체
+   * @returns 없음
+   * @author 박창우
+   */
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     const selectedOption = relatedSelections.find(
@@ -109,6 +138,13 @@ function AttendSingleChoice({
     }
   };
 
+  /**
+   * 라디오 버튼의 선택 상태를 토글하는 함수입니다.
+   *
+   * @param value 라디오 버튼의 값
+   * @returns 없음
+   * @author 박창우
+   */
   const handleRadioToggle = (value: string) => {
     const selectedOption = relatedSelections.find(
       (opt) => opt.selectionValue === value

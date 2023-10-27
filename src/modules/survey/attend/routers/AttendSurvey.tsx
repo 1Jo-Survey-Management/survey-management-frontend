@@ -1,3 +1,10 @@
+/**
+ * AttendSurvey 컴포넌트는 사용자에게 설문조사를 제출할 수 있는 인터페이스를 제공합니다.
+ * 이 컴포넌트는 여러 종류의 질문 유형을 지원하며 사용자 응답을 수집하고 제출하는 기능을 포함합니다.
+ *
+ * @component
+ * @author 박창우
+ */
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Stack } from '@mui/material';
 import axios from 'axios';
@@ -7,7 +14,11 @@ import { SurveyData, SurveyItem } from '../types/AttendTypes';
 import AttendMultipleChoice from '../components/AttendMultipleChoice';
 import ShortAnswer from '../components/ShortAnswer';
 import LongAnswer from '../components/LongAnswer';
+import ScrollProgress from '../util/ScrollProgress';
 
+/**
+ * 사용자의 응답 데이터 인터페이스입니다.
+ */
 interface UserResponse {
   surveyQuestionTitle: string;
   selectionValue: string | null;
@@ -30,7 +41,6 @@ function AttendSurvey() {
   const [hiddenQuestions, setHiddenQuestions] = useState<
     Record<number, number[]>
   >({});
-  // 모든 문항의 숨김 상태를 합친 배열 생성
   const allHiddenQuestions = Object.values(hiddenQuestions).flat();
   const uniqueQuestions = Array.from(
     new Set(surveyData.content.map((item) => item.surveyQuestionNo))
@@ -43,6 +53,19 @@ function AttendSurvey() {
   const USER_NO = 1;
   const SURVEY_NO = 8;
 
+  /**
+   * 선택 항목을 클릭할 때 동작하는 함수입니다.
+   * 이 함수는 사용자가 선택한 항목에 따라 특정 질문을 숨기거나 표시하는 로직을 담당합니다.
+   *
+   * @param selectedQuestionNo 현재 선택된 질문 번호
+   * @param moveToQuestionNo 이동할 질문 번호
+   * @param questionTypeNo 질문 유형 번호
+   * @param isMovable 이동 가능 여부
+   * @param isUnchecked 선택 여부 확인
+   * @param endOfSurvey 설문 종료 여부
+   * @returns 없음
+   * @author 박창우
+   */
   const handleSelectionClick = (
     selectedQuestionNo: number,
     moveToQuestionNo: number,
@@ -51,23 +74,12 @@ function AttendSurvey() {
     isUnchecked: boolean,
     endOfSurvey: boolean
   ) => {
-    console.log(
-      `selectedQuestionNo: ${JSON.stringify(selectedQuestionNo, null, 2)}`
-    );
-    console.log(
-      `moveToQuestionNo: ${JSON.stringify(moveToQuestionNo, null, 2)}`
-    );
-    console.log(`questionTypeNo: ${JSON.stringify(questionTypeNo, null, 2)}`);
-    console.log(`isMovable: ${JSON.stringify(isMovable, null, 2)}`);
-    console.log(`isUnchecked: ${JSON.stringify(isUnchecked, null, 2)}`);
-    console.log(`endOfSurvey: ${JSON.stringify(endOfSurvey, null, 2)}`);
     const currentHiddenQuestions = hiddenQuestions[selectedQuestionNo] || [];
 
     let newHiddenQuestions: number[] = [];
 
     if (isMovable && questionTypeNo === 2) {
-      // eslint-disable-next-line no-plusplus
-      for (let i = selectedQuestionNo + 1; i < moveToQuestionNo; i++) {
+      for (let i = selectedQuestionNo + 1; i < moveToQuestionNo; i += 1) {
         if (!currentHiddenQuestions.includes(i)) {
           newHiddenQuestions.push(i);
         }
@@ -81,28 +93,56 @@ function AttendSurvey() {
       );
     }
 
+    if (isUnchecked) {
+      setUserResponses((prev) =>
+        prev.filter(
+          (response) => response.surveyQuestionNo !== selectedQuestionNo
+        )
+      );
+    }
+
     setHiddenQuestions({
       ...hiddenQuestions,
       [selectedQuestionNo]: newHiddenQuestions,
     });
 
     if (endOfSurvey) {
-      // 다른 모든 문항을 숨깁니다.
+      const questionsToHide = uniqueQuestions.filter(
+        (q) => q > selectedQuestionNo
+      );
+
       setHiddenQuestions({
         ...hiddenQuestions,
-        [selectedQuestionNo]: uniqueQuestions.filter(
-          (q) => q !== selectedQuestionNo
-        ),
+        [selectedQuestionNo]: questionsToHide,
       });
-      // 다른 필수 문항의 답변을 초기화합니다.
+
+      const questionsToRemove = uniqueQuestions.filter((q) => {
+        const currentQuestion = surveyData.content.find(
+          (item) => item.surveyQuestionNo === q
+        );
+        return (
+          q > selectedQuestionNo &&
+          currentQuestion &&
+          currentQuestion.questionTypeNo !== 2
+        );
+      });
+
       setUserResponses((responses) =>
         responses.filter(
-          (response) => response.surveyQuestionNo === selectedQuestionNo
+          (response) => !questionsToRemove.includes(response.surveyQuestionNo)
         )
       );
     }
   };
 
+  /**
+   * 사용자의 응답을 처리하는 함수입니다.
+   * 각 질문 유형에 따라 다르게 동작합니다.
+   *
+   * @param questionNo 현재 질문 번호
+   * @returns 변경된 응답 처리 함수
+   * @author 박창우
+   */
   const handleAnswerChange =
     (questionNo: number) =>
     (
@@ -111,12 +151,6 @@ function AttendSurvey() {
         | { selectionValue: string; selectionNo: number; endOfSurvey: boolean }
         | string
     ) => {
-      console.log(
-        'handleAnswerChange called for question:',
-        questionNo,
-        answerOrAnswers
-      );
-
       const currentQuestionData = surveyData.content.find(
         (item) => item.surveyQuestionNo === questionNo
       );
@@ -146,13 +180,7 @@ function AttendSurvey() {
             endOfSurvey: currentQuestionData.endOfSurvey,
           });
         });
-        console.log(
-          `객관식 복수 선택: ${JSON.stringify(newResponses, null, 2)}`
-        );
-      }
-
-      // 주관식 답변 (단답 or 장문)
-      else if (
+      } else if (
         currentQuestionData.questionTypeNo === 4 ||
         currentQuestionData.questionTypeNo === 5
       ) {
@@ -167,12 +195,7 @@ function AttendSurvey() {
           surveySubjectiveAnswer: answerOrAnswers as string,
           endOfSurvey: currentQuestionData.endOfSurvey,
         });
-        console.log(
-          `주관식 답변 (단답 or 장문): ${JSON.stringify(newResponses, null, 2)}`
-        );
-      }
-      // 객관식 단일 선택 or 객관식 단일 선택(movable=true)
-      else if (
+      } else if (
         !Array.isArray(answerOrAnswers) &&
         typeof answerOrAnswers === 'object' &&
         (currentQuestionData.questionTypeNo === 1 ||
@@ -184,29 +207,29 @@ function AttendSurvey() {
           endOfSurvey,
         } = answerOrAnswers;
 
-        console.log('Selected answer:', answerString); // 1. answerString 확인
-
-        newResponses.push({
-          surveyQuestionTitle: currentQuestionData.surveyQuestionTitle,
-          selectionValue: answerString,
-          userNo: USER_NO,
-          surveyNo: SURVEY_NO,
-          surveyQuestionNo: currentQuestionData.surveyQuestionNo,
-          questionTypeNo: currentQuestionData.questionTypeNo,
-          selectionNo,
-          surveySubjectiveAnswer: null,
-          endOfSurvey, // 이 부분은 endOfSurvey가 selection에서 온다면 수정이 필요합니다.
-        });
-        console.log(
-          `객관식 단일 선택 or 객관식 단일 선택(movable=true): ${JSON.stringify(
-            newResponses,
-            null,
-            2
-          )}`
-        );
+        if (!answerString) {
+          setUserResponses((prev) =>
+            prev.filter(
+              (response) =>
+                response.surveyQuestionNo !==
+                currentQuestionData.surveyQuestionNo
+            )
+          );
+        } else {
+          newResponses.push({
+            surveyQuestionTitle: currentQuestionData.surveyQuestionTitle,
+            selectionValue: answerString,
+            userNo: USER_NO,
+            surveyNo: SURVEY_NO,
+            surveyQuestionNo: currentQuestionData.surveyQuestionNo,
+            questionTypeNo: currentQuestionData.questionTypeNo,
+            selectionNo,
+            surveySubjectiveAnswer: null,
+            endOfSurvey,
+          });
+        }
       }
 
-      // 기존 응답 중 해당 질문의 응답을 제거하고 새로운 응답을 추가
       setUserResponses((prev) => {
         const updatedResponses = prev.filter(
           (response) =>
@@ -216,6 +239,13 @@ function AttendSurvey() {
       });
     };
 
+  /**
+   * 설문조사의 특정 질문을 렌더링하는 함수입니다.
+   *
+   * @param questionNo 렌더링할 질문 번호
+   * @returns 렌더링된 React 요소
+   * @author 박창우
+   */
   const renderQuestion = (questionNo: number) => {
     const question = surveyData.content.find(
       (item) => item.surveyQuestionNo === questionNo
@@ -276,6 +306,12 @@ function AttendSurvey() {
     }
   };
 
+  /**
+   * 컴포넌트가 마운트 될 때 설문조사 데이터를 가져오는 함수입니다.
+   *
+   * @returns 없음
+   * @author 박창우
+   */
   useEffect(() => {
     console.log('useEffect running');
     axios
@@ -300,7 +336,6 @@ function AttendSurvey() {
       });
   }, []);
 
-  // Alert function with scroll behavior
   function alertAndScrollTo(item: SurveyItem) {
     alert('필수 응답 문항에 답변하세요.');
     const targetElement = document.getElementById(
@@ -316,36 +351,58 @@ function AttendSurvey() {
     }
   }
 
+  /**
+   * 사용자가 제출 버튼을 클릭했을 때 동작하는 함수입니다.
+   * 유효성 검사 후 서버에 응답 데이터를 제출합니다.
+   *
+   * @returns 없음
+   * @author 박창우
+   */
   const handleSubmit = async () => {
-    if (!userResponses.some((response) => response.endOfSurvey)) {
-      console.log(`제출 시: ${JSON.stringify(userResponses)}`);
+    console.log(`제출 시: ${JSON.stringify(userResponses)}`);
 
-      // eslint-disable-next-line no-restricted-syntax
-      for (const item of surveyData.content) {
-        if (item.required) {
-          const responseExists = userResponses.find(
-            (response) => response.surveyQuestionNo === item.surveyQuestionNo
+    const lastEndOfSurveyQuestion = userResponses.some(
+      (response) => response.endOfSurvey
+    )
+      ? Math.max(
+          ...userResponses
+            .filter((response) => response.endOfSurvey)
+            .map((response) => response.surveyQuestionNo)
+        )
+      : null;
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const item of surveyData.content) {
+      if (
+        lastEndOfSurveyQuestion &&
+        item.surveyQuestionNo > lastEndOfSurveyQuestion
+      )
+        // eslint-disable-next-line no-continue
+        continue;
+
+      if (item.required) {
+        const responseExists = userResponses.find(
+          (response) => response.surveyQuestionNo === item.surveyQuestionNo
+        );
+
+        if (!responseExists) {
+          console.log(
+            `Missing response for question: ${item.surveyQuestionNo}`
           );
+          alertAndScrollTo(item);
+          return;
+        }
 
-          if (!responseExists) {
-            console.log(
-              `Missing response for question: ${item.surveyQuestionNo}`
-            );
-            alertAndScrollTo(item);
-            return;
-          }
-
-          if (
-            item.questionTypeNo > 3 &&
-            (!responseExists.surveySubjectiveAnswer ||
-              responseExists.surveySubjectiveAnswer.trim() === '')
-          ) {
-            console.log(
-              `Empty subjective answer for question: ${item.surveyQuestionNo}`
-            );
-            alertAndScrollTo(item);
-            return;
-          }
+        if (
+          item.questionTypeNo > 3 &&
+          (!responseExists.surveySubjectiveAnswer ||
+            responseExists.surveySubjectiveAnswer.trim() === '')
+        ) {
+          console.log(
+            `Empty subjective answer for question: ${item.surveyQuestionNo}`
+          );
+          alertAndScrollTo(item);
+          return;
         }
       }
     }
@@ -374,6 +431,7 @@ function AttendSurvey() {
 
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
+      <ScrollProgress />
       <h1
         style={{ fontSize: '25px', display: 'flex', justifyContent: 'center' }}
       >

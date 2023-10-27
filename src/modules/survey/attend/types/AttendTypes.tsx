@@ -1,11 +1,42 @@
+/**
+ * 선택 항목에 대한 정보를 나타내는 인터페이스입니다.
+ *
+ * @interface
+ * @property {string} value 선택 항목의 값입니다.
+ * @property {string} selectionValue 선택 항목의 실제 값입니다.
+ * @property {number} selectionNo 선택 항목의 고유 번호입니다.
+ * @property {boolean} endOfSurvey 해당 선택 항목 선택 시 설문이 종료되는지 여부입니다.
+ *
+ * @author 박창우
+ */
 export interface SelectionItem {
   value: string;
   selectionValue: string;
   selectionNo: number;
   endOfSurvey: boolean;
-  // 필요하면 여기에 추가적인 속성들을 추가할 수 있습니다.
 }
 
+/**
+ * 설문 문항에 대한 정보를 나타내는 인터페이스입니다.
+ *
+ * @interface
+ * @property {string} surveyTitle 설문의 제목입니다.
+ * @property {string} surveyImage 설문의 이미지 URL입니다.
+ * @property {number} surveyQuestionNo 문항의 고유 번호입니다.
+ * @property {number} surveyNo 설문의 고유 번호입니다.
+ * @property {number} questionTypeNo 문항의 유형 번호입니다.
+ * @property {string} surveyQuestionTitle 문항의 제목입니다.
+ * @property {string} surveyQuestionDescription 문항의 설명입니다.
+ * @property {number} selectionNo 선택 항목의 고유 번호입니다.
+ * @property {number} surveyQuestionMoveNo 다음 문항으로 이동할 번호입니다.
+ * @property {string | null} selectionValue 선택 항목의 실제 값입니다.
+ * @property {boolean} required 문항 응답이 필수인지 여부입니다.
+ * @property {boolean} endOfSurvey 설문이 종료되는지 여부입니다.
+ * @property {boolean} movable 문항 선택 후 다른 문항으로 이동 가능한지 여부입니다.
+ * @property {SelectionItem[] | undefined} selections 관련 선택 항목 목록입니다.
+ *
+ * @author 박창우
+ */
 export interface SurveyItem {
   surveyTitle: string;
   surveyImage: string;
@@ -20,9 +51,19 @@ export interface SurveyItem {
   required: boolean;
   endOfSurvey: boolean;
   movable: boolean;
-  selections?: SelectionItem[]; // 수정된 부분
+  selections?: SelectionItem[];
 }
 
+/**
+ * 설문 데이터 응답에 대한 정보를 나타내는 인터페이스입니다.
+ *
+ * @interface
+ * @property {boolean} success 요청 성공 여부입니다.
+ * @property {SurveyItem[]} content 설문 데이터의 배열입니다.
+ * @property {unknown} errorResponse 에러 응답 데이터입니다.
+ *
+ * @author 박창우
+ */
 export interface SurveyData {
   success: boolean;
   content: SurveyItem[];
