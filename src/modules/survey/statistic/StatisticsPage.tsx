@@ -32,7 +32,7 @@ const styles = {
     marginTop: '20px',
     borderRadius: '3%',
   },
-  cardContent: {border: '1px solid #757575',borderRadius: '3%'},
+  cardContent: { border: '1px solid #757575', borderRadius: '3%' },
   subjectContent: {
     border: '1px solid #757575',
     borderRadius: '3%',
@@ -73,10 +73,12 @@ export default function StatisticsPage() {
 
   const [allItems, setAllItems] = useState([]);
 
+  const userNo = localStorage.getItem('userNo');
+
   useEffect(() => {
     const fetchData = async () => {
       await axios
-        .get(`http://localhost:8080/api/survey/resultall?surveyno=1`)
+        .get(`http://localhost:8080/api/survey/resultall?surveyno=${userNo}`)
         .then((response) => {
           setSelectStat(response.data.content);
           setTotalSelectionCount(response.data.content[0].totalAttend);
@@ -129,12 +131,10 @@ export default function StatisticsPage() {
               <Divider />
             </Typography>
             <Typography style={textStyle} sx={styles.surveyInfo}>
-              
-                설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
-                {surveyWriter}
-                &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt}{' '}
-                &nbsp;&nbsp;&nbsp; 설문 참여자 수: {totalSelectionCount}
-              
+              설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
+              {surveyWriter}
+              &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt} &nbsp;&nbsp;&nbsp;
+              설문 참여자 수: {totalSelectionCount}
               <br />
               <br />
               <Button variant="contained">참여하기</Button>&nbsp;&nbsp;&nbsp;
@@ -176,17 +176,21 @@ export default function StatisticsPage() {
         };
         const chartData = extractChartData(itemsForQuestion);
 
-        const extractShortSubjectiveAnswer = (data: Selection[]): Selection[] => {
+        const extractShortSubjectiveAnswer = (
+          data: Selection[]
+        ): Selection[] => {
           const filteredData = data.filter((item) => item.questionTypeNo === 4);
 
-          console.log('단답형 : '+JSON.stringify(filteredData,null,2));
+          console.log('단답형 : ' + JSON.stringify(filteredData, null, 2));
           return filteredData;
         };
         const shortSubData = extractShortSubjectiveAnswer(itemsForQuestion);
 
-        const extractLongSubjectiveAnswer = (data: Selection[]): Selection[] => {
+        const extractLongSubjectiveAnswer = (
+          data: Selection[]
+        ): Selection[] => {
           const filteredData = data.filter((item) => item.questionTypeNo === 5);
-          console.log('서술형 : '+JSON.stringify(filteredData,null,2));
+          console.log('서술형 : ' + JSON.stringify(filteredData, null, 2));
           return filteredData;
         };
         const LongSubData = extractLongSubjectiveAnswer(itemsForQuestion);
@@ -196,25 +200,23 @@ export default function StatisticsPage() {
             <CardContent>
               <Box>
                 <Typography style={textStyle} sx={styles.componentText}>
-
-                    {itemsForQuestion[0].surveyQuestionNo} .{' '}
-                    {itemsForQuestion[0].surveyQuestionTitle}
-                    <br/>
+                  {itemsForQuestion[0].surveyQuestionNo} .{' '}
+                  {itemsForQuestion[0].surveyQuestionTitle}
+                  <br />
                 </Typography>
                 <Divider />
-                
+
                 <Typography style={textStyle} sx={styles.surveyInfo}>
-                  <br/>
-                    &nbsp;&nbsp;&nbsp;  설문 참여자 수:{' '}
-                    
-                    {itemsForQuestion[0].selectionCount != 0
-                      ? countSelections(itemsForQuestion)
-                      : countSubjectiveAnswerCount(itemsForQuestion)}                  
+                  <br />
+                  &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
+                  {itemsForQuestion[0].selectionCount != 0
+                    ? countSelections(itemsForQuestion)
+                    : countSubjectiveAnswerCount(itemsForQuestion)}
                 </Typography>
-                <br/>
+                <br />
 
                 {questionTypeNo === 1 && (
-                  <Box  sx={styles.cardContent}>
+                  <Box sx={styles.cardContent}>
                     <GooglePieChart selectionAnswer={chartData} />
                   </Box>
                 )}
@@ -230,10 +232,10 @@ export default function StatisticsPage() {
                 )}
                 {questionTypeNo === 4 && (
                   <>
-                    <Typography style={textStyle} >
+                    <Typography style={textStyle}>
                       ## 단답형의 답들은 다음과 같은 것들이 있었습니다!
                     </Typography>
-                    <br/>
+                    <br />
                     <Box sx={styles.subjectContent}>
                       <WordCloud
                         wordCloud={shortSubData.map((item) => ({
@@ -242,17 +244,15 @@ export default function StatisticsPage() {
                         }))}
                       />
                     </Box>
-                    <br/>
-                    <Typography style={textStyle} >
-                      답변 랭킹!!
-                    </Typography>
+                    <br />
+                    <Typography style={textStyle}>답변 랭킹!!</Typography>
                     <AnswerList selectList={shortSubData} />
                   </>
                 )}
 
                 {questionTypeNo === 5 && (
                   <>
-                    <Typography style={textStyle} >
+                    <Typography style={textStyle}>
                       ## 서술형의 답들은 다음과 같은 것들이 있었습니다!
                     </Typography>
                     <Box>
