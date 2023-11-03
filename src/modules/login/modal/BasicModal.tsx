@@ -78,6 +78,11 @@ export default function BasicModal({ onClose }: ModalProps) {
   };
 
   const handleClose = () => {
+    localStorage.removeItem('userNo');
+    localStorage.removeItem('userNickname');
+    localStorage.removeItem('userImage');
+    localStorage.removeItem('accessToken');
+    console.log('회원가입 취소');
     onClose();
     setOpen(false);
   };

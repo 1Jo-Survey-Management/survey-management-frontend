@@ -79,45 +79,44 @@ function LoginDisplay() {
     // accessToken이 유효한지 api를 통해서 확인 (로그인 했는데 로그아웃 안했을때)
     if (localStorageAccessToken != null && !accessCode) {
       axios.defaults.headers.common['Authorization'] =
-      'Bearer ' + localStorageAccessToken;
+        'Bearer ' + localStorageAccessToken;
 
       // 액세스 토큰이 유효한지 api를 쏴서 확인하면서 로그인 처리
       axios
-      .post('/login/user')
-      .then((response) => {
-        // 서버로부터의 응답 처리
-        const respData = response.data;
-        const responseCheck = response;
-        const responseUserNo = responseCheck.data.content.userNo;
-        const responseAccessToken = responseCheck.data.content.accessToken;
-        const responseImage = responseCheck.data.content.userImage;
-        const responseNickName = responseCheck.data.content.userNickname;
-        const responseExpiresIn = responseCheck.data.content.expiresIn;
+        .post('/login/user')
+        .then((response) => {
+          // 서버로부터의 응답 처리
+          const respData = response.data;
+          const responseCheck = response;
+          const responseUserNo = responseCheck.data.content.userNo;
+          const responseAccessToken = responseCheck.data.content.accessToken;
+          const responseImage = responseCheck.data.content.userImage;
+          const responseNickName = responseCheck.data.content.userNickname;
+          const responseExpiresIn = responseCheck.data.content.expiresIn;
 
-        localStorage.setItem('userNo', responseUserNo);
-        localStorage.setItem('userNickname', responseNickName);
-        localStorage.setItem('userImage', responseImage);
-        localStorage.setItem('accessToken', responseAccessToken);
-        localStorage.setItem('expiresIn', responseExpiresIn);
+          localStorage.setItem('userNo', responseUserNo);
+          localStorage.setItem('userNickname', responseNickName);
+          localStorage.setItem('userImage', responseImage);
+          localStorage.setItem('accessToken', responseAccessToken);
+          localStorage.setItem('expiresIn', responseExpiresIn);
 
-        if (respData === '') {
+          if (respData === '') {
+            alert('로그인이 필요합니다!');
+            console.error('API 응답 데이터 없음!');
+          }
+        })
+        .catch((error) => {
           alert('로그인이 필요합니다!');
-          console.error('API 응답 데이터 없음!');
-        }
-      })
-      .catch((error) => {
-        alert('로그인이 필요합니다!');
-        console.error(error);
-        localStorage.removeItem('userNo');
-        localStorage.removeItem('userNickname');
-        localStorage.removeItem('userImage');
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('expiresIn');
-        localStorage.removeItem('refreshToken');
-        console.error('API 요청 실패!');
-        navigate('/');
-
-      });
+          console.error(error);
+          localStorage.removeItem('userNo');
+          localStorage.removeItem('userNickname');
+          localStorage.removeItem('userImage');
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('expiresIn');
+          localStorage.removeItem('refreshToken');
+          console.error('API 요청 실패!');
+          navigate('/');
+        });
 
       navigate('/survey/main');
     }
@@ -132,13 +131,15 @@ function LoginDisplay() {
           },
         })
         .then((response) => {
-          // code 보내서 백에서 인증하고 미완료회원 객체 가져옴(메일, accessToken)          
+          // code 보내서 백에서 인증하고 미완료회원 객체 가져옴(메일, accessToken)
           const responseCheck = response;
           const responseUserNo = responseCheck.data.content.userNo;
           const responseAccessToken = responseCheck.data.content.accessToken;
           const responseImage = responseCheck.data.content.userImage;
           const responseNickName = responseCheck.data.content.userNickname;
           const responseExpiresIn = responseCheck.data.content.expiresIn;
+
+          console.log('유저 번호 : ' + responseUserNo);
 
           localStorage.setItem('userNo', responseUserNo);
           localStorage.setItem('userNickname', responseNickName);

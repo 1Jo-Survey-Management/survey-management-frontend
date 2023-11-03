@@ -15,6 +15,7 @@ import TitleFig from './imgs/surveyTitlepng.png';
 import WordCloud from './components/WordCloud';
 import GooglePieChart from './components/GooglePieChart';
 import { Selection } from './types/SurveyStatisticTypes';
+import { useNavigate } from 'react-router-dom';
 
 const styles = {
   card: {
@@ -74,6 +75,7 @@ export default function StatisticsPage() {
   const [allItems, setAllItems] = useState([]);
 
   const userNo = localStorage.getItem('userNo');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,7 +89,8 @@ export default function StatisticsPage() {
           setSurveyPostAt(response.data.content[0].surveyPostAt);
         })
         .catch((error) => {
-          console.error('Error fetching data: ', error);
+          console.error('통계가 없습니다! ', error);
+          navigate('/survey/main');
         });
     };
 
