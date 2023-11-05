@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
 import config from './config/config.json';
+import { Box } from '@mui/system';
+
+const bottonBoxStyle = {
+  width: '100%',
+};
+
+const webButtonBoxStyle = {
+  '@media (min-width: 800px)': {
+    width: '100%',
+  },
+};
 
 const buttonStyle = {
   border: 'none',
@@ -9,6 +20,12 @@ const buttonStyle = {
 
 const imageStyle = {
   width: '60%',
+};
+
+const webImageStyle = {
+  '@media (min-width: 800px)': {
+    width: '10%',
+  },
 };
 
 /**
@@ -30,7 +47,7 @@ function LoginNaver() {
       : `${process.env.PUBLIC_URL}/naverButton.png`;
 
   return (
-    <div>
+    <Box sx={{ ...bottonBoxStyle, ...webButtonBoxStyle }}>
       <button
         type="button"
         onClick={handleOAuthLogin}
@@ -38,9 +55,13 @@ function LoginNaver() {
         onMouseLeave={() => setIsHovered(false)}
         style={buttonStyle}
       >
-        <img src={getImageSrc()} style={imageStyle} alt="대체_텍스트" />
+        <img
+          src={getImageSrc()}
+          style={{ ...webImageStyle, ...imageStyle }}
+          alt="대체_텍스트"
+        />
       </button>
-    </div>
+    </Box>
   );
 }
 

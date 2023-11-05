@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import axios from './components/customApi';
 import Logo from './img/SurveyLogo.png';
@@ -31,10 +31,17 @@ const basicBox = {
 };
 
 const secBasicBox = {
-  width: 350,
-  height: 400,
-  backgroundColor: '#C2E9FF',
+  width: '80%',
+  height: '50%',
+  backgroundColor: 'white',
   borderRadius: '10px',
+};
+
+const webSecBasicBox = {
+  '@media (min-width: 800px)': {
+    width: '25%',
+    height: '50%',
+  },
 };
 
 const loginBox = {
@@ -43,9 +50,14 @@ const loginBox = {
   justifyContent: 'center',
 };
 
-const imageSx = {
-  width: '50px',
-  marginRight: '10px',
+const webImageStyle = {
+  '@media (min-width: 800px)': {
+    width: '20%',
+  },
+};
+
+const mobileImageStyle = {
+  width: '20%',
 };
 
 const naverloginButton = {
@@ -229,18 +241,32 @@ function LoginDisplay() {
     navigate('/survey/main');
   };
 
+  //'@media(max-width: 400px)': { width: '10%' }
+
   return (
     <Box component="div" sx={basicBox}>
-      <Box sx={secBasicBox}>
+      <Box sx={{ ...secBasicBox, ...webSecBasicBox }}>
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={loginBox}>
-          <img src={`${Logo}`} style={imageSx} alt="not Logo" />
-          <h1 style={{ position: 'relative', color: '#9E9E9E' }}>
-            {' '}
+          <Box sx={{ ...mobileImageStyle, ...webImageStyle }}>
+            <img
+              src={`${Logo}`}
+              style={{ width: '70%', padding: '15%' }}
+              alt="not Logo"
+            />
+          </Box>
+          <Typography
+            variant="h1"
+            sx={{
+              fontSize: '150%', // 150%로 설정하여 1.5배 크기
+              color: '#9E9E9E',
+              position: 'relative',
+              fontWeight: 'bold',
+            }}
+          >
             NoName Survey
-          </h1>
+          </Typography>
         </Box>
-        <Box sx={emptyBoxSimple}> </Box>
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={naverloginButton}>
@@ -250,10 +276,17 @@ function LoginDisplay() {
         </Box>
 
         <Box sx={emptyBox} />
-
-        <h2 style={{ position: 'relative', marginBottom: '1px' }}>
+        <Typography
+          variant="h2"
+          sx={{
+            fontSize: '100%', // 150%로 설정하여 1.5배 크기
+            position: 'relative',
+            marginBottom: '1px',
+            fontWeight: 'bold',
+          }}
+        >
           Nice to See you Again
-        </h2>
+        </Typography>
         <Button sx={guestLogin} onClick={goLogin}>
           비회원으로 로그인
         </Button>
