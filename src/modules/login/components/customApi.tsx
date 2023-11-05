@@ -24,13 +24,10 @@ Api.interceptors.response.use(
       console.log('갱신할 토큰 없음');
     }
 
-    return response; // 이 부분에서 변경된 응답을 반환할 수도 있습니다
+    return response;
   },
   (error) => {
-    // 오류 응답을 받았을 때 실행할 코드
-    // error 변수는 에러 응답을 나타냅니다
-    // 예를 들어, 에러 처리 또는 로깅 등을 수행할 수 있습니다
-
+    console.error('customApi interceptor reponse error!');
     return Promise.reject(error);
   }
 );
