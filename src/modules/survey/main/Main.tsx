@@ -18,15 +18,15 @@ function Main() {
   return (
     <Container maxWidth="md">
       <h2 style={textStyle}>인기 설문</h2>
-      {/* <WeeklySurvey /> */}
+      <WeeklySurvey />
       <h2 style={textStyle}>
         최근 등록된 설문
         <Button onClick={() => navigate('/survey/search')}>전체 보기</Button>
       </h2>
       <Button onClick={() => navigate('/survey/statistics')}>통계 보기</Button>
-      {/* <RecentSurvey /> */}
+      <RecentSurvey />
       <h2 style={textStyle}>최근 마감된 설문</h2>
-      {/* <ClosingSurvey /> */}
+      <ClosingSurvey />
       <Floating />
     </Container>
   );

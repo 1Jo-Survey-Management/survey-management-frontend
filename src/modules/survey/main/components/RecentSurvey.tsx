@@ -1,7 +1,7 @@
 // Import Swiper React components
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../../login/components/customApi';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -74,7 +74,7 @@ function RecentSurvey() {
 
   useEffect(() => {
     const data = async () => {
-      const card = await axios.get('http://localhost:8080/surveys/recent');
+      const card = await axios.get('http://localhost:8080/api/surveys/recent');
       setCardList(card.data);
     };
     data();
