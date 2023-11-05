@@ -16,24 +16,44 @@ import WordCloud from './components/WordCloud';
 import GooglePieChart from './components/GooglePieChart';
 import { Selection } from './types/SurveyStatisticTypes';
 import { useNavigate } from 'react-router-dom';
+import { Container } from '@mui/system';
 
 const styles = {
   card: {
-    boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
-    marginBottom: '30px',
-    borderRadius: '3%',
+    '@media (min-width: 700px)': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   },
   cardTitle: {
-    backgroundImage: `url(${TitleFig})`,
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
+    // backgroundImage: `url(${TitleFig})`,
+    // backgroundSize: 'cover',
+    // backgroundRepeat: 'no-repeat',
 
     boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
     marginBottom: '30px',
     marginTop: '20px',
     borderRadius: '3%',
+    '@media (min-width: 700px)': {
+      width: '40%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   },
-  cardContent: { border: '1px solid #757575', borderRadius: '3%' },
+  cardContent: {
+    border: '1px solid #757575',
+    borderRadius: '3%',
+    '@media (min-width: 700px)': {
+      width: '40%',
+    },
+  },
+  googleChartContent: {
+    '@media (min-width: 700px)': {
+      width: '100%',
+    },
+  },
   subjectContent: {
     border: '1px solid #757575',
     borderRadius: '3%',
@@ -46,16 +66,25 @@ const styles = {
     fontSize: '40px',
     textAlign: 'center',
     fontWeight: 'bold',
+    '@media (max-width: 400px)': {
+      fontSize: '30px',
+    },
   },
   componentText: {
     fontSize: '25px',
     textAlign: 'left',
     margin: '10px',
     fontWeight: 'bold',
+    '@media (max-width: 400px)': {
+      fontSize: '20px',
+    },
   },
   surveyInfo: {
     fontSize: '15px',
     textAlign: 'right',
+    '@media (max-width: 400px)': {
+      fontSize: '13px',
+    },
   },
 };
 
@@ -122,31 +151,31 @@ export default function StatisticsPage() {
     return itemGroups;
   };
 
-  const isSmallScreen = useMediaQuery('(max-width: 500px)');
-
   return (
     <>
-      <Card sx={styles.cardTitle}>
-        <CardContent>
-          <Box>
-            <Typography style={textStyle} sx={styles.titleText}>
-              {surveyTitle}
-              <Divider />
-            </Typography>
-            <Typography style={textStyle} sx={styles.surveyInfo}>
-              설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
-              {surveyWriter}
-              &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt} &nbsp;&nbsp;&nbsp;
-              설문 참여자 수: {totalSelectionCount}
+      <Box sx={styles.card}>
+        <Card sx={styles.cardTitle}>
+          <CardContent>
+            <Box>
+              <Typography style={textStyle} sx={styles.titleText}>
+                {surveyTitle}
+                <Divider />
+              </Typography>
+              <Typography style={textStyle} sx={styles.surveyInfo}>
+                설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
+                {surveyWriter}
+                &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt}{' '}
+                &nbsp;&nbsp;&nbsp; 설문 참여자 수: {totalSelectionCount}
+                <br />
+                <br />
+                <Button variant="contained">참여하기</Button>&nbsp;&nbsp;&nbsp;
+                <Button variant="contained">돌아가기</Button>&nbsp;&nbsp;&nbsp;
+              </Typography>
               <br />
-              <br />
-              <Button variant="contained">참여하기</Button>&nbsp;&nbsp;&nbsp;
-              <Button variant="contained">돌아가기</Button>&nbsp;&nbsp;&nbsp;
-            </Typography>
-            <br />
-          </Box>
-        </CardContent>
-      </Card>
+            </Box>
+          </CardContent>
+        </Card>
+      </Box>
       {Object.keys(allItems).map((questionNo: any) => {
         const itemsForQuestion: Selection[] = allItems[questionNo];
         const questionTypeNo = itemsForQuestion[0].questionTypeNo;
@@ -199,73 +228,75 @@ export default function StatisticsPage() {
         const LongSubData = extractLongSubjectiveAnswer(itemsForQuestion);
 
         return (
-          <Card sx={styles.cardTitle} key={questionNo}>
-            <CardContent>
-              <Box>
-                <Typography style={textStyle} sx={styles.componentText}>
-                  {itemsForQuestion[0].surveyQuestionNo} .{' '}
-                  {itemsForQuestion[0].surveyQuestionTitle}
-                  <br />
-                </Typography>
-                <Divider />
-
-                <Typography style={textStyle} sx={styles.surveyInfo}>
-                  <br />
-                  &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
-                  {itemsForQuestion[0].selectionCount != 0
-                    ? countSelections(itemsForQuestion)
-                    : countSubjectiveAnswerCount(itemsForQuestion)}
-                </Typography>
-                <br />
-
-                {questionTypeNo === 1 && (
-                  <Box sx={styles.cardContent}>
-                    <GooglePieChart selectionAnswer={chartData} />
-                  </Box>
-                )}
-                {questionTypeNo === 2 && (
-                  <div>
-                    <GooglePieChart selectionAnswer={chartData} />
-                  </div>
-                )}
-                {questionTypeNo === 3 && (
-                  <div>
-                    <GooglePieChart selectionAnswer={chartData} />
-                  </div>
-                )}
-                {questionTypeNo === 4 && (
-                  <>
-                    <Typography style={textStyle}>
-                      ## 단답형의 답들은 다음과 같은 것들이 있었습니다!
-                    </Typography>
+          <Box sx={styles.card}>
+            <Card sx={styles.cardTitle} key={questionNo}>
+              <CardContent>
+                <Box>
+                  <Typography style={textStyle} sx={styles.componentText}>
+                    {itemsForQuestion[0].surveyQuestionNo} .{' '}
+                    {itemsForQuestion[0].surveyQuestionTitle}
                     <br />
-                    <Box sx={styles.subjectContent}>
-                      <WordCloud
-                        wordCloud={shortSubData.map((item) => ({
-                          text: item.surveySubjectiveAnswer,
-                          value: item.questionTypeNo,
-                        }))}
-                      />
-                    </Box>
-                    <br />
-                    <Typography style={textStyle}>답변 랭킹!!</Typography>
-                    <AnswerList selectList={shortSubData} />
-                  </>
-                )}
+                  </Typography>
+                  <Divider />
 
-                {questionTypeNo === 5 && (
-                  <>
-                    <Typography style={textStyle}>
-                      ## 서술형의 답들은 다음과 같은 것들이 있었습니다!
-                    </Typography>
-                    <Box>
-                      <AnswerList selectList={LongSubData} />
+                  <Typography style={textStyle} sx={styles.surveyInfo}>
+                    <br />
+                    &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
+                    {itemsForQuestion[0].selectionCount != 0
+                      ? countSelections(itemsForQuestion)
+                      : countSubjectiveAnswerCount(itemsForQuestion)}
+                  </Typography>
+                  <br />
+
+                  {questionTypeNo === 1 && (
+                    <Box sx={styles.googleChartContent}>
+                      <GooglePieChart selectionAnswer={chartData} />
                     </Box>
-                  </>
-                )}
-              </Box>
-            </CardContent>
-          </Card>
+                  )}
+                  {questionTypeNo === 2 && (
+                    <Box sx={styles.googleChartContent}>
+                      <GooglePieChart selectionAnswer={chartData} />
+                    </Box>
+                  )}
+                  {questionTypeNo === 3 && (
+                    <Box sx={styles.googleChartContent}>
+                      <GooglePieChart selectionAnswer={chartData} />
+                    </Box>
+                  )}
+                  {questionTypeNo === 4 && (
+                    <>
+                      <Typography style={textStyle}>
+                        ## 단답형의 답들은 다음과 같은 것들이 있었습니다!
+                      </Typography>
+                      <br />
+                      <Box sx={styles.subjectContent}>
+                        <WordCloud
+                          wordCloud={shortSubData.map((item) => ({
+                            text: item.surveySubjectiveAnswer,
+                            value: item.questionTypeNo,
+                          }))}
+                        />
+                      </Box>
+                      <br />
+                      <Typography style={textStyle}>답변 랭킹!!</Typography>
+                      <AnswerList selectList={shortSubData} />
+                    </>
+                  )}
+
+                  {questionTypeNo === 5 && (
+                    <>
+                      <Typography style={textStyle}>
+                        ## 서술형의 답들은 다음과 같은 것들이 있었습니다!
+                      </Typography>
+                      <Box>
+                        <AnswerList selectList={LongSubData} />
+                      </Box>
+                    </>
+                  )}
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
         );
       })}
     </>
