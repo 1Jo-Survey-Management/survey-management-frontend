@@ -271,9 +271,9 @@ function LoginDisplay() {
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={naverloginButton}>
           <LoginNaver />
-
-          {showModal && <BasicModal onClose={() => {}} />}
         </Box>
+
+        {showModal && <BasicModal onClose={() => {}} />}
 
         <Box sx={emptyBox} />
         <Typography
