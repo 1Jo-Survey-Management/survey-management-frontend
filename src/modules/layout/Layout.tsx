@@ -3,6 +3,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Header from './Header';
+
+
 import LoginPage from '../login/LoginDisplay';
 import axios from '../login/components/customApi';
 
@@ -18,14 +20,27 @@ export default function Layout() {
     console.log(`로컬스토리지 토큰 : ${responseAcccessToken}`);
     axios.defaults.headers.common.Authorization = `Bearer ${responseAcccessToken}`;
   }, []);
+
+  console.log(`현재 위치 : ${location.pathname}`);
+
+  const isLoginPage = location.pathname === '/';
   return (
     <>
       <CssBaseline />
+
       <Header />
+
+
+      {isLoginPage ? (
+        <LoginPage />
+      ) : (
+        <>
           <Container>
             <Outlet />
           </Container>
-          {/* <Footer /> */}      
+          {/* <Footer /> */}
+        </>
+      )}
     </>
   );
 }
