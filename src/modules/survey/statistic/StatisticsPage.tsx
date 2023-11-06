@@ -1,22 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  useMediaQuery,
-  Button,
-} from '@mui/material';
+import { Box, Card, CardContent, Typography, Button } from '@mui/material';
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
 import axios from '../../login/components/customApi';
 import Divider from '@mui/material/Divider';
-import TitleFig from './imgs/surveyTitlepng.png';
-import WordCloud from './components/WordCloud';
+import WordCloud from './components/WordCloudTest';
 import GooglePieChart from './components/GooglePieChart';
 import { Selection } from './types/SurveyStatisticTypes';
 import { useNavigate } from 'react-router-dom';
-import { Container } from '@mui/system';
 
 const styles = {
   card: {
@@ -273,7 +264,7 @@ export default function StatisticsPage() {
                         <WordCloud
                           wordCloud={shortSubData.map((item) => ({
                             text: item.surveySubjectiveAnswer,
-                            value: item.questionTypeNo,
+                            size: item.questionTypeNo,
                           }))}
                         />
                       </Box>
