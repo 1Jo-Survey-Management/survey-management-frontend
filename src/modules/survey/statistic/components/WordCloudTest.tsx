@@ -31,9 +31,12 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
     { text: string; size: number }[]
   >([]);
 
+  const [width, setWidth] = useState<number>(800);
+  const [height, setHeight] = useState<number>(400);
+
   const incrementValue = 10;
 
-  useEffect(() => {
+  const updateWordCloud = () => {
     const updatedWordCloudData = wordCloud.reduce(
       (acc, word) => {
         return updateWordCloudData(acc, word.text, incrementValue);
@@ -42,15 +45,37 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
     );
 
     setWordCloudData(updatedWordCloudData);
-  }, [wordCloud, incrementValue]);
+  };
 
   useEffect(() => {
-    if (wordCloudData && wordCloudData.length) {
+    const containerWidth = svgRef.current?.getBoundingClientRect().width;
+
+    console.log('크기가 어떻길래 : ' + containerWidth);
+
+    if (containerWidth) {
+      setWidth(containerWidth);
+    }
+
+    const handleResize = () => {
+      const newContainerWidth = svgRef.current?.getBoundingClientRect().width;
+      console.log('리사이즈 크기가 어떻길래 : ' + newContainerWidth);
+
+      if (newContainerWidth) {
+        setWidth(newContainerWidth);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    updateWordCloud();
+  }, [wordCloud]);
+
+  useEffect(() => {
+    if (wordCloudData && wordCloudData.length && width && height) {
       console.log(
         '워드클라우드 다음내용 : ' + JSON.stringify(wordCloudData, null, 2)
       );
-      const width = 800;
-      const height = 400;
+
       const svg = svgRef.current;
 
       if (svg) {
@@ -82,7 +107,7 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
         layout.start();
       }
     }
-  }, [wordCloudData]);
+  }, [wordCloudData, width, height]);
 
   return <svg ref={svgRef}></svg>;
 }
