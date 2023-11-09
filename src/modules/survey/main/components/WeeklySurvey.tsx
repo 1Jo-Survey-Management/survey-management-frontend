@@ -319,7 +319,9 @@ function WeeklySurvey() {
           <p id="modal-description" style={textStyle}>
             {selectedCard ? selectedCard.surveyDiscription : ''}
           </p>
-          <Button onClick={() => navigate('/survey/Search')}>결과보기</Button>
+          <Button onClick={() => navigate('/survey/statistics')}>
+            결과보기
+          </Button>
           <Button onClick={() => navigate('/survey/Search')}>참여하기</Button>
           <Button onClick={closeCardModal}>닫기</Button>
         </div>

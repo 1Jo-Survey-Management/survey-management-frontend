@@ -110,7 +110,7 @@ export default function StatisticsPage() {
           setSurveyPostAt(response.data.content[0].surveyPostAt);
         })
         .catch((error) => {
-          console.error('로그인이 필요합니다! ', error);
+          alert('로그인이 필요합니다!');
           navigate('/');
         });
     };

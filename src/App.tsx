@@ -12,6 +12,7 @@ import LoginDisplay from './modules/login/LoginDisplay';
 import MypageWriteSurvey from './modules/survey/MypageWriteSurvey';
 import StatisticsPage from './modules/survey/statistic/StatisticsPage';
 import Main from './modules/survey/main/Main';
+import Search from './modules/survey/main/Search';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/survey/modify" element={<Navigate to="/login" />} />
           <Route path="/login" element={<LoginDisplay />} />
           <Route path="/survey/mypage" element={<MypageWriteSurvey />} />
+          <Route path="/survey/search" element={<Search />} />
         </Route>
       </Routes>
     </Router>

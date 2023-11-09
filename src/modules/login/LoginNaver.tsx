@@ -7,7 +7,7 @@ const bottonBoxStyle = {
 };
 
 const webButtonBoxStyle = {
-  '@media (min-width: 800px)': {
+  '@media (minWidth: 800px)': {
     width: '100%',
   },
 };
@@ -23,7 +23,7 @@ const imageStyle = {
 };
 
 const webImageStyle = {
-  '@media (min-width: 800px)': {
+  '@media (minWidth: 800px)': {
     width: '10%',
   },
 };

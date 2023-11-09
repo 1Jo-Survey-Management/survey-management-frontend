@@ -103,7 +103,7 @@ function Menu({ toggleDrawer }: MenuProps) {
     /**
      * FIXME: router 지정 && 인가 사용자 검증 로직 -> 실패하면 로그인 페이지 리다이렉트
      */
-    navigate('');
+    navigate('/survey/MypageAttend');
   };
 
   /**
@@ -115,7 +115,7 @@ function Menu({ toggleDrawer }: MenuProps) {
     /**
      * FIXME: router 지정 && 인가 사용자 검증 로직 -> 실패하면 로그인 페이지 리다이렉트
      */
-    navigate('');
+    navigate('/survey/mypage');
   };
 
   /**
@@ -126,7 +126,7 @@ function Menu({ toggleDrawer }: MenuProps) {
     /**
      * FIXME: router 지정 && 인가 사용자 검증 로직 -> 실패하면 로그인 페이지 리다이렉트
      */
-    navigate('');
+    navigate('/survey/modify');
   };
 
   return (

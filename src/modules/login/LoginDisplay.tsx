@@ -53,7 +53,7 @@ const loginBox = {
 };
 
 const webImageStyle = {
-  '@media (min-width: 800px)': {
+  '@media (minWidth: 800px)': {
     width: '20%',
   },
 };
@@ -119,12 +119,6 @@ function LoginDisplay() {
 
             if (respData === '') {
               alert('회원가입 취소중..');
-              // localStorage.removeItem('userNo');
-              // localStorage.removeItem('userNickname');
-              // localStorage.removeItem('userImage');
-              // localStorage.removeItem('accessToken');
-              // localStorage.removeItem('expiresIn');
-
               setShowModal(false);
 
               navigate('/');
@@ -155,40 +149,45 @@ function LoginDisplay() {
           const responseNickName = responseCheck.data.content.userNickname;
           const responseExpiresIn = responseCheck.data.content.expiresIn;
 
-          localStorage.setItem('userNo', responseUserNo);
-          localStorage.setItem('userNickname', responseNickName);
-          localStorage.setItem('userImage', responseImage);
-          localStorage.setItem('accessToken', responseAccessToken);
-          localStorage.setItem('expiresIn', responseExpiresIn);
-
-          if (respData === '') {
+          if (respData === '' || !responseNickName) {
             alert('로그인이 필요합니다!');
-            console.error('API 응답 데이터 없음!');
-          }
+            localStorage.removeItem('userNo');
+            localStorage.removeItem('userNickname');
+            localStorage.removeItem('userImage');
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('expiresIn');
 
-          navigate('/survey/main');
+            axios.defaults.headers.common['Authorization'] = null;
+
+            navigate('/');
+          } else {
+            localStorage.setItem('userNo', responseUserNo);
+            localStorage.setItem('userNickname', responseNickName);
+            localStorage.setItem('userImage', responseImage);
+            localStorage.setItem('accessToken', responseAccessToken);
+            localStorage.setItem('expiresIn', responseExpiresIn);
+
+            navigate('/survey/main');
+          }
         })
-        .catch((error) => {
+        .catch(() => {
           localStorage.removeItem('userNo');
           localStorage.removeItem('userNickname');
           localStorage.removeItem('userImage');
           localStorage.removeItem('accessToken');
           localStorage.removeItem('expiresIn');
 
-          console.error('API 요청 실패!');
+          console.info('로그인 되어있지 않습니다!');
         });
     }
 
     // Authorization code를 받으면 백 서버로 요청을 보내준다.
     if (accessCode) {
-      // const userNo = localStorage.get('userNo');
-
       axios
         .get(redirectUri, {
           params: {
             code: accessCode,
             state: 'STATE_STRING',
-            // userNo: userNo,
           },
         })
         .then((response) => {
@@ -207,6 +206,9 @@ function LoginDisplay() {
           localStorage.setItem('userImage', responseImage);
           localStorage.setItem('accessToken', responseAccessToken);
           localStorage.setItem('expiresIn', responseExpiresIn);
+
+          console.log('responseNickName : ' + responseNickName);
+          console.log('responseImage : ' + responseImage);
 
           // 1. 완료된 회원
           if (responseUserNo != null && responseNickName != null) {
@@ -242,8 +244,6 @@ function LoginDisplay() {
 
             const expiresAt = localStorage.getItem('expiresIn');
             console.log(`유효시간 확인 : ${expiresAt}`);
-
-            // axios.defaults.headers.common.Authorization = `Bearer ${responseAccessToken}`;
 
             navigate('/survey/main');
 

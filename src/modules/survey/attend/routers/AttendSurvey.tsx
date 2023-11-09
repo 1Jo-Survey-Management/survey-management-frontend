@@ -7,7 +7,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Stack } from '@mui/material';
-import axios from 'axios';
+import axios from '../../../login/components/customApi';
 import AttendSingleChoice from '../components/AttendSingleChoice';
 import AttendSingleMoveChoice from '../components/AttendSingleMoveChoice';
 import { SurveyData, SurveyItem } from '../types/AttendTypes';
