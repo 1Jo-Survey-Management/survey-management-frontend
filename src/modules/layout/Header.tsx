@@ -39,9 +39,15 @@ function Header() {
   const logout = () => {
     console.log('logout');
 
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('expiresIn');
+    axios.get('/login/logout').then((response) => {
+      const respData = response.data;
+      console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
+      axios.defaults.headers.common.Authorization = null;
+
+      if (respData === '') {
+        console.log('API 요청 실패');
+      }
+    });
 
     axios.defaults.headers.common.Authorization = null;
 
