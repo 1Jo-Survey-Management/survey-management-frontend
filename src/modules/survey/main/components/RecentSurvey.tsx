@@ -35,7 +35,7 @@ function RecentSurvey() {
       height: '170px',
     },
   };
-  const fontFamily = "'Sunflower', sans-serif";
+  const fontFamily = 'nanumsquare';
   const textStyle = {
     fontFamily,
     textOverflow: 'ellipsis',
@@ -70,7 +70,7 @@ function RecentSurvey() {
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
       case '진행':
-        return '#7F81B4';
+        return '#3D882B';
       case '작성':
         return 'secondary';
       default:
@@ -80,7 +80,7 @@ function RecentSurvey() {
 
   useEffect(() => {
     const data = async () => {
-      const card = await axios.get('http://localhost:8080/surveys/recent');
+      const card = await axios.get('http://localhost:8080/api/surveys/recent');
       setCardList(card.data);
     };
     data();
@@ -98,37 +98,32 @@ function RecentSurvey() {
     setOpenModal(false);
   };
 
-  const cardColor = () => {
-    if (
-      !selectedCard?.attendCheckList ||
-      selectedCard.attendCheckList.some((item) => item === false) ||
-      selectedCard?.userNo === userInfo.loginUserNo
-    ) {
-      return '#FFEAEA';
-    }
-    return '#D3D4F5';
-  };
   const swiperParams: SwiperOptions = {
     slidesPerView: 'auto', // 한 번에 보여질 슬라이드 수
     spaceBetween: 5, // 슬라이드 간의 간격 (옵션)
     breakpoints: {
-      1050: {
+      920: {
         slidesPerView: 5,
+        spaceBetween: 5,
       },
-      870: {
+      750: {
         slidesPerView: 4,
+        spaceBetween: 5,
       },
-      // 화면 너비가 768px 이상일 때 3개의 슬라이드 보이기
-      730: {
+
+      540: {
         slidesPerView: 3,
+        spaceBetween: 5,
       },
-      // 화면 너비가 480px 이상 768px 미만일 때 2개의 슬라이드 보이기
-      511: {
+
+      500: {
         slidesPerView: 2,
+        spaceBetween: 5,
       },
-      // 화면 너비가 480px 미만일 때 1개의 슬라이드 보이기
+
       0: {
         slidesPerView: 1.8,
+        spaceBetween: 5,
       },
     },
   };
@@ -155,13 +150,13 @@ function RecentSurvey() {
                   {/* 카드를 클릭하면 해당 카드 정보를 전달하여 모달 열기 */}
                   <SwiperSlide style={styles.Slide}>
                     <Card
-                      variant="outlined"
+                      variant="elevation"
                       sx={{
                         width: '150px',
                         height: '160px',
-                        border: 2.5,
-                        borderColor: cardColor,
                         borderRadius: 5,
+                        backgroundColor: '#D1E4CC',
+                        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                       }}
                       style={textStyle}
                       onClick={() => openCardModal(card)}
@@ -184,7 +179,8 @@ function RecentSurvey() {
                             icon={
                               <GroupsIcon
                                 sx={{
-                                  fontSize: '15px',
+                                  width: '18px',
+                                  height: '18px',
                                 }}
                               />
                             }
@@ -195,13 +191,14 @@ function RecentSurvey() {
                               height: '20px',
                               fontWeight: 600,
                               justifyContent: 'space-between',
+                              backgroundColor: '#BDD4B7',
                             }}
                             style={textStyle}
                           />
 
                           <Chip
                             label={card.surveyStatusName}
-                            variant="outlined"
+                            variant="filled"
                             sx={{
                               width: '50px',
                               height: '20px',
@@ -210,6 +207,7 @@ function RecentSurvey() {
                               '& .MuiChip-label': {
                                 padding: 0,
                               },
+                              backgroundColor: '#BDD5B1',
                               color: getChipColor(card.surveyStatusName),
                             }}
                             style={textStyle}
@@ -249,7 +247,7 @@ function RecentSurvey() {
                           variant="h5"
                           component="div"
                           sx={{
-                            fontSize: 17,
+                            fontSize: 15,
                             fontWeight: 600,
                             marginBottom: '8px',
                             cursor: 'pointer',
@@ -271,6 +269,8 @@ function RecentSurvey() {
                             '& > span:not(:last-child)': {
                               marginRight: '8px',
                             },
+                            color: '#4B6744',
+                            fontWeight: 'bold',
                           }}
                           style={textStyle}
                         >

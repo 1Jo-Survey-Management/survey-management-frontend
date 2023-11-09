@@ -24,9 +24,9 @@ export default function FloatingActionButtons() {
       zIndex: '1',
     },
     fabStyles: {
-      width: '44px',
-      height: '44px',
-      marginBottom: '8px',
+      width: '50px',
+      height: '50px',
+      marginBottom: '15px',
     },
   };
 
@@ -35,7 +35,11 @@ export default function FloatingActionButtons() {
       <Fab
         sx={{
           ...styles.fabStyles,
-          backgroundColor: '#C5C7F2',
+          backgroundColor: '#8ECC7E',
+          marginRight: '25px',
+          '&:hover': {
+            backgroundColor: '#438133', // Change this to the desired color on hover
+          },
         }}
         color="primary"
         aria-label="pageup"
@@ -46,7 +50,11 @@ export default function FloatingActionButtons() {
       <Fab
         sx={{
           ...styles.fabStyles,
-          backgroundColor: '#C5C7F2',
+          backgroundColor: '#8ECC7E',
+          marginRight: '25px',
+          '&:hover': {
+            backgroundColor: '#438133', // Change this to the desired color on hover
+          },
         }}
         color="primary"
         onClick={() => navigate('/survey/register')}

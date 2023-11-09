@@ -13,12 +13,23 @@ function Body() {
 
   const containerStyle = {
     maxWidth: 'md',
-    height: '500px',
+    height: '600px',
+  };
+
+  const backStyle = {
+    backgroundColor: '#FFFDF8',
   };
 
   console.log(location.pathname);
   return (
-    <Container style={containerStyle}>{routeInfo(location.pathname)}</Container>
+    <div style={backStyle}>
+      <Container
+        style={containerStyle}
+        sx={{ paddingTop: '0', backgroundColor: '#FFDF8' }}
+      >
+        {routeInfo(location.pathname)}
+      </Container>
+    </div>
   );
 }
 

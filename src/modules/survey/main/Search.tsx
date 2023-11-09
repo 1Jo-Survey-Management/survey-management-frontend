@@ -10,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
 import '../../../global.css';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import TextField from '@mui/material/TextField';
 import {
   Button,
   Card,
@@ -22,6 +23,7 @@ import {
   Fade,
 } from '@mui/material';
 import GroupsIcon from '@mui/icons-material/Groups';
+import { relativeTimeRounding } from 'moment';
 import Floating from './components/Floating';
 
 type CardData = {
@@ -58,7 +60,7 @@ function SurveySearch() {
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
       case '진행':
-        return '#7F81B4';
+        return '#3D882B';
       case '작성':
         return 'secondary';
       default:
@@ -66,8 +68,8 @@ function SurveySearch() {
     }
   };
 
-  const fontFamily = "'Sunflower', sans-serif";
-  const contentFont = "'Poor Story', sans-serif";
+  const fontFamily = 'nanumsquare';
+  const contentFont = 'GmarketSansMedium';
   const textStyle = {
     fontFamily,
     contentFont,
@@ -83,7 +85,7 @@ function SurveySearch() {
     const fetchData = async () => {
       if (selectedState === '전체(모든 카드)') {
         const response = await axios.get(
-          `http://localhost:8080/surveys/surveyall?page=${page}`
+          `http://localhost:8080/api/surveys/surveyall?page=${page}`
         );
         if (response.data.length === 0) {
           setHasMore(false);
@@ -97,7 +99,7 @@ function SurveySearch() {
         }
       } else if (selectedState === '진행') {
         const response = await axios.get(
-          `http://localhost:8080/surveys/select-post?page=${page}`
+          `http://localhost:8080/api/surveys/select-post?page=${page}`
         );
 
         if (response.data.length === 0) {
@@ -112,7 +114,7 @@ function SurveySearch() {
         }
       } else if (selectedState === '마감') {
         const response = await axios.get(
-          `http://localhost:8080/surveys/select-closing?page=${page}`
+          `http://localhost:8080/api/surveys/select-closing?page=${page}`
         );
 
         if (response.data.length === 0) {
@@ -199,13 +201,18 @@ function SurveySearch() {
     setOpenModal(false);
   };
 
-  // const cardColor = (selectedCard?.surveyStatusName) => {
-  //   if (selectedCard?.surveyStatusName === '마감') {
-  //     return '#E4E4E4';
-  //   }
+  const cardColor = (selectedCard) => {
+    if (selectedCard?.surveyStatusName !== '마감') {
+      const colors = ['#D1E4CC', '#B8DDA6'];
+      const randomIndex = Math.floor(Math.random() * colors.length);
+      return colors[randomIndex];
+    }
+    if (selectedCard?.surveyStatusName === '마감') {
+      return '#E4E4E4';
+    }
 
-  //   return '#FFEAEA';
-  // };
+    // 마감인 경우 아무 것도 반환하지 않음
+  };
 
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
@@ -223,7 +230,7 @@ function SurveySearch() {
       </Typography>
 
       {/* 검색어 입력란 */}
-      <Paper
+      {/* <Paper
         component="form"
         sx={{
           p: '2px 4px',
@@ -231,8 +238,8 @@ function SurveySearch() {
           alignItems: 'center',
           width: 300,
         }}
-      >
-        <InputBase
+      > */}
+      {/* <InputBase
           sx={{
             ml: 1,
             flex: 1,
@@ -241,16 +248,25 @@ function SurveySearch() {
           placeholder="제목, 작성자를 입력해주세요"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <IconButton
-          type="button"
-          sx={{ p: '10px' }}
-          aria-label="search"
-          onClick={handleSearch}
-        >
-          <SearchIcon />
-        </IconButton>
-      </Paper>
+        /> */}
+
+      <TextField
+        id="standard-basic"
+        label="제목, 작성자를 입력해주세요"
+        value={searchTerm}
+        variant="standard"
+        onChange={(e) => setSearchTerm(e.target.value)}
+        sx={{ width: 300 }}
+      />
+      <IconButton
+        type="button"
+        sx={{ p: '10px' }}
+        aria-label="search"
+        onClick={handleSearch}
+      >
+        <SearchIcon />
+      </IconButton>
+      {/* </Paper> */}
 
       {/* 상태 선택 */}
       <div
@@ -339,7 +355,7 @@ function SurveySearch() {
         dataLength={filteredData.length}
         next={next}
         hasMore={hasMore}
-        loader={<h4>loading</h4>}
+        loader={null}
       >
         <Box
           sx={{
@@ -359,16 +375,19 @@ function SurveySearch() {
               tabIndex={0}
             >
               {/* 카드를 클릭하면 해당 카드 정보를 전달하여 모달 열기 */}
+
               <Card
-                variant="outlined"
+                variant="elevation"
                 sx={{
                   width: '150px',
                   height: '160px',
-                  border: 2.5,
-                  borderColor: '#FFFACC',
                   borderRadius: 5,
-                  fontStyle: textStyle,
+                  backgroundColor: '#D1E4CC',
+                  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                 }}
+                style={textStyle}
+                onClick={() => openCardModal(card)}
+                role="button"
               >
                 <CardContent
                   sx={{
@@ -386,7 +405,8 @@ function SurveySearch() {
                       icon={
                         <GroupsIcon
                           sx={{
-                            fontSize: '15px',
+                            width: '18px',
+                            height: '18px',
                           }}
                         />
                       }
@@ -397,13 +417,14 @@ function SurveySearch() {
                         height: '20px',
                         fontWeight: 600,
                         justifyContent: 'space-between',
-                        fontStyle: textStyle,
+                        backgroundColor: '#BDD4B7',
                       }}
+                      style={textStyle}
                     />
 
                     <Chip
                       label={card.surveyStatusName}
-                      variant="outlined"
+                      variant="filled"
                       sx={{
                         width: '50px',
                         height: '20px',
@@ -412,6 +433,7 @@ function SurveySearch() {
                         '& .MuiChip-label': {
                           padding: 0,
                         },
+                        backgroundColor: '#BDD5B1',
                         color: getChipColor(card.surveyStatusName),
                       }}
                       style={textStyle}
@@ -442,13 +464,13 @@ function SurveySearch() {
                       fontStyle: textStyle,
                     }}
                   >
-                    {card.surveyNo}
+                    {/* {card.surveyNo} */}
                   </Typography>
                   <Typography
                     variant="h5"
                     component="div"
                     sx={{
-                      fontSize: 17,
+                      fontSize: 15,
                       fontWeight: 600,
                       marginBottom: '8px',
                       cursor: 'pointer',
@@ -480,6 +502,8 @@ function SurveySearch() {
                       '& > span:not(:last-child)': {
                         marginRight: '8px',
                       },
+                      color: '#4B6744',
+                      fontWeight: 'bold',
                     }}
                     style={textStyle}
                   >

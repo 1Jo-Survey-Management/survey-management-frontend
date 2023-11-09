@@ -48,7 +48,7 @@ function ClosingSurvey() {
     isDeleted: boolean;
     attend_check: boolean;
   };
-  const fontFamily = "'Sunflower', sans-serif";
+  const fontFamily = 'nanumsquare';
   const textStyle = {
     fontFamily,
     textOverflow: 'ellipsis',
@@ -60,7 +60,7 @@ function ClosingSurvey() {
 
   useEffect(() => {
     const data = async () => {
-      const card = await axios.get('http://localhost:8080/surveys/closing');
+      const card = await axios.get('http://localhost:8080/api/surveys/closing');
 
       setCardList(card.data);
     };
@@ -88,37 +88,37 @@ function ClosingSurvey() {
     setOpenModal(false);
   };
 
-  // const reParticipation = () => {
-  //   if(    ) {
-  //     alert('본인이 작성한 설문에는 참여할 수 없습니다.')
-  //   } else {
-  //     (() => navigate('/survey/Search'))
-  //   }
-  // }
-
   const swiperParams: SwiperOptions = {
     slidesPerView: 'auto',
     spaceBetween: 5,
     breakpoints: {
-      1050: {
+      920: {
         slidesPerView: 5,
+        spaceBetween: 5,
       },
-      870: {
+      750: {
         slidesPerView: 4,
+        spaceBetween: 5,
       },
-      730: {
+
+      540: {
         slidesPerView: 3,
+        spaceBetween: 5,
       },
-      511: {
+
+      500: {
         slidesPerView: 2,
+        spaceBetween: 5,
       },
+
       0: {
         slidesPerView: 1.8,
+        spaceBetween: 5,
       },
     },
   };
 
-  const cardColor = () => '#E4E4E4';
+  const cardColor = () => '#F2F2F2';
   return (
     <div>
       <div>
@@ -144,13 +144,15 @@ function ClosingSurvey() {
                 >
                   <SwiperSlide style={styles.Slide}>
                     <Card
-                      variant="outlined"
+                      variant="elevation"
                       sx={{
                         width: '150px',
                         height: '160px',
                         border: 2.5,
                         borderColor: cardColor,
                         borderRadius: 5,
+                        backgroundColor: '#F2F2F2',
+                        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                       }}
                       style={textStyle}
                       onClick={() => openCardModal(card)}
@@ -174,6 +176,8 @@ function ClosingSurvey() {
                               <GroupsIcon
                                 sx={{
                                   fontSize: '15px',
+                                  width: '18px',
+                                  height: '18px',
                                 }}
                               />
                             }
@@ -190,7 +194,7 @@ function ClosingSurvey() {
 
                           <Chip
                             label={card.surveyStatusName}
-                            variant="outlined"
+                            variant="filled"
                             sx={{
                               width: '50px',
                               height: '20px',
@@ -199,6 +203,7 @@ function ClosingSurvey() {
                               '& .MuiChip-label': {
                                 padding: 0,
                               },
+                              backgroundColor: '#EAEAEA',
                               color: getChipColor(card.surveyStatusName),
                             }}
                             style={textStyle}
@@ -212,7 +217,7 @@ function ClosingSurvey() {
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             fontSize: 12,
-                            color: 'text.secondary',
+                            color: '#8B8B8B',
                             fontWeight: 600,
                             marginBottom: '0px',
                             fontFamily,
@@ -238,7 +243,7 @@ function ClosingSurvey() {
                           variant="h5"
                           component="div"
                           sx={{
-                            fontSize: 17,
+                            fontSize: 15,
                             fontWeight: 600,
                             marginBottom: '8px',
                             cursor: 'pointer',
@@ -247,6 +252,7 @@ function ClosingSurvey() {
                             display: '-webkit-box',
                             WebkitLineClamp: 2,
                             WebkitBoxOrient: 'vertical',
+                            color: '#8B8B8B',
                           }}
                           style={textStyle}
                         >
@@ -260,11 +266,12 @@ function ClosingSurvey() {
                             '& > span:not(:last-child)': {
                               marginRight: '8px',
                             },
+                            color: '#8B8B8B',
                           }}
                           style={textStyle}
                         >
                           {card.tag.map((tag) => (
-                            <span key={tag}>{tag}</span>
+                            <span key={tag}>#{tag}</span>
                           ))}
                         </Typography>
                       </CardContent>

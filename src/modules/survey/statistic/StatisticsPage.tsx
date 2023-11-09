@@ -77,7 +77,9 @@ export default function StatisticsPage() {
   useEffect(() => {
     const fetchData = async () => {
       await axios
-        .get(`http://localhost:8080/survey/resultall?surveyno=${statSurveyNo}`)
+        .get(
+          `http://localhost:8080/api/survey/resultall?surveyno=${statSurveyNo}`
+        )
         .then((response) => {
           setSelectStat(response.data.content);
           setTotalSelectionCount(response.data.content[0].totalAttend);

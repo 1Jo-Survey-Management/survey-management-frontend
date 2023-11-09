@@ -10,6 +10,7 @@ import { Button, Drawer, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import axios from '../login/components/customApi';
 import '../../global.css';
+import logo from './logo.png';
 
 import './Header.css';
 import Menu from './Menu';
@@ -66,18 +67,25 @@ function Header() {
     };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+    <Box sx={{ flexGrow: 1 }} height={110}>
+      <AppBar
+        position="static"
+        sx={{
+          backgroundColor: '#FFFDF8',
+          boxShadow: 'none',
+          height: '110px',
+          marginBottom: '0',
+        }}
+      >
         <Toolbar>
           <IconButton
             size="large"
-            color="inherit"
+            sx={{ color: '#57A035' }}
             aria-label="menu"
             onClick={toggleDrawer(true)}
           >
             <MenuIcon />
           </IconButton>
-
           <React.Fragment key={ANCHOR_TYPE}>
             <Drawer
               anchor={ANCHOR_TYPE}
@@ -87,17 +95,37 @@ function Header() {
               <Menu toggleDrawer={toggleDrawer} />
             </Drawer>
           </React.Fragment>
-
-          <Typography variant="h6" onClick={goMain}>
-            Logo survey
-          </Typography>
+          <div
+            style={{
+              maxWidth: '300px', // 최대 너비 설정
+              maxHeight: '60px', // 최대 높이 설정
+            }}
+          >
+            <img
+              src={logo}
+              alt="로고"
+              style={{
+                width: '100%', // 너비 100%로 설정하여 부모 요소에 맞추기
+                height: 'auto', // 원본 이미지의 비율 유지
+              }}
+              onClick={goMain}
+              onKeyDown={goMain}
+              role="presentation"
+            />
+          </div>
           {isHomePage || !hasAccessToken ? (
-            <Button onClick={login} color="inherit">
-              로그인
+            <Button
+              onClick={login}
+              sx={{ color: '#57A035', fontStyle: textStyle, fontSize: '20px' }}
+            >
+              LogIn
             </Button>
           ) : (
-            <Button onClick={logout} color="inherit">
-              로그아웃
+            <Button
+              onClick={logout}
+              sx={{ color: '#57A035', fontStyle: textStyle, fontSize: '20px' }}
+            >
+              Logout
             </Button>
           )}
         </Toolbar>
