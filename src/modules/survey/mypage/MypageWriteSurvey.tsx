@@ -20,6 +20,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 interface CardData {
   surveyNo: number;
@@ -32,8 +34,10 @@ interface CardData {
   surveyClosingAt: string;
   surveyPostAt: string;
   openStatusNo: number;
-  userNickname: string;
+  writer: string;
 }
+
+console.log('윈도우 온로드 체크');
 
 function getStatusText(surveyStatusNo: number) {
   switch (surveyStatusNo) {
@@ -79,9 +83,64 @@ function Mypage() {
 
   const [state, setState] = useState('전체');
 
+  const [isUpdateData, setIsUpdateData] = useState<boolean>(false);
+
   const userNo = 1;
 
   const [searchQuery, setSearchQuery] = useState('');
+
+  const naviagte = useNavigate();
+
+  /**
+   * 설문수정 페이지로 리다이렉트 시키는 onClick 메서드 입니다.
+   *
+   * @param surveyNo 설문 번호
+   * @author 강명관
+   */
+  const handleClickSurveyModify = (surveyNo: number) => {
+    naviagte(`/survey/modify/${surveyNo}`);
+  };
+
+  /**
+   * 설문을 진행 상태에서 게시 상태로 변경하는 API Call 하는 메서드 입니다.
+   *
+   * @param surveyNo 설문 번호
+   * @author 강명관
+   */
+  const handleClickPostSurvey = async (surveyNo: number) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/api/surveys/${surveyNo}/post`
+      );
+
+      if (response.status === 200) {
+        setOpenModal(false);
+        setIsUpdateData(true);
+
+        Swal.fire({
+          icon: 'success',
+          title: '설문 게시가 완료되었습니다!',
+        });
+      } else {
+        setOpenModal(false);
+
+        Swal.fire({
+          icon: 'error',
+          title: '설문 게시에 실패했습니다.',
+          text: `설문의 상태 혹은 설문의 마감일을 확인해주세요.`,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+
+      setOpenModal(false);
+      Swal.fire({
+        icon: 'error',
+        title: '설문 게시에 실패했습니다.',
+        text: `설문의 상태 혹은 설문의 마감일을 확인해주세요.`,
+      });
+    }
+  };
 
   const handleChange = (event: SelectChangeEvent) => {
     setState(event.target.value);
@@ -89,7 +148,7 @@ function Mypage() {
 
   const fetchCardData = () => {
     axios
-      .get(`http://localhost:8000/api/my-surveys/${userNo}/attend-surveys`)
+      .get(`http://localhost:8080/api/my-surveys/${userNo}/write-surveys`)
       .then((response) => {
         const cardData: CardData[] = response.data.content;
 
@@ -131,6 +190,12 @@ function Mypage() {
   };
 
   useEffect(() => {
+    if (isUpdateData) {
+      fetchCardData();
+    }
+  }, [isUpdateData]);
+
+  useEffect(() => {
     fetchCardData();
   }, [userNo, state, searchQuery]);
 
@@ -162,7 +227,7 @@ function Mypage() {
         console.log('mySurveyDTO: ', mySurveyDTO);
         axios
           .put(
-            'http://localhost:8000/api/my-surveys/update-write-surveys',
+            'http://localhost:8080/api/my-surveys/update-write-surveys',
             mySurveyDTO
           )
           .then(() => {
@@ -186,7 +251,7 @@ function Mypage() {
           fontSize: '25px',
         }}
       >
-        내가 참여한 설문 목록
+        내가 작성한 설문 목록
       </h1>
 
       <Box
@@ -387,15 +452,6 @@ function Mypage() {
                     </React.Fragment>
                   ))}
                 </Typography>
-                <Typography
-                  sx={{
-                    fontSize: 12,
-                    fontWeight: 600,
-                    paddingTop: '12px',
-                  }}
-                >
-                  작성자: {card.userNickname}
-                </Typography>
               </CardContent>
             </Card>
           </div>
@@ -439,7 +495,6 @@ function Mypage() {
                 : ''}
             </p>
 
-            <p>작성자: {selectedCard ? selectedCard.userNickname : ''}</p>
             <p>태그: {selectedCard ? selectedCard.tagNames.join(', ') : ''}</p>
             <p>참석자 수: {selectedCard ? selectedCard.attendeeCount : ''}</p>
             <p id="modal-description">
@@ -448,9 +503,17 @@ function Mypage() {
 
             {selectedCard && selectedCard.surveyStatusNo === 1 && (
               <>
-                <Button>수정하기</Button>
+                <Button
+                  onClick={() => handleClickSurveyModify(selectedCard.surveyNo)}
+                >
+                  수정하기
+                </Button>
                 <Button onClick={handleDeleteClick}>삭제하기</Button>
-                <Button>게시하기</Button>
+                <Button
+                  onClick={() => handleClickPostSurvey(selectedCard.surveyNo)}
+                >
+                  게시하기
+                </Button>
               </>
             )}
 

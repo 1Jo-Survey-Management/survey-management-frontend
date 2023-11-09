@@ -40,7 +40,7 @@ function MypageUserModify() {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/users/${userNo}`
+          `http://localhost:8080/api/users/${userNo}`
         );
 
         if (response.status === 200) {
@@ -85,7 +85,7 @@ function MypageUserModify() {
 
       try {
         const imageResponse = await axios.put(
-          `http://localhost:8000/api/users/${userNo}/image`,
+          `http://localhost:8080/api/users/${userNo}/image`,
           formData,
           {
             headers: {
@@ -96,7 +96,7 @@ function MypageUserModify() {
 
         if (imageResponse.data.success) {
           const response = await axios.get(
-            `http://localhost:8000/api/users/${userNo}`
+            `http://localhost:8080/api/users/${userNo}`
           );
 
           const imageBox = response.data.userImage;
@@ -136,7 +136,7 @@ function MypageUserModify() {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/users/check-duplicate-nickname`,
+        `http://localhost:8080/api/users/check-duplicate-nickname`,
         { userNickname: nickname }
       );
 
@@ -172,7 +172,7 @@ function MypageUserModify() {
         };
 
         const nicknameResponse = await axios.put(
-          `http://localhost:8000/api/users/${userNo}/nickname`,
+          `http://localhost:8080/api/users/${userNo}/nickname`,
           requestBody
         );
 

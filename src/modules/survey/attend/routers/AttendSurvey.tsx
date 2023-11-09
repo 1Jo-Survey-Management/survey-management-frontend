@@ -8,13 +8,13 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Stack } from '@mui/material';
 import axios from 'axios';
+import { AnimatePresence, Variants, motion } from 'framer-motion';
 import AttendSingleChoice from '../components/AttendSingleChoice';
 import AttendSingleMoveChoice from '../components/AttendSingleMoveChoice';
 import { SurveyData, SurveyItem } from '../types/AttendTypes';
 import AttendMultipleChoice from '../components/AttendMultipleChoice';
 import ShortAnswer from '../components/ShortAnswer';
 import LongAnswer from '../components/LongAnswer';
-import ScrollProgress from '../util/ScrollProgress';
 
 /**
  * 사용자의 응답 데이터 인터페이스입니다.
@@ -32,6 +32,8 @@ interface UserResponse {
 }
 
 function AttendSurvey() {
+  const [closingTime, setClosingTime] = useState<Date | null>(null);
+
   const [surveyData, setSurveyData] = useState<SurveyData>({
     success: false,
     content: [],
@@ -52,6 +54,16 @@ function AttendSurvey() {
 
   const USER_NO = 1;
   const SURVEY_NO = 8;
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1, // 자식 컴포넌트 사이의 지연 시간 설정
+      },
+    },
+  };
 
   /**
    * 선택 항목을 클릭할 때 동작하는 함수입니다.
@@ -74,64 +86,94 @@ function AttendSurvey() {
     isUnchecked: boolean,
     endOfSurvey: boolean
   ) => {
-    const currentHiddenQuestions = hiddenQuestions[selectedQuestionNo] || [];
+    setHiddenQuestions((prevHiddenQuestions) => {
+      const currentHiddenQuestions =
+        prevHiddenQuestions[selectedQuestionNo] || [];
+      let newHiddenQuestions = [...currentHiddenQuestions];
 
-    let newHiddenQuestions: number[] = [];
-
-    if (isMovable && questionTypeNo === 2) {
-      for (let i = selectedQuestionNo + 1; i < moveToQuestionNo; i += 1) {
-        if (!currentHiddenQuestions.includes(i)) {
-          newHiddenQuestions.push(i);
-        }
+      // endOfSurvey가 선택되었다가 다른 movable로 변경되는 경우
+      if (!endOfSurvey && currentHiddenQuestions.length > 0) {
+        // 이전에 endOfSurvey에 의해 숨겨진 모든 질문들을 표시합니다.
+        uniqueQuestions.forEach((qNo) => {
+          if (qNo > selectedQuestionNo) {
+            newHiddenQuestions = newHiddenQuestions.filter(
+              (hiddenNo) => hiddenNo !== qNo
+            );
+          }
+        });
       }
-    } else if (
-      (!isMovable && questionTypeNo === 2 && moveToQuestionNo === 0) ||
-      isUnchecked
-    ) {
-      newHiddenQuestions = currentHiddenQuestions.filter(
-        (qNo) => qNo < moveToQuestionNo
-      );
-    }
 
-    if (isUnchecked) {
-      setUserResponses((prev) =>
-        prev.filter(
-          (response) => response.surveyQuestionNo !== selectedQuestionNo
-        )
-      );
-    }
+      if (isMovable && questionTypeNo === 2) {
+        // 숨길 질문 번호들을 추가합니다.
+        for (let i = selectedQuestionNo + 1; i < moveToQuestionNo; i += 1) {
+          if (!newHiddenQuestions.includes(i)) {
+            newHiddenQuestions.push(i);
+          }
+        }
+      } else if (
+        (!isMovable && questionTypeNo === 2 && moveToQuestionNo === 0) ||
+        isUnchecked
+      ) {
+        // 숨겨진 질문 번호들을 필터링합니다.
+        newHiddenQuestions = newHiddenQuestions.filter(
+          (qNo) => !allHiddenQuestions.includes(qNo) || qNo < moveToQuestionNo
+        );
+      }
 
-    setHiddenQuestions({
-      ...hiddenQuestions,
-      [selectedQuestionNo]: newHiddenQuestions,
+      // endOfSurvey가 true인 경우, 뒤따르는 모든 질문을 숨깁니다.
+      if (endOfSurvey) {
+        const questionsToHide = uniqueQuestions.filter(
+          (q) => q > selectedQuestionNo
+        );
+        // Set 객체를 배열로 변환
+        newHiddenQuestions = Array.from(
+          new Set([...newHiddenQuestions, ...questionsToHide])
+        );
+
+        // 함수 파라미터를 직접 변경하지 않고 새로운 객체 생성
+        const updatedPrevHiddenQuestions = { ...prevHiddenQuestions };
+        newHiddenQuestions.forEach((questionNo) => {
+          if (
+            !updatedPrevHiddenQuestions[selectedQuestionNo]?.includes(
+              questionNo
+            )
+          ) {
+            updatedPrevHiddenQuestions[selectedQuestionNo] = [
+              ...(updatedPrevHiddenQuestions[selectedQuestionNo] || []),
+              questionNo,
+            ];
+          }
+        });
+
+        return updatedPrevHiddenQuestions;
+      }
+
+      // 결과적인 상태를 반환합니다.
+      return {
+        ...prevHiddenQuestions,
+        [selectedQuestionNo]: newHiddenQuestions,
+      };
     });
 
-    if (endOfSurvey) {
-      const questionsToHide = uniqueQuestions.filter(
-        (q) => q > selectedQuestionNo
-      );
-
-      setHiddenQuestions({
-        ...hiddenQuestions,
-        [selectedQuestionNo]: questionsToHide,
-      });
-
-      const questionsToRemove = uniqueQuestions.filter((q) => {
-        const currentQuestion = surveyData.content.find(
-          (item) => item.surveyQuestionNo === q
+    // 사용자 응답을 업데이트합니다.
+    if (isUnchecked || endOfSurvey) {
+      setUserResponses((prevResponses) => {
+        let updatedResponses = prevResponses.filter(
+          (response) => response.surveyQuestionNo !== selectedQuestionNo
         );
-        return (
-          q > selectedQuestionNo &&
-          currentQuestion &&
-          currentQuestion.questionTypeNo !== 2
-        );
-      });
 
-      setUserResponses((responses) =>
-        responses.filter(
-          (response) => !questionsToRemove.includes(response.surveyQuestionNo)
-        )
-      );
+        // endOfSurvey가 true인 경우, 뒤따르는 모든 질문에 대한 응답을 제거합니다.
+        if (endOfSurvey) {
+          const questionsToRemove = uniqueQuestions.filter(
+            (q) => q > selectedQuestionNo
+          );
+          updatedResponses = updatedResponses.filter(
+            (response) => !questionsToRemove.includes(response.surveyQuestionNo)
+          );
+        }
+
+        return updatedResponses;
+      });
     }
   };
 
@@ -246,64 +288,78 @@ function AttendSurvey() {
    * @returns 렌더링된 React 요소
    * @author 박창우
    */
-  const renderQuestion = (questionNo: number) => {
+  // renderQuestion 함수 내부에서 motion.div를 사용하여 애니메이션을 적용합니다.
+  const renderQuestion = (questionNo: number, key: number) => {
     const question = surveyData.content.find(
       (item) => item.surveyQuestionNo === questionNo
     );
     if (!question) return null;
 
+    const isHidden = allHiddenQuestions.includes(questionNo);
+
     const { questionTypeNo } = question;
+    let Component;
     switch (questionTypeNo) {
       case 1:
-        return (
-          <AttendSingleChoice
-            key={questionNo}
-            surveyData={surveyData.content}
-            questionNo={questionNo}
-            onAnswerChange={(answer) => handleAnswerChange(questionNo)(answer)}
-            handleSelectionClick={handleSelectionClick}
-          />
-        );
+        Component = AttendSingleChoice;
+        break;
       case 2:
-        return (
-          <AttendSingleMoveChoice
-            key={questionNo}
-            surveyData={surveyData.content}
-            questionNo={questionNo}
-            onAnswerChange={(answer) => handleAnswerChange(questionNo)(answer)}
-            handleSelectionClick={handleSelectionClick}
-          />
-        );
+        Component = AttendSingleMoveChoice;
+        break;
       case 3:
-        return (
-          <AttendMultipleChoice
-            key={questionNo}
-            surveyData={surveyData.content}
-            questionNo={questionNo}
-            onAnswerChange={handleAnswerChange(questionNo)}
-          />
-        );
+        Component = AttendMultipleChoice;
+        break;
       case 4:
-        return (
-          <ShortAnswer
-            key={questionNo}
-            surveyData={surveyData.content}
-            questionNo={questionNo}
-            onAnswerChange={handleAnswerChange(questionNo)}
-          />
-        );
+        Component = ShortAnswer;
+        break;
       case 5:
-        return (
-          <LongAnswer
-            key={questionNo}
-            surveyData={surveyData.content}
-            questionNo={questionNo}
-            onAnswerChange={handleAnswerChange(questionNo)}
-          />
-        );
+        Component = LongAnswer;
+        break;
       default:
         return null;
     }
+
+    // 슬라이드 애니메이션을 위한 상태
+    const slideIn = {
+      initial: { x: -100, opacity: 0 },
+      animate: { x: 0, opacity: 1 },
+      exit: { x: 100, opacity: 0 },
+    };
+
+    if (isHidden) {
+      // 숨겨진 문항은 슬라이드 아웃되도록
+      slideIn.initial = { x: 0, opacity: 1 };
+      slideIn.animate = { x: 100, opacity: 0 };
+    }
+
+    // 여기서 `initial`, `animate`, `exit` 프로퍼티를 사용하여
+    // 숨겨지는 요소에 대한 애니메이션을 정의합니다.
+    return (
+      <AnimatePresence>
+        {!isHidden && (
+          <motion.div
+            key={key}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={slideIn}
+            transition={{
+              x: { type: 'spring', stiffness: 300, damping: 30 },
+              opacity: { duration: 0.2 },
+            }}
+          >
+            <Component
+              surveyData={surveyData.content}
+              questionNo={questionNo}
+              onAnswerChange={(answer) =>
+                handleAnswerChange(questionNo)(answer)
+              }
+              handleSelectionClick={handleSelectionClick}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
   };
 
   /**
@@ -316,7 +372,7 @@ function AttendSurvey() {
     console.log('useEffect running');
     axios
       .get<SurveyData>(
-        'http://localhost:8000/api/for-attend/surveys/survey-data'
+        'http://localhost:8080/api/for-attend/surveys/survey-data'
       )
       .then((response) => {
         const filteredData = response.data.content
@@ -333,6 +389,29 @@ function AttendSurvey() {
       })
       .catch((error) => {
         console.error('Error fetching survey data:', error);
+      });
+  }, []);
+
+  // 마감 시간을 가져오는 useEffect
+  useEffect(() => {
+    // 설문 마감 시간을 가져오는 API 호출
+    axios
+      .get(
+        `http://localhost:8080/api/for-attend/surveys/closing-time/${SURVEY_NO}`
+      )
+      .then((response) => {
+        if (response.data.success && response.data.content) {
+          // 서버로부터 받은 날짜-시간 문자열을 Date 객체로 변환하여 저장합니다.
+          setClosingTime(new Date(response.data.content));
+        } else {
+          console.error(
+            'Failed to fetch closing time:',
+            response.data.errorResponse
+          );
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching closing time:', error);
       });
   }, []);
 
@@ -360,6 +439,12 @@ function AttendSurvey() {
    */
   const handleSubmit = async () => {
     console.log(`제출 시: ${JSON.stringify(userResponses)}`);
+
+    // 마감 시간이 현재 시간 이후인지 확인
+    if (closingTime && new Date() > closingTime) {
+      alert('이 설문은 이미 마감되었습니다.');
+      return;
+    }
 
     const lastEndOfSurveyQuestion = userResponses.some(
       (response) => response.endOfSurvey
@@ -412,7 +497,7 @@ function AttendSurvey() {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/api/for-attend/surveys/save-responses',
+        'http://localhost:8080/api/for-attend/surveys/save-responses',
         userResponses
       );
 
@@ -431,18 +516,31 @@ function AttendSurvey() {
 
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
-      <ScrollProgress />
       <h1
         style={{ fontSize: '25px', display: 'flex', justifyContent: 'center' }}
       >
         {surveyTitle}
       </h1>
-      {uniqueQuestions.map((questionNo) => {
-        if (!allHiddenQuestions.includes(questionNo)) {
-          return renderQuestion(questionNo);
-        }
-        return null;
-      })}
+      <AnimatePresence>
+        {uniqueQuestions.map((questionNo, index) => (
+          <motion.div
+            key={questionNo}
+            custom={index}
+            initial="hidden"
+            animate="show"
+            exit="hidden"
+            variants={containerVariants}
+            transition={{
+              delay: index * 0.1,
+              when: 'beforeChildren',
+              staggerChildren: 0.1,
+            }}
+          >
+            {renderQuestion(questionNo, index)}
+          </motion.div>
+        ))}
+      </AnimatePresence>
+
       <Stack spacing={2}>
         <Button
           variant="contained"
