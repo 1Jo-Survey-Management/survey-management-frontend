@@ -60,7 +60,7 @@ function AttendSurvey() {
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1, // 자식 컴포넌트 사이의 지연 시간 설정
+        staggerChildren: 0.1,
       },
     },
   };
@@ -93,7 +93,7 @@ function AttendSurvey() {
 
       // endOfSurvey가 선택되었다가 다른 movable로 변경되는 경우
       if (!endOfSurvey && currentHiddenQuestions.length > 0) {
-        // 이전에 endOfSurvey에 의해 숨겨진 모든 질문들을 표시합니다.
+        // 이전에 endOfSurvey에 의해 숨겨진 모든 질문들을 표시
         uniqueQuestions.forEach((qNo) => {
           if (qNo > selectedQuestionNo) {
             newHiddenQuestions = newHiddenQuestions.filter(
@@ -104,7 +104,7 @@ function AttendSurvey() {
       }
 
       if (isMovable && questionTypeNo === 2) {
-        // 숨길 질문 번호들을 추가합니다.
+        // 숨길 질문 번호들을 추가
         for (let i = selectedQuestionNo + 1; i < moveToQuestionNo; i += 1) {
           if (!newHiddenQuestions.includes(i)) {
             newHiddenQuestions.push(i);
@@ -114,18 +114,17 @@ function AttendSurvey() {
         (!isMovable && questionTypeNo === 2 && moveToQuestionNo === 0) ||
         isUnchecked
       ) {
-        // 숨겨진 질문 번호들을 필터링합니다.
+        // 숨겨진 질문 번호들을 필터링
         newHiddenQuestions = newHiddenQuestions.filter(
           (qNo) => !allHiddenQuestions.includes(qNo) || qNo < moveToQuestionNo
         );
       }
 
-      // endOfSurvey가 true인 경우, 뒤따르는 모든 질문을 숨깁니다.
+      // endOfSurvey가 true인 경우, 뒤따르는 모든 질문을 숨김.
       if (endOfSurvey) {
         const questionsToHide = uniqueQuestions.filter(
           (q) => q > selectedQuestionNo
         );
-        // Set 객체를 배열로 변환
         newHiddenQuestions = Array.from(
           new Set([...newHiddenQuestions, ...questionsToHide])
         );
@@ -148,21 +147,20 @@ function AttendSurvey() {
         return updatedPrevHiddenQuestions;
       }
 
-      // 결과적인 상태를 반환합니다.
+      // 결과적인 상태를 반환
       return {
         ...prevHiddenQuestions,
         [selectedQuestionNo]: newHiddenQuestions,
       };
     });
 
-    // 사용자 응답을 업데이트합니다.
+    // 사용자 응답을 업데이트
     if (isUnchecked || endOfSurvey) {
       setUserResponses((prevResponses) => {
         let updatedResponses = prevResponses.filter(
           (response) => response.surveyQuestionNo !== selectedQuestionNo
         );
 
-        // endOfSurvey가 true인 경우, 뒤따르는 모든 질문에 대한 응답을 제거합니다.
         if (endOfSurvey) {
           const questionsToRemove = uniqueQuestions.filter(
             (q) => q > selectedQuestionNo
@@ -288,7 +286,6 @@ function AttendSurvey() {
    * @returns 렌더링된 React 요소
    * @author 박창우
    */
-  // renderQuestion 함수 내부에서 motion.div를 사용하여 애니메이션을 적용합니다.
   const renderQuestion = (questionNo: number, key: number) => {
     const question = surveyData.content.find(
       (item) => item.surveyQuestionNo === questionNo
@@ -319,7 +316,6 @@ function AttendSurvey() {
         return null;
     }
 
-    // 슬라이드 애니메이션을 위한 상태
     const slideIn = {
       initial: { x: -100, opacity: 0 },
       animate: { x: 0, opacity: 1 },
@@ -327,13 +323,10 @@ function AttendSurvey() {
     };
 
     if (isHidden) {
-      // 숨겨진 문항은 슬라이드 아웃되도록
       slideIn.initial = { x: 0, opacity: 1 };
       slideIn.animate = { x: 100, opacity: 0 };
     }
 
-    // 여기서 `initial`, `animate`, `exit` 프로퍼티를 사용하여
-    // 숨겨지는 요소에 대한 애니메이션을 정의합니다.
     return (
       <AnimatePresence>
         {!isHidden && (
@@ -392,16 +385,13 @@ function AttendSurvey() {
       });
   }, []);
 
-  // 마감 시간을 가져오는 useEffect
   useEffect(() => {
-    // 설문 마감 시간을 가져오는 API 호출
     axios
       .get(
         `http://localhost:8080/api/for-attend/surveys/closing-time/${SURVEY_NO}`
       )
       .then((response) => {
         if (response.data.success && response.data.content) {
-          // 서버로부터 받은 날짜-시간 문자열을 Date 객체로 변환하여 저장합니다.
           setClosingTime(new Date(response.data.content));
         } else {
           console.error(
@@ -440,7 +430,6 @@ function AttendSurvey() {
   const handleSubmit = async () => {
     console.log(`제출 시: ${JSON.stringify(userResponses)}`);
 
-    // 마감 시간이 현재 시간 이후인지 확인
     if (closingTime && new Date() > closingTime) {
       alert('이 설문은 이미 마감되었습니다.');
       return;
