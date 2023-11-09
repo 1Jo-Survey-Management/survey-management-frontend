@@ -1,9 +1,7 @@
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import Paper from '@mui/material/Paper';
 import Select from '@mui/material/Select';
-import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
@@ -23,7 +21,6 @@ import {
   Fade,
 } from '@mui/material';
 import GroupsIcon from '@mui/icons-material/Groups';
-import { relativeTimeRounding } from 'moment';
 import Floating from './components/Floating';
 
 type CardData = {
@@ -201,19 +198,6 @@ function SurveySearch() {
     setOpenModal(false);
   };
 
-  const cardColor = (selectedCard) => {
-    if (selectedCard?.surveyStatusName !== '마감') {
-      const colors = ['#D1E4CC', '#B8DDA6'];
-      const randomIndex = Math.floor(Math.random() * colors.length);
-      return colors[randomIndex];
-    }
-    if (selectedCard?.surveyStatusName === '마감') {
-      return '#E4E4E4';
-    }
-
-    // 마감인 경우 아무 것도 반환하지 않음
-  };
-
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
       <Typography
@@ -230,25 +214,6 @@ function SurveySearch() {
       </Typography>
 
       {/* 검색어 입력란 */}
-      {/* <Paper
-        component="form"
-        sx={{
-          p: '2px 4px',
-          display: 'flex',
-          alignItems: 'center',
-          width: 300,
-        }}
-      > */}
-      {/* <InputBase
-          sx={{
-            ml: 1,
-            flex: 1,
-          }}
-          aria-label="제목, 작성자를 입력해주세요"
-          placeholder="제목, 작성자를 입력해주세요"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        /> */}
 
       <TextField
         id="standard-basic"
@@ -266,7 +231,6 @@ function SurveySearch() {
       >
         <SearchIcon />
       </IconButton>
-      {/* </Paper> */}
 
       {/* 상태 선택 */}
       <div
