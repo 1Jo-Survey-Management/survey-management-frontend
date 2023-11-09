@@ -103,7 +103,6 @@ function MypageUserModify() {
     if (selectedFile) {
       const formData = new FormData();
       formData.append('file', selectedFile);
-      console.log('셀렉티드 파일:', selectedFile);
 
       try {
         const imageResponse = await axios.put(
