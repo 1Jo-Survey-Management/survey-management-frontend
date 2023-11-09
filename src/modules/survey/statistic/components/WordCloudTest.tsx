@@ -78,6 +78,13 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
 
       const svg = svgRef.current;
 
+      // for (let i = 0; i < wordCloudData.length; i++) {
+      //   const wordData = wordCloudData[i]; // 현재 요소에 접근
+      //   const text = wordData.text; // 단어 텍스트
+      //   const size = wordData.size; // 단어 크기
+
+      //   console.log('단어:', text, '크기:', size);
+
       if (svg) {
         const selection = d3
           .select<SVGSVGElement, unknown>(svg)
@@ -86,18 +93,33 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
 
         const layout = cloud<{ text: string; size: number }>()
           .size([width, height])
-          .words(wordCloudData)
+          .words(
+            wordCloudData.map((d) => {
+              return {
+                text: d.text,
+                size: d.size,
+                x: Math.random() * width, // 무작위 x 좌표
+                y: Math.random() * height, // 무작위 y 좌표
+                rotate: Math.random() * 90 - 45, // 무작위 회전 각도 (-45도에서 45도 사이)
+              };
+            })
+          )
           .padding(5)
-          .rotate(0)
+          .rotate(() => Math.random() * 90 - 45) // 무작위 회전 각도 (-45도에서 45도 사이)
           .fontSize((d) => d.size)
-          .on('end', (words) => {
+          .on('end', (wordData) => {
             selection
-              .append('g')
-              .attr('transform', `translate(${width / 2},${height / 2})`)
               .selectAll('text')
-              .data(words)
+              .data(wordData)
               .enter()
               .append('text')
+              .attr(
+                'transform',
+                (d) =>
+                  `translate(${Math.random() * width},${
+                    Math.random() * height
+                  }) rotate(${Math.random() * 90 - 45})`
+              )
               .style('font-size', (d) => `${d.size}px`)
               .style('fill', 'steelblue')
               .attr('text-anchor', 'middle')
@@ -107,6 +129,7 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
         layout.start();
       }
     }
+    // }
   }, [wordCloudData, width, height]);
 
   return <svg ref={svgRef}></svg>;

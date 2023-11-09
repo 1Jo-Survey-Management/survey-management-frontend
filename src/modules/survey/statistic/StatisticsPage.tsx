@@ -57,6 +57,7 @@ const styles = {
     fontSize: '40px',
     textAlign: 'center',
     fontWeight: 'bold',
+    marginBottom: '30px',
     '@media (max-width: 400px)': {
       fontSize: '30px',
     },
