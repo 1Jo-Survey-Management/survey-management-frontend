@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { useNavigate } from 'react-router-dom';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import moment, { Moment } from 'moment';
 import axios from '../components/customApi';
 import RadioButton from '../components/RowRadioButtonsGroup';
@@ -88,6 +89,7 @@ export default function BasicModal({ onClose }: ModalProps) {
       formData.userBirth === '' ||
       formData.userGender === ''
     ) {
+      /* empty */
     } else {
       const userInfo = {
         userNickname: formData.userNickname,
@@ -116,9 +118,7 @@ export default function BasicModal({ onClose }: ModalProps) {
     }
   };
 
-  const cancelSubmit = () => {
-    return handleClose();
-  };
+  const cancelSubmit = () => handleClose();
 
   return (
     <div>

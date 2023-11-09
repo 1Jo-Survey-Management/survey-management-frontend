@@ -1,3 +1,10 @@
+/**
+ * 사용자의 마이페이지를 위한 컴포넌트입니다. 사용자가 참여한 설문 목록을 보여주고,
+ * 각 설문에 대해 상태를 필터링하거나 검색할 수 있는 기능을 제공합니다.
+ *
+ * @component
+ * @author 박창우
+ */
 import React, { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import axios from 'axios';
@@ -35,6 +42,12 @@ interface CardData {
   userNickname: string;
 }
 
+/**
+ * 설문의 상태 번호에 따라 해당하는 상태 텍스트를 반환합니다.
+ *
+ * @param {number} surveyStatusNo 설문의 상태 번호
+ * @returns {string} 설문 상태를 나타내는 텍스트
+ */
 function getStatusText(surveyStatusNo: number) {
   switch (surveyStatusNo) {
     case 1:
@@ -48,6 +61,12 @@ function getStatusText(surveyStatusNo: number) {
   }
 }
 
+/**
+ * 설문의 상태 번호에 따라 해당하는 칩 색상을 반환합니다.
+ *
+ * @param {number} surveyStatusNo 설문의 상태 번호
+ * @returns {string} Material UI 칩 컴포넌트에 사용될 색상
+ */
 function getChipColor(surveyStatusNo: number) {
   switch (surveyStatusNo) {
     case 1:
@@ -59,6 +78,12 @@ function getChipColor(surveyStatusNo: number) {
   }
 }
 
+/**
+ * 설문의 상태 번호에 따라 해당하는 카드 색상을 반환합니다.
+ *
+ * @param {number} surveyStatusNo 설문의 상태 번호
+ * @returns {string} 카드 배경에 사용될 색상
+ */
 function getCardColor(surveyStatusNo: number) {
   switch (surveyStatusNo) {
     case 1:
@@ -87,9 +112,12 @@ function Mypage() {
     setState(event.target.value);
   };
 
+  /**
+   * 서버로부터 사용자가 참여한 설문 데이터를 가져와 상태를 업데이트합니다.
+   */
   const fetchCardData = () => {
     axios
-      .get(`http://localhost:8000/api/my-surveys/${userNo}/attend-surveys`)
+      .get(`http://localhost:8080/api/my-surveys/${userNo}/attend-surveys`)
       .then((response) => {
         const cardData: CardData[] = response.data.content;
 
@@ -134,6 +162,11 @@ function Mypage() {
     fetchCardData();
   }, [userNo, state, searchQuery]);
 
+  /**
+   * 사용자가 검색 입력란에 입력할 때마다 호출되어 검색 쿼리 상태를 업데이트합니다.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event 입력 이벤트
+   */
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchQuery = event.target.value;
     setSearchQuery(newSearchQuery);
@@ -141,16 +174,27 @@ function Mypage() {
     fetchCardData();
   };
 
+  /**
+   * 카드를 클릭했을 때 모달을 열어 해당 설문의 상세 정보를 보여줍니다.
+   *
+   * @param {CardData} card 사용자가 클릭한 설문 데이터
+   */
   const openCardModal = (card: CardData) => {
     setSelectedCard(card);
     setOpenModal(true);
   };
 
+  /**
+   * 모달을 닫고 선택된 설문의 상태를 초기화합니다.
+   */
   const closeCardModal = () => {
     setSelectedCard(null);
     setOpenModal(false);
   };
 
+  /**
+   * 사용자가 설문 삭제 버튼을 클릭했을 때 호출되어, 설문을 삭제합니다.
+   */
   const handleDeleteClick = () => {
     if (selectedCard) {
       if (window.confirm('작성 중인 설문을 삭제하시겠습니까?')) {
@@ -162,7 +206,7 @@ function Mypage() {
         console.log('mySurveyDTO: ', mySurveyDTO);
         axios
           .put(
-            'http://localhost:8000/api/my-surveys/update-write-surveys',
+            'http://localhost:8080/api/my-surveys/update-write-surveys',
             mySurveyDTO
           )
           .then(() => {
