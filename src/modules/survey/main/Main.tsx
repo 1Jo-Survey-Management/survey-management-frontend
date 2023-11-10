@@ -35,7 +35,7 @@ function Main() {
         <ArrowForwardIosRoundedIcon sx={{ fontSize: 'medium' }} />
       </div>
       <h3 style={textStyle}>
-        최근 등록된 설문
+        최근 등록된 설문📝
         <Button onClick={() => navigate('/survey/search')} style={textStyle}>
           전체 보기
           <ArrowForwardIosRoundedIcon sx={{ fontSize: 'medium' }} />
@@ -48,7 +48,7 @@ function Main() {
         />
         <ArrowForwardIosRoundedIcon sx={{ fontSize: 'medium' }} />
       </div>
-      <h3 style={textStyle}>최근 마감된 설문</h3>
+      <h3 style={textStyle}>최근 마감된 설문⌛</h3>
       <ClosingSurvey />
       <div style={arrowStyle}>
         <ArrowBackIosRoundedIcon

@@ -128,6 +128,23 @@ function RecentSurvey() {
     },
   };
 
+  const tagColor = (tag: string) => {
+    switch (tag) {
+      case '공지':
+        return '#F8E5E5';
+      case '중요':
+        return '#F5F9DE';
+      case '업무':
+        return '#F9ECDF';
+      case '기타':
+        return '#E5ECF5';
+      case '일상':
+        return '#EDEBF6';
+      default:
+        return 'default';
+    }
+  };
+
   return (
     <div>
       <div>
@@ -176,14 +193,6 @@ function RecentSurvey() {
                           paddingBottom="12px"
                         >
                           <Chip
-                            icon={
-                              <GroupsIcon
-                                sx={{
-                                  width: '18px',
-                                  height: '18px',
-                                }}
-                              />
-                            }
                             label={card.surveyAttendCount}
                             sx={{
                               fontSize: '12px',
@@ -191,23 +200,34 @@ function RecentSurvey() {
                               height: '20px',
                               fontWeight: 600,
                               justifyContent: 'space-between',
-                              backgroundColor: '#BDD4B7',
+                              backgroundColor: '#FFFDF8',
+                              boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                             }}
                             style={textStyle}
+                            icon={
+                              <GroupsIcon
+                                sx={{
+                                  fontSize: '15px',
+                                  width: '18px',
+                                  height: '18px',
+                                }}
+                              />
+                            }
                           />
 
                           <Chip
                             label={card.surveyStatusName}
                             variant="filled"
                             sx={{
-                              width: '50px',
+                              width: '40px',
                               height: '20px',
                               fontSize: '10px',
                               fontWeight: 600,
                               '& .MuiChip-label': {
                                 padding: 0,
                               },
-                              backgroundColor: '#BDD5B1',
+                              backgroundColor: '#FFFDF8',
+                              boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                               color: getChipColor(card.surveyStatusName),
                             }}
                             style={textStyle}
@@ -251,10 +271,11 @@ function RecentSurvey() {
                             fontWeight: 600,
                             marginBottom: '8px',
                             cursor: 'pointer',
-                            maxHeight: '45px', // 원하는 높이 설정
+                            maxHeight: '43px', // 원하는 높이 설정
                             overflow: 'hidden',
                             display: '-webkit-box',
                             WebkitLineClamp: 2,
+                            height: '41px',
                             WebkitBoxOrient: 'vertical',
                           }}
                           style={textStyle}
@@ -262,23 +283,23 @@ function RecentSurvey() {
                           {card.surveyTitle}
                         </Typography>
                         {/* 태그 등 카드에 관한 내용 표시 */}
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            fontSize: 11,
-                            '& > span:not(:last-child)': {
-                              marginRight: '8px',
-                            },
-                            color: '#4B6744',
-                            fontWeight: 'bold',
-                          }}
-                          style={textStyle}
-                        >
-                          #
+                        <Stack direction="row" spacing={1}>
                           {card.tag.map((tag) => (
-                            <span key={tag}>{tag}</span>
+                            <Chip
+                              key={tag}
+                              label={tag}
+                              size="small"
+                              style={textStyle}
+                              sx={{
+                                fontSize: 11,
+                                marginRight: 1,
+                                height: '20px',
+                                backgroundColor: tagColor(tag),
+                                opacity: 0.7,
+                              }}
+                            />
                           ))}
-                        </Typography>
+                        </Stack>
                       </CardContent>
                     </Card>
                   </SwiperSlide>

@@ -198,6 +198,23 @@ function SurveySearch() {
     setOpenModal(false);
   };
 
+  const tagColor = (tag: string) => {
+    switch (tag) {
+      case '공지':
+        return '#F8E5E5';
+      case '중요':
+        return '#F5F9DE';
+      case '업무':
+        return '#F9ECDF';
+      case '기타':
+        return '#E5ECF5';
+      case '일상':
+        return '#EDEBF6';
+      default:
+        return 'default';
+    }
+  };
+
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
       <Typography
@@ -220,6 +237,7 @@ function SurveySearch() {
         label="제목, 작성자를 입력해주세요"
         value={searchTerm}
         variant="standard"
+        style={textStyle}
         onChange={(e) => setSearchTerm(e.target.value)}
         sx={{ width: 300 }}
       />
@@ -244,6 +262,7 @@ function SurveySearch() {
         }}
       >
         <Select
+          style={textStyle}
           value={selectedState}
           onChange={(event) => setSelectedState(event.target.value as string)}
           inputProps={{
@@ -266,16 +285,17 @@ function SurveySearch() {
           }}
         >
           <MenuItem
+            style={textStyle}
             value="전체(모든 카드)"
             onClick={removePage}
             sx={{ fontStyle: textStyle.fontFamily }}
           >
             전체
           </MenuItem>
-          <MenuItem value="진행" onClick={removePage}>
+          <MenuItem style={textStyle} value="진행" onClick={removePage}>
             진행
           </MenuItem>
-          <MenuItem value="마감" onClick={removePage}>
+          <MenuItem style={textStyle} value="마감" onClick={removePage}>
             마감
           </MenuItem>
         </Select>
@@ -286,8 +306,9 @@ function SurveySearch() {
           sx={{
             height: '30px',
             border: 2,
-            borderColor: '#DADAFF',
-            color: '#7F81B4',
+            borderColor: '#8BC96E',
+            color: '#8BC96E',
+            fontWeight: 'bold',
           }}
           onClick={() => {
             // 초기화 버튼 클릭 시 검색 옵션 및 검색어 초기화
@@ -346,7 +367,7 @@ function SurveySearch() {
                   width: '150px',
                   height: '160px',
                   borderRadius: 5,
-                  backgroundColor: '#D1E4CC',
+                  backgroundColor: '#D2E8B6',
                   boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                 }}
                 style={textStyle}
@@ -366,14 +387,6 @@ function SurveySearch() {
                     paddingBottom="12px"
                   >
                     <Chip
-                      icon={
-                        <GroupsIcon
-                          sx={{
-                            width: '18px',
-                            height: '18px',
-                          }}
-                        />
-                      }
                       label={card.surveyAttendCount}
                       sx={{
                         fontSize: '12px',
@@ -381,23 +394,35 @@ function SurveySearch() {
                         height: '20px',
                         fontWeight: 600,
                         justifyContent: 'space-between',
-                        backgroundColor: '#BDD4B7',
+                        backgroundColor: '#FFFDF8',
+                        boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                       }}
                       style={textStyle}
+                      icon={
+                        <GroupsIcon
+                          sx={{
+                            fontSize: '15px',
+
+                            width: '18px',
+                            height: '18px',
+                          }}
+                        />
+                      }
                     />
 
                     <Chip
                       label={card.surveyStatusName}
                       variant="filled"
                       sx={{
-                        width: '50px',
+                        width: '40px',
                         height: '20px',
                         fontSize: '10px',
                         fontWeight: 600,
                         '& .MuiChip-label': {
                           padding: 0,
                         },
-                        backgroundColor: '#BDD5B1',
+                        backgroundColor: '#FFFDF8',
+                        boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                         color: getChipColor(card.surveyStatusName),
                       }}
                       style={textStyle}
@@ -438,9 +463,10 @@ function SurveySearch() {
                       fontWeight: 600,
                       marginBottom: '8px',
                       cursor: 'pointer',
-                      maxHeight: '45px', // 원하는 높이 설정
+                      maxHeight: '43px', // 원하는 높이 설정
                       overflow: 'hidden',
                       display: '-webkit-box',
+                      height: '41px',
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical',
                     }}
@@ -459,21 +485,23 @@ function SurveySearch() {
                     }}
                   />
                   {/* 태그 등 카드에 관한 내용 표시 */}
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      fontSize: 11,
-                      '& > span:not(:last-child)': {
-                        marginRight: '8px',
-                      },
-                      color: '#4B6744',
-                      fontWeight: 'bold',
-                    }}
-                    style={textStyle}
-                  >
-                    {card.tag &&
-                      card.tag.map((tag) => <span key={tag}>#{tag}</span>)}
-                  </Typography>
+                  <Stack direction="row" spacing={1} style={{}}>
+                    {card.tag.map((tag) => (
+                      <Chip
+                        key={tag}
+                        label={tag}
+                        size="small"
+                        style={textStyle}
+                        sx={{
+                          fontSize: 11,
+                          marginRight: 1,
+                          height: '20px',
+                          backgroundColor: tagColor(tag),
+                          opacity: 0.7,
+                        }}
+                      />
+                    ))}
+                  </Stack>
                 </CardContent>
               </Card>
             </div>
