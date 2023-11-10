@@ -41,6 +41,7 @@ function Main() {
           <ArrowForwardIosRoundedIcon sx={{ fontSize: 'medium' }} />
         </Button>
       </h3>
+
       <RecentSurvey />
       <div style={arrowStyle}>
         <ArrowBackIosRoundedIcon

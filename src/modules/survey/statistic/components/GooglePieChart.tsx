@@ -62,6 +62,7 @@ export default function GooglePieChart({
 
   console.log(chartData);
   return (
+
     <div style={{ width: '100%', minWidth: '330px' }}>
       <Chart
         chartType="PieChart"
@@ -72,5 +73,6 @@ export default function GooglePieChart({
         style={{ marginTop: '0' }}
       />
     </div>
+
   );
 }

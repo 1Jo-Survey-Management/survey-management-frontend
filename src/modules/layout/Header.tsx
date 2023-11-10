@@ -13,7 +13,13 @@ import '../../global.css';
 import logo from './logo.png';
 
 import './Header.css';
+import '../../global.css';
 import Menu from './Menu';
+
+const fontFamily = "'Gaegu', sans-serif";
+const textStyle = {
+  fontFamily,
+};
 
 const ANCHOR_TYPE = 'left';
 
@@ -39,15 +45,12 @@ function Header() {
   const logout = () => {
     console.log('logout');
 
-    axios.get('/login/logout').then((response) => {
-      const respData = response.data;
-      console.log(`API 요청 : ${JSON.stringify(respData, null, 2)}`);
-      axios.defaults.headers.common.Authorization = null;
 
-      if (respData === '') {
-        console.log('API 요청 실패');
-      }
-    });
+    localStorage.removeItem('userNo');
+    localStorage.removeItem('userImage');
+    localStorage.removeItem('userNickname');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('expiresIn');
 
     axios.defaults.headers.common.Authorization = null;
 
@@ -73,6 +76,7 @@ function Header() {
     };
 
   return (
+
     <Box sx={{ flexGrow: 1 }} height={110}>
       <AppBar
         position="static"
@@ -136,6 +140,7 @@ function Header() {
           )}
         </Toolbar>
       </AppBar>
+
     </Box>
   );
 }

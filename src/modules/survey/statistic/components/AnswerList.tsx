@@ -44,7 +44,7 @@ export default function AnswerList({ selectList }: selectionList) {
       (item: { surveySubjectiveAnswer: string }) =>
         item.surveySubjectiveAnswer === newSurveySubjectiveAnswer
     );
-
+  
     if (existingWord) {
       existingWord.surveySubjectiveAnswerCount += 1;
     } else {
@@ -64,9 +64,13 @@ export default function AnswerList({ selectList }: selectionList) {
         surveyWriter: '',
       });
     }
-
+  
+    // Sort the data array based on surveySubjectiveAnswerCount in descending order
+    data.sort((a, b) => b.surveySubjectiveAnswerCount - a.surveySubjectiveAnswerCount);
+  
     return data;
   }
+  
 
   return (
     <div>
@@ -76,13 +80,27 @@ export default function AnswerList({ selectList }: selectionList) {
         sx={{ maxHeight: 250 }}
         style={textStyle}
       >
-        <Table sx={{ minWidth: 300 }} aria-label="simple table">
+      <Table sx={{ minWidth: 300 , backgroundColor: '#D5C2EE'}} aria-label="simple table">
           <TableHead>
+            <TableRow>
+              <TableCell sx={{width:'75%'}}>답변</TableCell>
+              <TableCell>답변수</TableCell>
+            </TableRow>
+          </TableHead>
+          </Table>
+          </TableContainer>
+      <TableContainer
+        component={Paper}
+        sx={{ maxHeight: 250 }}
+        style={textStyle}
+      >
+        <Table sx={{ minWidth: 300 }} aria-label="simple table">
+          {/* <TableHead>
             <TableRow>
               <TableCell>답변</TableCell>
               <TableCell>답변수</TableCell>
             </TableRow>
-          </TableHead>
+          </TableHead> */}
           <TableBody>
             {selectStats.map((row, index) => (
               <TableRow key={index}>

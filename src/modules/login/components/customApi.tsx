@@ -11,4 +11,31 @@ const Api = axios.create({
   params: {},
 });
 
+// 응답 인터셉터를 설정
+Api.interceptors.response.use(
+  (response) => {
+    const accessToken = response.config.headers.Authorization;
+
+    if (typeof accessToken === 'string') {
+      const token = accessToken.split(' ')[1];
+
+      console.log('응답 객체좀 보자 : ' + JSON.stringify(response, null, 2));
+
+      if (token != null) {
+        console.log('응답 인터셉터에서 갱신할 accessToken : ' + token);
+        localStorage.setItem('accessToken', token);
+        Api.defaults.headers.common.Authorization = accessToken;
+      } else {
+        console.log('갱신할 토큰 없음');
+      }
+    }
+
+    return response;
+  },
+  (error) => {
+    console.error('customApi interceptor reponse error!');
+    return Promise.reject(error);
+  }
+);
+
 export default Api;
