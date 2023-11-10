@@ -16,11 +16,6 @@ import './Header.css';
 import '../../global.css';
 import Menu from './Menu';
 
-const fontFamily = "'Gaegu', sans-serif";
-const textStyle = {
-  fontFamily,
-};
-
 const ANCHOR_TYPE = 'left';
 
 const fontFamily = "'Gaegu', sans-serif";
@@ -44,7 +39,6 @@ function Header() {
 
   const logout = () => {
     console.log('logout');
-
 
     localStorage.removeItem('userNo');
     localStorage.removeItem('userImage');
@@ -76,7 +70,6 @@ function Header() {
     };
 
   return (
-
     <Box sx={{ flexGrow: 1 }} height={110}>
       <AppBar
         position="static"
@@ -140,7 +133,6 @@ function Header() {
           )}
         </Toolbar>
       </AppBar>
-
     </Box>
   );
 }
