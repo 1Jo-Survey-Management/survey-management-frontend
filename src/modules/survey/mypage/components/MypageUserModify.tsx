@@ -1,3 +1,9 @@
+/**
+ * 사용자 정보 수정 페이지를 위한 컴포넌트입니다. 사용자는 자신의 프로필 이미지와 닉네임을 수정할 수 있습니다.
+ *
+ * @returns {React.ReactElement} 사용자 정보 수정 페이지 컴포넌트를 렌더링하는 React 엘리먼트
+ * @author 박창우
+ */
 import React, { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +46,7 @@ function MypageUserModify() {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/users/${userNo}`
+          `http://localhost:8080/api/users/${userNo}`
         );
 
         if (response.status === 200) {
@@ -58,10 +64,20 @@ function MypageUserModify() {
     fetchUserData();
   }, [userNo]);
 
+  /**
+   * 이전 페이지로 돌아가는 함수입니다.
+   * 취소 버튼을 클릭하면 실행됩니다.
+   */
   const goBack = () => {
     navigate('/survey/main');
   };
 
+  /**
+   * 사용자가 파일 선택 입력란에서 파일을 선택했을 때 호출되는 이벤트 핸들러입니다.
+   * 선택된 이미지 파일을 상태에 설정하고 미리보기 URL을 생성합니다.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event - 파일 선택 이벤트
+   */
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
@@ -70,6 +86,9 @@ function MypageUserModify() {
     }
   };
 
+  /**
+   * 파일 선택 입력란을 열어 사용자가 이미지 파일을 선택할 수 있도록 합니다.
+   */
   const openFileInput = () => {
     const fileInput = document.getElementById('fileInput');
     if (fileInput) {
@@ -77,15 +96,17 @@ function MypageUserModify() {
     }
   };
 
+  /**
+   * 선택된 이미지 파일을 서버로 업로드합니다.
+   */
   const uploadImage = async () => {
     if (selectedFile) {
       const formData = new FormData();
       formData.append('file', selectedFile);
-      console.log('셀렉티드 파일:', selectedFile);
 
       try {
         const imageResponse = await axios.put(
-          `http://localhost:8000/api/users/${userNo}/image`,
+          `http://localhost:8080/api/users/${userNo}/image`,
           formData,
           {
             headers: {
@@ -96,7 +117,7 @@ function MypageUserModify() {
 
         if (imageResponse.data.success) {
           const response = await axios.get(
-            `http://localhost:8000/api/users/${userNo}`
+            `http://localhost:8080/api/users/${userNo}`
           );
 
           const imageBox = response.data.userImage;
@@ -120,6 +141,11 @@ function MypageUserModify() {
     }
   };
 
+  /**
+   * 닉네임 입력란의 값이 변경될 때마다 호출되어 닉네임 상태를 업데이트합니다.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e - 입력 이벤트 객체
+   */
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setNickname(value);
@@ -128,6 +154,10 @@ function MypageUserModify() {
     console.log(`nickname: ${value}`);
   };
 
+  /**
+   * 닉네임 중복 검사를 요청하는 함수입니다.
+   * 서버에 닉네임 중복 검사를 요청하고 결과에 따라 상태를 업데이트합니다.
+   */
   const handleNicknameCheck = async () => {
     if (nickname.trim() === '') {
       alert('닉네임을 입력하세요.');
@@ -136,7 +166,7 @@ function MypageUserModify() {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/users/check-duplicate-nickname`,
+        `http://localhost:8080/api/users/check-duplicate-nickname`,
         { userNickname: nickname }
       );
 
@@ -163,6 +193,9 @@ function MypageUserModify() {
     }
   };
 
+  /**
+   * 새로운 닉네임을 서버로 업데이트하는 함수입니다.
+   */
   const updateNickname = async () => {
     if (nickname) {
       try {
@@ -172,7 +205,7 @@ function MypageUserModify() {
         };
 
         const nicknameResponse = await axios.put(
-          `http://localhost:8000/api/users/${userNo}/nickname`,
+          `http://localhost:8080/api/users/${userNo}/nickname`,
           requestBody
         );
 
@@ -190,6 +223,10 @@ function MypageUserModify() {
     }
   };
 
+  /**
+   * 이미지와 닉네임을 업로드합니다.
+   * 사용자가 업로드 버튼을 클릭하면 실행되며, 입력된 데이터의 유효성을 검사한 후 업로드를 수행합니다.
+   */
   const uploadImageAndNickname = async () => {
     if ((selectedFile && isNicknameEmpty) || (nickname && isNicknameChecked)) {
       if (selectedFile) {

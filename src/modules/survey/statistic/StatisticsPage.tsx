@@ -132,7 +132,7 @@ export default function StatisticsPage() {
     const itemGroups: { [key: string]: Selection[] } = {};
 
     data.forEach((item) => {
-      const surveyQuestionNo = item.surveyQuestionNo;
+      const { surveyQuestionNo } = item;
 
       if (!itemGroups[surveyQuestionNo]) {
         itemGroups[surveyQuestionNo] = [];
@@ -195,9 +195,8 @@ export default function StatisticsPage() {
           return totalSelectionCount;
         };
 
-        const extractChartData = (data: Selection[]): [string, number][] => {
-          return data.map((item) => [item.selectionValue, item.selectionCount]);
-        };
+        const extractChartData = (data: Selection[]): [string, number][] =>
+          data.map((item) => [item.selectionValue, item.selectionCount]);
         const chartData = extractChartData(itemsForQuestion);
 
         const extractShortSubjectiveAnswer = (

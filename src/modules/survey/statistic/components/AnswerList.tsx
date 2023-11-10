@@ -28,9 +28,10 @@ export default function AnswerList({ selectList }: selectionList) {
   }, [selectList]);
 
   useEffect(() => {
-    const updateArrayLists = selectList.reduce((acc, word) => {
-      return updateArrayList(acc, word.surveySubjectiveAnswer);
-    }, selectStats);
+    const updateArrayLists = selectList.reduce(
+      (acc, word) => updateArrayList(acc, word.surveySubjectiveAnswer),
+      selectStats
+    );
 
     setSelectStats(updateArrayLists);
   }, [selectList]);
