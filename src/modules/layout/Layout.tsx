@@ -3,6 +3,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Header from './Header';
+import Footer from './Footer';
 
 import LoginPage from '../login/LoginDisplay';
 import axios from '../login/components/customApi';
@@ -36,7 +37,7 @@ export default function Layout() {
           <Container>
             <Outlet />
           </Container>
-          {/* <Footer /> */}
+          <Footer />
         </>
       )}
     </>
