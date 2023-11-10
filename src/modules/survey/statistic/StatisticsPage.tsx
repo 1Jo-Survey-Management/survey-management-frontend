@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Card, CardContent, Typography, Button } from '@mui/material';
+
+import { useNavigate, useParams } from 'react-router-dom';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  useMediaQuery,
+  Button,
+} from '@mui/material';
+
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
 import axios from '../../login/components/customApi';
@@ -45,6 +55,9 @@ const styles = {
       width: '100%',
     },
   },
+
+  cardContent: { border: '1px solid #757575', borderRadius: '3%' },
+
   subjectContent: {
     border: '1px solid #757575',
     borderRadius: '3%',
@@ -94,6 +107,8 @@ export default function StatisticsPage() {
   const [surveyWriter, setSurveyWriter] = useState<string>();
 
   const [allItems, setAllItems] = useState([]);
+  const params = useParams();
+  const statSurveyNo = params.surveyNo;
 
   const userNo = localStorage.getItem('userNo');
   const navigate = useNavigate();
@@ -101,7 +116,11 @@ export default function StatisticsPage() {
   useEffect(() => {
     const fetchData = async () => {
       await axios
-        .get(`http://localhost:8080/api/survey/resultall?surveyno=${userNo}`)
+
+        .get(
+          `http://localhost:8080/api/survey/resultall?surveyno=${statSurveyNo}`
+        )
+
         .then((response) => {
           setSelectStat(response.data.content);
           setTotalSelectionCount(response.data.content[0].totalAttend);
@@ -118,6 +137,7 @@ export default function StatisticsPage() {
     fetchData();
   }, []);
 
+  console.log(selectStat);
   useEffect(() => {
     setAllItems(surveyBranch(selectStat));
 
@@ -145,6 +165,7 @@ export default function StatisticsPage() {
 
   return (
     <>
+
       <Box sx={styles.card}>
         <Card sx={styles.cardTitle}>
           <CardContent>
@@ -163,6 +184,7 @@ export default function StatisticsPage() {
                 <Button variant="contained">참여하기</Button>&nbsp;&nbsp;&nbsp;
                 <Button variant="contained">돌아가기</Button>&nbsp;&nbsp;&nbsp;
               </Typography>
+
               <br />
             </Box>
           </CardContent>
@@ -170,7 +192,7 @@ export default function StatisticsPage() {
       </Box>
       {Object.keys(allItems).map((questionNo: any) => {
         const itemsForQuestion: Selection[] = allItems[questionNo];
-        const questionTypeNo = itemsForQuestion[0].questionTypeNo;
+        const { questionTypeNo } = itemsForQuestion[0];
 
         const countSelections = (itemsForQuestion: any[]) => {
           let totalSelectionCount = 0;
@@ -204,7 +226,7 @@ export default function StatisticsPage() {
         ): Selection[] => {
           const filteredData = data.filter((item) => item.questionTypeNo === 4);
 
-          console.log('단답형 : ' + JSON.stringify(filteredData, null, 2));
+
           return filteredData;
         };
         const shortSubData = extractShortSubjectiveAnswer(itemsForQuestion);
@@ -213,12 +235,13 @@ export default function StatisticsPage() {
           data: Selection[]
         ): Selection[] => {
           const filteredData = data.filter((item) => item.questionTypeNo === 5);
-          console.log('서술형 : ' + JSON.stringify(filteredData, null, 2));
+
           return filteredData;
         };
         const LongSubData = extractLongSubjectiveAnswer(itemsForQuestion);
 
         return (
+
           <Box sx={styles.card}>
             <Card sx={styles.cardTitle} key={questionNo}>
               <CardContent>
@@ -252,6 +275,7 @@ export default function StatisticsPage() {
                   {questionTypeNo === 3 && (
                     <Box sx={styles.googleChartContent}>
                       <GooglePieChart selectionAnswer={chartData} />
+
                     </Box>
                   )}
                   {questionTypeNo === 4 && (

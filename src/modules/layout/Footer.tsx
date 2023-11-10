@@ -35,17 +35,10 @@ function Footer() {
       color="D3D4F5"
     >
       <Toolbar>
-        <Typography
-          variant="h6"
-          fontSize="60%"
-          color="#AFB2F0"
-          sx={{ fontStyle: textStyle, margin: '10px' }}
-        >
+        <Typography variant="h6" fontSize="60%" color="#AFB2F0">
           NoName Survey v.0.0.1
         </Typography>
       </Toolbar>
     </Box>
   );
 }
-
-export default Footer;

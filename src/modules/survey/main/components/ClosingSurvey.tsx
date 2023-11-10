@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from '../../../login/components/customApi';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -15,6 +14,7 @@ import {
   Modal,
   Fade,
 } from '@mui/material';
+import axios from '../../../login/components/customApi';
 
 import '../../../../global.css';
 
@@ -26,7 +26,7 @@ function ClosingSurvey() {
     },
     Slide: {
       width: '100%',
-      height: '150px',
+      height: '170px',
     },
   };
 
@@ -37,19 +37,21 @@ function ClosingSurvey() {
     surveyImage: string;
     surveyPostAt: string;
     surveyClosingAt: string;
+    userNo: number;
     userNickName: string;
     userImage: string;
-    userNo: Array<number>;
+    attendUserNo: Array<number>;
     surveyStatusName: string;
     openStatusName: string;
     tag: Array<string>;
     surveyAttendCount: number;
     isDeleted: boolean;
+    attend_check: boolean;
   };
-
-  const fontFamily = "'Noto Sans KR', sans-serif";
+  const fontFamily = 'nanumsquare';
   const textStyle = {
     fontFamily,
+    textOverflow: 'ellipsis',
   };
   const [openModal, setOpenModal] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
@@ -68,11 +70,11 @@ function ClosingSurvey() {
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
       case '진행':
-        return 'primary';
+        return '#7F81B4';
       case '작성':
         return 'secondary';
       default:
-        return 'default';
+        return '#D7D3D3';
     }
   };
 
@@ -86,36 +88,52 @@ function ClosingSurvey() {
     setOpenModal(false);
   };
 
-  // const reParticipation = () => {
-  //   if(    ) {
-  //     alert('본인이 작성한 설문에는 참여할 수 없습니다.')
-  //   } else {
-  //     (() => navigate('/survey/Search'))
-  //   }
-  // }
-
   const swiperParams: SwiperOptions = {
     slidesPerView: 'auto',
     spaceBetween: 5,
     breakpoints: {
-      1050: {
+      920: {
         slidesPerView: 5,
+        spaceBetween: 5,
       },
-      870: {
+      750: {
         slidesPerView: 4,
+        spaceBetween: 5,
       },
-      730: {
+
+      540: {
         slidesPerView: 3,
+        spaceBetween: 5,
       },
-      511: {
+
+      500: {
         slidesPerView: 2,
+        spaceBetween: 5,
       },
+
       0: {
         slidesPerView: 1.8,
+        spaceBetween: 5,
       },
     },
   };
 
+  const tagColor = (tag: string) => {
+    switch (tag) {
+      case '공지':
+        return '#F8E5E5';
+      case '중요':
+        return '#F5F9DE';
+      case '업무':
+        return '#F9ECDF';
+      case '기타':
+        return '#E5ECF5';
+      case '일상':
+        return '#EDEBF6';
+      default:
+        return 'default';
+    }
+  };
   return (
     <div>
       <div>
@@ -141,14 +159,14 @@ function ClosingSurvey() {
                 >
                   <SwiperSlide style={styles.Slide}>
                     <Card
-                      variant="outlined"
+                      variant="elevation"
                       sx={{
-                        minWidth: 100,
-                        maxWidth: 150,
-                        height: '130px',
-                        border: 2,
-                        borderColor: '#BCBCBC',
+                        width: '150px',
+                        height: '160px',
+
                         borderRadius: 5,
+                        backgroundColor: '#F2F2F2',
+                        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                       }}
                       style={textStyle}
                       onClick={() => openCardModal(card)}
@@ -161,7 +179,6 @@ function ClosingSurvey() {
                         }}
                       >
                         {/* 카드 내용 */}
-
                         <Stack
                           direction="row"
                           spacing={1}
@@ -169,39 +186,49 @@ function ClosingSurvey() {
                           paddingBottom="12px"
                         >
                           <Chip
-                            icon={
-                              <GroupsIcon
-                                sx={{
-                                  fontSize: '15px',
-                                }}
-                              />
-                            }
                             label={card.surveyAttendCount}
                             sx={{
                               fontSize: '12px',
+                              color: '#D7D3D3',
                               width: '60px',
                               height: '20px',
                               fontWeight: 600,
                               justifyContent: 'space-between',
+                              backgroundColor: '#FFFDF8',
+                              boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                             }}
                             style={textStyle}
+                            icon={
+                              <GroupsIcon
+                                sx={{
+                                  fontSize: '15px',
+
+                                  width: '18px',
+                                  height: '18px',
+                                }}
+                              />
+                            }
                           />
 
                           <Chip
                             label={card.surveyStatusName}
-                            color={getChipColor(card.surveyStatusName)}
-                            variant="outlined"
+                            variant="filled"
                             sx={{
-                              width: '50px',
+                              width: '40px',
                               height: '20px',
                               fontSize: '10px',
                               fontWeight: 600,
                               '& .MuiChip-label': {
                                 padding: 0,
                               },
+                              backgroundColor: '#FFFDF8',
+                              boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
+                              color: getChipColor(card.surveyStatusName),
                             }}
+                            style={textStyle}
                           />
                         </Stack>
+                        {/* </Stack> */}
 
                         <div
                           style={{
@@ -209,7 +236,7 @@ function ClosingSurvey() {
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             fontSize: 12,
-                            color: 'text.secondary',
+                            color: '#8B8B8B',
                             fontWeight: 600,
                             marginBottom: '0px',
                             fontFamily,
@@ -228,37 +255,47 @@ function ClosingSurvey() {
                           }}
                           style={textStyle}
                         >
-                          {/* {card.userNo} */}
                           {/* {card.surveyNo} */}
                         </Typography>
+
                         <Typography
                           variant="h5"
                           component="div"
                           sx={{
-                            fontSize: 18,
+                            fontSize: 15,
                             fontWeight: 600,
                             marginBottom: '8px',
                             cursor: 'pointer',
+                            maxHeight: '43px', // 원하는 높이 설정
+                            overflow: 'hidden',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            height: '41px',
+                            WebkitBoxOrient: 'vertical',
+                            color: '#8B8B8B',
                           }}
                           style={textStyle}
                         >
                           {card.surveyTitle}
                         </Typography>
                         {/* 태그 등 카드에 관한 내용 표시 */}
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            fontSize: 11,
-                            '& > span:not(:last-child)': {
-                              marginRight: '8px',
-                            },
-                          }}
-                          style={textStyle}
-                        >
+                        <Stack direction="row" spacing={1}>
                           {card.tag.map((tag) => (
-                            <span key={tag}>{tag}</span>
+                            <Chip
+                              key={tag}
+                              label={tag}
+                              size="small"
+                              style={textStyle}
+                              sx={{
+                                fontSize: 11,
+                                marginRight: 1,
+                                height: '20px',
+                                backgroundColor: tagColor(tag),
+                                opacity: 0.7,
+                              }}
+                            />
                           ))}
-                        </Typography>
+                        </Stack>
                       </CardContent>
                     </Card>
                   </SwiperSlide>
@@ -296,8 +333,9 @@ function ClosingSurvey() {
               </h2>
               <p style={textStyle}>
                 날짜:
-                {selectedCard ? selectedCard.surveyPostAt : ''}~{' '}
-                {selectedCard ? selectedCard.surveyClosingAt : ''}
+                {selectedCard
+                  ? selectedCard.surveyPostAt.slice(0, 10)
+                  : ''}~ {selectedCard ? selectedCard.surveyClosingAt : ''}
               </p>
 
               <p>작성자: {selectedCard ? selectedCard.userNickName : ''}</p>
@@ -308,15 +346,34 @@ function ClosingSurvey() {
               <p id="modal-description">
                 {selectedCard ? selectedCard.surveyDiscription : ''}
               </p>
-              <Button onClick={() => navigate('/survey/Search')}>
-                결과보기
-              </Button>
-              <Button
-              // onClick={(reParticipation)}
+
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  marginTop: 'auto',
+                }}
               >
-                참여하기
-              </Button>
-              <Button onClick={closeCardModal}>닫기</Button>
+                <Button
+                  onClick={() =>
+                    navigate(`/survey/statistics/${selectedCard?.surveyNo}`)
+                  }
+                >
+                  결과보기
+                </Button>
+                <Button onClick={() => navigate('/survey/Search')} disabled>
+                  참여하기
+                </Button>
+                <Typography
+                  variant="body2"
+                  style={{ color: 'red' }}
+                  fontSize="12px"
+                >
+                  마감된 설문입니다.
+                </Typography>
+                <Button onClick={closeCardModal}>닫기</Button>
+              </div>
             </div>
           </Fade>
         </Modal>

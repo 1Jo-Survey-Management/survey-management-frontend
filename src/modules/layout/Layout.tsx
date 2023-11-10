@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Container } from '@mui/material';
@@ -6,7 +6,6 @@ import Header from './Header';
 import Footer from './Footer';
 
 import LoginPage from '../login/LoginDisplay';
-import axios from '../login/components/customApi';
 
 /**
  * 페이지의 Header, Body, Footer를 모아놓은 Layout 입니다.
@@ -15,17 +14,15 @@ import axios from '../login/components/customApi';
 export default function Layout() {
   const location = useLocation();
 
-  useEffect(() => {
-    const responseAcccessToken = localStorage.getItem('accessToken');
-    console.log(`로컬스토리지 토큰 : ${responseAcccessToken}`);
-    axios.defaults.headers.common.Authorization = `Bearer ${responseAcccessToken}`;
-  }, []);
-
   console.log(`현재 위치 : ${location.pathname}`);
+
+  const backStyle = {
+    backgroundColor: '#FFFDF8',
+  };
 
   const isLoginPage = location.pathname === '/';
   return (
-    <>
+    <div style={backStyle}>
       <CssBaseline />
 
       <Header />
@@ -33,13 +30,11 @@ export default function Layout() {
       {isLoginPage ? (
         <LoginPage />
       ) : (
-        <>
-          <Container>
-            <Outlet />
-          </Container>
-          <Footer />
-        </>
+        <Container sx={{ backgroundColor: '#FFFDF8' }}>
+          <Outlet />
+        </Container>
       )}
-    </>
+      <Footer />
+    </div>
   );
 }
