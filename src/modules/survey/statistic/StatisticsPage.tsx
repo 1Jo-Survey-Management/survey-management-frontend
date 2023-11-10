@@ -233,7 +233,7 @@ export default function StatisticsPage() {
                   <Typography style={textStyle} sx={styles.surveyInfo}>
                     <br />
                     &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
-                    {itemsForQuestion[0].selectionCount != 0
+                    {itemsForQuestion[0].selectionCount !== 0
                       ? countSelections(itemsForQuestion)
                       : countSubjectiveAnswerCount(itemsForQuestion)}
                   </Typography>
