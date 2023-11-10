@@ -1,23 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
+import Divider from '@mui/material/Divider';
 
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  useMediaQuery,
-  Button,
-} from '@mui/material';
+import { Box, Card, CardContent, Typography, Button } from '@mui/material';
 
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
 import axios from '../../login/components/customApi';
-import Divider from '@mui/material/Divider';
 import WordCloud from './components/WordCloudTest';
 import GooglePieChart from './components/GooglePieChart';
 import { Selection } from './types/SurveyStatisticTypes';
-import { useNavigate } from 'react-router-dom';
 
 const styles = {
   card: {
@@ -55,8 +48,6 @@ const styles = {
       width: '100%',
     },
   },
-
-  cardContent: { border: '1px solid #757575', borderRadius: '3%' },
 
   subjectContent: {
     border: '1px solid #757575',
@@ -110,7 +101,6 @@ export default function StatisticsPage() {
   const params = useParams();
   const statSurveyNo = params.surveyNo;
 
-  const userNo = localStorage.getItem('userNo');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -128,7 +118,7 @@ export default function StatisticsPage() {
           setSurveyNo(response.data.content[0].surveyNo);
           setSurveyPostAt(response.data.content[0].surveyPostAt);
         })
-        .catch((error) => {
+        .catch(() => {
           alert('로그인이 필요합니다!');
           navigate('/');
         });
@@ -137,17 +127,7 @@ export default function StatisticsPage() {
     fetchData();
   }, []);
 
-  console.log(selectStat);
-  useEffect(() => {
-    setAllItems(surveyBranch(selectStat));
-
-    selectStat.forEach((item) => {
-      if (item.surveyWriter != null) {
-        setSurveyWriter(item.surveyWriter);
-      }
-    });
-  }, [selectStat]);
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const surveyBranch = (data: Selection[]): any => {
     const itemGroups: { [key: string]: Selection[] } = {};
 
@@ -163,9 +143,18 @@ export default function StatisticsPage() {
     return itemGroups;
   };
 
+  useEffect(() => {
+    setAllItems(surveyBranch(selectStat));
+
+    selectStat.forEach((item) => {
+      if (item.surveyWriter != null) {
+        setSurveyWriter(item.surveyWriter);
+      }
+    });
+  }, [selectStat]);
+
   return (
     <>
-
       <Box sx={styles.card}>
         <Card sx={styles.cardTitle}>
           <CardContent>
@@ -194,7 +183,9 @@ export default function StatisticsPage() {
         const itemsForQuestion: Selection[] = allItems[questionNo];
         const { questionTypeNo } = itemsForQuestion[0];
 
+        // eslint-disable-next-line no-shadow
         const countSelections = (itemsForQuestion: any[]) => {
+          // eslint-disable-next-line no-shadow
           let totalSelectionCount = 0;
 
           itemsForQuestion.forEach((item: { selectionCount: number }) => {
@@ -204,7 +195,9 @@ export default function StatisticsPage() {
           return totalSelectionCount;
         };
 
+        // eslint-disable-next-line no-shadow
         const countSubjectiveAnswerCount = (itemsForQuestion: any[]) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           let totalSurveySubjectiveAnswerCount = -1;
 
           itemsForQuestion.forEach(
@@ -226,7 +219,6 @@ export default function StatisticsPage() {
         ): Selection[] => {
           const filteredData = data.filter((item) => item.questionTypeNo === 4);
 
-
           return filteredData;
         };
         const shortSubData = extractShortSubjectiveAnswer(itemsForQuestion);
@@ -235,13 +227,12 @@ export default function StatisticsPage() {
           data: Selection[]
         ): Selection[] => {
           const filteredData = data.filter((item) => item.questionTypeNo === 5);
-
           return filteredData;
         };
         const LongSubData = extractLongSubjectiveAnswer(itemsForQuestion);
 
         return (
-
+          // eslint-disable-next-line react/jsx-key
           <Box sx={styles.card}>
             <Card sx={styles.cardTitle} key={questionNo}>
               <CardContent>
@@ -256,7 +247,7 @@ export default function StatisticsPage() {
                   <Typography style={textStyle} sx={styles.surveyInfo}>
                     <br />
                     &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
-                    {itemsForQuestion[0].selectionCount != 0
+                    {itemsForQuestion[0].selectionCount !== 0
                       ? countSelections(itemsForQuestion)
                       : countSubjectiveAnswerCount(itemsForQuestion)}
                   </Typography>
@@ -275,7 +266,6 @@ export default function StatisticsPage() {
                   {questionTypeNo === 3 && (
                     <Box sx={styles.googleChartContent}>
                       <GooglePieChart selectionAnswer={chartData} />
-
                     </Box>
                   )}
                   {questionTypeNo === 4 && (

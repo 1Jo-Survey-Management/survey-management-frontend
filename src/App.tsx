@@ -20,11 +20,12 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/" element={<LoginDisplay />} /> */}
+        <Route path="/" element={<LoginDisplay />} />
         <Route element={<Layout />}>
           <Route path="/survey/register" element={<CreateationSurvey />} />
           <Route path="/survey/modify/:surveyNo" element={<ModifySurvey />} />
           <Route path="/login/LoginDisplay" element={<LoginDisplay />} />
+          <Route path="/survey/statistics" element={<StatisticsPage />} />
           <Route
             path="/survey/statistics/:surveyNo"
             element={<StatisticsPage />}
@@ -39,7 +40,7 @@ function App() {
             path="/survey/mypage/attend"
             element={<MypageAttendSurvey />}
           />
-          <Route path="/survey/attend" element={<AttendSurvey />} />
+          <Route path="/survey/attend/:surveyNo" element={<AttendSurvey />} />
         </Route>
       </Routes>
     </Router>
