@@ -20,12 +20,15 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginDisplay />} />
+        {/* <Route path="/" element={<LoginDisplay />} /> */}
         <Route element={<Layout />}>
           <Route path="/survey/register" element={<CreateationSurvey />} />
           <Route path="/survey/modify/:surveyNo" element={<ModifySurvey />} />
           <Route path="/login/LoginDisplay" element={<LoginDisplay />} />
-          {/* <Route path="/survey/statistics" element={<StatisticsPage />} /> */}
+          <Route
+            path="/survey/statistics/:surveyNo"
+            element={<StatisticsPage />}
+          />
           <Route path="/survey/main" element={<Main />} />
           <Route path="/survey/modify" element={<Navigate to="/login" />} />
           <Route path="/login" element={<LoginDisplay />} />

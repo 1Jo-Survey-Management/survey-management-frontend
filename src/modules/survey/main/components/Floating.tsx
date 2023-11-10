@@ -24,16 +24,23 @@ export default function FloatingActionButtons() {
       zIndex: '1',
     },
     fabStyles: {
-      width: '44px',
-      height: '44px',
-      marginBottom: '8px',
+      width: '50px',
+      height: '50px',
+      marginBottom: '15px',
     },
   };
 
   return (
     <Box sx={styles.fabBox}>
       <Fab
-        sx={styles.fabStyles}
+        sx={{
+          ...styles.fabStyles,
+          backgroundColor: '#8ECC7E',
+          marginRight: '25px',
+          '&:hover': {
+            backgroundColor: '#438133', // Change this to the desired color on hover
+          },
+        }}
         color="primary"
         aria-label="pageup"
         onClick={scrollToTop}
@@ -41,7 +48,14 @@ export default function FloatingActionButtons() {
         <ArrowDropUpIcon />
       </Fab>
       <Fab
-        sx={styles.fabStyles}
+        sx={{
+          ...styles.fabStyles,
+          backgroundColor: '#8ECC7E',
+          marginRight: '25px',
+          '&:hover': {
+            backgroundColor: '#438133', // Change this to the desired color on hover
+          },
+        }}
         color="primary"
         onClick={() => navigate('/survey/register')}
       >

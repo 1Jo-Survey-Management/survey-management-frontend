@@ -32,13 +32,17 @@ function RecentSurvey() {
     },
     Slide: {
       width: '100%',
-      height: '150px',
+      height: '170px',
     },
   };
-
-  const fontFamily = "'Noto Sans KR', sans-serif";
+  const fontFamily = 'nanumsquare';
   const textStyle = {
     fontFamily,
+    textOverflow: 'ellipsis',
+  };
+
+  const userInfo = {
+    loginUserNo: 1,
   };
 
   type CardData = {
@@ -48,14 +52,16 @@ function RecentSurvey() {
     surveyImage: string;
     surveyPostAt: string;
     surveyClosingAt: string;
+    userNo: number;
     userNickName: string;
     userImage: string;
-    userNo: Array<number>;
+    attendUserList: Array<number>;
     surveyStatusName: string;
     openStatusName: string;
     tag: Array<string>;
     surveyAttendCount: number;
     isDeleted: boolean;
+    attendCheckList: Array<boolean>;
   };
   const [openModal, setOpenModal] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
@@ -64,7 +70,7 @@ function RecentSurvey() {
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
       case '진행':
-        return 'primary';
+        return '#3D882B';
       case '작성':
         return 'secondary';
       default:
@@ -80,6 +86,8 @@ function RecentSurvey() {
     data();
   }, []);
 
+  console.log(cardList);
+
   const openCardModal = (card: CardData) => {
     setSelectedCard(card);
     setOpenModal(true);
@@ -94,25 +102,47 @@ function RecentSurvey() {
     slidesPerView: 'auto', // 한 번에 보여질 슬라이드 수
     spaceBetween: 5, // 슬라이드 간의 간격 (옵션)
     breakpoints: {
-      1050: {
+      920: {
         slidesPerView: 5,
+        spaceBetween: 5,
       },
-      870: {
+      750: {
         slidesPerView: 4,
+        spaceBetween: 5,
       },
-      // 화면 너비가 768px 이상일 때 3개의 슬라이드 보이기
-      730: {
+
+      540: {
         slidesPerView: 3,
+        spaceBetween: 5,
       },
-      // 화면 너비가 480px 이상 768px 미만일 때 2개의 슬라이드 보이기
-      511: {
+
+      500: {
         slidesPerView: 2,
+        spaceBetween: 5,
       },
-      // 화면 너비가 480px 미만일 때 1개의 슬라이드 보이기
+
       0: {
         slidesPerView: 1.8,
+        spaceBetween: 5,
       },
     },
+  };
+
+  const tagColor = (tag: string) => {
+    switch (tag) {
+      case '공지':
+        return '#F8E5E5';
+      case '중요':
+        return '#F5F9DE';
+      case '업무':
+        return '#F9ECDF';
+      case '기타':
+        return '#E5ECF5';
+      case '일상':
+        return '#EDEBF6';
+      default:
+        return 'default';
+    }
   };
 
   return (
@@ -137,14 +167,13 @@ function RecentSurvey() {
                   {/* 카드를 클릭하면 해당 카드 정보를 전달하여 모달 열기 */}
                   <SwiperSlide style={styles.Slide}>
                     <Card
-                      variant="outlined"
+                      variant="elevation"
                       sx={{
-                        minWidth: 100,
-                        maxWidth: 150,
-                        height: '130px',
-                        border: 2,
-                        borderColor: '#BCBCBC',
+                        width: '150px',
+                        height: '160px',
                         borderRadius: 5,
+                        backgroundColor: '#D1E4CC',
+                        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                       }}
                       style={textStyle}
                       onClick={() => openCardModal(card)}
@@ -157,7 +186,6 @@ function RecentSurvey() {
                         }}
                       >
                         {/* 카드 내용 */}
-
                         <Stack
                           direction="row"
                           spacing={1}
@@ -165,38 +193,44 @@ function RecentSurvey() {
                           paddingBottom="12px"
                         >
                           <Chip
-                            icon={
-                              <GroupsIcon
-                                sx={{
-                                  fontSize: '15px',
-                                }}
-                              />
-                            }
                             label={card.surveyAttendCount}
-                            // variant="outlined"
                             sx={{
                               fontSize: '12px',
                               width: '60px',
                               height: '20px',
                               fontWeight: 600,
                               justifyContent: 'space-between',
+                              backgroundColor: '#FFFDF8',
+                              boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                             }}
                             style={textStyle}
+                            icon={
+                              <GroupsIcon
+                                sx={{
+                                  fontSize: '15px',
+                                  width: '18px',
+                                  height: '18px',
+                                }}
+                              />
+                            }
                           />
 
                           <Chip
                             label={card.surveyStatusName}
-                            color={getChipColor(card.surveyStatusName)} // 상태에 따른 색상 사용
-                            variant="outlined"
+                            variant="filled"
                             sx={{
-                              width: '50px',
+                              width: '40px',
                               height: '20px',
                               fontSize: '10px',
                               fontWeight: 600,
                               '& .MuiChip-label': {
                                 padding: 0,
                               },
+                              backgroundColor: '#FFFDF8',
+                              boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
+                              color: getChipColor(card.surveyStatusName),
                             }}
+                            style={textStyle}
                           />
                         </Stack>
                         {/* </Stack> */}
@@ -226,50 +260,46 @@ function RecentSurvey() {
                           }}
                           style={textStyle}
                         >
-                          {/* {card.userNo}  */}
+                          {/* {card.surveyNo} */}
                         </Typography>
+
                         <Typography
                           variant="h5"
                           component="div"
                           sx={{
-                            fontSize: 18,
+                            fontSize: 15,
                             fontWeight: 600,
                             marginBottom: '8px',
                             cursor: 'pointer',
-                          }}
-                          style={textStyle}
-                        >
-                          {card.surveyNo}
-                        </Typography>
-                        <Typography
-                          variant="h5"
-                          component="div"
-                          sx={{
-                            fontSize: 18,
-                            fontWeight: 600,
-                            marginBottom: '8px',
-                            cursor: 'pointer',
+                            maxHeight: '43px', // 원하는 높이 설정
+                            overflow: 'hidden',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            height: '41px',
+                            WebkitBoxOrient: 'vertical',
                           }}
                           style={textStyle}
                         >
                           {card.surveyTitle}
                         </Typography>
                         {/* 태그 등 카드에 관한 내용 표시 */}
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            fontSize: 11,
-                            '& > span:not(:last-child)': {
-                              marginRight: '8px',
-                            },
-                          }}
-                          style={textStyle}
-                        >
-                          #
+                        <Stack direction="row" spacing={1}>
                           {card.tag.map((tag) => (
-                            <span key={tag}>{tag}</span>
+                            <Chip
+                              key={tag}
+                              label={tag}
+                              size="small"
+                              style={textStyle}
+                              sx={{
+                                fontSize: 11,
+                                marginRight: 1,
+                                height: '20px',
+                                backgroundColor: tagColor(tag),
+                                opacity: 0.7,
+                              }}
+                            />
                           ))}
-                        </Typography>
+                        </Stack>
                       </CardContent>
                     </Card>
                   </SwiperSlide>
@@ -307,8 +337,9 @@ function RecentSurvey() {
               </h2>
               <p style={textStyle}>
                 날짜:
-                {selectedCard ? selectedCard.surveyPostAt : ''}~{' '}
-                {selectedCard ? selectedCard.surveyClosingAt : ''}
+                {selectedCard
+                  ? selectedCard.surveyPostAt.slice(0, 10)
+                  : ''}~ {selectedCard ? selectedCard.surveyClosingAt : ''}
               </p>
 
               <p style={textStyle}>
@@ -323,13 +354,56 @@ function RecentSurvey() {
               <p id="modal-description" style={textStyle}>
                 {selectedCard ? selectedCard.surveyDiscription : ''}
               </p>
-              <Button onClick={() => navigate(`/survey/statistics`)}>
-                결과보기
-              </Button>
-              <Button onClick={() => navigate('/survey/Search')}>
-                참여하기
-              </Button>
-              <Button onClick={closeCardModal}>닫기</Button>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  marginTop: 'auto',
+                }}
+              >
+                <Button
+                  onClick={() =>
+                    navigate(`/survey/statistics/${selectedCard?.surveyNo}`)
+                  }
+                >
+                  결과보기
+                </Button>
+
+                <Button
+                  onClick={() => navigate('/survey/Search')}
+                  disabled={
+                    !selectedCard?.attendCheckList ||
+                    selectedCard.attendCheckList.some(
+                      (item) => item === false
+                    ) ||
+                    selectedCard?.userNo === userInfo.loginUserNo
+                  }
+                >
+                  참여하기
+                </Button>
+                {selectedCard?.attendCheckList &&
+                  selectedCard.attendCheckList.includes(false) && (
+                    <Typography
+                      variant="body2"
+                      style={{ color: 'red' }}
+                      fontSize="12px"
+                    >
+                      이미 참여한 설문에는 다시 참여할 수 없습니다.
+                    </Typography>
+                  )}
+
+                {selectedCard?.userNo === userInfo.loginUserNo && (
+                  <Typography
+                    variant="body2"
+                    style={{ color: 'red' }}
+                    fontSize="12px"
+                  >
+                    본인이 작성한 설문에는 참여할 수 없습니다.
+                  </Typography>
+                )}
+                <Button onClick={closeCardModal}>닫기</Button>
+              </div>
             </div>
           </Fade>
         </Modal>

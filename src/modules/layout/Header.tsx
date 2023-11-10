@@ -9,6 +9,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Drawer, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import axios from '../login/components/customApi';
+import '../../global.css';
+import logo from './logo.png';
 
 import './Header.css';
 import '../../global.css';
@@ -21,6 +23,11 @@ const textStyle = {
 
 const ANCHOR_TYPE = 'left';
 
+const fontFamily = "'Gaegu', sans-serif";
+
+const textStyle = {
+  fontFamily,
+};
 function Header() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -37,6 +44,7 @@ function Header() {
 
   const logout = () => {
     console.log('logout');
+
 
     localStorage.removeItem('userNo');
     localStorage.removeItem('userImage');
@@ -68,51 +76,71 @@ function Header() {
     };
 
   return (
-    <Box sx={{ flexGrow: 1 }} height={100} color="D3D4F5">
-      {/* <AppBar position="static"> */}
-      <Toolbar>
-        <IconButton size="large" aria-label="menu" onClick={toggleDrawer(true)}>
-          <MenuIcon style={{ color: '#AFB2F0' }} />
-        </IconButton>
 
-        <React.Fragment key={ANCHOR_TYPE}>
-          <Drawer
-            anchor={ANCHOR_TYPE}
-            open={isOpenDrawer}
-            onClose={toggleDrawer(false)}
+    <Box sx={{ flexGrow: 1 }} height={110}>
+      <AppBar
+        position="static"
+        sx={{
+          backgroundColor: '#FFFDF8',
+          boxShadow: 'none',
+          height: '110px',
+          marginBottom: '0',
+        }}
+      >
+        <Toolbar>
+          <IconButton
+            size="large"
+            sx={{ color: '#57A035' }}
+            aria-label="menu"
+            onClick={toggleDrawer(true)}
           >
-            <Menu toggleDrawer={toggleDrawer} />
-          </Drawer>
-        </React.Fragment>
+            <MenuIcon />
+          </IconButton>
+          <React.Fragment key={ANCHOR_TYPE}>
+            <Drawer
+              anchor={ANCHOR_TYPE}
+              open={isOpenDrawer}
+              onClose={toggleDrawer(false)}
+            >
+              <Menu toggleDrawer={toggleDrawer} />
+            </Drawer>
+          </React.Fragment>
+          <div
+            style={{
+              maxWidth: '300px', // 최대 너비 설정
+              maxHeight: '60px', // 최대 높이 설정
+            }}
+          >
+            <img
+              src={logo}
+              alt="로고"
+              style={{
+                width: '100%', // 너비 100%로 설정하여 부모 요소에 맞추기
+                height: 'auto', // 원본 이미지의 비율 유지
+              }}
+              onClick={goMain}
+              onKeyDown={goMain}
+              role="presentation"
+            />
+          </div>
+          {isHomePage || !hasAccessToken ? (
+            <Button
+              onClick={login}
+              sx={{ color: '#57A035', fontStyle: textStyle, fontSize: '20px' }}
+            >
+              LogIn
+            </Button>
+          ) : (
+            <Button
+              onClick={logout}
+              sx={{ color: '#57A035', fontStyle: textStyle, fontSize: '20px' }}
+            >
+              Logout
+            </Button>
+          )}
+        </Toolbar>
+      </AppBar>
 
-        <Typography
-          onClick={goMain}
-          variant="h6"
-          fontSize="150%"
-          color="#AFB2F0"
-          sx={{ fontStyle: textStyle }}
-        >
-          NoName Survey
-        </Typography>
-        {isHomePage || !hasAccessToken ? (
-          <Button
-            onClick={login}
-            color="inherit"
-            sx={{ color: '#AFB2F0', fontStyle: textStyle, fontSize: '20px' }}
-          >
-            Login
-          </Button>
-        ) : (
-          <Button
-            onClick={logout}
-            color="inherit"
-            sx={{ color: '#AFB2F0', fontStyle: textStyle, fontSize: '20px' }}
-          >
-            Logout
-          </Button>
-        )}
-      </Toolbar>
-      {/* </AppBar> */}
     </Box>
   );
 }

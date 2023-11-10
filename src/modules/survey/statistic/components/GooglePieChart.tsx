@@ -42,6 +42,7 @@ export default function GooglePieChart({
   const aggregateData = (data: any[]) => {
     const aggregatedData = [];
     const map = new Map();
+    // eslint-disable-next-line no-restricted-syntax
     for (const item of data) {
       if (map.has(item[0])) {
         const index = map.get(item[0]);
@@ -59,14 +60,19 @@ export default function GooglePieChart({
   const aggregatedChartData = aggregateData(chartData);
   aggregatedChartData.unshift(['selectionValue', 'selectionCount']);
 
+  console.log(chartData);
   return (
-    <Chart
-      chartType="PieChart"
-      data={aggregatedChartData}
-      width="100%"
-      height="250px"
-      options={options}
-      style={{ marginTop: '0' }}
-    />
+
+    <div style={{ width: '100%', minWidth: '330px' }}>
+      <Chart
+        chartType="PieChart"
+        data={aggregatedChartData}
+        width="100%"
+        height="250px"
+        options={options}
+        style={{ marginTop: '0' }}
+      />
+    </div>
+
   );
 }
