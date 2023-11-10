@@ -11,8 +11,9 @@ import CreateationSurvey from './modules/survey/creation/routers/CreateationSurv
 import LoginDisplay from './modules/login/LoginDisplay';
 import MypageWriteSurvey from './modules/survey/mypage/components/MypageWriteSurvey';
 import MypageAttendSurvey from './modules/survey/mypage/components/MypageAttendSurvey';
-// import StatisticsPage from './modules/survey/statistic/StatisticsPage';
+import StatisticsPage from './modules/survey/statistic/StatisticsPage';
 import Main from './modules/survey/main/Main';
+import Search from './modules/survey/main/Search';
 import AttendSurvey from './modules/survey/attend/routers/AttendSurvey';
 
 function App() {
@@ -28,6 +29,8 @@ function App() {
           <Route path="/survey/main" element={<Main />} />
           <Route path="/survey/modify" element={<Navigate to="/login" />} />
           <Route path="/login" element={<LoginDisplay />} />
+          <Route path="/survey/mypage" element={<MypageWriteSurvey />} />
+          <Route path="/survey/search" element={<Search />} />
           <Route path="/survey/mypage/write" element={<MypageWriteSurvey />} />
           <Route
             path="/survey/mypage/attend"

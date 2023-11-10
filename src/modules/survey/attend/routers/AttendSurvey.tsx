@@ -7,7 +7,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Stack } from '@mui/material';
-import axios from 'axios';
+import axios from '../../../login/components/customApi';
 import { AnimatePresence, Variants, motion } from 'framer-motion';
 import AttendSingleChoice from '../components/AttendSingleChoice';
 import AttendSingleMoveChoice from '../components/AttendSingleMoveChoice';

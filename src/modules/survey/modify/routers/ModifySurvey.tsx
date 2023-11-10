@@ -8,7 +8,7 @@ import {
   CircularProgress,
   Container,
 } from '@mui/material';
-import axios from 'axios';
+import axios from '../../../login/components/customApi';
 import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { useNavigate, useParams } from 'react-router-dom';

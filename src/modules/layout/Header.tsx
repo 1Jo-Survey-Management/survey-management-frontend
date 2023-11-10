@@ -11,7 +11,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import axios from '../login/components/customApi';
 
 import './Header.css';
+import '../../global.css';
 import Menu from './Menu';
+
+const fontFamily = "'Gaegu', sans-serif";
+const textStyle = {
+  fontFamily,
+};
 
 const ANCHOR_TYPE = 'left';
 
@@ -32,8 +38,10 @@ function Header() {
   const logout = () => {
     console.log('logout');
 
+    localStorage.removeItem('userNo');
+    localStorage.removeItem('userImage');
+    localStorage.removeItem('userNickname');
     localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
     localStorage.removeItem('expiresIn');
 
     axios.defaults.headers.common.Authorization = null;
@@ -60,42 +68,51 @@ function Header() {
     };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            size="large"
-            color="inherit"
-            aria-label="menu"
-            onClick={toggleDrawer(true)}
+    <Box sx={{ flexGrow: 1 }} height={100} color="D3D4F5">
+      {/* <AppBar position="static"> */}
+      <Toolbar>
+        <IconButton size="large" aria-label="menu" onClick={toggleDrawer(true)}>
+          <MenuIcon style={{ color: '#AFB2F0' }} />
+        </IconButton>
+
+        <React.Fragment key={ANCHOR_TYPE}>
+          <Drawer
+            anchor={ANCHOR_TYPE}
+            open={isOpenDrawer}
+            onClose={toggleDrawer(false)}
           >
-            <MenuIcon />
-          </IconButton>
+            <Menu toggleDrawer={toggleDrawer} />
+          </Drawer>
+        </React.Fragment>
 
-          <React.Fragment key={ANCHOR_TYPE}>
-            <Drawer
-              anchor={ANCHOR_TYPE}
-              open={isOpenDrawer}
-              onClose={toggleDrawer(false)}
-            >
-              <Menu toggleDrawer={toggleDrawer} />
-            </Drawer>
-          </React.Fragment>
-
-          <Typography variant="h6" onClick={goMain}>
-            Logo survey
-          </Typography>
-          {isHomePage || !hasAccessToken ? (
-            <Button onClick={login} color="inherit">
-              로그인
-            </Button>
-          ) : (
-            <Button onClick={logout} color="inherit">
-              로그아웃
-            </Button>
-          )}
-        </Toolbar>
-      </AppBar>
+        <Typography
+          onClick={goMain}
+          variant="h6"
+          fontSize="150%"
+          color="#AFB2F0"
+          sx={{ fontStyle: textStyle }}
+        >
+          NoName Survey
+        </Typography>
+        {isHomePage || !hasAccessToken ? (
+          <Button
+            onClick={login}
+            color="inherit"
+            sx={{ color: '#AFB2F0', fontStyle: textStyle, fontSize: '20px' }}
+          >
+            Login
+          </Button>
+        ) : (
+          <Button
+            onClick={logout}
+            color="inherit"
+            sx={{ color: '#AFB2F0', fontStyle: textStyle, fontSize: '20px' }}
+          >
+            Logout
+          </Button>
+        )}
+      </Toolbar>
+      {/* </AppBar> */}
     </Box>
   );
 }

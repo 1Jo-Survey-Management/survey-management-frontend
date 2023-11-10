@@ -69,8 +69,10 @@ function WeeklySurvey() {
       try {
         // weekly 데이터
         const weeklyResponse = await axios.get(
-          'http://localhost:8080/surveys/weekly'
+          'http://localhost:8080/api/surveys/weekly'
         );
+
+        console.log('weekly 데이터 확인 : ' + weeklyResponse.data);
 
         if (weeklyResponse.data.length > 0) {
           // weekly 데이터가 존재하면 그 데이터를 사용
@@ -78,7 +80,7 @@ function WeeklySurvey() {
         } else {
           // weekly 데이터가 없으면 recent 데이터
           const recentResponse = await axios.get(
-            'http://localhost:8080/surveys/recent'
+            'http://localhost:8080/api/surveys/recent'
           );
           setCardList(recentResponse.data);
         }
@@ -317,7 +319,9 @@ function WeeklySurvey() {
           <p id="modal-description" style={textStyle}>
             {selectedCard ? selectedCard.surveyDiscription : ''}
           </p>
-          <Button onClick={() => navigate('/survey/Search')}>결과보기</Button>
+          <Button onClick={() => navigate('/survey/statistics')}>
+            결과보기
+          </Button>
           <Button onClick={() => navigate('/survey/Search')}>참여하기</Button>
           <Button onClick={closeCardModal}>닫기</Button>
         </div>

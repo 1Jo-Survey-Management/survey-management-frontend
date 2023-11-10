@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import axios from './components/customApi';
 import Logo from './img/SurveyLogo.png';
 import LoginFig from './img/LoginFig.png';
 import BasicModal from './modal/BasicModal';
 import LoginNaver from './LoginNaver';
+
+import { createBrowserHistory } from 'history';
 
 const emptyBoxSimple = {
   height: 20,
@@ -31,10 +33,17 @@ const basicBox = {
 };
 
 const secBasicBox = {
-  width: 350,
-  height: 400,
-  backgroundColor: '#C2E9FF',
+  width: '80%',
+  height: '50%',
+  backgroundColor: 'white',
   borderRadius: '10px',
+};
+
+const webSecBasicBox = {
+  '@media (min-width: 800px)': {
+    width: '25%',
+    height: '50%',
+  },
 };
 
 const loginBox = {
@@ -43,9 +52,14 @@ const loginBox = {
   justifyContent: 'center',
 };
 
-const imageSx = {
-  width: '50px',
-  marginRight: '10px',
+const webImageStyle = {
+  '@media (minWidth: 800px)': {
+    width: '20%',
+  },
+};
+
+const mobileImageStyle = {
+  width: '20%',
 };
 
 const naverloginButton = {
@@ -69,16 +83,58 @@ function LoginDisplay() {
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
 
+  const history = createBrowserHistory();
+
   useEffect(() => {
+    const userNo = localStorage.getItem('userNo');
     const localStorageAccessToken = localStorage.getItem('accessToken');
     const searchParams = new URLSearchParams(location.search);
     const accessCode = searchParams.get('code');
 
     const redirectUri = '/login/oauth2/code/naver';
 
+    // 뒤로가기 눌렀을때 회원가입 일련의 과정을 모두 취소하는 로직
+    const unlisten = history.listen((location) => {
+      console.log('location.action : ' + location.action);
+      console.log('history.action : ' + history.action);
+
+      if (history.action === 'POP') {
+        alert('뒤로 가기 동작이 감지되었습니다.');
+
+        localStorage.removeItem('userNo');
+        localStorage.removeItem('userNickname');
+        localStorage.removeItem('userImage');
+        localStorage.removeItem('accessToken');
+
+        //여기에 임시로 만들어진 미회원 완료 객체 제거 api 요청
+        axios
+          .get('/login/cancel', {
+            params: {
+              userNo: userNo,
+            },
+          })
+          .then((response) => {
+            // 서버로부터의 응답 처리
+            const respData = response.data;
+
+            if (respData === '') {
+              alert('회원가입 취소중..');
+              setShowModal(false);
+
+              navigate('/');
+            }
+          })
+          .catch(() => {
+            alert('api요청 실패!');
+            console.error('API 요청 실패!');
+          });
+      }
+    });
+
     // accessToken이 유효한지 api를 통해서 확인 (로그인 했는데 로그아웃 안했을때)
     if (localStorageAccessToken != null && !accessCode) {
-      axios.defaults.headers.common.Authorization = `Bearer ${localStorageAccessToken}`;
+      axios.defaults.headers.common['Authorization'] =
+      'Bearer ' + localStorageAccessToken;
 
       // 액세스 토큰이 유효한지 api를 쏴서 확인하면서 로그인 처리
       axios
@@ -93,29 +149,30 @@ function LoginDisplay() {
           const responseNickName = responseCheck.data.content.userNickname;
           const responseExpiresIn = responseCheck.data.content.expiresIn;
 
-          localStorage.setItem('userNo', responseUserNo);
-          localStorage.setItem('userNickname', responseNickName);
-          localStorage.setItem('userImage', responseImage);
-          localStorage.setItem('accessToken', responseAccessToken);
-          localStorage.setItem('expiresIn', responseExpiresIn);
+        localStorage.setItem('userNo', responseUserNo);
+        localStorage.setItem('userNickname', responseNickName);
+        localStorage.setItem('userImage', responseImage);
+        localStorage.setItem('accessToken', responseAccessToken);
+        localStorage.setItem('expiresIn', responseExpiresIn);
 
-          if (respData === '') {
-            alert('로그인이 필요합니다!');
-            console.error('API 응답 데이터 없음!');
-          }
-        })
-        .catch((error) => {
+        if (respData === '') {
           alert('로그인이 필요합니다!');
-          console.error(error);
-          localStorage.removeItem('userNo');
-          localStorage.removeItem('userNickname');
-          localStorage.removeItem('userImage');
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('expiresIn');
-          localStorage.removeItem('refreshToken');
-          console.error('API 요청 실패!');
-          navigate('/');
-        });
+          console.error('API 응답 데이터 없음!');
+        }
+      })
+      .catch((error) => {
+        alert('로그인이 필요합니다!');
+        console.error(error);
+        localStorage.removeItem('userNo');
+        localStorage.removeItem('userNickname');
+        localStorage.removeItem('userImage');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('expiresIn');
+        localStorage.removeItem('refreshToken');
+        console.error('API 요청 실패!');
+        navigate('/');
+
+      });
 
       navigate('/survey/main');
     }
@@ -138,11 +195,16 @@ function LoginDisplay() {
           const responseNickName = responseCheck.data.content.userNickname;
           const responseExpiresIn = responseCheck.data.content.expiresIn;
 
+          console.log('유저 번호 : ' + responseUserNo);
+
           localStorage.setItem('userNo', responseUserNo);
           localStorage.setItem('userNickname', responseNickName);
           localStorage.setItem('userImage', responseImage);
           localStorage.setItem('accessToken', responseAccessToken);
           localStorage.setItem('expiresIn', responseExpiresIn);
+
+          console.log('responseNickName : ' + responseNickName);
+          console.log('responseImage : ' + responseImage);
 
           // 1. 완료된 회원
           if (responseUserNo != null && responseNickName != null) {
@@ -177,8 +239,6 @@ function LoginDisplay() {
 
             const expiresAt = localStorage.getItem('expiresIn');
             console.log(`유효시간 확인 : ${expiresAt}`);
-
-            // axios.defaults.headers.common.Authorization = `Bearer ${responseAccessToken}`;
 
             navigate('/survey/main');
 
@@ -218,7 +278,11 @@ function LoginDisplay() {
           console.error('Error:', error);
         });
     }
-  }, []);
+
+    return () => {
+      unlisten();
+    };
+  }, [history]);
 
   const goLogin = () => {
     navigate('/survey/main');
@@ -226,29 +290,48 @@ function LoginDisplay() {
 
   return (
     <Box component="div" sx={basicBox}>
-      <Box sx={secBasicBox}>
+      <Box sx={{ ...secBasicBox, ...webSecBasicBox }}>
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={loginBox}>
-          <img src={`${Logo}`} style={imageSx} alt="not Logo" />
-          <h1 style={{ position: 'relative', color: '#9E9E9E' }}>
-            {' '}
+          <Box sx={{ ...mobileImageStyle, ...webImageStyle }}>
+            <img
+              src={`${Logo}`}
+              style={{ width: '70%', padding: '15%' }}
+              alt="not Logo"
+            />
+          </Box>
+          <Typography
+            variant="h1"
+            sx={{
+              fontSize: '150%', // 150%로 설정하여 1.5배 크기
+              color: '#9E9E9E',
+              position: 'relative',
+              fontWeight: 'bold',
+            }}
+          >
             NoName Survey
-          </h1>
+          </Typography>
         </Box>
-        <Box sx={emptyBoxSimple}> </Box>
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={naverloginButton}>
           <LoginNaver />
-
-          {showModal && <BasicModal onClose={() => {}} />}
         </Box>
 
-        <Box sx={emptyBox} />
+        {showModal && <BasicModal onClose={() => {}} />}
 
-        <h2 style={{ position: 'relative', marginBottom: '1px' }}>
+        <Box sx={emptyBox} />
+        <Typography
+          variant="h2"
+          sx={{
+            fontSize: '100%', // 150%로 설정하여 1.5배 크기
+            position: 'relative',
+            marginBottom: '1px',
+            fontWeight: 'bold',
+          }}
+        >
           Nice to See you Again
-        </h2>
+        </Typography>
         <Button sx={guestLogin} onClick={goLogin}>
           비회원으로 로그인
         </Button>
