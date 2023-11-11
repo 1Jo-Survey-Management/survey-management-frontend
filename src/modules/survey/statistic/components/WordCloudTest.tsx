@@ -23,8 +23,6 @@ function updateWordCloudData(
 }
 
 function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
-  console.log('들어왔는지 확인 : ' + JSON.stringify(wordCloud));
-
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   const [wordCloudData, setWordCloudData] = useState<
@@ -32,15 +30,13 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
   >([]);
 
   const [width, setWidth] = useState<number>(800);
-  const [height, setHeight] = useState<number>(400);
+  const [height] = useState<number>(400);
 
   const incrementValue = 10;
 
   const updateWordCloud = () => {
     const updatedWordCloudData = wordCloud.reduce(
-      (acc, word) => {
-        return updateWordCloudData(acc, word.text, incrementValue);
-      },
+      (acc, word) => updateWordCloudData(acc, word.text, incrementValue),
       [...wordCloudData]
     );
 
@@ -50,7 +46,7 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
   useEffect(() => {
     const containerWidth = svgRef.current?.getBoundingClientRect().width;
 
-    console.log('크기가 어떻길래 : ' + containerWidth);
+    // console.log('크기가 어떻길래 : ' + containerWidth);
 
     if (containerWidth) {
       setWidth(containerWidth);
@@ -58,7 +54,7 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
 
     const handleResize = () => {
       const newContainerWidth = svgRef.current?.getBoundingClientRect().width;
-      console.log('리사이즈 크기가 어떻길래 : ' + newContainerWidth);
+      // console.log('리사이즈 크기가 어떻길래 : ' + newContainerWidth);
 
       if (newContainerWidth) {
         setWidth(newContainerWidth);
@@ -72,9 +68,9 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
 
   useEffect(() => {
     if (wordCloudData && wordCloudData.length && width && height) {
-      console.log(
-        '워드클라우드 다음내용 : ' + JSON.stringify(wordCloudData, null, 2)
-      );
+      // console.log(
+      //   '워드클라우드 다음내용 : ' + JSON.stringify(wordCloudData, null, 2)
+      // );
 
       const svg = svgRef.current;
 
@@ -94,16 +90,15 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
         const layout = cloud<{ text: string; size: number }>()
           .size([width, height])
           .words(
-            wordCloudData.map((d) => {
-              return {
-                text: d.text,
-                size: d.size,
-                x: Math.random() * width, // 무작위 x 좌표
-                y: Math.random() * height, // 무작위 y 좌표
-                rotate: Math.random() * 90 - 45, // 무작위 회전 각도 (-45도에서 45도 사이)
-              };
-            })
+            wordCloudData.map((d) => ({
+              text: d.text,
+              size: d.size,
+              x: Math.random() * width, // 무작위 x 좌표
+              y: Math.random() * height, // 무작위 y 좌표
+              rotate: Math.random() * 90 - 45, // 무작위 회전 각도 (-45도에서 45도 사이)
+            }))
           )
+
           .padding(5)
           .rotate(() => Math.random() * 90 - 45) // 무작위 회전 각도 (-45도에서 45도 사이)
           .fontSize((d) => d.size)
@@ -115,7 +110,7 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
               .append('text')
               .attr(
                 'transform',
-                (d) =>
+                () =>
                   `translate(${Math.random() * width},${
                     Math.random() * height
                   }) rotate(${Math.random() * 90 - 45})`
@@ -132,7 +127,7 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
     // }
   }, [wordCloudData, width, height]);
 
-  return <svg ref={svgRef}></svg>;
+  return <svg ref={svgRef} />;
 }
 
 export default WordCloudTest;

@@ -22,21 +22,8 @@ export default function AnswerList({ selectList }: selectionList) {
   const textStyle = {
     fontFamily,
   };
-  const [selectStat, setSelectStat] = useState<Selection[]>([]);
+  const [, setSelectStat] = useState<Selection[]>([]);
   const [selectStats, setSelectStats] = useState<Selection[]>([]);
-
-  useEffect(() => {
-    setSelectStat(selectList);
-  }, [selectList]);
-
-  useEffect(() => {
-    const updateArrayLists = selectList.reduce(
-      (acc, word) => updateArrayList(acc, word.surveySubjectiveAnswer),
-      selectStats
-    );
-
-    setSelectStats(updateArrayLists);
-  }, [selectList]);
 
   function updateArrayList(
     data: Selection[],
@@ -74,6 +61,19 @@ export default function AnswerList({ selectList }: selectionList) {
 
     return data;
   }
+  useEffect(() => {
+    setSelectStat(selectList);
+  }, [selectList]);
+
+  useEffect(() => {
+    const updateArrayLists = selectList.reduce(
+      (acc, word) => updateArrayList(acc, word.surveySubjectiveAnswer),
+      selectStats
+    );
+
+    setSelectStats(updateArrayLists);
+  }, [selectList]);
+
 
   return (
     <div>
@@ -108,8 +108,8 @@ export default function AnswerList({ selectList }: selectionList) {
             </TableRow>
           </TableHead> */}
           <TableBody>
-            {selectStats.map((row, index) => (
-              <TableRow key={index}>
+            {selectStats.map((row) => (
+              <TableRow key={row.surveySubjectiveAnswer}>
                 <TableCell>{row.surveySubjectiveAnswer}</TableCell>
                 <TableCell>{row.surveySubjectiveAnswerCount}</TableCell>
               </TableRow>

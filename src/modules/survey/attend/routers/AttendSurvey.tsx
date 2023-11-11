@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Container, Stack } from '@mui/material';
 import { AnimatePresence, Variants, motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
+
 import axios from '../../../login/components/customApi';
 import AttendSingleChoice from '../components/AttendSingleChoice';
 import AttendSingleMoveChoice from '../components/AttendSingleMoveChoice';

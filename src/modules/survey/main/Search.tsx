@@ -39,7 +39,7 @@ type CardData = {
   tag: Array<string>;
   surveyAttendCount: number;
   isDeleted: boolean;
-  attendCheckList: boolean;
+  attendCheckList: boolean[];
 };
 
 const userInfo = {

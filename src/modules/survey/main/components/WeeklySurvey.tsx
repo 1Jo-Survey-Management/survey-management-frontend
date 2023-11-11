@@ -54,7 +54,7 @@ function WeeklySurvey() {
     tag: Array<string>;
     surveyAttendCount: number;
     isDeleted: boolean;
-    attendCheckList: boolean;
+    attendCheckList: boolean[];
   };
   const [openModal, setOpenModal] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
@@ -78,8 +78,7 @@ function WeeklySurvey() {
         const weeklyResponse = await axios.get(
           'http://localhost:8080/api/surveys/weekly'
         );
-
-        console.log(`weekly 데이터 확인 : ${weeklyResponse.data}`);
+        // console.log('weekly 데이터 확인 : ' + weeklyResponse.data);
 
         if (weeklyResponse.data.length > 0) {
           // weekly 데이터가 존재하면 그 데이터를 사용
@@ -376,6 +375,7 @@ function WeeklySurvey() {
             >
               결과보기
             </Button>
+
             <Button
               onClick={() =>
                 navigate(`/survey/attend/${selectedCard?.surveyNo}`)
