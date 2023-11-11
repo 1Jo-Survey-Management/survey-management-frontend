@@ -36,33 +36,34 @@ export default function GooglePieChart({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const extractChartData = (data: [string, number][]): [string, unknown][] =>
+  const extractChartData = (data: [string, number][]): [string, number][] =>
     data.map((item) => [item[0], item[1]]);
 
-  const aggregateData = (data: any[]) => {
-    const aggregatedData = [];
-    const map = new Map();
-    // eslint-disable-next-line no-restricted-syntax
-    for (const item of data) {
+  const aggregateData = (data: [string, number][]) => {
+    const aggregatedData: [string, number][] = [];
+    const map = new Map<string, number>();
+
+    data.forEach((item) => {
       if (map.has(item[0])) {
-        const index = map.get(item[0]);
+        const index = map.get(item[0])!;
         aggregatedData[index][1] += item[1];
       } else {
         map.set(item[0], aggregatedData.length);
         aggregatedData.push([item[0], item[1]]);
       }
-    }
+    });
+
     return aggregatedData;
   };
 
-  const chartData = extractChartData(selectionAnswer);
+  const chartData: [string, number][] = extractChartData(selectionAnswer);
 
-  const aggregatedChartData = aggregateData(chartData);
-  aggregatedChartData.unshift(['selectionValue', 'selectionCount']);
+  // aggregatedChartData를 [string, unknown][]에서 [string, number][]로 변경
+  const aggregatedChartData: [string, number][] = aggregateData(chartData);
+  aggregatedChartData.unshift(['selectionValue', 0]);
 
-  console.log(chartData);
+  // console.log(chartData);
   return (
-
     <div style={{ width: '100%', minWidth: '330px' }}>
       <Chart
         chartType="PieChart"
@@ -73,6 +74,5 @@ export default function GooglePieChart({
         style={{ marginTop: '0' }}
       />
     </div>
-
   );
 }

@@ -1,17 +1,15 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { useNavigate } from 'react-router-dom';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import moment, { Moment } from 'moment';
 import axios from '../components/customApi';
 import RadioButton from '../components/RowRadioButtonsGroup';
 import InputNickName from '../components/NameInput';
 import GetBirth from '../components/BasicDatePicker';
 import StyledButton from '../components/StyledButton';
-import { createBrowserHistory } from 'history';
 
 const boxStyle = {
   width: 400,
@@ -152,22 +150,6 @@ export default function BasicModal({ onClose }: ModalProps) {
   };
 
   const cancelSubmit = () => handleClose();
-
-  const history = createBrowserHistory();
-  const [doesAnyHistoryEntryExist, setDoesAnyHistoryEntryExist] =
-    useState<String>();
-
-  useEffect(() => {
-    const historys = history.location.key;
-
-    setDoesAnyHistoryEntryExist(historys);
-
-    if (doesAnyHistoryEntryExist) {
-      console.log('히스토리가 존재함' + doesAnyHistoryEntryExist);
-    } else {
-      history.push('/');
-    }
-  }, [doesAnyHistoryEntryExist]);
 
   return (
     <Box sx={boxStyle}>

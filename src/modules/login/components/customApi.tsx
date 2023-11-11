@@ -19,10 +19,10 @@ Api.interceptors.response.use(
     if (typeof accessToken === 'string') {
       const token = accessToken.split(' ')[1];
 
-      console.log('응답 객체좀 보자 : ' + JSON.stringify(response, null, 2));
+      // console.log('응답 객체좀 보자 : ' + JSON.stringify(response, null, 2));
 
       if (token != null) {
-        console.log('응답 인터셉터에서 갱신할 accessToken : ' + token);
+        // console.log('응답 인터셉터에서 갱신할 accessToken : ' + token);
         localStorage.setItem('accessToken', token);
         Api.defaults.headers.common.Authorization = accessToken;
       } else {

@@ -4,16 +4,13 @@ import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Drawer, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import axios from '../login/components/customApi';
 import '../../global.css';
 import logo from './logo.png';
-
 import './Header.css';
-import '../../global.css';
 import Menu from './Menu';
 
 const ANCHOR_TYPE = 'left';

@@ -79,7 +79,7 @@ function WeeklySurvey() {
           'http://localhost:8080/api/surveys/weekly'
         );
 
-        console.log('weekly 데이터 확인 : ' + weeklyResponse.data);
+        // console.log('weekly 데이터 확인 : ' + weeklyResponse.data);
 
         if (weeklyResponse.data.length > 0) {
           // weekly 데이터가 존재하면 그 데이터를 사용

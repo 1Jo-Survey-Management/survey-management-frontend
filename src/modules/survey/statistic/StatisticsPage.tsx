@@ -6,14 +6,13 @@ import {
   Card,
   CardContent,
   Typography,
-  useMediaQuery,
+  // useMediaQuery,
   Button,
 } from '@mui/material';
-
+import Divider from '@mui/material/Divider';
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
 import axios from '../../login/components/customApi';
-import Divider from '@mui/material/Divider';
 import WordCloud from './components/WordCloudTest';
 import GooglePieChart from './components/GooglePieChart';
 import { Selection } from './types/SurveyStatisticTypes';
@@ -103,12 +102,27 @@ export default function StatisticsPage() {
   const [surveyPostAt, setSurveyPostAt] = useState<string>();
   const [surveyWriter, setSurveyWriter] = useState<string>();
 
-  const [allItems, setAllItems] = useState([]);
+  const [allItems, setAllItems] = useState<Record<string, Selection[]>>({});
   const params = useParams();
   const statSurveyNo = params.surveyNo;
 
-  const userNo = localStorage.getItem('userNo');
+  // const userNo = localStorage.getItem('userNo');
   const navigate = useNavigate();
+
+  const surveyBranch = (data: Selection[]): Record<string, Selection[]> => {
+    const itemGroups: Record<string, Selection[]> = {};
+
+    data.forEach((item) => {
+      const { surveyQuestionNo } = item;
+
+      if (!itemGroups[surveyQuestionNo]) {
+        itemGroups[surveyQuestionNo] = [];
+      }
+      itemGroups[surveyQuestionNo].push(item);
+    });
+
+    return itemGroups;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -125,7 +139,7 @@ export default function StatisticsPage() {
           setSurveyNo(response.data.content[0].surveyNo);
           setSurveyPostAt(response.data.content[0].surveyPostAt);
         })
-        .catch((error) => {
+        .catch(() => {
           alert('로그인이 필요합니다!');
           navigate('/');
         });
@@ -135,6 +149,7 @@ export default function StatisticsPage() {
   }, []);
 
   console.log(selectStat);
+
   useEffect(() => {
     setAllItems(surveyBranch(selectStat));
 
@@ -144,21 +159,6 @@ export default function StatisticsPage() {
       }
     });
   }, [selectStat]);
-
-  const surveyBranch = (data: Selection[]): any => {
-    const itemGroups: { [key: string]: Selection[] } = {};
-
-    data.forEach((item) => {
-      const { surveyQuestionNo } = item;
-
-      if (!itemGroups[surveyQuestionNo]) {
-        itemGroups[surveyQuestionNo] = [];
-      }
-      itemGroups[surveyQuestionNo].push(item);
-    });
-
-    return itemGroups;
-  };
 
   return (
     <>
@@ -186,31 +186,33 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
       </Box>
-      {Object.keys(allItems).map((questionNo: any) => {
+      {Object.keys(allItems).map((questionNo) => {
         const itemsForQuestion: Selection[] = allItems[questionNo];
         const { questionTypeNo } = itemsForQuestion[0];
 
-        const countSelections = (itemsForQuestion: any[]) => {
-          let totalSelectionCount = 0;
+        const countSelections = (
+          itemsForQuestionCount: { selectionCount: number }[]
+        ): number => {
+          let CounttotalSelectionCount = 0;
 
-          itemsForQuestion.forEach((item: { selectionCount: number }) => {
-            totalSelectionCount += item.selectionCount;
+          itemsForQuestionCount.forEach((item: { selectionCount: number }) => {
+            CounttotalSelectionCount += item.selectionCount;
           });
 
-          return totalSelectionCount;
+          return CounttotalSelectionCount;
         };
 
-        const countSubjectiveAnswerCount = (itemsForQuestion: any[]) => {
-          let totalSurveySubjectiveAnswerCount = -1;
+        const countSubjectiveAnswerCount = (
+          itemsForQuestionCountSub: Selection[]
+        ): number => {
+          let totalSurveySubjectiveAnswerCount = 0;
 
-          itemsForQuestion.forEach(
-            (item: { surveySubjectiveAnswerCount: number }) => {
-              totalSurveySubjectiveAnswerCount +=
-                item.surveySubjectiveAnswerCount;
-            }
-          );
+          itemsForQuestionCountSub.forEach((item) => {
+            totalSurveySubjectiveAnswerCount +=
+              item.surveySubjectiveAnswerCount;
+          });
 
-          return totalSelectionCount;
+          return totalSurveySubjectiveAnswerCount;
         };
 
         const extractChartData = (data: Selection[]): [string, number][] =>
@@ -236,7 +238,7 @@ export default function StatisticsPage() {
         const LongSubData = extractLongSubjectiveAnswer(itemsForQuestion);
 
         return (
-          <Box sx={styles.card}>
+          <Box sx={styles.card} key={questionNo}>
             <Card sx={styles.cardTitle} key={questionNo}>
               <CardContent>
                 <Box>

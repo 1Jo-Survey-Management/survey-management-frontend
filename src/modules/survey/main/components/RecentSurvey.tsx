@@ -1,7 +1,6 @@
 // Import Swiper React components
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from '../../../login/components/customApi';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -16,13 +15,12 @@ import {
   Modal,
   Fade,
 } from '@mui/material';
-// Import Swiper styles
+import axios from '../../../login/components/customApi';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/pagination';
 import 'swiper/swiper-bundle.css';
 import '../../../../global.css';
-// import required modules
 
 function RecentSurvey() {
   const styles = {
