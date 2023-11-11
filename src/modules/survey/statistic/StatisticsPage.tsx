@@ -1,15 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
-
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
   Card,
   CardContent,
   Typography,
-  // useMediaQuery,
   Button,
 } from '@mui/material';
 import Divider from '@mui/material/Divider';
+
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
 import axios from '../../login/components/customApi';
@@ -105,8 +105,6 @@ export default function StatisticsPage() {
   const [allItems, setAllItems] = useState<Record<string, Selection[]>>({});
   const params = useParams();
   const statSurveyNo = params.surveyNo;
-
-  // const userNo = localStorage.getItem('userNo');
   const navigate = useNavigate();
 
   const surveyBranch = (data: Selection[]): Record<string, Selection[]> => {
@@ -148,7 +146,20 @@ export default function StatisticsPage() {
     fetchData();
   }, []);
 
-  console.log(selectStat);
+  const surveyBranch = (data: Selection[]): any => {
+    const itemGroups: { [key: string]: Selection[] } = {};
+
+    data.forEach((item) => {
+      const { surveyQuestionNo } = item;
+
+      if (!itemGroups[surveyQuestionNo]) {
+        itemGroups[surveyQuestionNo] = [];
+      }
+      itemGroups[surveyQuestionNo].push(item);
+    });
+
+    return itemGroups;
+  };
 
   useEffect(() => {
     setAllItems(surveyBranch(selectStat));
@@ -189,11 +200,11 @@ export default function StatisticsPage() {
       {Object.keys(allItems).map((questionNo) => {
         const itemsForQuestion: Selection[] = allItems[questionNo];
         const { questionTypeNo } = itemsForQuestion[0];
-
         const countSelections = (
           itemsForQuestionCount: { selectionCount: number }[]
         ): number => {
           let CounttotalSelectionCount = 0;
+
 
           itemsForQuestionCount.forEach((item: { selectionCount: number }) => {
             CounttotalSelectionCount += item.selectionCount;
@@ -232,12 +243,12 @@ export default function StatisticsPage() {
           data: Selection[]
         ): Selection[] => {
           const filteredData = data.filter((item) => item.questionTypeNo === 5);
-
           return filteredData;
         };
         const LongSubData = extractLongSubjectiveAnswer(itemsForQuestion);
 
         return (
+
           <Box sx={styles.card} key={questionNo}>
             <Card sx={styles.cardTitle} key={questionNo}>
               <CardContent>

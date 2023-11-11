@@ -8,6 +8,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Stack } from '@mui/material';
 import { AnimatePresence, Variants, motion } from 'framer-motion';
+import { useParams } from 'react-router-dom';
+
 import axios from '../../../login/components/customApi';
 import AttendSingleChoice from '../components/AttendSingleChoice';
 import AttendSingleMoveChoice from '../components/AttendSingleMoveChoice';
@@ -33,6 +35,7 @@ interface UserResponse {
 
 function AttendSurvey() {
   const [closingTime, setClosingTime] = useState<Date | null>(null);
+  const { surveyNo } = useParams<{ surveyNo: string }>();
 
   const [surveyData, setSurveyData] = useState<SurveyData>({
     success: false,
@@ -365,12 +368,14 @@ function AttendSurvey() {
     console.log('useEffect running');
     axios
       .get<SurveyData>(
-        'http://localhost:8080/api/for-attend/surveys/survey-data'
+        `http://localhost:8080/api/for-attend/surveys/survey-data`
       )
       .then((response) => {
+        // surveyNo에 해당하는 데이터만 필터링합니다.
         const filteredData = response.data.content
-          .filter((item) => item.surveyNo === 8)
+          .filter((item) => item.surveyNo.toString() === surveyNo)
           .sort((a, b) => a.surveyQuestionNo - b.surveyQuestionNo);
+
         setSurveyData({
           ...response.data,
           content: filteredData,
@@ -383,7 +388,7 @@ function AttendSurvey() {
       .catch((error) => {
         console.error('Error fetching survey data:', error);
       });
-  }, []);
+  }, [surveyNo]); // surveyNo를 의존성 배열에 추가합니다.
 
   useEffect(() => {
     axios

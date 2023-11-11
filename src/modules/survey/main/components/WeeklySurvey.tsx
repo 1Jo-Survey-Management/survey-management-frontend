@@ -78,7 +78,6 @@ function WeeklySurvey() {
         const weeklyResponse = await axios.get(
           'http://localhost:8080/api/surveys/weekly'
         );
-
         // console.log('weekly 데이터 확인 : ' + weeklyResponse.data);
 
         if (weeklyResponse.data.length > 0) {
@@ -382,10 +381,14 @@ function WeeklySurvey() {
             </Button>
 
             <Button
-              onClick={() => navigate('/survey/Search')}
+              onClick={() =>
+                navigate(`/survey/attend/${selectedCard?.surveyNo}`)
+              }
               disabled={
                 !selectedCard?.attendCheckList ||
-                selectedCard.attendCheckList.some((item) => item === false) ||
+                selectedCard.attendCheckList.some(
+                  (item: boolean) => item === false
+                ) ||
                 selectedCard?.userNo === userInfo.loginUserNo
               }
             >

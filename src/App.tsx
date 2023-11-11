@@ -40,7 +40,7 @@ function App() {
             path="/survey/mypage/attend"
             element={<MypageAttendSurvey />}
           />
-          <Route path="/survey/attend" element={<AttendSurvey />} />
+          <Route path="/survey/attend/:surveyNo" element={<AttendSurvey />} />
         </Route>
       </Routes>
     </Router>

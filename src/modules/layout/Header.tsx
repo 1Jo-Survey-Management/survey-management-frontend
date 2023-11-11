@@ -15,11 +15,6 @@ import Menu from './Menu';
 
 const ANCHOR_TYPE = 'left';
 
-const fontFamily = "'Gaegu', sans-serif";
-
-const textStyle = {
-  fontFamily,
-};
 function Header() {
   const location = useLocation();
   const navigate = useNavigate();

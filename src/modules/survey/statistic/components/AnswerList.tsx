@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable no-use-before-define */
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -58,7 +61,6 @@ export default function AnswerList({ selectList }: selectionList) {
 
     return data;
   }
-
   useEffect(() => {
     setSelectStat(selectList);
   }, [selectList]);
@@ -71,6 +73,7 @@ export default function AnswerList({ selectList }: selectionList) {
 
     setSelectStats(updateArrayLists);
   }, [selectList]);
+
 
   return (
     <div>
