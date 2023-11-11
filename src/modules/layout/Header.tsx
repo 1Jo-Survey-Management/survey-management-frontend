@@ -10,17 +10,15 @@ import MenuIcon from '@mui/icons-material/Menu';
 import axios from '../login/components/customApi';
 import '../../global.css';
 import logo from './logo.png';
-
 import './Header.css';
-
 import Menu from './Menu';
+
+const ANCHOR_TYPE = 'left';
 
 const fontFamily = "'Gaegu', sans-serif";
 const textStyle = {
   fontFamily,
 };
-
-const ANCHOR_TYPE = 'left';
 
 function Header() {
   const location = useLocation();

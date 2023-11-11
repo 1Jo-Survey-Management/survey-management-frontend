@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
-import Divider from '@mui/material/Divider';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Card, CardContent, Typography, Button } from '@mui/material';
-
+import Divider from '@mui/material/Divider';
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
 import axios from '../../login/components/customApi';
@@ -97,11 +95,27 @@ export default function StatisticsPage() {
   const [surveyPostAt, setSurveyPostAt] = useState<string>();
   const [surveyWriter, setSurveyWriter] = useState<string>();
 
-  const [allItems, setAllItems] = useState([]);
+  const [allItems, setAllItems] = useState<Record<string, Selection[]>>({});
   const params = useParams();
   const statSurveyNo = params.surveyNo;
 
+  // const userNo = localStorage.getItem('userNo');
   const navigate = useNavigate();
+
+  const surveyBranch = (data: Selection[]): Record<string, Selection[]> => {
+    const itemGroups: Record<string, Selection[]> = {};
+
+    data.forEach((item) => {
+      const { surveyQuestionNo } = item;
+
+      if (!itemGroups[surveyQuestionNo]) {
+        itemGroups[surveyQuestionNo] = [];
+      }
+      itemGroups[surveyQuestionNo].push(item);
+    });
+
+    return itemGroups;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -127,21 +141,7 @@ export default function StatisticsPage() {
     fetchData();
   }, []);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const surveyBranch = (data: Selection[]): any => {
-    const itemGroups: { [key: string]: Selection[] } = {};
-
-    data.forEach((item) => {
-      const { surveyQuestionNo } = item;
-
-      if (!itemGroups[surveyQuestionNo]) {
-        itemGroups[surveyQuestionNo] = [];
-      }
-      itemGroups[surveyQuestionNo].push(item);
-    });
-
-    return itemGroups;
-  };
+  console.log(selectStat);
 
   useEffect(() => {
     setAllItems(surveyBranch(selectStat));
@@ -179,35 +179,33 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
       </Box>
-      {Object.keys(allItems).map((questionNo: any) => {
+      {Object.keys(allItems).map((questionNo) => {
         const itemsForQuestion: Selection[] = allItems[questionNo];
         const { questionTypeNo } = itemsForQuestion[0];
 
-        // eslint-disable-next-line no-shadow
-        const countSelections = (itemsForQuestion: any[]) => {
-          // eslint-disable-next-line no-shadow
-          let totalSelectionCount = 0;
+        const countSelections = (
+          itemsForQuestionCount: { selectionCount: number }[]
+        ): number => {
+          let CounttotalSelectionCount = 0;
 
-          itemsForQuestion.forEach((item: { selectionCount: number }) => {
-            totalSelectionCount += item.selectionCount;
+          itemsForQuestionCount.forEach((item: { selectionCount: number }) => {
+            CounttotalSelectionCount += item.selectionCount;
           });
 
-          return totalSelectionCount;
+          return CounttotalSelectionCount;
         };
 
-        // eslint-disable-next-line no-shadow
-        const countSubjectiveAnswerCount = (itemsForQuestion: any[]) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          let totalSurveySubjectiveAnswerCount = -1;
+        const countSubjectiveAnswerCount = (
+          itemsForQuestionCountSub: Selection[]
+        ): number => {
+          let totalSurveySubjectiveAnswerCount = 0;
 
-          itemsForQuestion.forEach(
-            (item: { surveySubjectiveAnswerCount: number }) => {
-              totalSurveySubjectiveAnswerCount +=
-                item.surveySubjectiveAnswerCount;
-            }
-          );
+          itemsForQuestionCountSub.forEach((item) => {
+            totalSurveySubjectiveAnswerCount +=
+              item.surveySubjectiveAnswerCount;
+          });
 
-          return totalSelectionCount;
+          return totalSurveySubjectiveAnswerCount;
         };
 
         const extractChartData = (data: Selection[]): [string, number][] =>
@@ -227,13 +225,13 @@ export default function StatisticsPage() {
           data: Selection[]
         ): Selection[] => {
           const filteredData = data.filter((item) => item.questionTypeNo === 5);
+
           return filteredData;
         };
         const LongSubData = extractLongSubjectiveAnswer(itemsForQuestion);
 
         return (
-          // eslint-disable-next-line react/jsx-key
-          <Box sx={styles.card}>
+          <Box sx={styles.card} key={questionNo}>
             <Card sx={styles.cardTitle} key={questionNo}>
               <CardContent>
                 <Box>

@@ -14,12 +14,6 @@ import LoginPage from '../login/LoginDisplay';
 export default function Layout() {
   const location = useLocation();
 
-  // useEffect(() => {
-  //   const responseAcccessToken = localStorage.getItem('accessToken');
-  //   console.log(`로컬스토리지 토큰 : ${responseAcccessToken}`);
-  //   axios.defaults.headers.common.Authorization = `Bearer ${responseAcccessToken}`;
-  // }, []);
-
   console.log(`현재 위치 : ${location.pathname}`);
 
   const backStyle = {
