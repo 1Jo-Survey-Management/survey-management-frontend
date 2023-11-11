@@ -91,17 +91,13 @@ function WeeklySurvey() {
           );
           setCardList(recentResponse.data);
         }
-        setCardList((prevCardList) =>
-          prevCardList
-            .slice()
-            .sort((a, b) => b.surveyAttendCount - a.surveyAttendCount)
-        );
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
+    console.log(cardList);
   }, []);
 
   const openCardModal = (card: CardData) => {
