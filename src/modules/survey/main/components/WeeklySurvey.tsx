@@ -54,7 +54,7 @@ function WeeklySurvey() {
     tag: Array<string>;
     surveyAttendCount: number;
     isDeleted: boolean;
-    attendCheckList: boolean;
+    attendCheckList: boolean[];
   };
   const [openModal, setOpenModal] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
@@ -380,6 +380,7 @@ function WeeklySurvey() {
             >
               결과보기
             </Button>
+
             <Button
               onClick={() => navigate('/survey/Search')}
               disabled={
@@ -413,7 +414,6 @@ function WeeklySurvey() {
 
             <Button onClick={closeCardModal}>닫기</Button>
           </div>
-
         </div>
       </Modal>
     </div>

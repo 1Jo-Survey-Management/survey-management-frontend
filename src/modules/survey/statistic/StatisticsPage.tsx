@@ -17,7 +17,6 @@ import Divider from '@mui/material/Divider';
 import WordCloud from './components/WordCloudTest';
 import GooglePieChart from './components/GooglePieChart';
 import { Selection } from './types/SurveyStatisticTypes';
-import { useNavigate } from 'react-router-dom';
 
 const styles = {
   card: {
@@ -55,8 +54,6 @@ const styles = {
       width: '100%',
     },
   },
-
-  cardContent: { border: '1px solid #757575', borderRadius: '3%' },
 
   subjectContent: {
     border: '1px solid #757575',
@@ -165,7 +162,6 @@ export default function StatisticsPage() {
 
   return (
     <>
-
       <Box sx={styles.card}>
         <Card sx={styles.cardTitle}>
           <CardContent>
@@ -226,7 +222,6 @@ export default function StatisticsPage() {
         ): Selection[] => {
           const filteredData = data.filter((item) => item.questionTypeNo === 4);
 
-
           return filteredData;
         };
         const shortSubData = extractShortSubjectiveAnswer(itemsForQuestion);
@@ -241,7 +236,6 @@ export default function StatisticsPage() {
         const LongSubData = extractLongSubjectiveAnswer(itemsForQuestion);
 
         return (
-
           <Box sx={styles.card}>
             <Card sx={styles.cardTitle} key={questionNo}>
               <CardContent>
@@ -275,7 +269,6 @@ export default function StatisticsPage() {
                   {questionTypeNo === 3 && (
                     <Box sx={styles.googleChartContent}>
                       <GooglePieChart selectionAnswer={chartData} />
-
                     </Box>
                   )}
                   {questionTypeNo === 4 && (
