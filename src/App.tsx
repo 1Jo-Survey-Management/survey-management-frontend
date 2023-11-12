@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Navigate,
@@ -15,8 +15,16 @@ import StatisticsPage from './modules/survey/statistic/StatisticsPage';
 import Main from './modules/survey/main/Main';
 import Search from './modules/survey/main/Search';
 import AttendSurvey from './modules/survey/attend/routers/AttendSurvey';
+import axios from './modules/login/components/customApi';
 
 function App() {
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+
+    console.log('App 지나가면서 accessToken : ' + accessToken);
+  }, []);
+
   return (
     <Router>
       <Routes>
