@@ -238,9 +238,8 @@ export default function StatisticsPage() {
                   <Typography style={textStyle} sx={styles.componentText}>
                     {itemsForQuestion[0].surveyQuestionNo} .{' '}
                     {itemsForQuestion[0].surveyQuestionTitle}
-                    <br />
+                    <Divider />
                   </Typography>
-                  <Divider />
 
                   <Typography style={textStyle} sx={styles.surveyInfo}>
                     <br />
