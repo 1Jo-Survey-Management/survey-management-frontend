@@ -99,13 +99,15 @@ function Header() {
             style={{
               maxWidth: '300px', // 최대 너비 설정
               maxHeight: '60px', // 최대 높이 설정
+              textAlign: 'center',
             }}
           >
+            {/* 로고 타이틀, 이미지로 삽입했음 */}
             <img
               src={logo}
               alt="로고"
               style={{
-                width: '100%', // 너비 100%로 설정하여 부모 요소에 맞추기
+                width: '50%', // 너비 100%로 설정하여 부모 요소에 맞추기
                 height: 'auto', // 원본 이미지의 비율 유지
               }}
               onClick={goMain}
