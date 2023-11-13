@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * 사용자의 마이페이지를 위한 컴포넌트입니다. 사용자가 참여한 설문 목록을 보여주고,
  * 각 설문에 대해 상태를 필터링하거나 검색할 수 있는 기능을 제공합니다.
@@ -7,7 +8,6 @@
  */
 import React, { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
-import axios from 'axios';
 
 import {
   Button,
@@ -27,8 +27,10 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
+import axios from '../../../login/components/customApi';
 
 interface CardData {
+  userNo: any;
   surveyNo: number;
   surveyTitle: string;
   tagNames: string[];
@@ -104,8 +106,6 @@ function Mypage() {
 
   const [state, setState] = useState('전체');
 
-  const userNo = 1;
-
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -116,12 +116,22 @@ function Mypage() {
    * 서버로부터 사용자가 참여한 설문 데이터를 가져와 상태를 업데이트합니다.
    */
   const fetchCardData = () => {
-    axios
-      .get(`http://localhost:8080/api/my-surveys/${userNo}/attend-surveys`)
-      .then((response) => {
-        const cardData: CardData[] = response.data.content;
+    const loggedInUserNo = localStorage.getItem('userNo');
+    console.log(`로그인된 유저의 userNo: ${loggedInUserNo}`);
 
-        let filtered = cardData;
+    axios
+      .get(`http://localhost:8080/api/my-surveys/attend-surveys`)
+      .then((response) => {
+        const cardData: CardData[] = response.data.content || [];
+
+        console.log(
+          `내가 참여한 설문 카드 데이터 배열: ${JSON.stringify(cardData)}`
+        );
+
+        let filtered = cardData.filter(
+          (card) => card.userNo.toString() === loggedInUserNo
+        );
+        console.log(`axios의 filtered: ${JSON.stringify(filtered)}`);
         if (state !== '전체') {
           const filterStatus = parseInt(state, 10);
           filtered = cardData.filter(
@@ -160,7 +170,7 @@ function Mypage() {
 
   useEffect(() => {
     fetchCardData();
-  }, [userNo, state, searchQuery]);
+  }, [state, searchQuery]);
 
   /**
    * 사용자가 검색 입력란에 입력할 때마다 호출되어 검색 쿼리 상태를 업데이트합니다.
@@ -199,7 +209,6 @@ function Mypage() {
     if (selectedCard) {
       if (window.confirm('작성 중인 설문을 삭제하시겠습니까?')) {
         const mySurveyDTO = {
-          userNo,
           surveyStatusNo: selectedCard.surveyStatusNo,
           surveyNo: selectedCard.surveyNo,
         };
@@ -222,6 +231,7 @@ function Mypage() {
       }
     }
   };
+  console.log(`필터된 데이터: ${JSON.stringify(filteredData)}`);
 
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
@@ -410,6 +420,9 @@ function Mypage() {
                     fontWeight: 600,
                     marginBottom: '8px',
                     cursor: 'pointer',
+                    overflow: 'hidden', // 넘치는 내용 숨김
+                    whiteSpace: 'nowrap', // 텍스트를 한 줄로 유지
+                    textOverflow: 'ellipsis', // 넘치는 텍스트를 ...으로 표시
                   }}
                 >
                   {card.surveyTitle}

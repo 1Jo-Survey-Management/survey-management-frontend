@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * 사용자의 마이페이지 컴포넌트입니다. 사용자가 작성하거나 참여한 설문의 목록을 보여주고,
  * 상태에 따라 필터링하거나 검색할 수 있는 기능을 제공합니다.
@@ -7,7 +8,6 @@
  */
 import React, { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
-import axios from 'axios';
 
 import {
   Button,
@@ -29,8 +29,10 @@ import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import axios from '../../../login/components/customApi';
 
 interface CardData {
+  userNo: any;
   surveyNo: number;
   surveyTitle: string;
   tagNames: string[];
@@ -43,8 +45,6 @@ interface CardData {
   openStatusNo: number;
   writer: string;
 }
-
-console.log('윈도우 온로드 체크');
 
 /**
  * 설문 상태 번호에 따라 상태 텍스트를 반환합니다.
@@ -110,8 +110,6 @@ function Mypage() {
 
   const [isUpdateData, setIsUpdateData] = useState<boolean>(false);
 
-  const userNo = 1;
-
   const [searchQuery, setSearchQuery] = useState('');
 
   const naviagte = useNavigate();
@@ -175,12 +173,17 @@ function Mypage() {
    * 선택된 상태나 검색 쿼리에 따라 필터링된 설문 데이터를 서버로부터 가져옵니다.
    */
   const fetchCardData = () => {
+    const loggedInUserNo = localStorage.getItem('userNo');
     axios
-      .get(`http://localhost:8080/api/my-surveys/${userNo}/write-surveys`)
+      .get(`http://localhost:8080/api/my-surveys/write-surveys`)
       .then((response) => {
-        const cardData: CardData[] = response.data.content;
+        const cardData: CardData[] = response.data.content || [];
 
-        let filtered = cardData;
+        let filtered = cardData.filter(
+          (card) => card.userNo.toString() === loggedInUserNo
+        );
+        console.log(`axios의 filtered: ${JSON.stringify(filtered)}`);
+
         if (state !== '전체') {
           const filterStatus = parseInt(state, 10);
           filtered = cardData.filter(
@@ -225,7 +228,7 @@ function Mypage() {
 
   useEffect(() => {
     fetchCardData();
-  }, [userNo, state, searchQuery]);
+  }, [state, searchQuery]);
 
   /**
    * 검색 입력란의 값이 변경될 때 호출되며, 검색 쿼리 상태를 업데이트합니다.
@@ -264,7 +267,6 @@ function Mypage() {
     if (selectedCard) {
       if (window.confirm('작성 중인 설문을 삭제하시겠습니까?')) {
         const mySurveyDTO = {
-          userNo,
           surveyStatusNo: selectedCard.surveyStatusNo,
           surveyNo: selectedCard.surveyNo,
         };
@@ -287,6 +289,7 @@ function Mypage() {
       }
     }
   };
+  console.log(`필터된 데이터: ${JSON.stringify(filteredData)}`);
 
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
@@ -475,6 +478,9 @@ function Mypage() {
                     fontWeight: 600,
                     marginBottom: '8px',
                     cursor: 'pointer',
+                    overflow: 'hidden', // 넘치는 내용 숨김
+                    whiteSpace: 'nowrap', // 텍스트를 한 줄로 유지
+                    textOverflow: 'ellipsis', // 넘치는 텍스트를 ...으로 표시
                   }}
                 >
                   {card.surveyTitle}
