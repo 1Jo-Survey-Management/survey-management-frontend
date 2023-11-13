@@ -10,8 +10,6 @@ import RecentSurvey from './components/RecentSurvey';
 import WeeklySurvey from './components/WeeklySurvey';
 import '../../../global.css';
 
-import StatisticsPage from '../statistic/StatisticsPage';
-
 function Main() {
   const navigate = useNavigate();
   const fontFamily = 'GmarketSansMedium';
@@ -29,12 +27,7 @@ function Main() {
   return (
     <Container maxWidth="md">
       <h3 style={textStyle}>인기 설문🔥</h3>
-
-      <Button onClick={() => navigate(`/survey/statistics/${1}`)}>
-        통계보기
-      </Button>
-
-      {/* <WeeklySurvey />
+      <WeeklySurvey />
       <div style={arrowStyle}>
         <ArrowBackIosRoundedIcon
           sx={{ fontSize: 'medium', marginRight: '8px' }}
@@ -64,7 +57,7 @@ function Main() {
         />
         <ArrowForwardIosRoundedIcon sx={{ fontSize: 'medium' }} />
       </div>
-      <Floating /> */}
+      <Floating />
     </Container>
   );
 }

@@ -21,8 +21,6 @@ function App() {
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-
-    console.log('App 지나가면서 accessToken : ' + accessToken);
   }, []);
 
   return (
