@@ -170,8 +170,10 @@ export default function StatisticsPage() {
                 &nbsp;&nbsp;&nbsp; 설문 참여자 수: {totalSelectionCount}
                 <br />
                 <br />
-                <Button variant="contained">참여하기</Button>&nbsp;&nbsp;&nbsp;
-                <Button variant="contained">돌아가기</Button>&nbsp;&nbsp;&nbsp;
+                <Button onClick={() => navigate('/survey/main')}>
+                  돌아가기
+                </Button>
+                &nbsp;&nbsp;&nbsp;
               </Typography>
 
               <br />
@@ -238,9 +240,8 @@ export default function StatisticsPage() {
                   <Typography style={textStyle} sx={styles.componentText}>
                     {itemsForQuestion[0].surveyQuestionNo} .{' '}
                     {itemsForQuestion[0].surveyQuestionTitle}
-                    <br />
+                    <Divider />
                   </Typography>
-                  <Divider />
 
                   <Typography style={textStyle} sx={styles.surveyInfo}>
                     <br />
