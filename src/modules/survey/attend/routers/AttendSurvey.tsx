@@ -55,8 +55,7 @@ function AttendSurvey() {
 
   useState<number | null>(null);
 
-  const USER_NO = 1;
-  const SURVEY_NO = 8;
+  const USER_NO = Number(localStorage.getItem('userNo'));
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -215,7 +214,7 @@ function AttendSurvey() {
             surveyQuestionTitle: currentQuestionData.surveyQuestionTitle,
             selectionValue: selection.selectionValue,
             userNo: USER_NO,
-            surveyNo: SURVEY_NO,
+            surveyNo: currentQuestionData.surveyNo,
             surveyQuestionNo: currentQuestionData.surveyQuestionNo,
             questionTypeNo: currentQuestionData.questionTypeNo,
             selectionNo: selection.selectionNo,
@@ -231,7 +230,7 @@ function AttendSurvey() {
           surveyQuestionTitle: currentQuestionData.surveyQuestionTitle,
           selectionValue: null,
           userNo: USER_NO,
-          surveyNo: SURVEY_NO,
+          surveyNo: currentQuestionData.surveyNo,
           surveyQuestionNo: currentQuestionData.surveyQuestionNo,
           questionTypeNo: currentQuestionData.questionTypeNo,
           selectionNo: 0,
@@ -263,7 +262,7 @@ function AttendSurvey() {
             surveyQuestionTitle: currentQuestionData.surveyQuestionTitle,
             selectionValue: answerString,
             userNo: USER_NO,
-            surveyNo: SURVEY_NO,
+            surveyNo: currentQuestionData.surveyNo,
             surveyQuestionNo: currentQuestionData.surveyQuestionNo,
             questionTypeNo: currentQuestionData.questionTypeNo,
             selectionNo,
@@ -391,24 +390,26 @@ function AttendSurvey() {
   }, [surveyNo]); // surveyNo를 의존성 배열에 추가합니다.
 
   useEffect(() => {
-    axios
-      .get(
-        `http://localhost:8080/api/for-attend/surveys/closing-time/${SURVEY_NO}`
-      )
-      .then((response) => {
-        if (response.data.success && response.data.content) {
-          setClosingTime(new Date(response.data.content));
-        } else {
-          console.error(
-            'Failed to fetch closing time:',
-            response.data.errorResponse
-          );
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching closing time:', error);
-      });
-  }, []);
+    if (surveyNo) {
+      axios
+        .get(
+          `http://localhost:8080/api/for-attend/surveys/closing-time/${surveyNo}`
+        )
+        .then((response) => {
+          if (response.data.success && response.data.content) {
+            setClosingTime(new Date(response.data.content));
+          } else {
+            console.error(
+              'Failed to fetch closing time:',
+              response.data.errorResponse
+            );
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching closing time:', error);
+        });
+    }
+  }, [surveyNo]);
 
   function alertAndScrollTo(item: SurveyItem) {
     alert('필수 응답 문항에 답변하세요.');

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -35,7 +36,7 @@ function WeeklySurvey() {
   };
 
   const userInfo = {
-    loginUserNo: 1,
+    loginUserNo: localStorage.getItem('userNo'),
   };
 
   type CardData = {
@@ -45,7 +46,7 @@ function WeeklySurvey() {
     surveyImage: string;
     surveyPostAt: string;
     surveyClosingAt: string;
-    userNo: number;
+    userNo: any;
     userNickName: string;
     userImage: string;
     attendUserNo: Array<number>;

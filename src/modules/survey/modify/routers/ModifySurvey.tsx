@@ -92,7 +92,7 @@ function ModifySurvey() {
       /**
        * FIXME: redirect mypage 내가 작성한 설문 페이지로 변경 예정
        */
-      navigate('/login');
+      navigate('/survey/mypage/write');
     }
     return response.data.content;
   };
@@ -154,7 +154,7 @@ function ModifySurvey() {
       /**
        * FIXME: redirect mypage 내가 작성한 설문 페이지로 변경 예정
        */
-      navigate('/login');
+      navigate('/survey/mypage/write');
       return;
     }
 
@@ -173,7 +173,7 @@ function ModifySurvey() {
         /**
          * FIXME: redirect mypage 내가 작성한 설문 페이지로 변경 예정
          */
-        navigate('/login');
+        navigate('/survey/mypage/write');
       }
     };
 
@@ -241,7 +241,7 @@ function ModifySurvey() {
           icon: 'success',
           title: '설문 수정이 완료되었습니다!',
         });
-        navigate('/login');
+        navigate('/survey/mypage/write');
       } else {
         Swal.fire({
           icon: 'error',
