@@ -14,9 +14,9 @@ function Footer() {
   return (
     <Box
       sx={{
-        position: 'fixed',
+        position: 'static',
         display: 'flex',
-        bottom: 0, // 화면 최상단에 고정
+        bottom: 0,
         width: '100%',
         height: '10%',
         justifyContent: 'center',
