@@ -2,33 +2,36 @@ import React from 'react';
 import './Footer.css';
 import { Box, Toolbar, Typography } from '@mui/material';
 
-const fontFamily = "'Gaegu', sans-serif";
-const textStyle = {
-  fontFamily,
-};
-
 /**
  * Layout의 Footer 입니다
  * @returns Footer
  */
 function Footer() {
+  const textStyle = {
+    fontFamily: 'nanumsquare',
+  };
+
   return (
     <Box
       sx={{
+        position: 'fixed',
         display: 'flex',
-        top: 'auto',
+        bottom: 0, // 화면 최상단에 고정
         width: '100%',
-        height: '5%',
-        bottom: 0,
-        marginTop: '500px',
+        height: '10%',
+        justifyContent: 'center',
+        backgroundColor: '#a9eb8a', // 배경색 추가
+        zIndex: 1000, // 적절한 값으로 조절
       }}
       color="D3D4F5"
     >
       <Toolbar>
         <Typography
           variant="h6"
-          fontSize="60%"
-          color="#AFB2F0"
+          fontSize="80%"
+          fontWeight={'700'}
+          color="#25263f"
+          sx={textStyle}
           fontStyle={textStyle}
         >
           NoName Survey v.0.0.1
