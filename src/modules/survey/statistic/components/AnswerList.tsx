@@ -74,7 +74,6 @@ export default function AnswerList({ selectList }: selectionList) {
     setSelectStats(updateArrayLists);
   }, [selectList]);
 
-
   return (
     <div>
       <br />
