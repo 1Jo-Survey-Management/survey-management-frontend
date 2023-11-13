@@ -29,7 +29,7 @@ function Footer() {
         <Typography
           variant="h6"
           fontSize="80%"
-          fontWeight={'700'}
+          fontWeight="700"
           color="#25263f"
           sx={textStyle}
           fontStyle={textStyle}
