@@ -35,6 +35,7 @@ const styles = {
     width: '44px',
     height: '44px',
     marginBottom: '8px',
+    color: 'white',
   }),
 
   appBar: css({
@@ -117,7 +118,7 @@ function FloatingActionButtons({
   return (
     <Box css={styles.fabBox}>
       <Fab
-        color="primary"
+        sx={{ bgcolor: '#8ECC7E' }}
         aria-label="add"
         css={styles.fabStyles}
         onClick={scrollToTop}
@@ -125,7 +126,7 @@ function FloatingActionButtons({
         <ArrowDropUpIcon />
       </Fab>
       <Fab
-        color="primary"
+        sx={{ bgcolor: '#8ECC7E' }}
         aria-label="add"
         css={styles.fabStyles}
         onClick={scrollToBottom}
@@ -133,7 +134,7 @@ function FloatingActionButtons({
         <ArrowDropDownIcon />
       </Fab>
       <Fab
-        color="primary"
+        sx={{ bgcolor: '#8ECC7E' }}
         aria-label="add"
         css={styles.fabStyles}
         onClick={handleAddQuestion}
@@ -141,7 +142,7 @@ function FloatingActionButtons({
         <AddIcon />
       </Fab>
       <Fab
-        color="primary"
+        sx={{ bgcolor: '#8ECC7E' }}
         aria-label="add"
         css={styles.fabStyles}
         onClick={handleOpenPreviewModal}
@@ -154,15 +155,16 @@ function FloatingActionButtons({
         open={isPreviewModalOpen}
         onClose={handleClosePreviewModal}
         TransitionComponent={Transition}
+        sx={{ bgcolor: '#8ECC7E' }}
       >
         <AppBar css={styles.appBar}>
-          <Toolbar>
+          <Toolbar sx={{ bgcolor: '#8ECC7E' }}>
             <Typography css={styles.previewTitle} variant="h6" component="div">
               미리보기
             </Typography>
             <IconButton
               edge="start"
-              color="inherit"
+              sx={{ bgcolor: '#8ECC7E' }}
               onClick={handleClosePreviewModal}
               aria-label="close"
             >
