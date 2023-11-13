@@ -32,7 +32,7 @@ function MenuTool() {
 
   const handleMenuCloseGoMypageModify = () => {
     setAnchorEl(null);
-    navigate('/survey/Mypage');
+    navigate('/survey/mypageUserModify');
   };
 
   return (

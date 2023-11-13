@@ -15,7 +15,8 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
+import axios from '../../../login/components/customApi';
 
 function MypageUserModify() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -31,6 +32,7 @@ function MypageUserModify() {
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
 
   const [userData, setUserData] = useState({
+    userNo: null,
     userNickname: '',
     userImage: '',
   });
@@ -38,23 +40,22 @@ function MypageUserModify() {
   console.log(`닉네임 체크 여부: ${nicknameCheckResult}`);
   console.log(`isNicknameEmpty: ${isNicknameEmpty}`);
 
-  const userNo = 2;
-
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/users/${userNo}`
+          'http://localhost:8080/api/users/user-info'
         );
+        console.log(`서버 응답 확인: ${response.data}`); // 서버 응답 확인
 
         if (response.status === 200) {
-          const { userNickname, userImage } = response.data;
-          const imageURL = `http://localhost:3000/images/${userImage
-            .split('\\')
-            .pop()}`;
-          setUserData({ userNickname, userImage });
+          const { userNickname, userImage, userNo } = response.data;
+          console.log({ userNickname, userImage, userNo }); // 상태 설정 데이터 확인
+
+          const imageURL = 'http://localhost:8080/api/users/image';
+          setUserData({ userNickname, userImage, userNo });
           setImagePreview(imageURL);
         }
       } catch (error) {
@@ -62,7 +63,7 @@ function MypageUserModify() {
       }
     };
     fetchUserData();
-  }, [userNo]);
+  }, []);
 
   /**
    * 이전 페이지로 돌아가는 함수입니다.
@@ -100,13 +101,13 @@ function MypageUserModify() {
    * 선택된 이미지 파일을 서버로 업로드합니다.
    */
   const uploadImage = async () => {
-    if (selectedFile) {
+    if (selectedFile && userData.userNo) {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
       try {
         const imageResponse = await axios.put(
-          `http://localhost:8080/api/users/${userNo}/image`,
+          `http://localhost:8080/api/users/${userData.userNo}/image`,
           formData,
           {
             headers: {
@@ -117,7 +118,7 @@ function MypageUserModify() {
 
         if (imageResponse.data.success) {
           const response = await axios.get(
-            `http://localhost:8080/api/users/${userNo}`
+            `http://localhost:8080/api/users/${userData.userNo}`
           );
 
           const imageBox = response.data.userImage;
@@ -200,12 +201,11 @@ function MypageUserModify() {
     if (nickname) {
       try {
         const requestBody = {
-          userNo,
           userNickname: nickname,
         };
 
         const nicknameResponse = await axios.put(
-          `http://localhost:8080/api/users/${userNo}/nickname`,
+          `http://localhost:8080/api/users/nickname`,
           requestBody
         );
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import {
   BrowserRouter as Router,
-  Navigate,
+  // Navigate,
   Route,
   Routes,
 } from 'react-router-dom';
@@ -16,6 +16,7 @@ import Main from './modules/survey/main/Main';
 import Search from './modules/survey/main/Search';
 import AttendSurvey from './modules/survey/attend/routers/AttendSurvey';
 import axios from './modules/login/components/customApi';
+import MypageUserModify from './modules/survey/mypage/components/MypageUserModify';
 
 function App() {
   useEffect(() => {
@@ -37,9 +38,9 @@ function App() {
             element={<StatisticsPage />}
           />
           <Route path="/survey/main" element={<Main />} />
-          <Route path="/survey/modify" element={<Navigate to="/login" />} />
+          {/* <Route path="/survey/modify" element={<Navigate to="/login" />} /> */}
           <Route path="/login" element={<LoginDisplay />} />
-          <Route path="/survey/mypage" element={<MypageWriteSurvey />} />
+          {/* <Route path="/survey/mypage" element={<MypageWriteSurvey />} /> */}
           <Route path="/survey/search" element={<Search />} />
           <Route path="/survey/mypage/write" element={<MypageWriteSurvey />} />
           <Route
@@ -47,6 +48,10 @@ function App() {
             element={<MypageAttendSurvey />}
           />
           <Route path="/survey/attend/:surveyNo" element={<AttendSurvey />} />
+          <Route
+            path="/survey/mypageUserModify"
+            element={<MypageUserModify />}
+          />
         </Route>
       </Routes>
     </Router>

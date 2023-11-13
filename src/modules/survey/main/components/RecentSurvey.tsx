@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Import Swiper React components
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +41,7 @@ function RecentSurvey() {
   };
 
   const userInfo = {
-    loginUserNo: 1,
+    loginUserNo: localStorage.getItem('userNo'),
   };
 
   type CardData = {
@@ -50,7 +51,7 @@ function RecentSurvey() {
     surveyImage: string;
     surveyPostAt: string;
     surveyClosingAt: string;
-    userNo: number;
+    userNo: any;
     userNickName: string;
     userImage: string;
     attendUserList: Array<number>;
