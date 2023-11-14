@@ -272,13 +272,13 @@ function CreateSurveyInfo({
   const surveyOpenStatusSelectBox = (
     <Box>
       <FormControl fullWidth>
-        <InputLabel id="openStatus-select-label">공개 여부</InputLabel>
+        <InputLabel id="openStatus-select-label">설문결과 공개</InputLabel>
         <Select
           labelId="openStatus-select-label"
           id="openStatus-select"
           value={surveyInfo.openStatusNo.toString()}
           name="openStatusNo"
-          label="공개 여부"
+          label="설문결과 공개"
           onChange={handleOpenStatusChange}
         >
           <MenuItem value={OpenStatusEnum.PUBLIC}>전체공개</MenuItem>
