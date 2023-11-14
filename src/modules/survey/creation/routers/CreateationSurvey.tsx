@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Container from '@mui/material/Container';
 import { Box, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import axios from '../../../login/components/customApi';
 import FloatingActionButtons from '../components/FloatingActionButtons';
 import CreateSurveyInfo from '../components/CreateSurveyInfo';
@@ -13,7 +14,11 @@ import { OpenStatusEnum } from '../../enums/OpenStatusEnum';
 import { SurveyStatusEunm } from '../../enums/SurveyStatusEnum';
 import DragDropQuestion from '../components/DragDropQuestions';
 
+const MAIN_PAGE = '/survey/main';
+
 function CreateationSurvey() {
+  const navigate = useNavigate();
+
   const [surveyId] = useState<number>(new Date().getTime());
 
   const [surveyImage, setSurveyImage] = useState<File>();
@@ -93,7 +98,7 @@ function CreateationSurvey() {
       );
 
       if (response.status === 201) {
-        console.log('설문 등록 성공');
+        navigate(MAIN_PAGE);
       } else {
         console.error('요청 실패:', response.status, response.statusText);
       }
@@ -141,7 +146,7 @@ function CreateationSurvey() {
       );
 
       if (response.status === 201) {
-        console.log('설문 등록 성공');
+        navigate(MAIN_PAGE);
       } else {
         console.error('요청 실패:', response.status, response.statusText);
       }
@@ -151,7 +156,7 @@ function CreateationSurvey() {
   };
 
   return (
-    <Container maxWidth="md" css={{ marginTop: '30px' }}>
+    <Container maxWidth="md">
       <CreateSurveyInfo
         surveyInfo={surveyInfo}
         setSurveyInfo={setSurveyInfo}
