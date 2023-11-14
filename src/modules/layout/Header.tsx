@@ -67,13 +67,13 @@ function Header() {
     };
 
   return (
-    <Box sx={{ flexGrow: 1 }} height={110}>
+    <Box sx={{ flexGrow: 1 }} height={60}>
       <AppBar
         position="static"
         sx={{
           backgroundColor: '#FFFDF8',
           boxShadow: 'none',
-          height: '110px',
+          height: '90px',
           marginBottom: '0',
         }}
       >
