@@ -46,7 +46,7 @@ function MypageUserModify() {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:8080/api/users/user-info'
+          `${process.env.REACT_APP_BASE_URL}/api/users/user-info`
         );
         console.log(`서버 응답 확인: ${response.data}`); // 서버 응답 확인
 
@@ -107,7 +107,7 @@ function MypageUserModify() {
 
       try {
         const imageResponse = await axios.put(
-          `http://localhost:8080/api/users/${userData.userNo}/image`,
+          `${process.env.REACT_APP_BASE_URL}/api/users/${userData.userNo}/image`,
           formData,
           {
             headers: {
@@ -118,7 +118,7 @@ function MypageUserModify() {
 
         if (imageResponse.data.success) {
           const response = await axios.get(
-            `http://localhost:8080/api/users/${userData.userNo}`
+            `${process.env.REACT_APP_BASE_URL}/api/users/${userData.userNo}`
           );
 
           const imageBox = response.data.userImage;
@@ -167,7 +167,7 @@ function MypageUserModify() {
 
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/users/check-duplicate-nickname`,
+        `${process.env.REACT_APP_BASE_URL}/api/users/check-duplicate-nickname`,
         { userNickname: nickname }
       );
 
@@ -205,7 +205,7 @@ function MypageUserModify() {
         };
 
         const nicknameResponse = await axios.put(
-          `http://localhost:8080/api/users/nickname`,
+          `${process.env.REACT_APP_BASE_URL}/api/users/nickname`,
           requestBody
         );
 

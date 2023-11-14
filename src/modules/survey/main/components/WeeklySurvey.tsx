@@ -75,7 +75,7 @@ function WeeklySurvey() {
       try {
         // weekly 데이터
         const weeklyResponse = await axios.get(
-          'http://localhost:8080/api/surveys/weekly'
+          `${process.env.REACT_APP_BASE_URL}/api/surveys/weekly`
         );
         console.log(`weekly 데이터 확인 : ${weeklyResponse.data}`);
 
@@ -84,8 +84,11 @@ function WeeklySurvey() {
           setCardList(weeklyResponse.data);
           setIsDataAvailable(true);
         } else {
-          setCardList([]);
-          setIsDataAvailable(false);
+          // weekly 데이터가 없으면 recent 데이터
+          const recentResponse = await axios.get(
+            `${process.env.REACT_APP_BASE_URL}/api/surveys/recent`
+          );
+          setCardList(recentResponse.data);
         }
       } catch (error) {
         console.error('Error fetching data:', error);

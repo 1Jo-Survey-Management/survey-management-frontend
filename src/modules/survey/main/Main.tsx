@@ -1,10 +1,8 @@
-import React from 'react';
+/* eslint-disable react/react-in-jsx-scope */
 import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import { Box } from '@mui/material';
-import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
+import { Box } from '@mui/system';
 import Floating from './components/Floating';
 import ClosingSurvey from './components/ClosingSurvey';
 import RecentSurvey from './components/RecentSurvey';
@@ -37,39 +35,24 @@ function Main() {
   };
 
   return (
+    // eslint-disable-next-line react/react-in-jsx-scope
     <Container maxWidth="md">
       <h3 style={textStyle}>인기 설문🔥</h3>
       <WeeklySurvey />
-      <div style={arrowStyle}>
-        <ArrowBackIosRoundedIcon
-          sx={{ fontSize: 'medium', marginRight: '8px' }}
-        />
-        <ArrowForwardIosRoundedIcon sx={{ fontSize: 'medium' }} />
-      </div>
+      <div style={arrowStyle} />
 
       <Box sx={containerStyle}>
         <h3 style={textStyle}>최근 등록된 설문📝</h3>
         <Button onClick={() => navigate('/survey/search')} style={searchAll}>
           전체 보기
-          <ArrowForwardIosRoundedIcon sx={{ fontSize: 'medium' }} />
         </Button>
       </Box>
 
       <RecentSurvey />
-      <div style={arrowStyle}>
-        <ArrowBackIosRoundedIcon
-          sx={{ fontSize: 'medium', marginRight: '8px' }}
-        />
-        <ArrowForwardIosRoundedIcon sx={{ fontSize: 'medium' }} />
-      </div>
+      <div style={arrowStyle} />
       <h3 style={textStyle}>최근 마감된 설문⌛</h3>
       <ClosingSurvey />
-      <div style={arrowStyle}>
-        <ArrowBackIosRoundedIcon
-          sx={{ fontSize: 'medium', marginRight: '8px' }}
-        />
-        <ArrowForwardIosRoundedIcon sx={{ fontSize: 'medium' }} />
-      </div>
+      <div style={arrowStyle} />
       <Floating />
     </Container>
   );

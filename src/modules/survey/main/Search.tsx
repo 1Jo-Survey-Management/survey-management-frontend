@@ -79,7 +79,7 @@ function SurveySearch() {
       if (selectedState === '전체(모든 카드)') {
         console.log('전체 선택함');
         const response = await axios.get(
-          `http://localhost:8080/api/surveys/surveyall?page=${page}`
+          `${process.env.REACT_APP_BASE_URL}/api/surveys/surveyall?page=${page}`
         );
         console.log('전체: ', response);
 
@@ -95,7 +95,7 @@ function SurveySearch() {
         }
       } else if (selectedState === '진행') {
         const response = await axios.get(
-          `http://localhost:8080/api/surveys/select-post?page=${page}`
+          `${process.env.REACT_APP_BASE_URL}/api/surveys/select-post?page=${page}`
         );
 
         if (response.data.length === 0) {
@@ -110,7 +110,7 @@ function SurveySearch() {
         }
       } else if (selectedState === '마감') {
         const response = await axios.get(
-          `http://localhost:8080/api/surveys/select-closing?page=${page}`
+          `${process.env.REACT_APP_BASE_URL}/api/surveys/select-closing?page=${page}`
         );
 
         if (response.data.length === 0) {
