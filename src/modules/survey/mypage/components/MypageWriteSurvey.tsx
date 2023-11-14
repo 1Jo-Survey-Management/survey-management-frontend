@@ -301,7 +301,7 @@ function Mypage() {
         내가 작성한 설문 목록
       </h1>
 
-      <Box
+      {/* <Box
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -309,6 +309,7 @@ function Mypage() {
           width: '300px',
           marginBottom: '15px',
           marginTop: '15px',
+          height: '100%',
         }}
       >
         <div
@@ -353,6 +354,46 @@ function Mypage() {
             </Select>
           </FormControl>
         </div>
+      </Box> */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%',
+          marginBottom: '15px',
+          marginTop: '15px',
+          gap: { xs: 1, sm: 1 }, // 간격 일관성 유지
+        }}
+      >
+        <Button
+          variant="outlined"
+          sx={{
+            width: '100px', // 모든 화면 크기에서 너비 100px 고정
+            height: '35px',
+          }}
+          onClick={() => {
+            setState('전체');
+            setSearchQuery('');
+            fetchCardData();
+          }}
+        >
+          초기화
+        </Button>
+        <FormControl sx={{ width: '100px', height: '35px' }}>
+          <Select
+            labelId="demo-simple-select-autowidth-label"
+            id="demo-simple-select-autowidth"
+            value={state}
+            onChange={handleChange}
+            sx={{ width: '100%', height: '100%' }}
+          >
+            <MenuItem value="전체">전체</MenuItem>
+            <MenuItem value={1}>작성 중</MenuItem>
+            <MenuItem value={2}>진행 중</MenuItem>
+            <MenuItem value={3}>마감</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
       <div
         style={{
@@ -389,7 +430,7 @@ function Mypage() {
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'flex-start',
-          gap: '8px',
+          gap: { xs: 2, sm: 4, md: 10.5 }, // 화면 크기에 따라 간격 조정
           height: '100%',
         }}
       >
