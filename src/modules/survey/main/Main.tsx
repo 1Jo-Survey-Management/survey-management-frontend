@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import Floating from './components/Floating';

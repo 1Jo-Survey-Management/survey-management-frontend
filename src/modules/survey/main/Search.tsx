@@ -42,10 +42,6 @@ type CardData = {
   attendCheckList: boolean[];
 };
 
-const userInfo = {
-  loginUserNo: 1,
-};
-
 function SurveySearch() {
   const navigate = useNavigate();
   // const [searchOptions, setSearchOptions] = useState<string[]>([]);
@@ -81,9 +77,12 @@ function SurveySearch() {
   useEffect(() => {
     const fetchData = async () => {
       if (selectedState === '전체(모든 카드)') {
+        console.log('전체 선택함');
         const response = await axios.get(
           `http://localhost:8080/api/surveys/surveyall?page=${page}`
         );
+        console.log('전체: ', response.data);
+
         if (response.data.length === 0) {
           setHasMore(false);
           return;
@@ -187,6 +186,16 @@ function SurveySearch() {
     });
 
     setFilteredData(sortedCardData);
+  };
+
+  const numUser = () => {
+    const loginUserNo = localStorage.getItem('userNo');
+    const numUserNo =
+      loginUserNo !== null && loginUserNo !== undefined
+        ? Number(loginUserNo)
+        : null;
+    // numUserNo를 사용하거나 처리하는 코드 추가
+    return numUserNo;
   };
   const openCardModal = (card: CardData) => {
     setSelectedCard(card);
@@ -575,7 +584,7 @@ function SurveySearch() {
                   selectedCard?.surveyStatusName === '마감' ||
                   !selectedCard?.attendCheckList ||
                   selectedCard.attendCheckList.some((item) => item === false) ||
-                  selectedCard?.userNo === userInfo.loginUserNo
+                  selectedCard?.userNo === numUser()
                 }
               >
                 참여하기
@@ -591,7 +600,7 @@ function SurveySearch() {
                     이미 참여한 설문에는 다시 참여할 수 없습니다.
                   </Typography>
                 )}
-              {selectedCard?.userNo === userInfo.loginUserNo &&
+              {selectedCard?.userNo === numUser() &&
                 selectedCard?.surveyStatusName !== '마감' && ( // Adjusted condition check
                   <Typography
                     variant="body2"

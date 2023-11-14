@@ -40,10 +40,6 @@ function RecentSurvey() {
     textOverflow: 'ellipsis',
   };
 
-  const userInfo = {
-    loginUserNo: localStorage.getItem('userNo'),
-  };
-
   type CardData = {
     surveyNo: number;
     surveyTitle: string;
@@ -95,6 +91,16 @@ function RecentSurvey() {
   const closeCardModal = () => {
     setSelectedCard(null);
     setOpenModal(false);
+  };
+
+  const numUser = () => {
+    const loginUserNo = localStorage.getItem('userNo');
+    const numUserNo =
+      loginUserNo !== null && loginUserNo !== undefined
+        ? Number(loginUserNo)
+        : null;
+    // numUserNo를 사용하거나 처리하는 코드 추가
+    return numUserNo;
   };
 
   const swiperParams: SwiperOptions = {
@@ -370,13 +376,15 @@ function RecentSurvey() {
                 </Button>
 
                 <Button
-                  onClick={() => navigate('/survey/Search')}
+                  onClick={() =>
+                    navigate(`/survey/attend/${selectedCard?.surveyNo}`)
+                  }
                   disabled={
                     !selectedCard?.attendCheckList ||
                     selectedCard.attendCheckList.some(
                       (item) => item === false
                     ) ||
-                    selectedCard?.userNo === userInfo.loginUserNo
+                    selectedCard?.userNo === numUser()
                   }
                 >
                   참여하기
@@ -392,7 +400,7 @@ function RecentSurvey() {
                     </Typography>
                   )}
 
-                {selectedCard?.userNo === userInfo.loginUserNo && (
+                {selectedCard?.userNo === numUser() && (
                   <Typography
                     variant="body2"
                     style={{ color: 'red' }}
