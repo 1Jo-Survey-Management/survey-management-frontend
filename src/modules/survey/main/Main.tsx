@@ -2,7 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import Floating from './components/Floating';
 import ClosingSurvey from './components/ClosingSurvey';
 import RecentSurvey from './components/RecentSurvey';
