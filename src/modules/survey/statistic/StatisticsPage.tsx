@@ -122,7 +122,7 @@ export default function StatisticsPage() {
       await axios
 
         .get(
-          `http://localhost:8080/api/survey/resultall?surveyno=${statSurveyNo}`
+          `${process.env.REACT_APP_BASE_URL}/api/survey/resultall?surveyno=${statSurveyNo}`
         )
 
         .then((response) => {

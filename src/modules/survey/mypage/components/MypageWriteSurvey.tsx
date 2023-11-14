@@ -133,7 +133,7 @@ function Mypage() {
   const handleClickPostSurvey = async (surveyNo: number) => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/api/surveys/${surveyNo}/post`
+        `${process.env.REACT_APP_BASE_URL}/api/surveys/${surveyNo}/post`
       );
 
       if (response.status === 200) {
@@ -175,7 +175,7 @@ function Mypage() {
   const fetchCardData = () => {
     const loggedInUserNo = localStorage.getItem('userNo');
     axios
-      .get(`http://localhost:8080/api/my-surveys/write-surveys`)
+      .get(`${process.env.REACT_APP_BASE_URL}/api/my-surveys/write-surveys`)
       .then((response) => {
         const cardData: CardData[] = response.data.content || [];
 
@@ -273,7 +273,7 @@ function Mypage() {
         console.log('mySurveyDTO: ', mySurveyDTO);
         axios
           .put(
-            'http://localhost:8080/api/my-surveys/update-write-surveys',
+            `${process.env.REACT_APP_BASE_URL}/api/my-surveys/update-write-surveys`,
             mySurveyDTO
           )
           .then(() => {

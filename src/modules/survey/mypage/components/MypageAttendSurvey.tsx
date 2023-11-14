@@ -120,7 +120,7 @@ function Mypage() {
     console.log(`로그인된 유저의 userNo: ${loggedInUserNo}`);
 
     axios
-      .get(`http://localhost:8080/api/my-surveys/attend-surveys`)
+      .get(`${process.env.REACT_APP_BASE_URL}/api/my-surveys/attend-surveys`)
       .then((response) => {
         const cardData: CardData[] = response.data.content || [];
 
@@ -215,7 +215,7 @@ function Mypage() {
         console.log('mySurveyDTO: ', mySurveyDTO);
         axios
           .put(
-            'http://localhost:8080/api/my-surveys/update-write-surveys',
+            `${process.env.REACT_APP_BASE_URL}/api/my-surveys/update-write-surveys`,
             mySurveyDTO
           )
           .then(() => {

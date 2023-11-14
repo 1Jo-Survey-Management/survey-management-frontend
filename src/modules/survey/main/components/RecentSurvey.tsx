@@ -75,7 +75,9 @@ function RecentSurvey() {
 
   useEffect(() => {
     const data = async () => {
-      const card = await axios.get('http://localhost:8080/api/surveys/recent');
+      const card = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/api/surveys/recent`
+      );
       setCardList(card.data);
     };
     data();
