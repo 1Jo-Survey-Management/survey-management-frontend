@@ -41,7 +41,7 @@ const styles = {
   }),
 };
 
-const previewImageBaseUrl = 'http://localhost:8080/api/images/surveys/';
+const previewImageBaseUrl = `${process.env.REACT_APP_BASE_URL}/api/images/surveys/`;
 
 /**
  * 설문을 수정하는 페이지를 담당하는 페이지 입니다.
@@ -86,7 +86,7 @@ function ModifySurvey() {
    */
   const getSurveyDetails = async () => {
     const response = await axios.get(
-      `http://localhost:8080/api/surveys/${surveyNo}`
+      `${process.env.REACT_APP_BASE_URL}/api/surveys/${surveyNo}`
     );
     if (response.status !== 200) {
       /**
@@ -227,7 +227,7 @@ function ModifySurvey() {
 
     try {
       const response = await axios.put(
-        'http://localhost:8080/api/surveys',
+        `${process.env.REACT_APP_BASE_URL}/api/surveys`,
         formData,
         {
           headers: {
