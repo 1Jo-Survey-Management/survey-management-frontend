@@ -89,7 +89,7 @@ function CreateationSurvey() {
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/surveys',
+        `${process.env.REACT_APP_BASE_URL}/api/surveys`,
         formData,
         {
           headers: {
@@ -137,7 +137,7 @@ function CreateationSurvey() {
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/surveys',
+        `${process.env.REACT_APP_BASE_URL}/api/surveys`,
         formData,
         {
           headers: {
