@@ -301,60 +301,6 @@ function Mypage() {
         내가 작성한 설문 목록
       </h1>
 
-      {/* <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '300px',
-          marginBottom: '15px',
-          marginTop: '15px',
-          height: '100%',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            fontSize: 12,
-            color: 'text.secondary',
-            marginBottom: '10px',
-            fontWeight: 600,
-            width: '100%',
-            height: '30px',
-          }}
-        >
-          <Button
-            variant="outlined"
-            sx={{
-              width: '100px',
-              height: '35px',
-            }}
-            onClick={() => {
-              setState('전체');
-              setSearchQuery('');
-              fetchCardData();
-            }}
-          >
-            초기화
-          </Button>
-          <FormControl sx={{ width: '100px', height: '35px' }}>
-            <Select
-              labelId="demo-simple-select-autowidth-label"
-              id="demo-simple-select-autowidth"
-              value={state}
-              onChange={handleChange}
-              sx={{ width: '100%', height: '100%' }}
-            >
-              <MenuItem value="전체">전체</MenuItem>
-              <MenuItem value={1}>작성 중</MenuItem>
-              <MenuItem value={2}>진행 중</MenuItem>
-              <MenuItem value={3}>마감</MenuItem>
-            </Select>
-          </FormControl>
-        </div>
-      </Box> */}
       <Box
         sx={{
           display: 'flex',
