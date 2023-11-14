@@ -115,7 +115,7 @@ export default function StatisticsPage() {
       await axios
 
         .get(
-          `http://localhost:8080/api/survey/resultall?surveyno=${statSurveyNo}`
+          `${process.env.REACT_APP_BASE_URL}/api/survey/resultall?surveyno=${statSurveyNo}`
         )
 
         .then((response) => {
@@ -129,10 +129,20 @@ export default function StatisticsPage() {
           setSurveyTitle(response.data.content[0].surveyTitle);
           setSurveyNo(response.data.content[0].surveyNo);
           setSurveyPostAt(response.data.content[0].surveyPostAt);
+          console.log(
+            `response 배열 값: ${JSON.stringify(response.data.content)}`
+          );
+          console.log(
+            `totalAttend 수: ${JSON.stringify(
+              response.data.content[0].totalAttend
+            )}`
+          );
         })
+
         .catch((error) => {
-          console.error(error);
+          console.error('통계 보기 중 오류 발생:', error);
         });
+      console.log(`surveyNo 통계쪽: ${statSurveyNo}`);
     };
 
     fetchData();
@@ -165,15 +175,11 @@ export default function StatisticsPage() {
                 {surveyWriter}
                 &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt}{' '}
                 &nbsp;&nbsp;&nbsp; 설문 참여자 수: {totalSelectionCount}
-                <br />
-                <br />
                 <Button onClick={() => navigate('/survey/main')}>
                   돌아가기
                 </Button>
                 &nbsp;&nbsp;&nbsp;
               </Typography>
-
-              <br />
             </Box>
           </CardContent>
         </Card>
@@ -241,13 +247,11 @@ export default function StatisticsPage() {
                   </Typography>
 
                   <Typography style={textStyle} sx={styles.surveyInfo}>
-                    <br />
                     &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
                     {itemsForQuestion[0].selectionCount !== 0
                       ? countSelections(itemsForQuestion)
                       : countSubjectiveAnswerCount(itemsForQuestion)}
                   </Typography>
-                  <br />
 
                   {questionTypeNo === 1 && (
                     <Box sx={styles.googleChartContent}>
@@ -269,7 +273,6 @@ export default function StatisticsPage() {
                       <Typography style={textStyle}>
                         ## 단답형의 답들은 다음과 같은 것들이 있었습니다!
                       </Typography>
-                      <br />
                       <Box sx={styles.subjectContent}>
                         <WordCloud
                           wordCloud={shortSubData.map((item) => ({
@@ -278,7 +281,6 @@ export default function StatisticsPage() {
                           }))}
                         />
                       </Box>
-                      <br />
                       <Typography style={textStyle}>답변 랭킹!!</Typography>
                       <AnswerList selectList={shortSubData} />
                     </>

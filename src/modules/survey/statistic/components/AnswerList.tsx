@@ -75,8 +75,7 @@ export default function AnswerList({ selectList }: selectionList) {
   }, [selectList]);
 
   return (
-    <div>
-      <br />
+    <>
       <TableContainer
         component={Paper}
         sx={{ maxHeight: 250 }}
@@ -116,6 +115,6 @@ export default function AnswerList({ selectList }: selectionList) {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </>
   );
 }

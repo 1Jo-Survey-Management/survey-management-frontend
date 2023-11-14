@@ -1,6 +1,5 @@
+import { Box } from '@mui/material';
 import React, { useState } from 'react';
-import { Box } from '@mui/system';
-import config from './config/config.json';
 
 const bottonBoxStyle = {
   width: '100%',
@@ -37,7 +36,7 @@ function LoginNaver() {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleOAuthLogin = () => {
-    const authorizationUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${config.clientId}&state=${config.state}&redirect_uri=${config.redirectUri}`;
+    const authorizationUrl = `${process.env.REACT_APP_NAVER_OAUTH_BASE_URL}?response_type=code&client_id=${process.env.REACT_APP_NAVER_CLIENT_ID}&state=${process.env.REACT_APP_NAVER_STATE}&redirect_uri=${process.env.REACT_APP_NAVER_REDIRECT_URI}`;
     window.location.href = authorizationUrl;
   };
 

@@ -41,7 +41,7 @@ const styles = {
   }),
 };
 
-const previewImageBaseUrl = 'http://localhost:8080/api/images/surveys/';
+const previewImageBaseUrl = `${process.env.REACT_APP_BASE_URL}/api/images/surveys/`;
 
 /**
  * 설문을 수정하는 페이지를 담당하는 페이지 입니다.
@@ -86,13 +86,13 @@ function ModifySurvey() {
    */
   const getSurveyDetails = async () => {
     const response = await axios.get(
-      `http://localhost:8080/api/surveys/${surveyNo}`
+      `${process.env.REACT_APP_BASE_URL}/api/surveys/${surveyNo}`
     );
     if (response.status !== 200) {
       /**
        * FIXME: redirect mypage 내가 작성한 설문 페이지로 변경 예정
        */
-      navigate('/login');
+      navigate('/survey/mypage/write');
     }
     return response.data.content;
   };
@@ -154,7 +154,7 @@ function ModifySurvey() {
       /**
        * FIXME: redirect mypage 내가 작성한 설문 페이지로 변경 예정
        */
-      navigate('/login');
+      navigate('/survey/mypage/write');
       return;
     }
 
@@ -173,7 +173,7 @@ function ModifySurvey() {
         /**
          * FIXME: redirect mypage 내가 작성한 설문 페이지로 변경 예정
          */
-        navigate('/login');
+        navigate('/survey/mypage/write');
       }
     };
 
@@ -227,7 +227,7 @@ function ModifySurvey() {
 
     try {
       const response = await axios.put(
-        'http://localhost:8080/api/surveys',
+        `${process.env.REACT_APP_BASE_URL}/api/surveys`,
         formData,
         {
           headers: {
@@ -241,7 +241,7 @@ function ModifySurvey() {
           icon: 'success',
           title: '설문 수정이 완료되었습니다!',
         });
-        navigate('/login');
+        navigate('/survey/mypage/write');
       } else {
         Swal.fire({
           icon: 'error',

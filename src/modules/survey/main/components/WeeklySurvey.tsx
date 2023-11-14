@@ -1,12 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
-// import SwiperCore, {
-//   A11y,
-//   Navigation,
-//   Pagination,
-//   Scrollbar,
-// } from 'swiper/modules';
 import { SwiperOptions } from 'swiper/types/swiper-options';
 import GroupsIcon from '@mui/icons-material/Groups';
 import {
@@ -18,10 +13,8 @@ import {
   Chip,
   Stack,
   Modal,
-  Divider,
 } from '@mui/material';
 import axios from '../../../login/components/customApi';
-import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 
 import '../../../../global.css';
 
@@ -40,23 +33,6 @@ function WeeklySurvey() {
   const textStyle = {
     fontFamily,
     textOverflow: 'ellipsis',
-  };
-
-  const modalSubText = {
-    fontSize: '15px',
-  };
-
-  const topTitleStyle = {};
-
-  const titleStyle = {
-    display: 'flex',
-    fontFamily,
-    textOverflow: 'ellipsis',
-    justifyContent: 'center',
-  };
-
-  const userInfo = {
-    loginUserNo: 1,
   };
 
   type CardData = {
@@ -97,7 +73,7 @@ function WeeklySurvey() {
       try {
         // weekly 데이터
         const weeklyResponse = await axios.get(
-          'http://localhost:8080/api/surveys/weekly'
+          `${process.env.REACT_APP_BASE_URL}/api/surveys/weekly`
         );
         // console.log('weekly 데이터 확인 : ' + weeklyResponse.data);
 
@@ -107,26 +83,32 @@ function WeeklySurvey() {
         } else {
           // weekly 데이터가 없으면 recent 데이터
           const recentResponse = await axios.get(
-            'http://localhost:8080/api/surveys/recent'
+            `${process.env.REACT_APP_BASE_URL}/api/surveys/recent`
           );
           setCardList(recentResponse.data);
         }
-        setCardList((prevCardList) =>
-          prevCardList
-            .slice()
-            .sort((a, b) => b.surveyAttendCount - a.surveyAttendCount)
-        );
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
+    console.log(cardList);
   }, []);
 
   const openCardModal = (card: CardData) => {
     setSelectedCard(card);
     setOpenModal(true);
+  };
+
+  const numUser = () => {
+    const loginUserNo = localStorage.getItem('userNo');
+    const numUserNo =
+      loginUserNo !== null && loginUserNo !== undefined
+        ? Number(loginUserNo)
+        : null;
+    // numUserNo를 사용하거나 처리하는 코드 추가
+    return numUserNo;
   };
 
   const closeCardModal = () => {
@@ -181,22 +163,9 @@ function WeeklySurvey() {
     },
   };
 
-  const handleIconClick = () => {
-    closeCardModal();
-  };
-
   return (
     <div>
-      <Swiper
-        style={styles.CardSwiper}
-        {...swiperParams}
-        // modules={[Navigation, Pagination, Scrollbar]}
-        spaceBetween={50}
-        slidesPerView={3}
-        // navigation
-        // pagination={{ clickable: true }}
-        // scrollbar={{ draggable: true }}
-      >
+      <Swiper style={styles.CardSwiper} {...swiperParams}>
         <Box
           sx={{
             display: 'flex',
@@ -356,7 +325,6 @@ function WeeklySurvey() {
         </Box>
       </Swiper>
 
-      {/* -------------------------------------------------------- 모달 창 생성 ------------------- */}
       <Modal
         open={openModal}
         onClose={closeCardModal}
@@ -380,133 +348,78 @@ function WeeklySurvey() {
             textAlign: 'center',
           }}
         >
-          <Box>
-            {/* 닫기 아이콘 */}
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ClearTwoToneIcon onClick={handleIconClick} />
-            </Box>
+          <h2 id="modal-title" style={textStyle}>
+            {selectedCard ? selectedCard.surveyTitle : ''}
+          </h2>
+          <p style={textStyle}>
+            날짜:
+            {selectedCard ? selectedCard.surveyPostAt.slice(0, 10) : ''}~{' '}
+            {selectedCard ? selectedCard.surveyClosingAt : ''}
+          </p>
 
-            {/* 설문 조사 타이틀 */}
-            <Box sx={titleStyle}>
-              <Typography
-                variant="h5"
-                id="modal-title"
-                style={{
-                  fontFamily,
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                {selectedCard ? selectedCard.surveyTitle : ''}
-              </Typography>
-            </Box>
-
-            {/* 설문 조사 기간 */}
-            <Typography style={modalSubText}>
-              {' '}
-              {selectedCard
-                ? `${selectedCard.surveyPostAt.slice(0, 10)} ~ ${
-                    selectedCard.surveyClosingAt
-                  }`
-                : ''}
-            </Typography>
-
-            {/* 작성자, 참여자수, 태그들 */}
-            <Typography style={{ display: 'flex', justifyContent: 'right' }}>
-              작성자: {selectedCard ? selectedCard.userNickName : ''}
-            </Typography>
-            <Typography style={{ display: 'flex', justifyContent: 'right' }}>
-              참석자 수: {selectedCard ? selectedCard.surveyAttendCount : ''}
-            </Typography>
-
-            <Stack direction="row" spacing={1}>
-              {selectedCard?.tag.map((tag) => (
-                <Chip
-                  key={tag}
-                  label={tag}
-                  size="small"
-                  style={textStyle}
-                  sx={{
-                    fontSize: 16,
-                    marginRight: 1,
-                    height: '35px',
-                    backgroundColor: tagColor(tag),
-                    opacity: 0.7,
-                  }}
-                />
-              ))}
-            </Stack>
-            <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
-
-            {/* 설문조사 사진 */}
-            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-              <img
-                src={`${process.env.PUBLIC_URL}/LoginFig.png`}
-                alt="Naver Button"
-                style={{ width: '100%', height: 'auto' }}
-              />{' '}
-            </Box>
-
-            <Typography id="modal-description" style={textStyle}>
-              {selectedCard ? selectedCard.surveyDiscription : ''}
-            </Typography>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                marginTop: 'auto',
-                paddingTop: '16px',
-              }}
+          <p style={textStyle}>
+            작성자: {selectedCard ? selectedCard.userNickName : ''}
+          </p>
+          <p style={textStyle}>태그: {selectedCard ? selectedCard.tag : ''}</p>
+          <p style={textStyle}>
+            참석자 수: {selectedCard ? selectedCard.surveyAttendCount : ''}
+          </p>
+          <p id="modal-description" style={textStyle}>
+            {selectedCard ? selectedCard.surveyDiscription : ''}
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              marginTop: 'auto',
+            }}
+          >
+            <Button
+              onClick={() =>
+                navigate(`/survey/statistics/${selectedCard?.surveyNo}`)
+              }
             >
-              {/* 결과보기, 참여하기 버튼 */}
-              <Box>
-                <Button
-                  onClick={() =>
-                    navigate(`/survey/statistics/${selectedCard?.surveyNo}`)
-                  }
-                  style={{ marginBottom: '8px' }}
-                >
-                  결과보기
-                </Button>
-                <Button
-                  onClick={() =>
-                    navigate(`/survey/attend/${selectedCard?.surveyNo}`)
-                  }
-                  disabled={
-                    !selectedCard?.attendCheckList ||
-                    selectedCard.attendCheckList.some(
-                      (item) => item === false
-                    ) ||
-                    selectedCard?.userNo === userInfo.loginUserNo
-                  }
-                  style={{ marginBottom: '8px' }}
-                >
-                  참여하기
-                </Button>
-              </Box>
+              결과보기
+            </Button>
 
-              {/* 참여하기 제한 조건 */}
-              {selectedCard?.attendCheckList &&
-                selectedCard.attendCheckList.includes(false) && (
-                  <Typography
-                    variant="body2"
-                    style={{ color: 'red', marginBottom: '8px' }}
-                    fontSize="12px"
-                  >
-                    이미 참여한 설문에는 다시 참여할 수 없습니다.
-                  </Typography>
-                )}
-              {selectedCard?.userNo === userInfo.loginUserNo && (
+            <Button
+              onClick={() =>
+                navigate(`/survey/attend/${selectedCard?.surveyNo}`)
+              }
+              disabled={
+                !selectedCard?.attendCheckList ||
+                selectedCard.attendCheckList.some(
+                  (item: boolean) => item === false
+                ) ||
+                selectedCard?.userNo === numUser()
+              }
+            >
+              참여하기
+            </Button>
+            {selectedCard?.attendCheckList &&
+              selectedCard.attendCheckList.includes(false) && (
                 <Typography
                   variant="body2"
-                  style={{ color: 'red', marginBottom: '8px' }}
+                  style={{ color: 'red' }}
                   fontSize="12px"
                 >
-                  본인이 작성한 설문에는 참여할 수 없습니다.
+                  이미 참여한 설문에는 다시 참여할 수 없습니다.
                 </Typography>
               )}
-            </div>
-          </Box>
+
+            {selectedCard?.userNo === numUser() && (
+              <Typography
+                variant="body2"
+                style={{ color: 'red' }}
+                fontSize="12px"
+              >
+                본인이 작성한 설문에는 참여할 수 없습니다.
+              </Typography>
+            )}
+
+            <Button onClick={closeCardModal}>닫기</Button>
+          </div>
         </div>
       </Modal>
     </div>
