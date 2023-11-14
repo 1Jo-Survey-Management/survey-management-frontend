@@ -156,7 +156,7 @@ function CreateationSurvey() {
   };
 
   return (
-    <Container maxWidth="md" css={{ marginTop: '30px' }}>
+    <Container maxWidth="md">
       <CreateSurveyInfo
         surveyInfo={surveyInfo}
         setSurveyInfo={setSurveyInfo}
