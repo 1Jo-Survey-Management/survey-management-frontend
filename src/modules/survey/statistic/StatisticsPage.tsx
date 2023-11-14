@@ -19,12 +19,6 @@ const styles = {
     },
   },
   cardTitle: {
-    // backgroundImage: `url(${TitleFig})`,
-    // backgroundSize: 'cover',
-    // backgroundRepeat: 'no-repeat',
-
-    // boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
-    marginBottom: '30px',
     marginTop: '20px',
     borderRadius: '3%',
     '@media (min-width: 700px)': {
@@ -99,7 +93,6 @@ export default function StatisticsPage() {
   const params = useParams();
   const statSurveyNo = params.surveyNo;
 
-  // const userNo = localStorage.getItem('userNo');
   const navigate = useNavigate();
 
   const surveyBranch = (data: Selection[]): Record<string, Selection[]> => {
@@ -126,6 +119,11 @@ export default function StatisticsPage() {
         )
 
         .then((response) => {
+          console.log(
+            '통계보기 데이터들 : ' +
+              JSON.stringify(response.data.content, null, 2)
+          );
+
           setSelectStat(response.data.content);
           setTotalSelectionCount(response.data.content[0].totalAttend);
           setSurveyTitle(response.data.content[0].surveyTitle);
