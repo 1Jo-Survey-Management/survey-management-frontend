@@ -248,53 +248,40 @@ function Mypage() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          width: '300px',
+          width: '100%',
           marginBottom: '15px',
           marginTop: '15px',
+          gap: { xs: 1, sm: 1 }, // 간격 일관성 유지
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            fontSize: 12,
-            color: 'text.secondary',
-            marginBottom: '10px',
-            fontWeight: 600,
-            width: '100%',
-            height: '30px',
+        <Button
+          variant="outlined"
+          sx={{
+            width: '100px', // 모든 화면 크기에서 너비 100px 고정
+            height: '35px',
+          }}
+          onClick={() => {
+            setState('전체');
+            setSearchQuery('');
+            fetchCardData();
           }}
         >
-          <Button
-            variant="outlined"
-            sx={{
-              width: '100px',
-              height: '35px',
-            }}
-            onClick={() => {
-              setState('전체');
-              setSearchQuery('');
-              fetchCardData();
-            }}
+          초기화
+        </Button>
+        <FormControl sx={{ width: '100px', height: '35px' }}>
+          <Select
+            labelId="demo-simple-select-autowidth-label"
+            id="demo-simple-select-autowidth"
+            value={state}
+            onChange={handleChange}
+            sx={{ width: '100%', height: '100%' }}
           >
-            초기화
-          </Button>
-          <FormControl sx={{ width: '100px', height: '35px' }}>
-            <Select
-              labelId="demo-simple-select-autowidth-label"
-              id="demo-simple-select-autowidth"
-              value={state}
-              onChange={handleChange}
-              sx={{ width: '100%', height: '100%' }}
-            >
-              <MenuItem value="전체">전체</MenuItem>
-              <MenuItem value={1}>작성 중</MenuItem>
-              <MenuItem value={2}>진행 중</MenuItem>
-              <MenuItem value={3}>마감</MenuItem>
-            </Select>
-          </FormControl>
-        </div>
+            <MenuItem value="전체">전체</MenuItem>
+            <MenuItem value={1}>작성 중</MenuItem>
+            <MenuItem value={2}>진행 중</MenuItem>
+            <MenuItem value={3}>마감</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
       <div
         style={{
@@ -331,7 +318,7 @@ function Mypage() {
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'flex-start',
-          gap: '8px',
+          gap: { xs: 2, sm: 4, md: 10.5 },
           height: '100%',
         }}
       >
@@ -420,9 +407,9 @@ function Mypage() {
                     fontWeight: 600,
                     marginBottom: '8px',
                     cursor: 'pointer',
-                    overflow: 'hidden', // 넘치는 내용 숨김
-                    whiteSpace: 'nowrap', // 텍스트를 한 줄로 유지
-                    textOverflow: 'ellipsis', // 넘치는 텍스트를 ...으로 표시
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis',
                   }}
                 >
                   {card.surveyTitle}
@@ -449,6 +436,9 @@ function Mypage() {
                     fontSize: 12,
                     fontWeight: 600,
                     paddingTop: '12px',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis',
                   }}
                 >
                   작성자: {card.userNickname}
