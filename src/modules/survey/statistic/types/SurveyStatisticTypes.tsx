@@ -1,5 +1,3 @@
-import React from 'react';
-
 export interface Selection {
   surveyPostAt: string;
   userNickname: string;
