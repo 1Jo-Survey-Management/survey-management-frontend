@@ -35,10 +35,6 @@ function WeeklySurvey() {
     textOverflow: 'ellipsis',
   };
 
-  const userInfo = {
-    loginUserNo: localStorage.getItem('userNo'),
-  };
-
   type CardData = {
     surveyNo: number;
     surveyTitle: string;
@@ -46,7 +42,7 @@ function WeeklySurvey() {
     surveyImage: string;
     surveyPostAt: string;
     surveyClosingAt: string;
-    userNo: any;
+    userNo: number;
     userNickName: string;
     userImage: string;
     attendUserNo: Array<number>;
@@ -103,6 +99,16 @@ function WeeklySurvey() {
   const openCardModal = (card: CardData) => {
     setSelectedCard(card);
     setOpenModal(true);
+  };
+
+  const numUser = () => {
+    const loginUserNo = localStorage.getItem('userNo');
+    const numUserNo =
+      loginUserNo !== null && loginUserNo !== undefined
+        ? Number(loginUserNo)
+        : null;
+    // numUserNo를 사용하거나 처리하는 코드 추가
+    return numUserNo;
   };
 
   const closeCardModal = () => {
@@ -271,6 +277,7 @@ function WeeklySurvey() {
                         }}
                         style={textStyle}
                       >
+                        {card.userNo}
                         {/* {card.surveyNo} */}
                       </Typography>
 
@@ -386,7 +393,7 @@ function WeeklySurvey() {
                 selectedCard.attendCheckList.some(
                   (item: boolean) => item === false
                 ) ||
-                selectedCard?.userNo === userInfo.loginUserNo
+                selectedCard?.userNo === numUser()
               }
             >
               참여하기
@@ -402,7 +409,7 @@ function WeeklySurvey() {
                 </Typography>
               )}
 
-            {selectedCard?.userNo === userInfo.loginUserNo && (
+            {selectedCard?.userNo === numUser() && (
               <Typography
                 variant="body2"
                 style={{ color: 'red' }}
