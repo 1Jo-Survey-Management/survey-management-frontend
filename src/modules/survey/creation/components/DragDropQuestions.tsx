@@ -3,7 +3,7 @@ import {
   DragDropContext,
   Draggable,
   Droppable,
-  DragEndDetails,
+  DropResult,
 } from 'react-beautiful-dnd';
 import { DragDropQuestionProps, QuestionProps } from '../types/SurveyTypes';
 import CreateQuestion from './CreateQuestion';
@@ -46,7 +46,7 @@ function DragDropQuestion({ questions, setQuestions }: DragDropQuestionProps) {
    * @param result Drag가 끝났을때의 동작
    * @author 강명관
    */
-  const handleOnDragEnd = (result: DragEndDetails) => {
+  const handleOnDragEnd = (result: DropResult) => {
     if (!result.destination) {
       return;
     }
