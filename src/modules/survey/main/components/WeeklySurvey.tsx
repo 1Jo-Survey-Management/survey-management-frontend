@@ -73,7 +73,7 @@ function WeeklySurvey() {
       try {
         // weekly 데이터
         const weeklyResponse = await axios.get(
-          'http://localhost:8080/api/surveys/weekly'
+          `${process.env.REACT_APP_BASE_URL}/api/surveys/weekly`
         );
         // console.log('weekly 데이터 확인 : ' + weeklyResponse.data);
 
@@ -83,7 +83,7 @@ function WeeklySurvey() {
         } else {
           // weekly 데이터가 없으면 recent 데이터
           const recentResponse = await axios.get(
-            'http://localhost:8080/api/surveys/recent'
+            `${process.env.REACT_APP_BASE_URL}/api/surveys/recent`
           );
           setCardList(recentResponse.data);
         }
@@ -277,7 +277,6 @@ function WeeklySurvey() {
                         }}
                         style={textStyle}
                       >
-                        {card.userNo}
                         {/* {card.surveyNo} */}
                       </Typography>
 

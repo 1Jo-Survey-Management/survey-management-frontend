@@ -367,7 +367,7 @@ function AttendSurvey() {
     console.log('useEffect running');
     axios
       .get<SurveyData>(
-        `http://localhost:8080/api/for-attend/surveys/survey-data`
+        `${process.env.REACT_APP_BASE_URL}/api/for-attend/surveys/survey-data`
       )
       .then((response) => {
         // surveyNo에 해당하는 데이터만 필터링합니다.
@@ -393,7 +393,7 @@ function AttendSurvey() {
     if (surveyNo) {
       axios
         .get(
-          `http://localhost:8080/api/for-attend/surveys/closing-time/${surveyNo}`
+          `${process.env.REACT_APP_BASE_URL}/api/for-attend/surveys/closing-time/${surveyNo}`
         )
         .then((response) => {
           if (response.data.success && response.data.content) {
@@ -492,7 +492,7 @@ function AttendSurvey() {
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/for-attend/surveys/save-responses',
+        `${process.env.REACT_APP_BASE_URL}/api/for-attend/surveys/save-responses`,
         userResponses
       );
 
