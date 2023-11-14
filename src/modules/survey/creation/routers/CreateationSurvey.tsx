@@ -15,6 +15,7 @@ import { SurveyStatusEunm } from '../../enums/SurveyStatusEnum';
 import DragDropQuestion from '../components/DragDropQuestions';
 
 const MAIN_PAGE = '/survey/main';
+const MYPAGE_WRITE_PAGE = '/survey/mypage/write';
 
 function CreateationSurvey() {
   const navigate = useNavigate();
@@ -98,7 +99,7 @@ function CreateationSurvey() {
       );
 
       if (response.status === 201) {
-        navigate(MAIN_PAGE);
+        navigate(MYPAGE_WRITE_PAGE);
       } else {
         console.error('요청 실패:', response.status, response.statusText);
       }
