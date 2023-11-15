@@ -71,6 +71,8 @@ function WeeklySurvey() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log('토큰 확인 : ' + localStorage.getItem('accessToken'));
+
         // weekly 데이터
         const weeklyResponse = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/api/surveys/weekly`

@@ -8,6 +8,7 @@ const Api = axios.create({
   baseURL: config.server,
   timeout: 10000,
   params: {},
+  headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
 });
 
 // 요청 인터셉터
