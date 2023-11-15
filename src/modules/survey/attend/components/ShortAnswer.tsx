@@ -25,6 +25,7 @@ function ShortAnswer({
   onAnswerChange,
 }: ShortAnswerProps) {
   const [answer, setAnswer] = useState<string>('');
+  const [isOverLimit, setIsOverLimit] = useState<boolean>(false);
 
   /**
    * 사용자의 입력에 따라 텍스트 상태를 업데이트하는 함수입니다.
@@ -35,8 +36,16 @@ function ShortAnswer({
    */
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    setAnswer(newValue);
-    onAnswerChange(newValue);
+
+    // setAnswer(newValue);
+    // onAnswerChange(newValue);
+    if (newValue.length <= 50) {
+      setAnswer(newValue);
+      onAnswerChange(newValue);
+      setIsOverLimit(false);
+    } else {
+      setIsOverLimit(true);
+    }
   };
 
   /**
@@ -102,7 +111,9 @@ function ShortAnswer({
           fullWidth
           value={answer}
           onChange={handleTextChange}
-          placeholder="단답 답변 입력"
+          placeholder="단답 답변 입력(최대 50자)"
+          error={isOverLimit}
+          helperText={isOverLimit ? '답변은 50자를 초과할 수 없습니다.' : ''}
         />
       </CardContent>
     </Card>
