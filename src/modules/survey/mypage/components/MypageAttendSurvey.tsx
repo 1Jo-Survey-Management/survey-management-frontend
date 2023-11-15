@@ -7,6 +7,7 @@
  * @author 박창우
  */
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 
 import {
@@ -107,6 +108,7 @@ function Mypage() {
   const [state, setState] = useState('전체');
 
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (event: SelectChangeEvent) => {
     setState(event.target.value);
@@ -465,7 +467,15 @@ function Mypage() {
 
             {selectedCard &&
               (selectedCard.surveyStatusNo === 2 ||
-                selectedCard.surveyStatusNo === 3) && <Button>통계보기</Button>}
+                selectedCard.surveyStatusNo === 3) && (
+                <Button
+                  onClick={() =>
+                    navigate(`/survey/statistics/${selectedCard?.surveyNo}`)
+                  }
+                >
+                  통계보기
+                </Button>
+              )}
 
             <Button onClick={closeCardModal}>닫기</Button>
           </div>

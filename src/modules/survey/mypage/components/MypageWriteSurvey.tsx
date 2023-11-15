@@ -7,6 +7,7 @@
  * @author 박창우
  */
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 
 import {
@@ -27,7 +28,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
-import { useNavigate } from 'react-router-dom';
+
 import Swal from 'sweetalert2';
 import axios from '../../../login/components/customApi';
 
@@ -559,7 +560,15 @@ function Mypage() {
 
             {selectedCard &&
               (selectedCard.surveyStatusNo === 2 ||
-                selectedCard.surveyStatusNo === 3) && <Button>통계보기</Button>}
+                selectedCard.surveyStatusNo === 3) && (
+                <Button
+                  onClick={() =>
+                    naviagte(`/survey/statistics/${selectedCard?.surveyNo}`)
+                  }
+                >
+                  통계보기
+                </Button>
+              )}
 
             <Button onClick={closeCardModal}>닫기</Button>
           </div>
