@@ -34,7 +34,7 @@ function App() {
           <Route path="/login/LoginDisplay" element={<LoginDisplay />} />
           <Route path="/survey/statistics" element={<StatisticsPage />} />
           <Route
-            path="/survey/statistics/:surveyNo"
+            path="/survey/statistics/:surveyNo/*"
             element={<StatisticsPage />}
           />
           <Route path="/survey/main" element={<Main />} />

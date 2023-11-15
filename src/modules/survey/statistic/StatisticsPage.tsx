@@ -92,7 +92,6 @@ export default function StatisticsPage() {
   const [allItems, setAllItems] = useState<Record<string, Selection[]>>({});
   const params = useParams();
   const statSurveyNo = params.surveyNo;
-
   const navigate = useNavigate();
 
   const surveyBranch = (data: Selection[]): Record<string, Selection[]> => {
