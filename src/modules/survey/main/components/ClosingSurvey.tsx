@@ -171,7 +171,7 @@ function ClosingSurvey() {
                           width: '150px',
                           height: '160px',
 
-                          borderRadius: 5,
+                          borderRadius: 2,
                           backgroundColor: '#F2F2F2',
                           boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                         }}
@@ -217,7 +217,7 @@ function ClosingSurvey() {
 
                             <Chip
                               label={card.surveyStatusName}
-                              variant="filled"
+                              variant="outlined"
                               sx={{
                                 width: '40px',
                                 height: '20px',
@@ -227,8 +227,8 @@ function ClosingSurvey() {
                                   padding: 0,
                                 },
                                 backgroundColor: '#FFFDF8',
-                                boxShadow:
-                                  'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
+                                // boxShadow:
+                                //   'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                                 color: getChipColor(card.surveyStatusName),
                               }}
                               style={textStyle}
