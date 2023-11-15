@@ -46,6 +46,8 @@ interface CardData {
   writer: string;
 }
 
+const MAIN_PAGE = '/survey/main';
+
 /**
  * 설문 상태 번호에 따라 상태 텍스트를 반환합니다.
  *
@@ -144,6 +146,7 @@ function Mypage() {
           icon: 'success',
           title: '설문 게시가 완료되었습니다!',
         });
+        naviagte(MAIN_PAGE);
       } else {
         setOpenModal(false);
 
@@ -182,7 +185,6 @@ function Mypage() {
         let filtered = cardData.filter(
           (card) => card.userNo.toString() === loggedInUserNo
         );
-        console.log(`axios의 filtered: ${JSON.stringify(filtered)}`);
 
         if (state !== '전체') {
           const filterStatus = parseInt(state, 10);
@@ -270,14 +272,16 @@ function Mypage() {
           surveyStatusNo: selectedCard.surveyStatusNo,
           surveyNo: selectedCard.surveyNo,
         };
-        console.log('mySurveyDTO: ', mySurveyDTO);
         axios
           .put(
             `${process.env.REACT_APP_BASE_URL}/api/my-surveys/update-write-surveys`,
             mySurveyDTO
           )
           .then(() => {
-            console.log('설문이 삭제되었습니다.');
+            Swal.fire({
+              icon: 'success',
+              title: '설문이 삭제 완료되었습니다!',
+            });
 
             closeCardModal();
 
@@ -289,7 +293,6 @@ function Mypage() {
       }
     }
   };
-  console.log(`필터된 데이터: ${JSON.stringify(filteredData)}`);
 
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
@@ -376,7 +379,7 @@ function Mypage() {
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'flex-start',
-          gap: { xs: 2, sm: 4, md: 10.5 }, // 화면 크기에 따라 간격 조정
+          gap: { xs: 2, sm: 4, md: 10.5 },
           height: '100%',
         }}
       >

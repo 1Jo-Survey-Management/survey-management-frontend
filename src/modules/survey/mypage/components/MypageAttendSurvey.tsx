@@ -117,21 +117,15 @@ function Mypage() {
    */
   const fetchCardData = () => {
     const loggedInUserNo = localStorage.getItem('userNo');
-    console.log(`로그인된 유저의 userNo: ${loggedInUserNo}`);
 
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/api/my-surveys/attend-surveys`)
       .then((response) => {
         const cardData: CardData[] = response.data.content || [];
 
-        console.log(
-          `내가 참여한 설문 카드 데이터 배열: ${JSON.stringify(cardData)}`
-        );
-
         let filtered = cardData.filter(
           (card) => card.userNo.toString() === loggedInUserNo
         );
-        console.log(`axios의 filtered: ${JSON.stringify(filtered)}`);
         if (state !== '전체') {
           const filterStatus = parseInt(state, 10);
           filtered = cardData.filter(
@@ -201,37 +195,6 @@ function Mypage() {
     setSelectedCard(null);
     setOpenModal(false);
   };
-
-  /**
-   * 사용자가 설문 삭제 버튼을 클릭했을 때 호출되어, 설문을 삭제합니다.
-   */
-  const handleDeleteClick = () => {
-    if (selectedCard) {
-      if (window.confirm('작성 중인 설문을 삭제하시겠습니까?')) {
-        const mySurveyDTO = {
-          surveyStatusNo: selectedCard.surveyStatusNo,
-          surveyNo: selectedCard.surveyNo,
-        };
-        console.log('mySurveyDTO: ', mySurveyDTO);
-        axios
-          .put(
-            `${process.env.REACT_APP_BASE_URL}/api/my-surveys/update-write-surveys`,
-            mySurveyDTO
-          )
-          .then(() => {
-            console.log('설문이 삭제되었습니다.');
-
-            closeCardModal();
-
-            fetchCardData();
-          })
-          .catch((error) => {
-            console.error('설문 삭제 중 오류 발생:', error);
-          });
-      }
-    }
-  };
-  console.log(`필터된 데이터: ${JSON.stringify(filteredData)}`);
 
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
@@ -496,7 +459,6 @@ function Mypage() {
             {selectedCard && selectedCard.surveyStatusNo === 1 && (
               <>
                 <Button>수정하기</Button>
-                <Button onClick={handleDeleteClick}>삭제하기</Button>
                 <Button>게시하기</Button>
               </>
             )}

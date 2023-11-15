@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * 사용자 정보 수정 페이지를 위한 컴포넌트입니다. 사용자는 자신의 프로필 이미지와 닉네임을 수정할 수 있습니다.
  *
@@ -16,6 +17,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { AxiosError } from 'axios';
+import Swal from 'sweetalert2';
 import axios from '../../../login/components/customApi';
 
 function MypageUserModify() {
@@ -37,9 +39,6 @@ function MypageUserModify() {
     userImage: '',
   });
 
-  console.log(`닉네임 체크 여부: ${nicknameCheckResult}`);
-  console.log(`isNicknameEmpty: ${isNicknameEmpty}`);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,11 +47,9 @@ function MypageUserModify() {
         const response = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/api/users/user-info`
         );
-        console.log(`서버 응답 확인: ${response.data}`); // 서버 응답 확인
 
         if (response.status === 200) {
           const { userNickname, userImage, userNo } = response.data;
-          console.log({ userNickname, userImage, userNo }); // 상태 설정 데이터 확인
 
           const imageURL = 'http://localhost:8080/api/users/image';
           setUserData({ userNickname, userImage, userNo });
@@ -130,8 +127,10 @@ function MypageUserModify() {
           setImagePreview(imageURL);
 
           console.log('이미지 업로드 성공');
-          alert('이미지가 성공적으로 수정되었습니다.');
-
+          Swal.fire({
+            icon: 'success',
+            title: '이미지가 성공적으로 수정되었습니다!',
+          });
           setSelectedFile(null);
         } else {
           console.error('이미지 업로드 실패');
@@ -152,7 +151,6 @@ function MypageUserModify() {
     setNickname(value);
     setIsNicknameEmpty(value.trim() === '');
     setIsNicknameChecked(false);
-    console.log(`nickname: ${value}`);
   };
 
   /**
@@ -211,8 +209,13 @@ function MypageUserModify() {
 
         if (nicknameResponse.data.success) {
           console.log('닉네임 수정 성공');
-          alert('닉네임이 성공적으로 수정되었습니다.');
+          Swal.fire({
+            icon: 'success',
+            title: '닉네임이 성공적으로 수정되었습니다!',
+          });
           setUserData({ ...userData, userNickname: nickname });
+          localStorage.setItem('userNickname', nickname);
+
           setNickname('');
         } else {
           console.error('닉네임 수정 실패');
