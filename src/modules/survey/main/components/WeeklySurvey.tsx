@@ -105,6 +105,8 @@ function WeeklySurvey() {
       } catch (error) {
         console.error('Error fetching data:', error);
       }
+
+      console.log('공개 여부 : ' + selectedCard?.openStatusName);
     };
 
     fetchData();
@@ -370,9 +372,24 @@ function WeeklySurvey() {
           }}
         >
           <Box>
-            {/* 닫기 아이콘 */}
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ClearTwoToneIcon onClick={handleIconClick} />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Chip
+                key={'0'}
+                label={selectedCard?.openStatusName}
+                size="small"
+                style={textStyle}
+                sx={{
+                  fontSize: 16,
+                  marginRight: 1,
+                  height: '35px',
+                  backgroundColor: tagColor('0'),
+                  opacity: 0.7,
+                }}
+              />
+              {/* 닫기 아이콘 */}
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <ClearTwoToneIcon onClick={handleIconClick} />
+              </Box>
             </Box>
 
             {/* 설문 조사 타이틀 */}
@@ -483,11 +500,35 @@ function WeeklySurvey() {
                   본인이 작성한 설문에는 참여할 수 없습니다.
                 </Typography>
               )}
+              {selectedCard?.openStatusName === '비공개' && (
+                <Typography
+                  variant="body2"
+                  style={{ color: 'red', marginBottom: '8px' }}
+                  fontSize="12px"
+                >
+                  해당 설문은 비공개입니다.
+                </Typography>
+              )}
+              {numUser() === null && (
+                <Typography
+                  variant="body2"
+                  style={{ color: 'red', marginBottom: '8px' }}
+                  fontSize="12px"
+                >
+                  비회원은 로그인해주세요!
+                </Typography>
+              )}
             </Box>
             {/* 결과보기, 참여하기 버튼 */}
             <Button
               onClick={() =>
                 navigate(`/survey/statistics/${selectedCard?.surveyNo}`)
+              }
+              disabled={
+                !selectedCard?.openStatusName ||
+                selectedCard?.openStatusName === '비공개' ||
+                (selectedCard?.openStatusName === '회원공개' &&
+                  numUser() === null)
               }
               sx={{
                 width: '100%',
@@ -508,7 +549,8 @@ function WeeklySurvey() {
               disabled={
                 !selectedCard?.attendCheckList ||
                 selectedCard.attendCheckList.some((item) => item === false) ||
-                selectedCard?.userNo === numUser()
+                selectedCard?.userNo === numUser() ||
+                numUser() === null
               }
               sx={{
                 width: '100%',
