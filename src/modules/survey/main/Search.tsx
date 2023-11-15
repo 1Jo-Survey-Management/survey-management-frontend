@@ -20,7 +20,7 @@ import {
   Modal,
   Fade,
 } from '@mui/material';
-import GroupsIcon from '@mui/icons-material/Groups';
+import FaceIcon from '@mui/icons-material/Face';
 import Floating from './components/Floating';
 
 type CardData = {
@@ -36,7 +36,7 @@ type CardData = {
   attendUserNo: Array<number>;
   surveyStatusName: string;
   openStatusName: string;
-  tag: Array<string>;
+  tagName: string[];
   surveyAttendCount: number;
   isDeleted: boolean;
   attendCheckList: boolean[];
@@ -81,7 +81,7 @@ function SurveySearch() {
         const response = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/api/surveys/surveyall?page=${page}`
         );
-        console.log('전체: ', response.data);
+        console.log('전체: ', response);
 
         if (response.data.length === 0) {
           setHasMore(false);
@@ -162,7 +162,7 @@ function SurveySearch() {
       const includesSearchTerm =
         card.surveyTitle.includes(searchTerm) ||
         card.userNickName.includes(searchTerm) ||
-        card.tag.includes(searchTerm);
+        card.tagName.includes(searchTerm);
       const matchesState =
         selectedState === '전체(모든 카드)' ||
         card.surveyStatusName === selectedState;
@@ -408,12 +408,9 @@ function SurveySearch() {
                       }}
                       style={textStyle}
                       icon={
-                        <GroupsIcon
+                        <FaceIcon
                           sx={{
                             fontSize: '15px',
-
-                            width: '18px',
-                            height: '18px',
                           }}
                         />
                       }
@@ -445,25 +442,13 @@ function SurveySearch() {
                       alignItems: 'center',
                       fontSize: 12,
                       color: 'text.secondary',
-                      marginBottom: '10px',
+                      marginBottom: '5px',
                       fontWeight: 600,
                     }}
                   >
                     {card.surveyClosingAt}
                   </div>
-                  <Typography
-                    variant="h5"
-                    component="div"
-                    sx={{
-                      fontSize: 18,
-                      fontWeight: 600,
-                      marginBottom: '8px',
-                      cursor: 'pointer',
-                      fontStyle: textStyle,
-                    }}
-                  >
-                    {/* {card.surveyNo} */}
-                  </Typography>
+
                   <Typography
                     variant="h5"
                     component="div"
@@ -494,8 +479,8 @@ function SurveySearch() {
                     }}
                   />
                   {/* 태그 등 카드에 관한 내용 표시 */}
-                  <Stack direction="row" spacing={1} style={{}}>
-                    {card.tag.map((tag) => (
+                  <Stack direction="row" spacing={1}>
+                    {card.tagName.map((tag) => (
                       <Chip
                         key={tag}
                         label={tag}
@@ -554,7 +539,7 @@ function SurveySearch() {
               작성자: {selectedCard ? selectedCard.userNickName : ''}
             </p>
             <p style={textStyle}>
-              태그: {selectedCard ? selectedCard.tag : ''}
+              태그: {selectedCard ? selectedCard.tagName : ''}
             </p>
             <p style={textStyle}>
               참석자 수: {selectedCard ? selectedCard.surveyAttendCount : ''}
@@ -579,7 +564,9 @@ function SurveySearch() {
               </Button>
 
               <Button
-                onClick={() => navigate('/survey/search')}
+                onClick={() =>
+                  navigate(`/survey/attend/${selectedCard?.surveyNo}`)
+                }
                 disabled={
                   selectedCard?.surveyStatusName === '마감' ||
                   !selectedCard?.attendCheckList ||

@@ -1,7 +1,8 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import Floating from './components/Floating';
 import ClosingSurvey from './components/ClosingSurvey';
 import RecentSurvey from './components/RecentSurvey';
@@ -34,10 +35,11 @@ function Main() {
   };
 
   return (
+    // eslint-disable-next-line react/react-in-jsx-scope
     <Container maxWidth="md">
       <h3 style={textStyle}>인기 설문🔥</h3>
       <WeeklySurvey />
-      <div style={arrowStyle}></div>
+      <div style={arrowStyle} />
 
       <Box sx={containerStyle}>
         <h3 style={textStyle}>최근 등록된 설문📝</h3>
@@ -47,10 +49,10 @@ function Main() {
       </Box>
 
       <RecentSurvey />
-      <div style={arrowStyle}></div>
+      <div style={arrowStyle} />
       <h3 style={textStyle}>최근 마감된 설문⌛</h3>
       <ClosingSurvey />
-      <div style={arrowStyle}></div>
+      <div style={arrowStyle} />
       <Floating />
     </Container>
   );

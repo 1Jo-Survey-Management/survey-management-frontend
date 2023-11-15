@@ -119,11 +119,6 @@ export default function StatisticsPage() {
         )
 
         .then((response) => {
-          console.log(
-            '통계보기 데이터들 : ' +
-              JSON.stringify(response.data.content, null, 2)
-          );
-
           setSelectStat(response.data.content);
           setTotalSelectionCount(response.data.content[0].totalAttend);
           setSurveyTitle(response.data.content[0].surveyTitle);
