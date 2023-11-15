@@ -5,7 +5,6 @@ import Select from '@mui/material/Select';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
-import axios from 'axios';
 import '../../../global.css';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import TextField from '@mui/material/TextField';
@@ -21,6 +20,7 @@ import {
   Fade,
 } from '@mui/material';
 import FaceIcon from '@mui/icons-material/Face';
+import axios from '../../login/components/customApi';
 import Floating from './components/Floating';
 
 type CardData = {

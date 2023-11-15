@@ -77,7 +77,9 @@ function WeeklySurvey() {
         const weeklyResponse = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/api/surveys/weekly`
         );
-        console.log(`weekly 데이터 확인 : ${weeklyResponse.data}`);
+        console.log(
+          `weekly 데이터 확인 : ${JSON.stringify(weeklyResponse.data)}`
+        );
 
         if (weeklyResponse.data.length > 0) {
           // weekly 데이터가 존재하면 그 데이터를 사용

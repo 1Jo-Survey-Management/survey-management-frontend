@@ -8,8 +8,9 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Stack } from '@mui/material';
 import { AnimatePresence, Variants, motion } from 'framer-motion';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
+import Swal from 'sweetalert2';
 import axios from '../../../login/components/customApi';
 import AttendSingleChoice from '../components/AttendSingleChoice';
 import AttendSingleMoveChoice from '../components/AttendSingleMoveChoice';
@@ -32,8 +33,11 @@ interface UserResponse {
   surveySubjectiveAnswer: string | null;
   endOfSurvey?: boolean;
 }
+const MAIN_PAGE = '/survey/main';
 
 function AttendSurvey() {
+  const navigate = useNavigate();
+
   const [closingTime, setClosingTime] = useState<Date | null>(null);
   const { surveyNo } = useParams<{ surveyNo: string }>();
 
@@ -497,12 +501,16 @@ function AttendSurvey() {
       );
 
       if (response.data.success) {
-        alert('설문 응답이 성공적으로 전송되었습니다.');
+        Swal.fire({
+          icon: 'success',
+          title: '설문 응답이 완료되었습니다!',
+        });
       } else if (response.data.errorCode === 'ERROR_SAVING_SURVEY') {
         alert('설문 응답 저장 중 오류가 발생했습니다.');
       } else {
         alert('오류가 발생했습니다. 다시 시도해주세요.');
       }
+      navigate(MAIN_PAGE);
     } catch (error) {
       console.error('Error submitting data:', error);
       alert('서버와의 통신 중 오류가 발생했습니다. 다시 시도해주세요.');
