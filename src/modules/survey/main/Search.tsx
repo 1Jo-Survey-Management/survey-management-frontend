@@ -5,7 +5,6 @@ import Select from '@mui/material/Select';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
-import axios from 'axios';
 import '../../../global.css';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import TextField from '@mui/material/TextField';
@@ -21,6 +20,7 @@ import {
   Fade,
 } from '@mui/material';
 import FaceIcon from '@mui/icons-material/Face';
+import axios from '../../login/components/customApi';
 import Floating from './components/Floating';
 
 type CardData = {
@@ -53,7 +53,7 @@ function SurveySearch() {
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
       case '진행':
-        return '#3D882B';
+        return '#000000';
       case '작성':
         return 'secondary';
       default:
@@ -225,7 +225,10 @@ function SurveySearch() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
+    <Container
+      maxWidth="md"
+      sx={{ paddingLeft: '5px', paddingRight: '5px', marginBottom: '20px' }}
+    >
       <Typography
         component="div"
         sx={{
@@ -358,6 +361,7 @@ function SurveySearch() {
             justifyContent: 'flex-start',
             gap: '8px',
             height: '100%',
+            marginBottom: '5px',
           }}
         >
           {filteredData.map((card) => (
@@ -375,8 +379,8 @@ function SurveySearch() {
                 sx={{
                   width: '150px',
                   height: '160px',
-                  borderRadius: 5,
-                  backgroundColor: '#D2E8B6',
+                  borderRadius: 2,
+                  backgroundColor: '#F9F9F9',
                   boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                 }}
                 style={textStyle}
@@ -403,7 +407,7 @@ function SurveySearch() {
                         height: '20px',
                         fontWeight: 600,
                         justifyContent: 'space-between',
-                        backgroundColor: '#FFFDF8',
+                        backgroundColor: '#F9F9F9',
                         boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                       }}
                       style={textStyle}
@@ -418,7 +422,7 @@ function SurveySearch() {
 
                     <Chip
                       label={card.surveyStatusName}
-                      variant="filled"
+                      variant="outlined"
                       sx={{
                         width: '40px',
                         height: '20px',
@@ -427,8 +431,8 @@ function SurveySearch() {
                         '& .MuiChip-label': {
                           padding: 0,
                         },
-                        backgroundColor: '#FFFDF8',
-                        boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
+                        backgroundColor: '#F9F9F9',
+                        // boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                         color: getChipColor(card.surveyStatusName),
                       }}
                       style={textStyle}
@@ -491,7 +495,7 @@ function SurveySearch() {
                           marginRight: 1,
                           height: '20px',
                           backgroundColor: tagColor(tag),
-                          opacity: 0.7,
+                          // opacity: 0.7,
                         }}
                       />
                     ))}

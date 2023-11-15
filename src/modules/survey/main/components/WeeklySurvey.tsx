@@ -62,7 +62,7 @@ function WeeklySurvey() {
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
       case '진행':
-        return '#3D882B';
+        return '#000000';
       case '작성':
         return 'secondary';
       default:
@@ -77,18 +77,13 @@ function WeeklySurvey() {
         const weeklyResponse = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/api/surveys/weekly`
         );
-        console.log(`weekly 데이터 확인 : ${weeklyResponse.data}`);
 
         if (weeklyResponse.data.length > 0) {
           // weekly 데이터가 존재하면 그 데이터를 사용
           setCardList(weeklyResponse.data);
           setIsDataAvailable(true);
         } else {
-          // weekly 데이터가 없으면 recent 데이터
-          const recentResponse = await axios.get(
-            `${process.env.REACT_APP_BASE_URL}/api/surveys/recent`
-          );
-          setCardList(recentResponse.data);
+          setIsDataAvailable(false);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -138,30 +133,30 @@ function WeeklySurvey() {
 
   const swiperParams: SwiperOptions = {
     slidesPerView: 'auto',
-    spaceBetween: 5,
+    spaceBetween: 3,
     breakpoints: {
       920: {
         slidesPerView: 5,
-        spaceBetween: 5,
+        spaceBetween: 3,
       },
       750: {
         slidesPerView: 4,
-        spaceBetween: 5,
+        spaceBetween: 3,
       },
 
       540: {
         slidesPerView: 3,
-        spaceBetween: 5,
+        spaceBetween: 3,
       },
 
       500: {
         slidesPerView: 2,
-        spaceBetween: 5,
+        spaceBetween: 3,
       },
 
       0: {
         slidesPerView: 1.8,
-        spaceBetween: 5,
+        spaceBetween: 3,
       },
     },
   };
@@ -202,8 +197,8 @@ function WeeklySurvey() {
                           width: '150px',
                           height: '160px',
 
-                          borderRadius: 5,
-                          backgroundColor: '#B8DDA6',
+                          borderRadius: 2,
+                          backgroundColor: '#FBFBFB',
                           boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                         }}
                         style={textStyle}
@@ -231,7 +226,7 @@ function WeeklySurvey() {
                                 height: '20px',
                                 fontWeight: 600,
                                 justifyContent: 'space-between',
-                                backgroundColor: '#FFFDF8',
+                                backgroundColor: '#F9F9F9',
                                 boxShadow:
                                   'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                               }}
@@ -247,7 +242,7 @@ function WeeklySurvey() {
 
                             <Chip
                               label={card.surveyStatusName}
-                              variant="filled"
+                              variant="outlined"
                               sx={{
                                 width: '40px',
                                 height: '20px',
@@ -256,9 +251,9 @@ function WeeklySurvey() {
                                 '& .MuiChip-label': {
                                   padding: 0,
                                 },
-                                backgroundColor: '#FFFDF8',
-                                boxShadow:
-                                  'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
+                                backgroundColor: '#F9F9F9',
+                                // boxShadow:
+                                //   'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                                 color: getChipColor(card.surveyStatusName),
                               }}
                               style={textStyle}
@@ -313,7 +308,7 @@ function WeeklySurvey() {
                                   marginRight: 1,
                                   height: '20px',
                                   backgroundColor: tagColor(tag),
-                                  opacity: 0.7,
+                                  // opacity: 0.7,
                                 }}
                               />
                             ))}
