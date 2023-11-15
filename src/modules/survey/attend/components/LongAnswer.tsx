@@ -25,6 +25,7 @@ function LongAnswer({
   onAnswerChange,
 }: LongAnswerProps) {
   const [answer, setAnswer] = useState<string>('');
+  const [isOverLimit, setIsOverLimit] = useState<boolean>(false);
 
   /**
    * 사용자의 입력에 따라 텍스트 상태를 업데이트하는 함수입니다.
@@ -35,8 +36,15 @@ function LongAnswer({
    */
   const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = event.target.value;
-    setAnswer(newValue);
-    onAnswerChange(newValue);
+    // setAnswer(newValue);
+    // onAnswerChange(newValue);
+    if (newValue.length <= 1000) {
+      setAnswer(newValue);
+      onAnswerChange(newValue);
+      setIsOverLimit(false);
+    } else {
+      setIsOverLimit(true);
+    }
   };
 
   /**
@@ -105,6 +113,9 @@ function LongAnswer({
           rows={10}
           value={answer}
           onChange={handleTextChange}
+          placeholder="장문 답변 입력(최대 1000자)"
+          error={isOverLimit}
+          helperText={isOverLimit ? '답변은 1000자를 초과할 수 없습니다.' : ''}
         />
       </CardContent>
     </Card>

@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@mui/material';
+import { Button, FormHelperText } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -32,6 +32,7 @@ function MypageUserModify() {
 
   const [isNicknameEmpty, setIsNicknameEmpty] = useState(true);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+  const [isOverLimit, setIsOverLimit] = useState(false);
 
   const [userData, setUserData] = useState({
     userNo: null,
@@ -148,9 +149,15 @@ function MypageUserModify() {
    */
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setNickname(value);
-    setIsNicknameEmpty(value.trim() === '');
-    setIsNicknameChecked(false);
+
+    if (value.length <= 16) {
+      setNickname(value);
+      setIsNicknameEmpty(value.trim() === '');
+      setIsNicknameChecked(false);
+      setIsOverLimit(false);
+    } else {
+      setIsOverLimit(true);
+    }
   };
 
   /**
@@ -361,6 +368,11 @@ function MypageUserModify() {
                   height: '55px',
                 }}
               />
+              {isOverLimit && (
+                <FormHelperText sx={{ color: 'red' }}>
+                  닉네임은 16자를 초과할 수 없습니다.
+                </FormHelperText>
+              )}
             </FormControl>
           </div>
         </div>
