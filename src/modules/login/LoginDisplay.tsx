@@ -88,50 +88,6 @@ function LoginDisplay() {
 
     const redirectUri = '/login/oauth2/code/naver';
 
-    // // 자동 로그인 로직, 제거 or 보수 예정
-    // if (localStorageAccessToken != null && !accessCode) {
-    //   axios.defaults.headers.common.Authorization = `Bearer ${localStorageAccessToken}`;
-
-    //   // 액세스 토큰이 유효한지 api를 쏴서 확인하면서 로그인 처리
-    //   axios
-    //     .post('/login/user')
-    //     .then((response) => {
-    //       // 서버로부터의 응답 처리
-    //       const respData = response.data;
-    //       const responseCheck = response;
-    //       const responseUserNo = responseCheck.data.content.userNo;
-    //       const responseAccessToken = responseCheck.data.content.accessToken;
-    //       const responseImage = responseCheck.data.content.userImage;
-    //       const responseNickName = responseCheck.data.content.userNickname;
-    //       const responseExpiresIn = responseCheck.data.content.expiresIn;
-
-    //       localStorage.setItem('userNo', responseUserNo);
-    //       localStorage.setItem('userNickname', responseNickName);
-    //       localStorage.setItem('userImage', responseImage);
-    //       localStorage.setItem('accessToken', responseAccessToken);
-    //       localStorage.setItem('expiresIn', responseExpiresIn);
-
-    //       if (respData === '') {
-    //         alert('(/login/user)로그인이 필요합니다!');
-    //         console.error('API 응답 데이터 없음!');
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       alert('(/login/user)로그인이 필요합니다!');
-    //       console.error(error);
-    //       localStorage.removeItem('userNo');
-    //       localStorage.removeItem('userNickname');
-    //       localStorage.removeItem('userImage');
-    //       localStorage.removeItem('accessToken');
-    //       localStorage.removeItem('expiresIn');
-    //       localStorage.removeItem('refreshToken');
-    //       console.error('API 요청 실패!');
-    //       navigate('/');
-    //     });
-
-    //   navigate('/survey/main');
-    // }
-
     // Authorization code를 받으면 백 서버로 요청을 보내준다.
     if (accessCode) {
       axios
