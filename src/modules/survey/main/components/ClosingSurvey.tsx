@@ -17,7 +17,6 @@ import {
 } from '@mui/material';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import axios from '../../../login/components/customApi';
-
 import '../../../../global.css';
 
 function ClosingSurvey() {
@@ -93,6 +92,15 @@ function ClosingSurvey() {
       default:
         return '#D7D3D3';
     }
+  };
+
+  const numUser = () => {
+    const loginUserNo = localStorage.getItem('userNo');
+    const numUserNo =
+      loginUserNo !== null && loginUserNo !== undefined
+        ? Number(loginUserNo)
+        : null;
+    return numUserNo;
   };
 
   const openCardModal = (card: CardData) => {
@@ -341,9 +349,24 @@ function ClosingSurvey() {
               }}
             >
               <Box>
-                {/* 닫기 아이콘 */}
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <ClearTwoToneIcon onClick={handleIconClick} />
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Chip
+                    key="0"
+                    label={selectedCard?.openStatusName}
+                    size="small"
+                    style={textStyle}
+                    sx={{
+                      fontSize: 16,
+                      marginRight: 1,
+                      height: '35px',
+                      backgroundColor: tagColor('0'),
+                      opacity: 0.7,
+                    }}
+                  />
+                  {/* 닫기 아이콘 */}
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <ClearTwoToneIcon onClick={handleIconClick} />
+                  </Box>
                 </Box>
 
                 {/* 설문 조사 타이틀 */}
@@ -433,10 +456,39 @@ function ClosingSurvey() {
                   {selectedCard ? selectedCard.surveyDiscription : ''}
                 </Typography>
 
+                <Box>
+                  {/* 결과보기 제한 조건 */}
+                  {selectedCard?.openStatusName === '비공개' && (
+                    <Typography
+                      variant="body2"
+                      style={{ color: 'red', marginBottom: '8px' }}
+                      fontSize="12px"
+                    >
+                      해당 설문은 비공개입니다.
+                    </Typography>
+                  )}
+                  {numUser() === null && (
+                    <Typography
+                      variant="body2"
+                      style={{ color: 'red', marginBottom: '8px' }}
+                      fontSize="12px"
+                    >
+                      비회원은 로그인해주세요!
+                    </Typography>
+                  )}
+                </Box>
                 {/* 결과보기, 참여하기 버튼 */}
                 <Button
                   onClick={() =>
                     navigate(`/survey/statistics/${selectedCard?.surveyNo}`)
+                  }
+                  disabled={
+                    !selectedCard?.openStatusName ||
+                    (selectedCard?.openStatusName === '비공개' &&
+                      (numUser() === null ||
+                        numUser() !== selectedCard?.userNo)) ||
+                    (selectedCard?.openStatusName === '회원 공개' &&
+                      numUser() === null)
                   }
                   sx={{
                     width: '100%',
