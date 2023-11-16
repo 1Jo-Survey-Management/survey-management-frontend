@@ -14,6 +14,7 @@ import {
   Stack,
   Modal,
   Divider,
+  Alert,
 } from '@mui/material';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import axios from '../../../login/components/customApi';
@@ -85,13 +86,11 @@ function WeeklySurvey() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // weekly 데이터
         const weeklyResponse = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/api/surveys/weekly`
         );
 
         if (weeklyResponse.data.length > 0) {
-          // weekly 데이터가 존재하면 그 데이터를 사용
           setCardList(weeklyResponse.data);
           setIsDataAvailable(true);
         } else {
@@ -101,7 +100,7 @@ function WeeklySurvey() {
         console.error('Error fetching data:', error);
       }
 
-      console.log('공개 여부 : ' + selectedCard?.openStatusName);
+      console.log(`공개 여부 : ${selectedCard?.openStatusName}`);
     };
 
     fetchData();
@@ -118,7 +117,6 @@ function WeeklySurvey() {
       loginUserNo !== null && loginUserNo !== undefined
         ? Number(loginUserNo)
         : null;
-    // numUserNo를 사용하거나 처리하는 코드 추가
     return numUserNo;
   };
 
@@ -269,8 +267,6 @@ function WeeklySurvey() {
                                   padding: 0,
                                 },
                                 backgroundColor: '#F9F9F9',
-                                // boxShadow:
-                                //   'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                                 color: getChipColor(card.surveyStatusName),
                               }}
                               style={textStyle}
@@ -301,7 +297,7 @@ function WeeklySurvey() {
                               fontWeight: 600,
                               marginBottom: '8px',
                               cursor: 'pointer',
-                              maxHeight: '43px', // 원하는 높이 설정
+                              maxHeight: '43px',
                               overflow: 'hidden',
                               display: '-webkit-box',
                               WebkitLineClamp: 2,
@@ -325,7 +321,6 @@ function WeeklySurvey() {
                                   marginRight: 1,
                                   height: '20px',
                                   backgroundColor: tagColor(tag),
-                                  // opacity: 0.7,
                                 }}
                               />
                             ))}
@@ -369,7 +364,7 @@ function WeeklySurvey() {
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Chip
-                key={'0'}
+                key="0"
                 label={selectedCard?.openStatusName}
                 size="small"
                 style={textStyle}
@@ -381,6 +376,21 @@ function WeeklySurvey() {
                   opacity: 0.7,
                 }}
               />
+              {numUser() === selectedCard?.userNo && (
+                <Chip
+                  key="0"
+                  label="본인 작성"
+                  size="small"
+                  style={textStyle}
+                  sx={{
+                    fontSize: 16,
+                    marginRight: 1,
+                    height: '35px',
+                    backgroundColor: tagColor('0'),
+                    opacity: 0.7,
+                  }}
+                />
+              )}
               {/* 닫기 아이콘 */}
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <ClearTwoToneIcon onClick={handleIconClick} />
@@ -478,41 +488,42 @@ function WeeklySurvey() {
               {/* 참여하기 제한 조건 */}
               {selectedCard?.attendCheckList &&
                 selectedCard.attendCheckList.includes(false) && (
-                  <Typography
-                    variant="body2"
-                    style={{ color: 'red', marginBottom: '8px' }}
-                    fontSize="12px"
-                  >
-                    이미 참여한 설문에는 다시 참여할 수 없습니다.
-                  </Typography>
+                  <Alert severity="info">이미 참여한 설문입니다.</Alert>
                 )}
-              {selectedCard?.userNo === numUser() && (
-                <Typography
-                  variant="body2"
-                  style={{ color: 'red', marginBottom: '8px' }}
-                  fontSize="12px"
-                >
-                  본인이 작성한 설문에는 참여할 수 없습니다.
-                </Typography>
-              )}
-              {selectedCard?.openStatusName === '비공개' && (
-                <Typography
-                  variant="body2"
-                  style={{ color: 'red', marginBottom: '8px' }}
-                  fontSize="12px"
-                >
-                  해당 설문은 비공개입니다.
-                </Typography>
-              )}
-              {numUser() === null && (
-                <Typography
-                  variant="body2"
-                  style={{ color: 'red', marginBottom: '8px' }}
-                  fontSize="12px"
-                >
-                  비회원은 로그인해주세요!
-                </Typography>
-              )}
+
+              {selectedCard?.userNo === numUser() &&
+                selectedCard?.openStatusName === '전체 공개' && (
+                  <Alert severity="success">본인이 작성한 설문입니다.</Alert>
+                )}
+              {selectedCard?.userNo === numUser() &&
+                selectedCard?.openStatusName === '회원 공개' && (
+                  <Alert severity="success">본인이 작성한 설문입니다.</Alert>
+                )}
+
+              {selectedCard?.openStatusName === '비공개' &&
+                (numUser() !== selectedCard.userNo ? (
+                  <Alert severity="warning">
+                    설문 작성자만 볼 수 있습니다.
+                  </Alert>
+                ) : (
+                  <Alert severity="success">
+                    해당 비공개 설문의 작성자입니다.
+                  </Alert>
+                ))}
+
+              {selectedCard?.openStatusName === '회원 공개' &&
+                numUser() === null && (
+                  <Alert severity="error">
+                    설문 결과를 보시려면 로그인해주세요.
+                  </Alert>
+                )}
+
+              {numUser() === null &&
+                selectedCard?.openStatusName === '전체 공개' && (
+                  <Alert severity="error">
+                    설문 참여를 원하시면 로그인해주세요
+                  </Alert>
+                )}
             </Box>
             {/* 결과보기, 참여하기 버튼 */}
             <Button
@@ -521,21 +532,26 @@ function WeeklySurvey() {
               }
               disabled={
                 !selectedCard?.openStatusName ||
-                selectedCard?.openStatusName === '비공개' ||
-                (selectedCard?.openStatusName === '회원공개' &&
+                (selectedCard?.openStatusName === '비공개' &&
+                  (numUser() === null || numUser() !== selectedCard?.userNo)) ||
+                (selectedCard?.openStatusName === '회원 공개' &&
                   numUser() === null)
               }
               sx={{
                 width: '100%',
                 marginBottom: '8px',
-                backgroundColor: 'white',
+                backgroundColor: '#ebebeb',
                 '&:hover': {
-                  backgroundColor: 'lightgray',
+                  backgroundColor: 'gray',
+                  color: 'white',
+                  fontWeight: '900',
+                  fontSize: '15px',
                 },
                 color: 'black',
+                fontWeight: '600',
               }}
             >
-              결과보기
+              설문 결과보기
             </Button>
             <Button
               onClick={() =>
@@ -550,14 +566,18 @@ function WeeklySurvey() {
               sx={{
                 width: '100%',
                 marginBottom: '8px',
-                backgroundColor: 'white',
+                backgroundColor: '#ebebeb',
                 '&:hover': {
-                  backgroundColor: 'lightgray',
+                  backgroundColor: 'gray',
+                  color: 'white',
+                  fontWeight: '900',
+                  fontSize: '15px',
                 },
                 color: 'black',
+                fontWeight: '600',
               }}
             >
-              참여하기
+              설문 참여하기
             </Button>
           </Box>
         </div>

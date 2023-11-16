@@ -6,7 +6,13 @@
  * @author 박창우
  */
 import React, { useEffect, useState } from 'react';
-import { Button, Container, Stack } from '@mui/material';
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  Container,
+  Stack,
+} from '@mui/material';
 import { AnimatePresence, Variants, motion } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -37,7 +43,7 @@ const MAIN_PAGE = '/survey/main';
 
 function AttendSurvey() {
   const navigate = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(true);
   const [closingTime, setClosingTime] = useState<Date | null>(null);
   const { surveyNo } = useParams<{ surveyNo: string }>();
 
@@ -368,12 +374,14 @@ function AttendSurvey() {
    * @author 박창우
    */
   useEffect(() => {
-    console.log('useEffect running');
-    axios
-      .get<SurveyData>(
-        `${process.env.REACT_APP_BASE_URL}/api/for-attend/surveys/survey-data`
-      )
-      .then((response) => {
+    const fetchData = async () => {
+      setIsLoading(true); // 로딩 시작
+
+      try {
+        const response = await axios.get<SurveyData>(
+          `${process.env.REACT_APP_BASE_URL}/api/for-attend/surveys/survey-data`
+        );
+
         // surveyNo에 해당하는 데이터만 필터링합니다.
         const filteredData = response.data.content
           .filter((item) => item.surveyNo.toString() === surveyNo)
@@ -384,14 +392,20 @@ function AttendSurvey() {
           content: filteredData,
         });
 
+        console.log(`filteredData 배열 내용: ${JSON.stringify(filteredData)}`);
+
         if (response.data.success && filteredData.length > 0) {
           setSurveyTitle(filteredData[0].surveyTitle);
         }
-      })
-      .catch((error) => {
+        setIsLoading(false); // 로딩 완료
+      } catch (error) {
         console.error('Error fetching survey data:', error);
-      });
-  }, [surveyNo]); // surveyNo를 의존성 배열에 추가합니다.
+        setIsLoading(false); // 오류 발생 시 로딩 완료
+      }
+    };
+
+    fetchData();
+  }, [surveyNo]); // 의존성 배열에 surveyNo 추가
 
   useEffect(() => {
     if (surveyNo) {
@@ -517,6 +531,16 @@ function AttendSurvey() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <Backdrop
+        open={isLoading}
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
       <h1
