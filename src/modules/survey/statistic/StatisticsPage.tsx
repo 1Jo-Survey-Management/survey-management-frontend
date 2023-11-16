@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Card, CardContent, Typography, Button } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Backdrop,
+  CircularProgress,
+} from '@mui/material';
 import Divider from '@mui/material/Divider';
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
@@ -82,6 +90,7 @@ const textStyle = {
 };
 
 export default function StatisticsPage() {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectStat, setSelectStat] = useState<Selection[]>([]);
   const [totalSelectionCount, setTotalSelectionCount] = useState<number>();
   const [surveyTitle, setSurveyTitle] = useState<string>();
@@ -92,7 +101,6 @@ export default function StatisticsPage() {
   const [allItems, setAllItems] = useState<Record<string, Selection[]>>({});
   const params = useParams();
   const statSurveyNo = params.surveyNo;
-
   const navigate = useNavigate();
 
   const surveyBranch = (data: Selection[]): Record<string, Selection[]> => {
@@ -112,38 +120,27 @@ export default function StatisticsPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      await axios
+      setIsLoading(true);
 
-        .get(
+      try {
+        const response = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/api/survey/resultall?surveyno=${statSurveyNo}`
-        )
+        );
+        setSelectStat(response.data.content);
+        setTotalSelectionCount(response.data.content[0].totalAttend);
+        setSurveyTitle(response.data.content[0].surveyTitle);
+        setSurveyNo(response.data.content[0].surveyNo);
+        setSurveyPostAt(response.data.content[0].surveyPostAt);
 
-        .then((response) => {
-          setSelectStat(response.data.content);
-          setTotalSelectionCount(response.data.content[0].totalAttend);
-          setSurveyTitle(response.data.content[0].surveyTitle);
-          setSurveyNo(response.data.content[0].surveyNo);
-          setSurveyPostAt(response.data.content[0].surveyPostAt);
-          console.log(
-            `response 배열 값: ${JSON.stringify(response.data.content)}`
-          );
-          console.log(
-            `totalAttend 수: ${JSON.stringify(
-              response.data.content[0].totalAttend
-            )}`
-          );
-        })
-
-        .catch((error) => {
-          console.error('통계 보기 중 오류 발생:', error);
-        });
-      console.log(`surveyNo 통계쪽: ${statSurveyNo}`);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('통계 보기 중 오류 발생:', error);
+        setIsLoading(false);
+      }
     };
 
     fetchData();
-  }, []);
-
-  console.log(selectStat);
+  }, [statSurveyNo]);
 
   useEffect(() => {
     setAllItems(surveyBranch(selectStat));
@@ -155,6 +152,16 @@ export default function StatisticsPage() {
     });
   }, [selectStat]);
 
+  if (isLoading) {
+    return (
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
   return (
     <>
       <Box sx={styles.card}>

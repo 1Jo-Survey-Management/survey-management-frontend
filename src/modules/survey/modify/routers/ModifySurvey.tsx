@@ -91,9 +91,6 @@ function ModifySurvey() {
       `${process.env.REACT_APP_BASE_URL}/api/surveys/${surveyNo}`
     );
     if (response.status !== 200) {
-      /**
-       * FIXME: redirect mypage 내가 작성한 설문 페이지로 변경 예정
-       */
       navigate(MYPAGE_WRITE_PAGE);
     }
     return response.data.content;
@@ -153,9 +150,6 @@ function ModifySurvey() {
 
   useEffect(() => {
     if (surveyNo === undefined || Number.isNaN(Number(surveyNo))) {
-      /**
-       * FIXME: redirect mypage 내가 작성한 설문 페이지로 변경 예정
-       */
       navigate('/survey/mypage/write');
       return;
     }
@@ -172,9 +166,6 @@ function ModifySurvey() {
 
         setIsLoading(false);
       } catch (error) {
-        /**
-         * FIXME: redirect mypage 내가 작성한 설문 페이지로 변경 예정
-         */
         navigate('/survey/mypage/write');
       }
     };

@@ -582,7 +582,7 @@ function SurveySearch() {
               </Button>
               {selectedCard?.attendCheckList &&
                 selectedCard.attendCheckList.includes(false) &&
-                selectedCard?.surveyStatusName !== '마감' && ( // Adjusted condition check
+                selectedCard?.surveyStatusName !== '마감' && (
                   <Typography
                     variant="body2"
                     style={{ color: 'red' }}
@@ -592,7 +592,7 @@ function SurveySearch() {
                   </Typography>
                 )}
               {selectedCard?.userNo === numUser() &&
-                selectedCard?.surveyStatusName !== '마감' && ( // Adjusted condition check
+                selectedCard?.surveyStatusName !== '마감' && (
                   <Typography
                     variant="body2"
                     style={{ color: 'red' }}
@@ -601,7 +601,7 @@ function SurveySearch() {
                     본인이 작성한 설문에는 참여할 수 없습니다.
                   </Typography>
                 )}
-              {selectedCard?.surveyStatusName === '마감' && ( // Condition remains the same
+              {selectedCard?.surveyStatusName === '마감' && (
                 <Typography
                   variant="body2"
                   style={{ color: 'red' }}
