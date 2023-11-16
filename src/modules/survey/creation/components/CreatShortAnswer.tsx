@@ -21,6 +21,11 @@ const styles = {
   }),
 };
 
+const fontFamily = 'nanumsquare';
+const textStyle = css({
+  fontFamily,
+});
+
 /**
  * 주관식 단단형 문항을 만드는 컴포넌트 입니다.
  *
@@ -32,7 +37,11 @@ function CreateShortAnswer() {
   return (
     <Box css={styles.questionBox}>
       <Box css={styles.textBox} />
-      <Input disabled defaultValue="문항 답변 입력란" css={styles.inputBox} />
+      <Input
+        disabled
+        defaultValue="문항 답변 입력란"
+        css={[styles.inputBox, textStyle]}
+      />
     </Box>
   );
 }

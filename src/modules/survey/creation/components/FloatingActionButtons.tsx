@@ -20,6 +20,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { css } from '@emotion/react';
 import SurveyPreview from '../../preview/routers/SurveyPreview';
 import { FloatingActionButtonsProps } from '../types/SurveyTypes';
+import '../../../../global.css';
 
 const styles = {
   fabBox: css({
@@ -40,13 +41,16 @@ const styles = {
 
   appBar: css({
     position: 'relative',
+    paddingRight: 0,
   }),
 
   previewTitle: css({
     ml: 2,
     flex: 1,
+    color: '#000000',
   }),
 };
+const fontFamily = 'nanumsquare';
 
 const Transition = React.forwardRef(
   (
@@ -118,7 +122,12 @@ function FloatingActionButtons({
   return (
     <Box css={styles.fabBox}>
       <Fab
-        sx={{ bgcolor: '#8ECC7E' }}
+        sx={{
+          bgcolor: '#B4B4B4',
+          '&:hover': {
+            backgroundColor: '#6C6B6B', // Change this to the desired color on hover
+          },
+        }}
         aria-label="add"
         css={styles.fabStyles}
         onClick={scrollToTop}
@@ -126,7 +135,12 @@ function FloatingActionButtons({
         <ArrowDropUpIcon />
       </Fab>
       <Fab
-        sx={{ bgcolor: '#8ECC7E' }}
+        sx={{
+          bgcolor: '#B4B4B4',
+          '&:hover': {
+            backgroundColor: '#6C6B6B', // Change this to the desired color on hover
+          },
+        }}
         aria-label="add"
         css={styles.fabStyles}
         onClick={scrollToBottom}
@@ -134,7 +148,12 @@ function FloatingActionButtons({
         <ArrowDropDownIcon />
       </Fab>
       <Fab
-        sx={{ bgcolor: '#8ECC7E' }}
+        sx={{
+          bgcolor: '#B4B4B4',
+          '&:hover': {
+            backgroundColor: '#6C6B6B', // Change this to the desired color on hover
+          },
+        }}
         aria-label="add"
         css={styles.fabStyles}
         onClick={handleAddQuestion}
@@ -142,7 +161,12 @@ function FloatingActionButtons({
         <AddIcon />
       </Fab>
       <Fab
-        sx={{ bgcolor: '#8ECC7E' }}
+        sx={{
+          bgcolor: '#B4B4B4',
+          '&:hover': {
+            backgroundColor: '#6C6B6B', // Change this to the desired color on hover
+          },
+        }}
         aria-label="add"
         css={styles.fabStyles}
         onClick={handleOpenPreviewModal}
@@ -155,16 +179,21 @@ function FloatingActionButtons({
         open={isPreviewModalOpen}
         onClose={handleClosePreviewModal}
         TransitionComponent={Transition}
-        sx={{ bgcolor: '#8ECC7E' }}
+        sx={{ bgcolor: '#E4E4E4' }}
       >
         <AppBar css={styles.appBar}>
-          <Toolbar sx={{ bgcolor: '#8ECC7E' }}>
-            <Typography css={styles.previewTitle} variant="h6" component="div">
+          <Toolbar sx={{ bgcolor: '#E4E4E4' }}>
+            <Typography
+              css={styles.previewTitle}
+              fontStyle={fontFamily}
+              variant="h6"
+              component="div"
+            >
               미리보기
             </Typography>
             <IconButton
               edge="start"
-              sx={{ bgcolor: '#8ECC7E' }}
+              sx={{ bgcolor: '#E4E4E4' }}
               onClick={handleClosePreviewModal}
               aria-label="close"
             >

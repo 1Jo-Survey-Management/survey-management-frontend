@@ -106,6 +106,11 @@ const styles = {
   }),
 };
 
+const fontFamily = 'nanumsquare';
+const textStyle = css({
+  fontFamily,
+});
+
 /**
  * 설문조사 문항을 만드는 컴포넌트 입니다.
  *
@@ -260,7 +265,7 @@ function CreateQuestion({
         </Tooltip>
         <FormGroup>
           <Box css={styles.switchBox}>
-            <Typography css={styles.requiredText}>필수</Typography>
+            <Typography css={[styles.requiredText, textStyle]}>필수</Typography>
             <Switch
               defaultChecked
               onChange={() => handleRequiredSwitchChange(question)}
@@ -273,10 +278,10 @@ function CreateQuestion({
 
   const questionTitle = (
     <Box css={styles.questionTitleBox}>
-      <Typography css={styles.textStyle}>문항 제목</Typography>
+      <Typography css={[styles.textStyle, textStyle]}>문항 제목</Typography>
       <Input
         placeholder="문항 제목을 입력해주세요."
-        css={styles.questionInputBox}
+        css={[styles.questionInputBox, textStyle]}
         value={question.questionTitle}
         name="questionTitle"
         onChange={(event) => handelQuestionInputChange(event)}
@@ -286,10 +291,10 @@ function CreateQuestion({
 
   const questionDescription = (
     <Box css={styles.questionDescriptionBox}>
-      <Typography css={styles.textStyle}>문항 설명</Typography>
+      <Typography css={[styles.textStyle, textStyle]}>문항 설명</Typography>
       <Input
         placeholder="문항 설명을 입력해주세요."
-        css={styles.questionInputBox}
+        css={[styles.questionInputBox, textStyle]}
         name="questionDescription"
         value={question.questionDescription}
         onChange={(event) => handelQuestionInputChange(event)}
@@ -299,29 +304,33 @@ function CreateQuestion({
 
   const selectQuestionType = (
     <Box css={styles.selectQuestionTypeBox}>
-      <Typography css={styles.textStyle}>문항 유형</Typography>
+      <Typography css={[styles.textStyle, textStyle]}>문항 유형</Typography>
 
       <FormControl css={styles.questionTypeSelectBox}>
         <Select
+          css={textStyle}
           id="demo-simple-select"
           name="questionType"
           value={question.questionType}
           displayEmpty
           onChange={handleQuestionTypeChange}
         >
-          <MenuItem value={QuestionTypeEnum.SINGLE_QUESTION}>
+          <MenuItem value={QuestionTypeEnum.SINGLE_QUESTION} css={textStyle}>
             단일 선택형
           </MenuItem>
-          <MenuItem value={QuestionTypeEnum.MOVEABLE_QUESTION}>
+          <MenuItem value={QuestionTypeEnum.MOVEABLE_QUESTION} css={textStyle}>
             단일 선택형 (선택시 문항 이동)
           </MenuItem>
-          <MenuItem value={QuestionTypeEnum.MULTIPLE_QUESTION}>
+          <MenuItem value={QuestionTypeEnum.MULTIPLE_QUESTION} css={textStyle}>
             복수 선택형
           </MenuItem>
-          <MenuItem value={QuestionTypeEnum.SHORT_ANSWER}>
+          <MenuItem value={QuestionTypeEnum.SHORT_ANSWER} css={textStyle}>
             주관식 단답형
           </MenuItem>
-          <MenuItem value={QuestionTypeEnum.SUBJECTIVE_DESCRIPTIVE_ANSWER}>
+          <MenuItem
+            value={QuestionTypeEnum.SUBJECTIVE_DESCRIPTIVE_ANSWER}
+            css={textStyle}
+          >
             주관식 서술형
           </MenuItem>
         </Select>
