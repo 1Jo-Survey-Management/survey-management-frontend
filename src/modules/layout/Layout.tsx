@@ -17,7 +17,7 @@ export default function Layout() {
   console.log(`현재 위치 : ${location.pathname}`);
 
   const backStyle = {
-    backgroundColor: '#FFFDF8',
+    backgroundColor: '#E4E4E4',
   };
 
   const isLoginPage = location.pathname === '/';
@@ -30,7 +30,7 @@ export default function Layout() {
       {isLoginPage ? (
         <LoginPage />
       ) : (
-        <Container sx={{ backgroundColor: '#FFFDF8' }}>
+        <Container sx={{ backgroundColor: '#E4E4E4', minHeight: '600px' }}>
           <Outlet />
         </Container>
       )}

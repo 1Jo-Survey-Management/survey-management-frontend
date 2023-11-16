@@ -34,7 +34,7 @@ const USER_NO = 'userNo';
 const USER_IMAGE = 'userImage';
 const USER_NICKNAME = 'userNickname';
 
-const IMAGE_API_BASE = 'http://localhost:8080/api/images/users/';
+// const IMAGE_API_BASE = 'http://localhost:8080/api/images/users/';
 const ANONYMOUS_USER_NICKNAME = '익명 사용자';
 
 const styels = {
@@ -91,8 +91,8 @@ function Menu({ toggleDrawer }: MenuProps) {
     });
   }, []);
 
-  const userInfoCheck = (checkedUserInfo: UserInfoProps) =>
-    checkedUserInfo.userNo !== null && checkedUserInfo.userImage !== null;
+  // const userInfoCheck = (checkedUserInfo: UserInfoProps) =>
+  //   checkedUserInfo.userNo !== null && checkedUserInfo.userImage !== null;
 
   /**
    * 내가 참여한 설문 페이지로 이동하는 메서드 입니다.
@@ -138,9 +138,9 @@ function Menu({ toggleDrawer }: MenuProps) {
     >
       <Box css={styels.avatarArea}>
         <Avatar
-          src={
-            userInfoCheck(userInfo) ? `${IMAGE_API_BASE}${userInfo.userNo}` : ''
-          }
+          // src={
+          //   userInfoCheck(userInfo) ? `${IMAGE_API_BASE}${userInfo.userNo}` : ''
+          // }
           css={styels.avatarImage}
         />
       </Box>

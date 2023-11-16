@@ -30,6 +30,8 @@ interface ModifySurveyProps {
   questions: QuestionProps[];
 }
 
+const MYPAGE_WRITE_PAGE = '/survey/mypage/write';
+
 const styles = {
   buttonBox: css({
     display: 'flex',
@@ -92,7 +94,7 @@ function ModifySurvey() {
       /**
        * FIXME: redirect mypage 내가 작성한 설문 페이지로 변경 예정
        */
-      navigate('/survey/mypage/write');
+      navigate(MYPAGE_WRITE_PAGE);
     }
     return response.data.content;
   };

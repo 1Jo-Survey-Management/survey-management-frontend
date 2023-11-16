@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
 import FaceIcon from '@mui/icons-material/Face';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import {
   Button,
   Card,
@@ -79,7 +80,7 @@ function RecentSurvey() {
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
       case '진행':
-        return '#3D882B';
+        return '#000000';
       case '작성':
         return 'secondary';
       default:
@@ -120,31 +121,31 @@ function RecentSurvey() {
   };
 
   const swiperParams: SwiperOptions = {
-    slidesPerView: 'auto', // 한 번에 보여질 슬라이드 수
-    spaceBetween: 5, // 슬라이드 간의 간격 (옵션)
+    slidesPerView: 'auto',
+    spaceBetween: 3,
     breakpoints: {
       920: {
         slidesPerView: 5,
-        spaceBetween: 5,
+        spaceBetween: 3,
       },
       750: {
         slidesPerView: 4,
-        spaceBetween: 5,
+        spaceBetween: 3,
       },
 
       540: {
         slidesPerView: 3,
-        spaceBetween: 5,
+        spaceBetween: 3,
       },
 
       500: {
         slidesPerView: 2,
-        spaceBetween: 5,
+        spaceBetween: 3,
       },
 
       0: {
         slidesPerView: 1.8,
-        spaceBetween: 5,
+        spaceBetween: 3,
       },
     },
   };
@@ -200,8 +201,8 @@ function RecentSurvey() {
                         sx={{
                           width: '150px',
                           height: '160px',
-                          borderRadius: 5,
-                          backgroundColor: '#D1E4CC',
+                          borderRadius: 2,
+                          backgroundColor: '#FBFBFB',
                           boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                         }}
                         style={textStyle}
@@ -229,7 +230,7 @@ function RecentSurvey() {
                                 height: '20px',
                                 fontWeight: 600,
                                 justifyContent: 'space-between',
-                                backgroundColor: '#FFFDF8',
+                                backgroundColor: '#F9F9F9',
                                 boxShadow:
                                   'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                               }}
@@ -245,7 +246,7 @@ function RecentSurvey() {
 
                             <Chip
                               label={card.surveyStatusName}
-                              variant="filled"
+                              variant="outlined"
                               sx={{
                                 width: '40px',
                                 height: '20px',
@@ -254,9 +255,9 @@ function RecentSurvey() {
                                 '& .MuiChip-label': {
                                   padding: 0,
                                 },
-                                backgroundColor: '#FFFDF8',
-                                boxShadow:
-                                  'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
+                                backgroundColor: '#F9F9F9',
+                                // boxShadow:
+                                //   'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                                 color: getChipColor(card.surveyStatusName),
                               }}
                               style={textStyle}
@@ -267,8 +268,7 @@ function RecentSurvey() {
                           <div
                             style={{
                               display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
+                              alignItems: 'stretch',
                               fontSize: 12,
                               color: 'text.secondary',
                               fontWeight: 600,
@@ -276,6 +276,13 @@ function RecentSurvey() {
                               fontFamily,
                             }}
                           >
+                            <EventAvailableIcon
+                              sx={{
+                                fontSize: '15px',
+                                marginRight: '4px',
+                                marginLeft: '3px',
+                              }}
+                            />
                             {card.surveyClosingAt}
                           </div>
 
@@ -311,7 +318,7 @@ function RecentSurvey() {
                                   marginRight: 1,
                                   height: '20px',
                                   backgroundColor: tagColor(tag),
-                                  opacity: 0.7,
+                                  // opacity: 0.7,
                                 }}
                               />
                             ))}
@@ -383,9 +390,22 @@ function RecentSurvey() {
                   onClick={() =>
                     navigate(`/survey/statistics/${selectedCard?.surveyNo}`)
                   }
+                  disabled={
+                    !selectedCard?.surveyAttendCount &&
+                    selectedCard?.surveyAttendCount === 0
+                  }
                 >
                   결과보기
                 </Button>
+                {selectedCard?.surveyAttendCount === 0 && (
+                  <Typography
+                    variant="body2"
+                    style={{ color: 'red' }}
+                    fontSize="12px"
+                  >
+                    설문 참여자가 없습니다.
+                  </Typography>
+                )}
 
                 <Button
                   onClick={() =>

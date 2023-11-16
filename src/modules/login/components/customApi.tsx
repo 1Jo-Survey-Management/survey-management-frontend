@@ -6,7 +6,6 @@ import config from '../config/config.json';
  */
 const Api = axios.create({
   baseURL: config.server,
-  // timeout: 10000,
   params: {},
 });
 

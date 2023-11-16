@@ -20,7 +20,7 @@ function Footer() {
         width: '100%',
         height: '10%',
         justifyContent: 'center',
-        backgroundColor: '#a9eb8a', // 배경색 추가
+        backgroundColor: '#4B4C54', // 배경색 추가
         zIndex: 1000, // 적절한 값으로 조절
       }}
       color="D3D4F5"
@@ -30,7 +30,7 @@ function Footer() {
           variant="h6"
           fontSize="80%"
           fontWeight="700"
-          color="#25263f"
+          color="#ffffff"
           sx={textStyle}
           fontStyle={textStyle}
         >
