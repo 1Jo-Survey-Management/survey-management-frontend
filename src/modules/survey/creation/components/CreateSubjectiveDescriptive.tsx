@@ -21,6 +21,11 @@ const styles = {
   }),
 };
 
+const fontFamily = 'nanumsquare';
+const textStyle = css({
+  fontFamily,
+});
+
 /**
  * 주관식 서술형 문항을 만드는 컴포넌트 입니다.
  *
@@ -37,7 +42,7 @@ function CreateSubjectiveDescriptive() {
         multiline
         rows={5}
         defaultValue="문항 답변 입력란"
-        css={styles.inputBox}
+        css={[styles.inputBox, textStyle]}
       />
     </Box>
   );

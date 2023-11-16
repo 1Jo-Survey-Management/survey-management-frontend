@@ -44,6 +44,11 @@ const styles = {
   }),
 };
 
+const fontFamily = 'nanumsquare';
+const textStyle = css({
+  fontFamily,
+});
+
 /**
  * 문항 생성에서 단일 선택형 선택지를 만드는 컴포넌트 입니다.
  *
@@ -159,13 +164,13 @@ function CreateSingleSelection({
             <Box css={styles.removeAndAddIconBox}>
               {index === question.selections.length - 1 && (
                 <AddIcon
-                  css={styles.plusIcon}
+                  css={[styles.plusIcon, textStyle]}
                   aria-label="Add"
                   onClick={handleAddSelection}
                 />
               )}
               <RemoveIcon
-                css={styles.removeIcon}
+                css={[styles.removeIcon, textStyle]}
                 aria-label="Remove"
                 onClick={() => handleRemoveSelection(selection.selectionId)}
               />
@@ -173,7 +178,7 @@ function CreateSingleSelection({
             <Radio disabled name={`radio-buttons-${selection.selectionId}`} />
             <Input
               placeholder="문항을 입력해주세요."
-              css={styles.input}
+              css={[styles.input, textStyle]}
               value={selection.selectionValue}
               onChange={(event) => handleSelectionValueChange(selection, event)}
             />

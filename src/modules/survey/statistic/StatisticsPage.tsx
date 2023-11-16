@@ -28,9 +28,9 @@ const styles = {
   },
   cardTitle: {
     marginTop: '20px',
-    borderRadius: '3%',
+    borderRadius: '4px',
     '@media (min-width: 700px)': {
-      width: '40%',
+      width: '70%',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',

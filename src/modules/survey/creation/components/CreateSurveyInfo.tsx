@@ -18,6 +18,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import ImageIcon from '@mui/icons-material/Image';
 import { css } from '@emotion/react';
+
 import { CreateSurveyInfoProps, SurveyInfoProps } from '../types/SurveyTypes';
 import { OpenStatusEnum } from '../../enums/OpenStatusEnum';
 
@@ -95,6 +96,11 @@ const styles = {
     marginTop: '10px',
   }),
 };
+
+const fontFamily = 'nanumsquare';
+const textStyle = css({
+  fontFamily,
+});
 
 const tagNames = ['일상', '업무', '공지', '중요', '기타'];
 
@@ -213,10 +219,10 @@ function CreateSurveyInfo({
 
   const surveyTitle = (
     <Box css={styles.surveyTitleBox}>
-      <Typography css={styles.textStyle}>설문 제목</Typography>
+      <Typography css={[styles.textStyle, textStyle]}>설문 제목</Typography>
       <Input
         placeholder="설문 제목을 입력해주세요."
-        css={styles.inputStyle}
+        css={[styles.inputStyle, textStyle]}
         name="surveyTitle"
         value={surveyInfo.surveyTitle}
         onChange={handleSurveyInfoInputChange}
@@ -226,9 +232,12 @@ function CreateSurveyInfo({
 
   const surveyTagSelectBox = (
     <div css={styles.tagSelectContainer}>
-      <FormControl css={styles.tagSelectBox}>
-        <InputLabel id="demo-multiple-chip-label">태그</InputLabel>
+      <FormControl css={[styles.tagSelectBox, textStyle]}>
+        <InputLabel id="demo-multiple-chip-label" css={textStyle}>
+          태그
+        </InputLabel>
         <Select
+          css={textStyle}
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
           multiple
@@ -241,6 +250,7 @@ function CreateSurveyInfo({
                 <Chip
                   key={tagNames[value as number]}
                   label={tagNames[value as number]}
+                  css={textStyle}
                 />
               ))}
             </Box>
@@ -257,11 +267,11 @@ function CreateSurveyInfo({
   );
 
   const surveyDescription = (
-    <Box css={styles.surveyDescriptionBox}>
-      <Typography css={styles.textStyle}>설문 설명</Typography>
+    <Box css={[styles.surveyDescriptionBox, textStyle]}>
+      <Typography css={[styles.textStyle, textStyle]}>설문 설명</Typography>
       <Input
         placeholder="문항 설명을 입력해주세요."
-        css={styles.inputStyle}
+        css={[styles.inputStyle, textStyle]}
         name="surveyDescription"
         value={surveyInfo.surveyDescription}
         onChange={handleSurveyInfoInputChange}
@@ -272,7 +282,9 @@ function CreateSurveyInfo({
   const surveyOpenStatusSelectBox = (
     <Box>
       <FormControl fullWidth>
-        <InputLabel id="openStatus-select-label">설문결과 공개</InputLabel>
+        <InputLabel id="openStatus-select-label" css={textStyle}>
+          설문결과 공개
+        </InputLabel>
         <Select
           labelId="openStatus-select-label"
           id="openStatus-select"
@@ -280,10 +292,17 @@ function CreateSurveyInfo({
           name="openStatusNo"
           label="설문결과 공개"
           onChange={handleOpenStatusChange}
+          css={textStyle}
         >
-          <MenuItem value={OpenStatusEnum.PUBLIC}>전체공개</MenuItem>
-          <MenuItem value={OpenStatusEnum.ONLY_USER}>회원공개</MenuItem>
-          <MenuItem value={OpenStatusEnum.PRIVATE}>비공개</MenuItem>
+          <MenuItem value={OpenStatusEnum.PUBLIC} css={textStyle}>
+            전체공개
+          </MenuItem>
+          <MenuItem value={OpenStatusEnum.ONLY_USER} css={textStyle}>
+            회원공개
+          </MenuItem>
+          <MenuItem value={OpenStatusEnum.PRIVATE} css={textStyle}>
+            비공개
+          </MenuItem>
         </Select>
       </FormControl>
     </Box>
@@ -291,7 +310,7 @@ function CreateSurveyInfo({
 
   return (
     <Card css={styles.card}>
-      <CardContent>
+      <CardContent css={textStyle}>
         {surveyTitle}
 
         <Box sx={{ marginBottom: '20px' }}>
@@ -312,7 +331,12 @@ function CreateSurveyInfo({
               </Box>
             </div>
           )}
-          <input type="file" accept="image/*" onChange={handleImageUpload} />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            css={textStyle}
+          />
         </Box>
 
         {surveyTagSelectBox}
@@ -322,7 +346,9 @@ function CreateSurveyInfo({
             marginBottom: '10px',
           }}
         >
-          <Typography css={styles.textStyle}>설문조사 마감일 지정</Typography>
+          <Typography css={[styles.textStyle, textStyle]}>
+            설문조사 마감일 지정
+          </Typography>
 
           <TextField
             id="date"
@@ -333,7 +359,7 @@ function CreateSurveyInfo({
             inputProps={{
               min: tomorrowFormatted,
             }}
-            css={styles.dateInputStyle}
+            css={[styles.dateInputStyle, textStyle]}
             onChange={handleSurveyInfoInputChange}
           />
         </Box>

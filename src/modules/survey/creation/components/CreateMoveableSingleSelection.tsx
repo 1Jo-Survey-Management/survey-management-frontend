@@ -62,6 +62,11 @@ const styles = {
   }),
 };
 
+const fontFamily = 'nanumsquare';
+const textStyle = css({
+  fontFamily,
+});
+
 const NEXT_QUESTION: string = 'nextQuestion';
 const END_OF_SURVEY: string = 'endOfSurvey';
 
@@ -264,7 +269,7 @@ function CreateMoveableSingleSelection({
             <Input
               placeholder="문항을 입력해주세요."
               value={selection.selectionValue}
-              css={styles.input}
+              css={[styles.input, textStyle]}
               onChange={(event) => handleSelectionValueChange(selection, event)}
             />
             <Box css={styles.moveQuestionBox}>
@@ -286,15 +291,20 @@ function CreateMoveableSingleSelection({
                       <MenuItem
                         key={que.questionId}
                         value={questions.indexOf(question) + queIndex + 2}
+                        css={textStyle}
                       >
                         {questions.indexOf(question) + queIndex + 2}번
                       </MenuItem>
                     ))}
 
                   {questions.indexOf(question) !== questions.length - 1 && (
-                    <MenuItem value={NEXT_QUESTION}>다음 문항</MenuItem>
+                    <MenuItem value={NEXT_QUESTION} css={textStyle}>
+                      다음 문항
+                    </MenuItem>
                   )}
-                  <MenuItem value={END_OF_SURVEY}>종료</MenuItem>
+                  <MenuItem value={END_OF_SURVEY} css={textStyle}>
+                    종료
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Box>

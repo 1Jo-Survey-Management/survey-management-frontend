@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Container from '@mui/material/Container';
 import { Box, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { css } from '@emotion/react';
 import axios from '../../../login/components/customApi';
 import FloatingActionButtons from '../components/FloatingActionButtons';
 import CreateSurveyInfo from '../components/CreateSurveyInfo';
@@ -16,6 +17,10 @@ import DragDropQuestion from '../components/DragDropQuestions';
 
 const MAIN_PAGE = '/survey/main';
 const MYPAGE_WRITE_PAGE = '/survey/mypage/write';
+const fontFamily = 'nanumsquare';
+const textStyle = css({
+  fontFamily,
+});
 
 function CreateationSurvey() {
   const navigate = useNavigate();
@@ -172,12 +177,17 @@ function CreateationSurvey() {
           color="success"
           sx={{ marginRight: '20px' }}
           onClick={handleSubmitSurveyWrite}
+          css={textStyle}
         >
           작성하기
         </Button>
 
-        <Button variant="contained" onClick={handleSubmitSurveyPost}>
-          개시하기
+        <Button
+          variant="contained"
+          onClick={handleSubmitSurveyPost}
+          css={textStyle}
+        >
+          게시하기
         </Button>
       </Box>
       <FloatingActionButtons
