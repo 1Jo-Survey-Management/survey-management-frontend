@@ -169,16 +169,33 @@ function AttendSurvey() {
     // 사용자 응답을 업데이트
     if (isUnchecked || endOfSurvey) {
       setUserResponses((prevResponses) => {
+        // 현재 선택된 문항을 제외한 다른 응답들을 필터링
         let updatedResponses = prevResponses.filter(
           (response) => response.surveyQuestionNo !== selectedQuestionNo
         );
 
         if (endOfSurvey) {
+          // endOfSurvey가 true인 경우, 해당 문항 뒤의 문항들을 제외
           const questionsToRemove = uniqueQuestions.filter(
             (q) => q > selectedQuestionNo
           );
           updatedResponses = updatedResponses.filter(
             (response) => !questionsToRemove.includes(response.surveyQuestionNo)
+          );
+
+          // 현재 선택된 문항의 응답을 추가
+          const currentResponse = prevResponses.find(
+            (response) => response.surveyQuestionNo === selectedQuestionNo
+          );
+          if (currentResponse) {
+            updatedResponses = [...updatedResponses, currentResponse];
+          }
+
+          console.log(
+            `questionsToRemove 배열 값: ${JSON.stringify(questionsToRemove)}`
+          );
+          console.log(
+            `updatedResponses 배열 값: ${JSON.stringify(updatedResponses)}`
           );
         }
 
@@ -199,12 +216,19 @@ function AttendSurvey() {
     (questionNo: number) =>
     (
       answerOrAnswers:
-        | Array<{ selectionValue: string; selectionNo: number }>
+        | Array<{
+            selectionValue: string;
+            selectionNo: number;
+          }>
         | { selectionValue: string; selectionNo: number; endOfSurvey: boolean }
         | string
     ) => {
       const currentQuestionData = surveyData.content.find(
         (item) => item.surveyQuestionNo === questionNo
+      );
+
+      console.log(
+        `currentQuestionData 배열 값: ${JSON.stringify(currentQuestionData)}`
       );
 
       if (!currentQuestionData) {
@@ -279,6 +303,7 @@ function AttendSurvey() {
             surveySubjectiveAnswer: null,
             endOfSurvey,
           });
+          console.log(`endOfSurvey 값: ${JSON.stringify(endOfSurvey)}`);
         }
       }
 
@@ -287,8 +312,10 @@ function AttendSurvey() {
           (response) =>
             response.surveyQuestionNo !== currentQuestionData.surveyQuestionNo
         );
+
         return [...updatedResponses, ...newResponses];
       });
+      console.log(`newResponses 배열: ${JSON.stringify(newResponses)}`);
     };
 
   /**
@@ -384,7 +411,7 @@ function AttendSurvey() {
 
         // surveyNo에 해당하는 데이터만 필터링합니다.
         const filteredData = response.data.content
-          .filter((item) => item.surveyNo.toString() === surveyNo)
+          .filter((item) => Number(item.surveyNo) === Number(surveyNo))
           .sort((a, b) => a.surveyQuestionNo - b.surveyQuestionNo);
 
         setSurveyData({
@@ -392,7 +419,7 @@ function AttendSurvey() {
           content: filteredData,
         });
 
-        console.log(`filteredData 배열 내용: ${JSON.stringify(filteredData)}`);
+        console.log(`filteredData: ${JSON.stringify(filteredData)}`);
 
         if (response.data.success && filteredData.length > 0) {
           setSurveyTitle(filteredData[0].surveyTitle);
@@ -403,6 +430,7 @@ function AttendSurvey() {
         setIsLoading(false); // 오류 발생 시 로딩 완료
       }
     };
+    console.log(`surveyNo: ${JSON.stringify(surveyNo)}`);
 
     fetchData();
   }, [surveyNo]); // 의존성 배열에 surveyNo 추가
@@ -468,6 +496,9 @@ function AttendSurvey() {
             .map((response) => response.surveyQuestionNo)
         )
       : null;
+    console.log(
+      `lastEndOfSurveyQuestion???: ${JSON.stringify(lastEndOfSurveyQuestion)}`
+    );
 
     // eslint-disable-next-line no-restricted-syntax
     for (const item of surveyData.content) {
@@ -482,6 +513,8 @@ function AttendSurvey() {
         const responseExists = userResponses.find(
           (response) => response.surveyQuestionNo === item.surveyQuestionNo
         );
+
+        console.log(`required가 있는 애들: ${JSON.stringify(responseExists)}`);
 
         if (!responseExists) {
           console.log(
