@@ -14,6 +14,7 @@ import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
 import { OpenStatusEnum } from '../../enums/OpenStatusEnum';
 import { SurveyStatusEunm } from '../../enums/SurveyStatusEnum';
 import DragDropQuestion from '../components/DragDropQuestions';
+import { imageUploadToS3 } from '../../utils/ImageUploadUtil';
 
 const MAIN_PAGE = '/survey/main';
 const MYPAGE_WRITE_PAGE = '/survey/mypage/write';
@@ -84,23 +85,25 @@ function CreateationSurvey() {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('surveyInfoCreateDto', JSON.stringify(surveyInfo));
-    formData.append('surveyQuestionCreateDtoList', JSON.stringify(questions));
+    const requestData = {
+      surveyInfoCreateDto: surveyInfo,
+      surveyQuestionCreateDtoList: questions,
+    };
 
     if (surveyImage !== undefined) {
-      formData.append('surveyImage', surveyImage);
+      try {
+        const imageUrl = await imageUploadToS3(surveyImage);
+        surveyInfo.surveyImageUrl = imageUrl;
+        console.log(imageUrl);
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/api/surveys`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+        requestData
       );
 
       if (response.status === 201) {
