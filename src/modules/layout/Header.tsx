@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button, Drawer, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import axios from '../login/components/customApi';
@@ -21,7 +21,6 @@ const textStyle = {
 };
 
 function Header() {
-  const location = useLocation();
   const navigate = useNavigate();
 
   const goMain = () => {
@@ -45,10 +44,8 @@ function Header() {
 
     axios.defaults.headers.common.Authorization = null;
 
-    navigate('/');
+    navigate('/login');
   };
-
-  const isHomePage = location.pathname === '/';
   const hasAccessToken = localStorage.getItem('accessToken');
 
   const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false);
@@ -120,7 +117,7 @@ function Header() {
               role="presentation"
             />
           </div>
-          {isHomePage || !hasAccessToken ? (
+          {!hasAccessToken ? (
             <Button
               onClick={login}
               sx={{ color: '#000000', fontStyle: textStyle, fontSize: '20px' }}
