@@ -612,32 +612,33 @@ function RecentSurvey() {
                 )}
 
                 {/* 참여하기 버튼 */}
-                {(!selectedCard?.attendCheckList ||
-                  (!selectedCard.attendCheckList.some(
-                    (item) => item === false
-                  ) &&
-                    selectedCard?.userNo !== numUser())) && (
-                  <Button
-                    onClick={() =>
-                      navigate(`/survey/attend/${selectedCard?.surveyNo}`)
-                    }
-                    sx={{
-                      width: '100%',
-                      marginBottom: '8px',
-                      backgroundColor: '#ebebeb',
-                      '&:hover': {
-                        backgroundColor: 'gray',
-                        color: 'white',
-                        fontWeight: '900',
-                        fontSize: '15px',
-                      },
-                      color: 'black',
-                      fontWeight: '600',
-                    }}
-                  >
-                    설문 참여하기
-                  </Button>
-                )}
+                {numUser() !== null &&
+                  (!selectedCard?.attendCheckList ||
+                    (!selectedCard.attendCheckList.some(
+                      (item) => item === false
+                    ) &&
+                      selectedCard?.userNo !== numUser())) && (
+                    <Button
+                      onClick={() =>
+                        navigate(`/survey/attend/${selectedCard?.surveyNo}`)
+                      }
+                      sx={{
+                        width: '100%',
+                        marginBottom: '8px',
+                        backgroundColor: '#ebebeb',
+                        '&:hover': {
+                          backgroundColor: 'gray',
+                          color: 'white',
+                          fontWeight: '900',
+                          fontSize: '15px',
+                        },
+                        color: 'black',
+                        fontWeight: '600',
+                      }}
+                    >
+                      설문 참여하기
+                    </Button>
+                  )}
               </Box>
             </div>
           </Fade>
