@@ -10,7 +10,6 @@ import {
   Backdrop,
   CircularProgress,
 } from '@mui/material';
-import Divider from '@mui/material/Divider';
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
 import axios from '../../login/components/customApi';
@@ -170,7 +169,6 @@ export default function StatisticsPage() {
             <Box>
               <Typography style={textStyle} sx={styles.titleText}>
                 {surveyTitle}
-                <Divider />
               </Typography>
               <Typography style={textStyle} sx={styles.surveyInfo}>
                 설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
@@ -245,7 +243,6 @@ export default function StatisticsPage() {
                   <Typography style={textStyle} sx={styles.componentText}>
                     {itemsForQuestion[0].surveyQuestionNo} .{' '}
                     {itemsForQuestion[0].surveyQuestionTitle}
-                    <Divider />
                   </Typography>
 
                   <Typography style={textStyle} sx={styles.surveyInfo}>
