@@ -175,6 +175,7 @@ function AttendSingleMoveChoice({
       }
     }
   };
+
   return (
     <Card id={`question-${questionNo}`} sx={{ marginBottom: '30px' }}>
       <CardContent>

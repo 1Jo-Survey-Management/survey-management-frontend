@@ -5,6 +5,8 @@ import {
   Route,
   Routes,
 } from 'react-router-dom';
+import { createGlobalStyle } from 'styled-components';
+import { createTheme, ThemeProvider } from '@mui/material';
 import Layout from './modules/layout/Layout';
 import ModifySurvey from './modules/survey/modify/routers/ModifySurvey';
 import CreateationSurvey from './modules/survey/creation/routers/CreateationSurvey';
@@ -24,36 +26,59 @@ function App() {
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
   }, []);
 
+  const GlobalStyle = createGlobalStyle`
+    @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+
+    /* Add any other global styles if needed */
+    body {
+      font-family: "NanumSquare", "Arial", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+  `;
+
+  const Theme = createTheme({
+    typography: {
+      fontFamily: 'nanumsquare',
+    },
+  });
+
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<LoginDisplay />} />
-        <Route element={<Layout />}>
-          <Route path="/survey/register" element={<CreateationSurvey />} />
-          <Route path="/survey/modify/:surveyNo" element={<ModifySurvey />} />
-          <Route path="/login/LoginDisplay" element={<LoginDisplay />} />
-          <Route path="/survey/statistics" element={<StatisticsPage />} />
-          <Route
-            path="/survey/statistics/:surveyNo"
-            element={<StatisticsPage />}
-          />
-          <Route path="/survey/main" element={<Main />} />
-          {/* <Route path="/survey/modify" element={<Navigate to="/login" />} /> */}
-          <Route path="/login" element={<LoginDisplay />} />
-          {/* <Route path="/survey/mypage" element={<MypageWriteSurvey />} /> */}
-          <Route path="/survey/search" element={<Search />} />
-          <Route path="/survey/mypage/write" element={<MypageWriteSurvey />} />
-          <Route
-            path="/survey/mypage/attend"
-            element={<MypageAttendSurvey />}
-          />
-          <Route path="/survey/attend/:surveyNo" element={<AttendSurvey />} />
-          <Route
-            path="/survey/mypageUserModify"
-            element={<MypageUserModify />}
-          />
-        </Route>
-      </Routes>
+      <GlobalStyle />
+      <ThemeProvider theme={Theme}>
+        <Routes>
+          <Route path="/" element={<LoginDisplay />} />
+          <Route element={<Layout />}>
+            <Route path="/survey/register" element={<CreateationSurvey />} />
+            <Route path="/survey/modify/:surveyNo" element={<ModifySurvey />} />
+            <Route path="/login/LoginDisplay" element={<LoginDisplay />} />
+            <Route path="/survey/statistics" element={<StatisticsPage />} />
+            <Route
+              path="/survey/statistics/:surveyNo"
+              element={<StatisticsPage />}
+            />
+            <Route path="/survey/main" element={<Main />} />
+            {/* <Route path="/survey/modify" element={<Navigate to="/login" />} /> */}
+            <Route path="/login" element={<LoginDisplay />} />
+            {/* <Route path="/survey/mypage" element={<MypageWriteSurvey />} /> */}
+            <Route path="/survey/search" element={<Search />} />
+            <Route
+              path="/survey/mypage/write"
+              element={<MypageWriteSurvey />}
+            />
+            <Route
+              path="/survey/mypage/attend"
+              element={<MypageAttendSurvey />}
+            />
+            <Route path="/survey/attend/:surveyNo" element={<AttendSurvey />} />
+            <Route
+              path="/survey/mypageUserModify"
+              element={<MypageUserModify />}
+            />
+          </Route>
+        </Routes>
+      </ThemeProvider>
     </Router>
   );
 }
