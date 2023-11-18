@@ -44,7 +44,7 @@ function Header() {
 
     axios.defaults.headers.common.Authorization = null;
 
-    // navigate('/loginDisplay');
+    navigate('/loginDisplay');
   };
   const hasAccessToken = localStorage.getItem('accessToken');
 

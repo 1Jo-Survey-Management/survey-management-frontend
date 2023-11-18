@@ -149,7 +149,7 @@ function LoginDisplay() {
               localStorage.removeItem('expiresIn');
               localStorage.removeItem('refreshToken');
 
-              navigate('/');
+              navigate('/loginDisplay');
             }
           }
 
@@ -167,10 +167,7 @@ function LoginDisplay() {
         })
         .catch((error) => {
           console.error('Error : ', error);
-          navigate('/login');
         });
-    } else {
-      navigate('/logout');
     }
   }, []);
 
