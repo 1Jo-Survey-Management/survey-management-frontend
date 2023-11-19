@@ -1,29 +1,38 @@
-// Body.tsx
-import React from 'react';
-import Container from '@mui/material/Container';
-import { useLocation, useNavigate, useRoutes } from "react-router-dom";
-import { pathInfo, routeInfo } from "../route/routeInfo"
+//  // Body.tsx
+//  import React from 'react';
+//  import Container from '@mui/material/Container';
+//  import { useLocation } from 'react-router-dom';
+//  import { routeInfo } from '../route/routeInfo';
 
-const Body: React.FC = () => {
-  const location = useLocation();
+//  /**
+//   * Layout의 Body입니다!
+//   * @returns 페이지 변경 경로
+//   */
+//  function Body() {
+//    const location = useLocation();
 
-  const containerStyle = {
-    maxWidth: 'md',
-    height: '500px', // 높이를 원하는 값으로 설정하세요.
-    // 다른 스타일 속성도 필요한 경우 추가할 수 있습니다.
-  };
+//   const containerStyle = {
+//     maxWidth: 'md',
+//     height: '600px',
+//   };
 
-  console.log(location.pathname)
-  return (
-    <Container style={containerStyle}>
-  
-      {routeInfo(location.pathname)}
+//   const backStyle = {
+//     backgroundColor: '#FFFDF8',
+//   };
 
-    </Container>
+//   console.log(location.pathname);
+//   return (
+//     <div style={backStyle}>
+//       <Container
+//         style={containerStyle}
+//         sx={{ paddingTop: '0', backgroundColor: '#FFDF8' }}
+//       >
+//         {routeInfo(location.pathname)}
+//       </Container>
+//     </div>
+//   );
+// }
 
-    
-  );
-};
+//  export default Body;
 
-export default Body;
-
+export {};

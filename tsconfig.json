@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -18,9 +14,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    // class-Validator 에서 경고메세지를 처리하기 위한 설정
+    "experimentalDecorators": true,
+    "types": ["@emotion/react/types/css-prop"]
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

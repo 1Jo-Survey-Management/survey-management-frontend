@@ -1,18 +1,39 @@
-import * as React from 'react';
+import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
+import { Outlet, useLocation } from 'react-router-dom';
+import { Container } from '@mui/material';
 import Header from './Header';
-import Body from './Body';
 import Footer from './Footer';
 
-export default function Layout() { // 컴포넌트 이름은 대문자로 시작
+// import LoginPage from '../login/LoginDisplay';
+/**
+ * 페이지의 Header, Body, Footer를 모아놓은 Layout 입니다.
+ * @returns Header,Body,Footer
+ */
+export default function Layout() {
+  const location = useLocation();
+
+  console.log(`현재 위치 : ${location.pathname}`);
+
+  const backStyle = {
+    backgroundColor: '#FFFFFF',
+  };
+
+  // const isLoginPage = location.pathname === '/loginDisplay';
   return (
-    <React.Fragment>
+    <div style={backStyle}>
       <CssBaseline />
+
       <Header />
-      <Body />
+      {/* 
+      {isLoginPage ? (
+        <LoginPage />
+      ) : ( */}
+      <Container sx={{ backgroundColor: '#FFFFFF', minHeight: '600px' }}>
+        <Outlet />
+      </Container>
+      {/* )} */}
       <Footer />
-    </React.Fragment>
+    </div>
   );
 }
