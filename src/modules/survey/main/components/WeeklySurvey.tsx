@@ -120,8 +120,6 @@ function WeeklySurvey() {
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-
-      console.log(`공개 여부 : ${selectedCard?.openStatusName}`);
     };
 
     fetchData();

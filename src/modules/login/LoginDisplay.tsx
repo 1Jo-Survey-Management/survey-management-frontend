@@ -86,9 +86,10 @@ function LoginDisplay() {
     const searchParams = new URLSearchParams(location.search);
     const accessCode = searchParams.get('code');
 
-    const redirectUri = '/login/oauth2/code/naver';
+    console.log(`서치:  ${JSON.stringify(searchParams)}`);
 
-    // Authorization code를 받으면 백 서버로 요청을 보내준다.
+    const redirectUri = '/api/oauthLogin/oauth2/code/naver';
+
     if (accessCode) {
       axios
         .get(redirectUri, {
@@ -98,7 +99,6 @@ function LoginDisplay() {
           },
         })
         .then((response) => {
-          // code 보내서 백에서 인증하고 미완료회원 객체 가져옴(메일, accessToken)
           const responseCheck = response;
           const responseUserNo = responseCheck.data.content.userNo;
           const responseAccessToken = responseCheck.data.content.accessToken;
@@ -106,26 +106,17 @@ function LoginDisplay() {
           const responseNickName = responseCheck.data.content.userNickname;
           const responseExpiresIn = responseCheck.data.content.expiresIn;
 
-          // console.log('유저 번호 : ' + responseUserNo);
-
           localStorage.setItem('userNo', responseUserNo);
           localStorage.setItem('userNickname', responseNickName);
           localStorage.setItem('userImage', responseImage);
           localStorage.setItem('accessToken', responseAccessToken);
           localStorage.setItem('expiresIn', responseExpiresIn);
 
-          // console.log('responseNickName : ' + responseNickName);
-          // console.log('responseImage : ' + responseImage);
-
-          // 1. 완료된 회원
           if (responseUserNo != null && responseNickName != null) {
-            // 회원은 존재하나 브라우저에서 로그인 한적이 없는 회원
-
             if (
               localStorageAccessToken == null ||
               responseAccessToken !== localStorageAccessToken
             ) {
-              // localStrage에 회원 프로필 정보 저장하기
               localStorage.setItem('userNo', responseUserNo);
               localStorage.setItem('userNickname', responseNickName);
               localStorage.setItem('userImage', responseImage);
@@ -137,29 +128,20 @@ function LoginDisplay() {
               navigate('/survey/main');
               return;
             }
-            // 회원도 존재하고 브라우저에 로그인도 했었던 회원
 
             if (responseExpiresIn) {
-              // localStrage에 회원 프로필 정보 저장하기
               localStorage.setItem('userNo', responseUserNo);
               localStorage.setItem('userNickname', responseNickName);
               localStorage.setItem('userImage', responseImage);
               localStorage.setItem('accessToken', responseAccessToken);
               localStorage.setItem('expiresIn', responseExpiresIn);
             }
-
-            const expiresAt = localStorage.getItem('expiresIn');
-            console.log(`유효시간 확인 : ${expiresAt}`);
-
             navigate('/survey/main');
 
-            // 현 브라우저에서 로그인 한적이 있어 localStorage에 토큰이 있는 회원
             if (responseAccessToken === localStorageAccessToken) {
               axios.defaults.headers.common.Authorization = `Bearer ${responseAccessToken}`;
               navigate('/survey/main');
-            }
-            // 토큰이 유효하지 않으면 다시 로그인해야해서 로컬스토리지 다지움
-            else {
+            } else {
               localStorage.removeItem('userNo');
               localStorage.removeItem('userNickname');
               localStorage.removeItem('userImage');
@@ -167,13 +149,11 @@ function LoginDisplay() {
               localStorage.removeItem('expiresIn');
               localStorage.removeItem('refreshToken');
 
-              navigate('/');
+              navigate('/loginDisplay');
             }
           }
 
-          // 2. 첫 로그인 시
           if (responseUserNo != null && !responseNickName) {
-            // localStrage에 회원 프로필 정보 저장하기
             localStorage.setItem('userNo', responseUserNo);
             localStorage.setItem('userNickname', responseNickName);
             localStorage.setItem('userImage', responseImage);
@@ -186,7 +166,7 @@ function LoginDisplay() {
           }
         })
         .catch((error) => {
-          console.error('Error:', error);
+          console.error('Error : ', error);
         });
     }
   }, []);
@@ -196,7 +176,7 @@ function LoginDisplay() {
   };
 
   return (
-    <Box component="div" sx={basicBox}>
+    <Box sx={basicBox}>
       <Box sx={{ ...secBasicBox, ...webSecBasicBox }}>
         <Box sx={emptyBoxSimple}> </Box>
         <Box sx={loginBox}>
@@ -210,7 +190,7 @@ function LoginDisplay() {
           <Typography
             variant="h1"
             sx={{
-              fontSize: '150%', // 150%로 설정하여 1.5배 크기
+              fontSize: '150%',
               color: '#9E9E9E',
               position: 'relative',
               fontWeight: 'bold',
@@ -231,7 +211,7 @@ function LoginDisplay() {
         <Typography
           variant="h2"
           sx={{
-            fontSize: '100%', // 150%로 설정하여 1.5배 크기
+            fontSize: '100%',
             position: 'relative',
             marginBottom: '1px',
             fontWeight: 'bold',
