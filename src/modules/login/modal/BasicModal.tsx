@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { useNavigate } from 'react-router-dom';
-import moment, { Moment } from 'moment';
 import axios from '../components/customApi';
 import RadioButton from '../components/RowRadioButtonsGroup';
 import InputNickName from '../components/NameInput';
@@ -70,8 +69,7 @@ interface FormData {
   userBirth: string;
   userNickname: string;
   userGender: string;
-  expiresIn: Moment;
-  refreshToken: string;
+  isNicknameChecked: false;
 }
 
 /**
@@ -88,11 +86,11 @@ export default function BasicModal({ onClose }: ModalProps) {
     userNickname: '',
     userGender: '',
     userBirth: '',
-    expiresIn: moment(),
-    refreshToken: '',
+    isNicknameChecked: false,
   });
 
   const handleNickNameChange = (value: string) => {
+    // const { userNickname, isNicknameChecked } = value;
     setFormData({ ...formData, userNickname: value });
   };
 
@@ -108,29 +106,23 @@ export default function BasicModal({ onClose }: ModalProps) {
     localStorage.removeItem('userNo');
     localStorage.removeItem('userNickname');
     localStorage.removeItem('userImage');
-    localStorage.removeItem('accessToken');
-    console.log('회원가입 취소');
     onClose();
     setOpen(false);
   };
 
   const handleSubmit = () => {
     if (
-      formData.userNickname === '' ||
-      formData.userBirth === '' ||
-      formData.userGender === ''
+      formData.userNickname !== '' &&
+      formData.userBirth !== '' &&
+      formData.userGender !== ''
     ) {
-      /* empty */
-    } else {
       const userInfo = {
         userNickname: formData.userNickname,
         userBirth: formData.userBirth,
         userGender: formData.userGender,
-        expiresIn: localStorage.getItem('expiresIn'),
-        refreshToken: localStorage.getItem('refreshToken'),
       };
       axios
-        .post('/login/regist', userInfo, {
+        .post('/api/oauthLogin/regist', userInfo, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -146,6 +138,8 @@ export default function BasicModal({ onClose }: ModalProps) {
         .catch((error) => {
           console.error(error);
         });
+    } else {
+      alert('정보를 정확히 입력해주세요!');
     }
   };
 
