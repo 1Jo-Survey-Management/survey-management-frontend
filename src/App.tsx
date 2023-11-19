@@ -20,16 +20,19 @@ import AttendSurvey from './modules/survey/attend/routers/AttendSurvey';
 import axios from './modules/login/components/customApi';
 import MypageUserModify from './modules/survey/mypage/components/MypageUserModify';
 
-function App() {
-  useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-  }, []);
+const GlobalStyle = createGlobalStyle`
+@font-face{
+  font-family:NanumSquareRound;
+  font-style:normal;
+  font-weight:300;
+  src:local("NanumSquareRoundL"),
+  url(NanumSquareRoundL.eot),
+  url(NanumSquareRoundL.eot?#iefix) format("embedded-opentype"),
+  url(NanumSquareRoundL.woff2) format("woff2"),
+  url(NanumSquareRoundL.woff) format("woff"),
+  url(NanumSquareRoundL.ttf) format("truetype")
+}
 
-  const GlobalStyle = createGlobalStyle`
-    @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
-
-    /* Add any other global styles if needed */
     body {
       font-family: "NanumSquare", "Arial", sans-serif;
       margin: 0;
@@ -37,11 +40,16 @@ function App() {
     }
   `;
 
-  const Theme = createTheme({
-    typography: {
-      fontFamily: 'nanumsquare',
-    },
-  });
+const Theme = createTheme({
+  typography: {
+    fontFamily: 'nanumsquare',
+  },
+});
+function App() {
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+  }, []);
 
   return (
     <Router>
