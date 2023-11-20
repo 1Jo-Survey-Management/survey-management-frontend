@@ -46,7 +46,15 @@ function Header() {
 
     navigate('/loginDisplay');
   };
-  const hasAccessToken = localStorage.getItem('accessToken');
+  const hasProperLogin = localStorage.getItem('userNickname');
+
+  const properLogin = () => {
+    let loginCheck = false;
+    if (hasProperLogin) {
+      loginCheck = true;
+    }
+    return loginCheck;
+  };
 
   const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false);
 
@@ -117,7 +125,7 @@ function Header() {
               role="presentation"
             />
           </div>
-          {!hasAccessToken ? (
+          {properLogin() ? (
             <Button
               onClick={login}
               sx={{ color: '#000000', fontStyle: textStyle, fontSize: '20px' }}

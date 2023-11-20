@@ -84,13 +84,47 @@ function LoginDisplay() {
   useEffect(() => {
     const localStorageAccessToken = localStorage.getItem('accessToken');
     const searchParams = new URLSearchParams(location.search);
-    const accessCode = searchParams.get('code');
-
-    console.log(`서치:  ${JSON.stringify(searchParams)}`);
-
     const redirectUri = '/api/oauthLogin/oauth2/code/naver';
 
-    if (accessCode) {
+    const accessCode = searchParams.get('code') ?? '';
+    const duplicateAccessCode = localStorage.getItem('accessCode');
+
+    const accessCodeDuplicateCheck = () => {
+      let duplicatedCheck = false;
+      if (duplicateAccessCode !== accessCode) {
+        duplicatedCheck = true;
+      }
+
+      return duplicatedCheck;
+    };
+
+    const cancelSubmit = async () => {
+      try {
+        const userNo = localStorage.getItem('userNo') ?? '';
+
+        const response = await axios.get('/api/oauthLogin/cancel', {
+          params: {
+            userNo,
+          },
+        });
+
+        const respData = response.data;
+        if (respData === '') {
+          console.error('API 요청 실패');
+          return;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      localStorage.removeItem('userNo');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('expiresIn');
+
+      navigate('/loginDisplay');
+    };
+
+    if (accessCode && accessCodeDuplicateCheck()) {
       axios
         .get(redirectUri, {
           params: {
@@ -106,6 +140,7 @@ function LoginDisplay() {
           const responseNickName = responseCheck.data.content.userNickname;
           const responseExpiresIn = responseCheck.data.content.expiresIn;
 
+          localStorage.setItem('accessCode', accessCode);
           localStorage.setItem('userNo', responseUserNo);
           localStorage.setItem('userNickname', responseNickName);
           localStorage.setItem('userImage', responseImage);
@@ -168,6 +203,8 @@ function LoginDisplay() {
         .catch((error) => {
           console.error('Error : ', error);
         });
+    } else {
+      cancelSubmit();
     }
   }, []);
 

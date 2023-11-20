@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -7,9 +7,10 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { Button } from '@mui/material';
 import axios from '../components/customApi';
+import { Container } from '@mui/system';
 
 interface InputNickNameProps {
-  onChange: (value: string) => void;
+  onChange: (value: string, isChecked: boolean) => void;
 }
 
 // interface FormData {
@@ -31,14 +32,15 @@ export default function ComposedTextField({ onChange }: InputNickNameProps) {
   const [error, setError] = useState(true);
   const [submitWithoutCheck, setSubmitWithoutCheck] = useState(false);
 
+  useEffect(() => {
+    setIsNicknameChecked(false);
+    setSubmitWithoutCheck(false);
+    setNicknameCheckResult(null);
+  }, [nickName]);
+
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setNickName(value);
-
-    // const formData: FormData = {
-    //   userNickname: value,
-    //   isNicknameChecked: value.trim() !== '' && value.trim() !== null,
-    // };
 
     if (value.trim() === '' || value.trim() === null) {
       setError(true);
@@ -46,7 +48,7 @@ export default function ComposedTextField({ onChange }: InputNickNameProps) {
       setError(false);
     }
 
-    onChange(value);
+    onChange(value, isNicknameChecked);
   };
 
   const handleNicknameSubmit = async () => {
@@ -57,15 +59,19 @@ export default function ComposedTextField({ onChange }: InputNickNameProps) {
     }
 
     try {
-      const response = await axios.post('/api/users/check-duplicate-nickname', {
-        userNickname: nickName,
-      });
+      const response = await axios.post(
+        '/api/oauthLogin/check-duplicate-nickname',
+        {
+          userNickname: nickName,
+        }
+      );
 
       if (response.status === 200) {
         if (response.data === 'Nickname is available') {
           setNicknameCheckResult('사용 가능한 닉네임입니다.');
           setIsNicknameChecked(true);
-        } else {
+        }
+        if (response.data === 'Nickname is not available') {
           setNicknameCheckResult('이미 사용 중인 닉네임입니다.');
           setIsNicknameChecked(false);
         }
@@ -76,46 +82,46 @@ export default function ComposedTextField({ onChange }: InputNickNameProps) {
   };
 
   return (
-    <Box
+    <Container
       component="form"
-      sx={{
-        '& > :not(style)': { m: 1 },
-      }}
-      noValidate
-      autoComplete="off"
+      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left' }}
     >
-      <FormControl variant="standard">
-        <InputLabel htmlFor="component-helper">닉네임을 입력하세요</InputLabel>
-        <Input
-          id="component-helper"
-          aria-describedby="component-helper-text"
-          value={nickName}
-          onChange={handleInputChange}
-          error={error}
-        />
-        {!error && isNicknameChecked && (
-          <FormHelperText id="component-helper-text">
-            {nicknameCheckResult}
-          </FormHelperText>
-        )}
+      <Box>
+        <FormControl variant="standard" sx={{ padding: 0 }}>
+          <InputLabel htmlFor="component-helper">
+            닉네임을 입력하세요
+          </InputLabel>
+          <Input
+            id="component-helper"
+            aria-describedby="component-helper-text"
+            value={nickName}
+            onChange={handleInputChange}
+            error={error}
+          />
+          {!error && nicknameCheckResult && (
+            <FormHelperText id="component-helper-text">
+              {nicknameCheckResult}
+            </FormHelperText>
+          )}
 
-        {!submitWithoutCheck && (
-          <FormHelperText id="component-helper-text" error>
-            중복확인을 하지 않았습니다!
-          </FormHelperText>
-        )}
+          {!submitWithoutCheck && (
+            <FormHelperText id="component-helper-text" error>
+              중복확인을 하지 않았습니다!
+            </FormHelperText>
+          )}
 
-        <Button
-          onClick={() => {
-            setSubmitWithoutCheck(true);
-            handleNicknameSubmit();
-          }}
-          variant="contained"
-          color="primary"
-        >
-          중복확인
-        </Button>
-      </FormControl>
-    </Box>
+          <Button
+            onClick={() => {
+              setSubmitWithoutCheck(true);
+              handleNicknameSubmit();
+            }}
+            variant="contained"
+            color="primary"
+          >
+            중복확인
+          </Button>
+        </FormControl>
+      </Box>
+    </Container>
   );
 }
