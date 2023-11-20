@@ -20,8 +20,9 @@ function Footer() {
         width: '100%',
         height: '10%',
         justifyContent: 'center',
-        backgroundColor: '#4B4C54', // 배경색 추가
-        zIndex: 1000, // 적절한 값으로 조절
+        backgroundColor: '#4B4C54',
+        zIndex: 1000,
+        marginTop: '30px',
       }}
       color="D3D4F5"
     >
