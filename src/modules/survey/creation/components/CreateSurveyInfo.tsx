@@ -102,6 +102,8 @@ const textStyle = css({
   fontFamily,
 });
 
+const TITLE_MAX_LENGTH = 255;
+
 const tagNames = ['일상', '업무', '공지', '중요', '기타'];
 
 function CreateSurveyInfo({
@@ -229,6 +231,7 @@ function CreateSurveyInfo({
         name="surveyTitle"
         value={surveyInfo.surveyTitle}
         onChange={handleSurveyInfoInputChange}
+        inputProps={{ maxLength: TITLE_MAX_LENGTH }}
       />
     </Box>
   );
