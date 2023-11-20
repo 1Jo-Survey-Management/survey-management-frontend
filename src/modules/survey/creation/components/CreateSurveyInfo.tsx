@@ -164,6 +164,9 @@ function CreateSurveyInfo({
 
       setSurveyImage(uploadFile);
       setSelectedImage(imageUrl);
+    } else {
+      setSurveyImage(undefined);
+      setSelectedImage('');
     }
   };
 
