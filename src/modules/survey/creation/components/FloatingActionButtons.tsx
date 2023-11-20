@@ -50,8 +50,11 @@ const styles = {
     color: '#000000',
   }),
 };
-const fontFamily = 'nanumsquare';
+const fontFamily = 'GmarketSansMedium';
 
+const textStyle = {
+  fontFamily,
+};
 const Transition = React.forwardRef(
   (
     props: TransitionProps & {
@@ -185,7 +188,7 @@ function FloatingActionButtons({
           <Toolbar sx={{ bgcolor: '#E4E4E4' }}>
             <Typography
               css={styles.previewTitle}
-              fontStyle={fontFamily}
+              fontStyle={textStyle}
               variant="h6"
               component="div"
             >
