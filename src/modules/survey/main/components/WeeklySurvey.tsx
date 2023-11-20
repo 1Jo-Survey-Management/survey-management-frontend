@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
+import './Modal.css';
 import FaceIcon from '@mui/icons-material/Face';
 import {
   Button,
@@ -369,18 +370,7 @@ function WeeklySurvey() {
           justifyContent: 'center',
         }}
       >
-        <div
-          style={{
-            backgroundColor: '#fff',
-            boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
-            width: '375px',
-            height: '800px',
-            padding: '16px',
-            outline: 0,
-            borderRadius: '8px',
-            textAlign: 'center',
-          }}
-        >
+        <div className="modal">
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Chip
@@ -490,12 +480,7 @@ function WeeklySurvey() {
               </Stack>
             </Box>
             <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
-            <div
-              style={{
-                overflow: 'auto',
-                height: '400px',
-              }}
-            >
+            <div className="modal-scroll-box">
               {/* 설문조사 사진 */}
               <Box
                 sx={{
