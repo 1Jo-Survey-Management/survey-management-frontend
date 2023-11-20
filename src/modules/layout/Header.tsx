@@ -30,7 +30,7 @@ function Header() {
   const login = () => {
     console.log('login');
 
-    navigate('/loginDisplay');
+    navigate('/login');
   };
 
   const logout = () => {
@@ -44,7 +44,7 @@ function Header() {
 
     axios.defaults.headers.common.Authorization = null;
 
-    navigate('/loginDisplay');
+    navigate('/login');
   };
   const hasProperLogin = localStorage.getItem('userNickname');
 
