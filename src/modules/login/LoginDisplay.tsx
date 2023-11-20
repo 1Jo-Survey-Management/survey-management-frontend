@@ -90,11 +90,14 @@ function LoginDisplay() {
       (userNickname === null || userNickname === '')
     ) {
       try {
-        const response = await axios.get('/api/oauthLogin/cancel', {
-          params: {
-            userNo,
-          },
-        });
+        const response = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/api/oauthLogin/cancel`,
+          {
+            params: {
+              userNo,
+            },
+          }
+        );
 
         const respData = response.data;
         if (respData === '') {
