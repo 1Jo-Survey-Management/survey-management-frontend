@@ -79,7 +79,6 @@ export default function BasicModal({ onClose }: ModalProps) {
     localStorage.removeItem('expiresIn');
     onClose();
     setOpen(false);
-    navigate('/login');
   };
 
   const handleSubmit = async () => {

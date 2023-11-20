@@ -85,10 +85,9 @@ function LoginDisplay() {
     const userNo = localStorage.getItem('userNo') ?? '';
     const userNickname = localStorage.getItem('userNickname');
 
-    if (
-      (userNo !== null || userNo !== '') &&
-      (userNickname === null || userNickname === '')
-    ) {
+    if (userNo && !userNickname) {
+      console.log('???');
+
       try {
         const response = await axios.get('/api/oauthLogin/cancel', {
           params: {
@@ -111,6 +110,8 @@ function LoginDisplay() {
       localStorage.removeItem('userImage');
       localStorage.removeItem('expiresIn');
       localStorage.removeItem('accessCode');
+
+      navigate('/loginDisplay');
     }
   };
 
@@ -191,7 +192,7 @@ function LoginDisplay() {
               localStorage.removeItem('expiresIn');
               localStorage.removeItem('refreshToken');
 
-              navigate('/login');
+              navigate('/loginDisplay');
             }
           }
 
@@ -212,7 +213,6 @@ function LoginDisplay() {
         });
     } else {
       cancelSubmit();
-      navigate('/login');
     }
   }, []);
 

@@ -56,7 +56,7 @@ function App() {
       <GlobalStyle />
       <ThemeProvider theme={Theme}>
         <Routes>
-          <Route path="/login" element={<LoginDisplay />} />
+          <Route path="/loginDisplay" element={<LoginDisplay />} />
           <Route element={<Layout />}>
             <Route path="/survey/register" element={<CreateationSurvey />} />
             <Route path="/survey/modify/:surveyNo" element={<ModifySurvey />} />
