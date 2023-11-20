@@ -196,6 +196,27 @@ function SurveySearch() {
     setHasMore(true);
   };
 
+  const resetData = async () => {
+    // Reset data to initial state
+    setPage(0);
+    setHasMore(true);
+
+    const response = await axios.get(
+      `${process.env.REACT_APP_BASE_URL}/api/surveys/surveyall?page=0`
+    );
+
+    if (response.data.length === 0) {
+      setHasMore(false);
+      return;
+    }
+
+    setFilteredData(response.data);
+  };
+  const reSearch = () => {
+    resetData();
+    setSearchTerm('');
+  };
+
   const handleSearch = () => {
     const filtered = filteredData.filter((card) => {
       const includesSearchTerm =
@@ -290,23 +311,6 @@ function SurveySearch() {
     closeCardModal();
   };
 
-  const resetData = async () => {
-    // Reset data to initial state
-    setPage(0);
-    setHasMore(true);
-
-    const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/api/surveys/surveyall?page=0`
-    );
-
-    if (response.data.length === 0) {
-      setHasMore(false);
-      return;
-    }
-
-    setFilteredData(response.data);
-  };
-
   return (
     <div>
       <style>{customStyles}</style>
@@ -337,6 +341,7 @@ function SurveySearch() {
           style={textStyle}
           onChange={(e) => setSearchTerm(e.target.value)}
           sx={{ width: 300 }}
+          onClick={reSearch}
         />
         <IconButton
           type="button"
