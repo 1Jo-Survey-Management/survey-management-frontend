@@ -117,7 +117,7 @@ function LoginDisplay() {
   useEffect(() => {
     const localStorageAccessToken = localStorage.getItem('accessToken');
     const searchParams = new URLSearchParams(location.search);
-    const redirectUri = '/api/oauthLogin/oauth2/code/naver';
+    const redirectUri = `${process.env.REACT_APP_BASE_URL}/api/oauthLogin/oauth2/code/naver`;
 
     const accessCode = searchParams.get('code');
     const duplicateAccessCode = localStorage.getItem('accessCode');

@@ -29,6 +29,11 @@ function MypageUserModify() {
   const [nicknameCheckResult, setNicknameCheckResult] = useState<string | null>(
     ''
   );
+  const fontFamily = 'GmarketSansMedium';
+
+  const textStyle = {
+    fontFamily,
+  };
 
   const [isNicknameEmpty, setIsNicknameEmpty] = useState(true);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
@@ -258,6 +263,7 @@ function MypageUserModify() {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          ...textStyle,
         }}
       >
         회원 정보 수정

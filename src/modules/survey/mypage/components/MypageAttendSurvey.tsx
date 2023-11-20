@@ -63,6 +63,11 @@ function getStatusText(surveyStatusNo: number) {
       return '';
   }
 }
+const fontFamily = 'GmarketSansMedium';
+
+const textStyle = {
+  fontFamily,
+};
 
 /**
  * 설문의 상태 번호에 따라 해당하는 칩 색상을 반환합니다.
@@ -203,6 +208,7 @@ function Mypage() {
       <h1
         style={{
           fontSize: '25px',
+          ...textStyle,
         }}
       >
         내가 참여한 설문 목록
