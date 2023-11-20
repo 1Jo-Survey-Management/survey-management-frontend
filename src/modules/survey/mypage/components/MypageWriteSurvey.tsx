@@ -104,6 +104,12 @@ function getCardColor(surveyStatusNo: number) {
   }
 }
 
+const fontFamily = 'GmarketSansMedium';
+
+const textStyle = {
+  fontFamily,
+};
+
 function Mypage() {
   const [filteredData, setFilteredData] = useState<CardData[]>([]);
   const [openModal, setOpenModal] = useState(false);
@@ -300,6 +306,7 @@ function Mypage() {
       <h1
         style={{
           fontSize: '25px',
+          ...textStyle,
         }}
       >
         내가 작성한 설문 목록
