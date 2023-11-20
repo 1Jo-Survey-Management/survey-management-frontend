@@ -38,7 +38,8 @@ interface AttendSingleMoveChoiceProps {
     questionTypeNo: number,
     isMovable: boolean,
     isUnchecked: boolean,
-    endOfSurvey: boolean
+    endOfSurvey: boolean,
+    selectionNo: number
   ) => void;
 }
 
@@ -75,8 +76,13 @@ function AttendSingleMoveChoice({
     );
 
     if (selectedOption) {
-      const { questionTypeNo, movable, surveyQuestionMoveNo, endOfSurvey } =
-        selectedOption;
+      const {
+        questionTypeNo,
+        movable,
+        surveyQuestionMoveNo,
+        endOfSurvey,
+        selectionNo,
+      } = selectedOption;
 
       if (selectedValue === null) {
         handleSelectionClick(
@@ -85,7 +91,8 @@ function AttendSingleMoveChoice({
           questionTypeNo,
           false,
           isUnchecked,
-          endOfSurvey
+          endOfSurvey,
+          selectionNo
         );
       } else if (movable) {
         handleSelectionClick(
@@ -94,7 +101,8 @@ function AttendSingleMoveChoice({
           questionTypeNo,
           true,
           isUnchecked,
-          endOfSurvey
+          endOfSurvey,
+          selectionNo
         );
       } else {
         handleSelectionClick(
@@ -103,11 +111,12 @@ function AttendSingleMoveChoice({
           questionTypeNo,
           false,
           isUnchecked,
-          endOfSurvey
+          endOfSurvey,
+          selectionNo
         );
       }
     }
-  }, [selectedValue, isUnchecked]);
+  }, [selectedValue, isUnchecked, surveyData, questionNo]);
 
   /**
    * 라디오 버튼 선택 변경 핸들러 함수입니다.

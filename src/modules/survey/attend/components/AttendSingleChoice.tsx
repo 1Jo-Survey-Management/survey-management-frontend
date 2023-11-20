@@ -39,7 +39,8 @@ interface AttendSingleChoiceProps {
     questionTypeNo: number,
     isMovable: boolean,
     isUnchecked: boolean,
-    endOfSurvey: boolean
+    endOfSurvey: boolean,
+    selectionNo: number
   ) => void;
 }
 
@@ -70,8 +71,13 @@ function AttendSingleChoice({
     );
 
     if (selectedOption) {
-      const { questionTypeNo, movable, surveyQuestionMoveNo, endOfSurvey } =
-        selectedOption;
+      const {
+        questionTypeNo,
+        movable,
+        surveyQuestionMoveNo,
+        endOfSurvey,
+        selectionNo,
+      } = selectedOption;
 
       if (selectedValue === null) {
         handleSelectionClick(
@@ -80,7 +86,8 @@ function AttendSingleChoice({
           questionTypeNo,
           false,
           isUnchecked,
-          endOfSurvey
+          endOfSurvey,
+          selectionNo
         );
       } else if (movable) {
         handleSelectionClick(
@@ -89,7 +96,8 @@ function AttendSingleChoice({
           questionTypeNo,
           true,
           isUnchecked,
-          endOfSurvey
+          endOfSurvey,
+          selectionNo
         );
       } else {
         handleSelectionClick(
@@ -98,7 +106,8 @@ function AttendSingleChoice({
           questionTypeNo,
           false,
           isUnchecked,
-          endOfSurvey
+          endOfSurvey,
+          selectionNo
         );
       }
     }
