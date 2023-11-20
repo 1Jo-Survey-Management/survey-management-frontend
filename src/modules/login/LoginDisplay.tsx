@@ -81,27 +81,14 @@ function LoginDisplay() {
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    const localStorageAccessToken = localStorage.getItem('accessToken');
-    const searchParams = new URLSearchParams(location.search);
-    const redirectUri = '/api/oauthLogin/oauth2/code/naver';
+  const cancelSubmit = async () => {
+    const userNo = localStorage.getItem('userNo') ?? '';
+    const userNickname = localStorage.getItem('userNickname');
 
-    const accessCode = searchParams.get('code') ?? '';
-    const duplicateAccessCode = localStorage.getItem('accessCode');
+    if (userNo && !userNickname) {
+      console.log('???');
 
-    const accessCodeDuplicateCheck = () => {
-      let duplicatedCheck = false;
-      if (duplicateAccessCode !== accessCode) {
-        duplicatedCheck = true;
-      }
-
-      return duplicatedCheck;
-    };
-
-    const cancelSubmit = async () => {
       try {
-        const userNo = localStorage.getItem('userNo') ?? '';
-
         const response = await axios.get('/api/oauthLogin/cancel', {
           params: {
             userNo,
@@ -119,9 +106,30 @@ function LoginDisplay() {
 
       localStorage.removeItem('userNo');
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('userNickname');
+      localStorage.removeItem('userImage');
       localStorage.removeItem('expiresIn');
+      localStorage.removeItem('accessCode');
 
       navigate('/loginDisplay');
+    }
+  };
+
+  useEffect(() => {
+    const localStorageAccessToken = localStorage.getItem('accessToken');
+    const searchParams = new URLSearchParams(location.search);
+    const redirectUri = '/api/oauthLogin/oauth2/code/naver';
+
+    const accessCode = searchParams.get('code') ?? '';
+    const duplicateAccessCode = localStorage.getItem('accessCode');
+
+    const accessCodeDuplicateCheck = () => {
+      let duplicatedCheck = false;
+      if (duplicateAccessCode !== accessCode) {
+        duplicatedCheck = true;
+      }
+
+      return duplicatedCheck;
     };
 
     if (accessCode && accessCodeDuplicateCheck()) {

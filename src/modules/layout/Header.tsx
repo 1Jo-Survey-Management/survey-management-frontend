@@ -50,7 +50,7 @@ function Header() {
 
   const properLogin = () => {
     let loginCheck = false;
-    if (hasProperLogin) {
+    if (hasProperLogin !== null) {
       loginCheck = true;
     }
     return loginCheck;
@@ -125,7 +125,7 @@ function Header() {
               role="presentation"
             />
           </div>
-          {properLogin() ? (
+          {!properLogin() ? (
             <Button
               onClick={login}
               sx={{ color: '#000000', fontStyle: textStyle, fontSize: '20px' }}

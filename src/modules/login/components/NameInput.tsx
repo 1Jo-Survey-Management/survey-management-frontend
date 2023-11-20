@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState, ChangeEvent, useEffect } from 'react';
+import { Container } from '@mui/system';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -7,23 +8,23 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { Button } from '@mui/material';
 import axios from '../components/customApi';
-import { Container } from '@mui/system';
 
 interface InputNickNameProps {
   onChange: (value: string, isChecked: boolean) => void;
 }
 
-// interface FormData {
-//   userNickname: string;
-//   isNicknameChecked: boolean;
-// }
-
+interface isNicknameCheckedOnChange {
+  isNicknameCheckedOnChangeCallback: (isChecked: boolean) => void;
+}
 /**
  * 닉네임을 입력할수 있는 input box 입니다
  * @author 김선규
  * @returns 닉네임 입력 컴포넌트
  */
-export default function ComposedTextField({ onChange }: InputNickNameProps) {
+export default function ComposedTextField({
+  onChange,
+  isNicknameCheckedOnChangeCallback,
+}: InputNickNameProps & isNicknameCheckedOnChange) {
   const [isNicknameChecked, setIsNicknameChecked] = useState<boolean>(false);
   const [nicknameCheckResult, setNicknameCheckResult] = useState<string | null>(
     ''
@@ -51,6 +52,10 @@ export default function ComposedTextField({ onChange }: InputNickNameProps) {
     onChange(value, isNicknameChecked);
   };
 
+  useEffect(() => {
+    isNicknameCheckedOnChangeCallback(isNicknameChecked);
+  }, [isNicknameChecked]);
+
   const handleNicknameSubmit = async () => {
     if (nickName.trim() === '') {
       setSubmitWithoutCheck(false);
@@ -70,10 +75,14 @@ export default function ComposedTextField({ onChange }: InputNickNameProps) {
         if (response.data === 'Nickname is available') {
           setNicknameCheckResult('사용 가능한 닉네임입니다.');
           setIsNicknameChecked(true);
+
+          isNicknameCheckedOnChangeCallback(true);
         }
         if (response.data === 'Nickname is not available') {
           setNicknameCheckResult('이미 사용 중인 닉네임입니다.');
           setIsNicknameChecked(false);
+
+          isNicknameCheckedOnChangeCallback(false);
         }
       }
     } catch (submitError) {

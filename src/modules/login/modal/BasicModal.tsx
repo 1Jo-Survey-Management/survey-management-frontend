@@ -73,8 +73,10 @@ export default function BasicModal({ onClose }: ModalProps) {
 
   const handleClose = () => {
     localStorage.removeItem('userNo');
+    localStorage.removeItem('accessToken');
     localStorage.removeItem('userNickname');
     localStorage.removeItem('userImage');
+    localStorage.removeItem('expiresIn');
     onClose();
     setOpen(false);
   };
@@ -108,6 +110,19 @@ export default function BasicModal({ onClose }: ModalProps) {
           console.error('API 요청 실패');
           return;
         }
+
+        const responseCheck = response;
+        const responseUserNo = responseCheck.data.content.userNo;
+        const responseAccessToken = responseCheck.data.content.accessToken;
+        const responseImage = responseCheck.data.content.userImage;
+        const responseNickName = responseCheck.data.content.userNickname;
+        const responseExpiresIn = responseCheck.data.content.expiresIn;
+
+        localStorage.setItem('userNo', responseUserNo);
+        localStorage.setItem('userNickname', responseNickName);
+        localStorage.setItem('userImage', responseImage);
+        localStorage.setItem('accessToken', responseAccessToken);
+        localStorage.setItem('expiresIn', responseExpiresIn);
 
         navigate(`/survey/main`);
       } catch (error) {
@@ -159,7 +174,12 @@ export default function BasicModal({ onClose }: ModalProps) {
           <Typography id="modal-modal-description">
             필수 추가 정보를 입력해야 회원가입이 가능합니다.
           </Typography>
-          <InputNickName onChange={handleNickNameChange} />
+          <InputNickName
+            onChange={handleNickNameChange}
+            isNicknameCheckedOnChangeCallback={(isChecked) =>
+              setFormData({ ...formData, isNicknameCheckedOnChange: isChecked })
+            }
+          />
           <RadioButton onChange={handleRadioChange} />
           <GetBirth onChange={handleBirthChange} />
           <Box sx={columnStyle}>
