@@ -1,3 +1,5 @@
+/* eslint-disable no-continue */
+/* eslint-disable no-restricted-syntax */
 /**
  * AttendSurvey 컴포넌트는 사용자에게 설문조사를 제출할 수 있는 인터페이스를 제공합니다.
  * 이 컴포넌트는 여러 종류의 질문 유형을 지원하며 사용자 응답을 수집하고 제출하는 기능을 포함합니다.
@@ -32,7 +34,7 @@ interface UserResponse {
   surveyQuestionTitle: string;
   selectionValue: string | null;
   userNo: number;
-  surveyNo: number;
+  surveyNo: string;
   surveyQuestionNo: number;
   questionTypeNo: number;
   selectionNo: number;
@@ -96,7 +98,8 @@ function AttendSurvey() {
     questionTypeNo: number,
     isMovable: boolean,
     isUnchecked: boolean,
-    endOfSurvey: boolean
+    endOfSurvey: boolean,
+    selectionNo: number
   ) => {
     setHiddenQuestions((prevHiddenQuestions) => {
       const currentHiddenQuestions =
@@ -116,12 +119,29 @@ function AttendSurvey() {
       }
 
       if (isMovable && questionTypeNo === 2) {
-        // 숨길 질문 번호들을 추가
+        // 현재 문항의 다른 선택지들의 surveyQuestionMoveNo 값들을 찾기
+        const additionalHiddenQuestions = surveyData.content
+          .filter(
+            (item) =>
+              item.surveyQuestionNo === selectedQuestionNo &&
+              item.selectionNo !== selectionNo &&
+              item.surveyQuestionMoveNo !== moveToQuestionNo // 현재 선택된 moveToQuestionNo와 다른 surveyQuestionMoveNo만 포함
+          )
+          .map((item) => item.surveyQuestionMoveNo);
+
+        // 숨겨야 할 질문 번호들을 추가 (현재 선택된 moveToQuestionNo는 제외)
         for (let i = selectedQuestionNo + 1; i < moveToQuestionNo; i += 1) {
           if (!newHiddenQuestions.includes(i)) {
             newHiddenQuestions.push(i);
           }
         }
+
+        // additionalHiddenQuestions에 포함된 문항들을 숨김 처리
+        additionalHiddenQuestions.forEach((hiddenQuestionNo) => {
+          if (!newHiddenQuestions.includes(hiddenQuestionNo)) {
+            newHiddenQuestions.push(hiddenQuestionNo);
+          }
+        });
       } else if (
         (!isMovable && questionTypeNo === 2 && moveToQuestionNo === 0) ||
         isUnchecked
@@ -190,13 +210,6 @@ function AttendSurvey() {
           if (currentResponse) {
             updatedResponses = [...updatedResponses, currentResponse];
           }
-
-          console.log(
-            `questionsToRemove 배열 값: ${JSON.stringify(questionsToRemove)}`
-          );
-          console.log(
-            `updatedResponses 배열 값: ${JSON.stringify(updatedResponses)}`
-          );
         }
 
         return updatedResponses;
@@ -303,7 +316,6 @@ function AttendSurvey() {
             surveySubjectiveAnswer: null,
             endOfSurvey,
           });
-          console.log(`endOfSurvey 값: ${JSON.stringify(endOfSurvey)}`);
         }
       }
 
@@ -315,7 +327,6 @@ function AttendSurvey() {
 
         return [...updatedResponses, ...newResponses];
       });
-      console.log(`newResponses 배열: ${JSON.stringify(newResponses)}`);
     };
 
   /**
@@ -411,7 +422,7 @@ function AttendSurvey() {
 
         // surveyNo에 해당하는 데이터만 필터링합니다.
         const filteredData = response.data.content
-          .filter((item) => Number(item.surveyNo) === Number(surveyNo))
+          .filter((item) => item.surveyNo.toString() === surveyNo)
           .sort((a, b) => a.surveyQuestionNo - b.surveyQuestionNo);
 
         setSurveyData({
@@ -419,21 +430,19 @@ function AttendSurvey() {
           content: filteredData,
         });
 
-        console.log(`filteredData: ${JSON.stringify(filteredData)}`);
-
         if (response.data.success && filteredData.length > 0) {
           setSurveyTitle(filteredData[0].surveyTitle);
         }
-        setIsLoading(false); // 로딩 완료
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching survey data:', error);
-        setIsLoading(false); // 오류 발생 시 로딩 완료
+        setIsLoading(false);
       }
     };
     console.log(`surveyNo: ${JSON.stringify(surveyNo)}`);
 
     fetchData();
-  }, [surveyNo]); // 의존성 배열에 surveyNo 추가
+  }, [surveyNo]);
 
   useEffect(() => {
     if (surveyNo) {
@@ -487,27 +496,15 @@ function AttendSurvey() {
       return;
     }
 
-    const lastEndOfSurveyQuestion = userResponses.some(
-      (response) => response.endOfSurvey
-    )
-      ? Math.max(
-          ...userResponses
-            .filter((response) => response.endOfSurvey)
-            .map((response) => response.surveyQuestionNo)
-        )
-      : null;
-    console.log(
-      `lastEndOfSurveyQuestion???: ${JSON.stringify(lastEndOfSurveyQuestion)}`
-    );
+    // 숨김 처리된 문항 번호들을 배열로 변환
+    const hiddenQuestionNumbers = Object.values(hiddenQuestions).flat();
 
-    // eslint-disable-next-line no-restricted-syntax
+    // 유효성 검사
     for (const item of surveyData.content) {
-      if (
-        lastEndOfSurveyQuestion &&
-        item.surveyQuestionNo > lastEndOfSurveyQuestion
-      )
-        // eslint-disable-next-line no-continue
+      // 숨김 처리된 문항은 검사에서 제외
+      if (hiddenQuestionNumbers.includes(item.surveyQuestionNo)) {
         continue;
+      }
 
       if (item.required) {
         const responseExists = userResponses.find(
@@ -607,6 +604,9 @@ function AttendSurvey() {
           color="primary"
           fullWidth
           onClick={handleSubmit}
+          sx={{
+            marginBottom: '60px',
+          }}
         >
           설문 제출
         </Button>
