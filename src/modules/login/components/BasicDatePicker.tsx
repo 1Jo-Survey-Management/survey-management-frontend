@@ -5,6 +5,7 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { Container } from '@mui/system';
 
 interface InputBirthDateProps {
   onChange: (value: string) => void;
@@ -41,23 +42,25 @@ export default function ResponsiveDatePickers({
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer
-        components={[
-          'DatePicker',
-          'MobileDatePicker',
-          'DesktopDatePicker',
-          'StaticDatePicker',
-        ]}
-      >
-        <DemoItem label="생년월일">
-          <DesktopDatePicker
-            disableFuture
-            value={selectedDate}
-            onChange={handleDateChange}
-          />
-        </DemoItem>
-      </DemoContainer>
-    </LocalizationProvider>
+    <Container>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DemoContainer
+          components={[
+            'DatePicker',
+            'MobileDatePicker',
+            'DesktopDatePicker',
+            'StaticDatePicker',
+          ]}
+        >
+          <DemoItem label="생년월일">
+            <DesktopDatePicker
+              disableFuture
+              value={selectedDate}
+              onChange={handleDateChange}
+            />
+          </DemoItem>
+        </DemoContainer>
+      </LocalizationProvider>
+    </Container>
   );
 }
