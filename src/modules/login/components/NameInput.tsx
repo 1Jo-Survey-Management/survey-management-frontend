@@ -65,7 +65,7 @@ export default function ComposedTextField({
 
     try {
       const response = await axios.post(
-        '/api/oauthLogin/check-duplicate-nickname',
+        `${process.env.REACT_APP_BASE_URL}/api/oauthLogin/check-duplicate-nickname`,
         {
           userNickname: nickName,
         }
