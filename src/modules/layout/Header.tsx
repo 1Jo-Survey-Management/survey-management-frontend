@@ -10,7 +10,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import axios from '../login/components/customApi';
 import '../../global.css';
 import logoplus from './logoplus.png';
-import './Header.css';
 import Menu from './Menu';
 import logoutbutton from './logoutbutton.png';
 import loginbutton from './loginbutton.png';
@@ -82,7 +81,16 @@ function Header() {
           marginBottom: '0',
         }}
       >
-        <Toolbar>
+        <Toolbar
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignContent: 'center',
+            width: '100%',
+            height: '60px',
+            marginTop: '15px',
+          }}
+        >
           <IconButton
             size="large"
             sx={{ color: '#272727', marginTop: '15px' }}
