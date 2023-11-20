@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
 import FaceIcon from '@mui/icons-material/Face';
+import './Modal.css';
 import {
   Button,
   Card,
@@ -14,6 +15,7 @@ import {
   Modal,
   Fade,
   Divider,
+  Alert,
 } from '@mui/material';
 import Swal from 'sweetalert2';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
@@ -347,18 +349,7 @@ function ClosingSurvey() {
           }}
         >
           <Fade in={openModal}>
-            <div
-              style={{
-                backgroundColor: '#fff',
-                boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
-                width: '375px',
-                height: '800px',
-                padding: '16px',
-                outline: 0,
-                borderRadius: '8px',
-                textAlign: 'center',
-              }}
-            >
+            <div className="modal">
               <Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Chip
@@ -468,12 +459,7 @@ function ClosingSurvey() {
                   </Stack>
                 </Box>
                 <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
-                <div
-                  style={{
-                    overflow: 'auto',
-                    height: '420px',
-                  }}
-                >
+                <div className="modal-scroll-box">
                   {/* 설문조사 사진 */}
                   <Box
                     sx={{
@@ -507,6 +493,31 @@ function ClosingSurvey() {
                 </div>
                 <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
 
+                <Box
+                  sx={{
+                    marginTop: '15px',
+                    paddingBottom: '15px',
+                  }}
+                >
+                  {selectedCard?.openStatusName === '비공개' &&
+                    (numUser() !== selectedCard.userNo ? (
+                      <Alert severity="warning">
+                        설문 작성자만 볼 수 있습니다.
+                      </Alert>
+                    ) : (
+                      <Alert severity="success">
+                        해당 비공개 설문의 작성자입니다.
+                      </Alert>
+                    ))}
+
+                  {selectedCard?.openStatusName === '회원 공개' &&
+                    numUser() === null && (
+                      <Alert severity="error">
+                        설문 결과를 보시려면 로그인해주세요.
+                      </Alert>
+                    )}
+                </Box>
+                {/* 결과보기, 참여하기 버튼 */}
                 {/* 결과보기 버튼 */}
                 {(!selectedCard?.openStatusName ||
                   selectedCard?.openStatusName === '전체 공개' ||
