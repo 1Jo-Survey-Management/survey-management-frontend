@@ -10,6 +10,7 @@ export interface SurveyInfoProps {
   surveyDescription: string;
   surveyStatusNo: number;
   surveyPostAt?: string;
+  surveyImageUrl?: string;
 }
 
 export interface CreateSurveyInfoProps {

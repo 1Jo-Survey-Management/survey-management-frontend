@@ -116,6 +116,22 @@ function LongAnswer({
           placeholder="장문 답변 입력(최대 1000자)"
           error={isOverLimit}
           helperText={isOverLimit ? '답변은 1000자를 초과할 수 없습니다.' : ''}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: 'lightgray', // 기본 테두리 색상
+              },
+              '&:hover fieldset': {
+                borderColor: 'gray', // 호버 시 테두리 색상
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#3e3e3e', // 포커스 시 테두리 색상
+              },
+            },
+            '& .MuiInputLabel-root.Mui-focused': {
+              color: '#3e3e3e', // 포커스 시 레이블 색상
+            },
+          }}
         />
       </CardContent>
     </Card>

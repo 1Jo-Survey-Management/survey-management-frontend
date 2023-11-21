@@ -1,11 +1,9 @@
 import axios from 'axios';
-import config from '../config/config.json';
 /**
  * intercepter를 통하여 토큰 만료시 refreshToken으로 자동 갱신하기 위한 axois 커스텀 컴포넌트입니다
  * @author 김선규
  */
 const Api = axios.create({
-  baseURL: config.server,
   params: {},
 });
 
@@ -13,7 +11,6 @@ const Api = axios.create({
 Api.interceptors.request.use(
   // eslint-disable-next-line no-shadow
   (config) => {
-    // 여기서 localStorage 등을 통해 토큰을 가져와 헤더에 추가
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
       // eslint-disable-next-line no-param-reassign

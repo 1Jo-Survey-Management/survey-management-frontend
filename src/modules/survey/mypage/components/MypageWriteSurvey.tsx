@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * 사용자의 마이페이지 컴포넌트입니다. 사용자가 작성하거나 참여한 설문의 목록을 보여주고,
@@ -9,6 +10,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 
 import {
   Button,
@@ -68,6 +70,23 @@ function getStatusText(surveyStatusNo: number) {
   }
 }
 
+const tagColor = (tag: string) => {
+  switch (tag) {
+    case '공지':
+      return '#F8E5E5';
+    case '중요':
+      return '#F5F9DE';
+    case '업무':
+      return '#F9ECDF';
+    case '기타':
+      return '#E5ECF5';
+    case '일상':
+      return '#EDEBF6';
+    default:
+      return 'default';
+  }
+};
+
 /**
  * 설문 상태 번호에 따라 Material UI Chip 컴포넌트의 색상을 반환합니다.
  *
@@ -77,7 +96,7 @@ function getStatusText(surveyStatusNo: number) {
 function getChipColor(surveyStatusNo: number) {
   switch (surveyStatusNo) {
     case 1:
-      return 'primary';
+      return '#000000';
     case 2:
       return 'secondary';
     default:
@@ -91,18 +110,24 @@ function getChipColor(surveyStatusNo: number) {
  * @param {number} surveyStatusNo - 설문의 상태 번호
  * @returns {string} 해당 상태에 맞는 배경색
  */
-function getCardColor(surveyStatusNo: number) {
-  switch (surveyStatusNo) {
-    case 1:
-      return 'rgba(51, 122, 255, 0.1)';
-    case 2:
-      return 'rgba(153, 102, 255, 0.1)';
-    case 3:
-      return 'rgba(128, 128, 128, 0.1)';
-    default:
-      return 'rgba(0, 0, 0, 0.5)';
-  }
-}
+// function getCardColor(surveyStatusNo: number) {
+//   switch (surveyStatusNo) {
+//     case 1:
+//       return 'rgba(51, 122, 255, 0.1)';
+//     case 2:
+//       return 'rgba(153, 102, 255, 0.1)';
+//     case 3:
+//       return 'rgba(128, 128, 128, 0.1)';
+//     default:
+//       return 'rgba(0, 0, 0, 0.5)';
+//   }
+// }
+
+const fontFamily = 'GmarketSansMedium';
+
+const textStyle = {
+  fontFamily,
+};
 
 function Mypage() {
   const [filteredData, setFilteredData] = useState<CardData[]>([]);
@@ -296,10 +321,14 @@ function Mypage() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
+    <Container maxWidth="md" sx={{ paddingLeft: '3px', paddingRight: '3px' }}>
       <h1
         style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
           fontSize: '25px',
+          ...textStyle,
         }}
       >
         내가 작성한 설문 목록
@@ -394,10 +423,11 @@ function Mypage() {
           >
             <Card
               sx={{
-                minWidth: 100,
-                maxWidth: 150,
-                minHeight: 80,
-                backgroundColor: getCardColor(card.surveyStatusNo),
+                width: '160px',
+                height: '180px',
+                borderRadius: 2,
+                backgroundColor: '#F9F9F9',
+                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
               }}
             >
               <CardContent
@@ -435,15 +465,17 @@ function Mypage() {
 
                   <Chip
                     label={getStatusText(card.surveyStatusNo)}
-                    color={getChipColor(card.surveyStatusNo)}
+                    variant="outlined"
                     sx={{
-                      width: '50px',
+                      width: '40px',
                       height: '20px',
                       fontSize: '10px',
                       fontWeight: 600,
                       '& .MuiChip-label': {
                         padding: 0,
                       },
+                      backgroundColor: '#F9F9F9',
+                      color: getChipColor(card.surveyStatusNo),
                     }}
                   />
                 </Stack>
@@ -451,15 +483,21 @@ function Mypage() {
                 <div
                   style={{
                     display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
+                    // justifyContent: 'space-between',
+                    alignItems: 'stretch',
                     fontSize: 12,
                     color: 'text.secondary',
-                    marginBottom: '10px',
+                    marginBottom: '5px',
                     fontWeight: 600,
                   }}
                 >
-                  마감: {card.surveyClosingAt}
+                  <EventAvailableIcon
+                    sx={{
+                      fontSize: '15px',
+                      marginRight: '4px',
+                    }}
+                  />
+                  {card.surveyClosingAt}
                 </div>
                 <Typography
                   variant="h5"
@@ -469,8 +507,9 @@ function Mypage() {
                     fontWeight: 600,
                     marginBottom: '8px',
                     cursor: 'pointer',
+                    height: '70px',
                     overflow: 'hidden', // 넘치는 내용 숨김
-                    whiteSpace: 'nowrap', // 텍스트를 한 줄로 유지
+                    whiteSpace: 'wrap', // 텍스트를 한 줄로 유지
                     textOverflow: 'ellipsis', // 넘치는 텍스트를 ...으로 표시
                   }}
                 >
@@ -485,14 +524,29 @@ function Mypage() {
                       marginRight: '8px',
                     },
                   }}
-                >
+                />
+                <Stack direction="row" spacing={1}>
                   {card.tagNames.map((tag, index, array) => (
-                    <React.Fragment key={tag}>
-                      #{tag}
-                      {index !== array.length - 1 && ', '}
-                    </React.Fragment>
+                    // <React.Fragment key={tag}>
+                    //   #{tag}
+                    //   {index !== array.length - 1 && ', '}
+                    // </React.Fragment>
+
+                    <Chip
+                      key={tag}
+                      label={tag}
+                      size="small"
+                      // style={textStyle}
+                      sx={{
+                        fontSize: 11,
+                        marginRight: 1,
+                        height: '20px',
+                        backgroundColor: tagColor(tag),
+                        // opacity: 0.7,
+                      }}
+                    />
                   ))}
-                </Typography>
+                </Stack>
               </CardContent>
             </Card>
           </div>

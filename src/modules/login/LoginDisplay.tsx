@@ -82,19 +82,19 @@ function LoginDisplay() {
   const [showModal, setShowModal] = useState(false);
 
   const cancelSubmit = async () => {
-    const userNo = localStorage.getItem('userNo') ?? '';
+    const userNo = localStorage.getItem('userNo');
     const userNickname = localStorage.getItem('userNickname');
 
-    if (
-      (userNo !== null || userNo !== '') &&
-      (userNickname === null || userNickname === '')
-    ) {
+    if (userNo !== '' && userNickname === '') {
       try {
-        const response = await axios.get('/api/oauthLogin/cancel', {
-          params: {
-            userNo,
-          },
-        });
+        const response = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/api/oauthLogin/cancel`,
+          {
+            params: {
+              userNo,
+            },
+          }
+        );
 
         const respData = response.data;
         if (respData === '') {
@@ -117,10 +117,11 @@ function LoginDisplay() {
   useEffect(() => {
     const localStorageAccessToken = localStorage.getItem('accessToken');
     const searchParams = new URLSearchParams(location.search);
-    const redirectUri = '/api/oauthLogin/oauth2/code/naver';
+    const redirectUri = `${process.env.REACT_APP_BASE_URL}/api/oauthLogin/oauth2/code/naver`;
 
-    const accessCode = searchParams.get('code') ?? '';
+    const accessCode = searchParams.get('code');
     const duplicateAccessCode = localStorage.getItem('accessCode');
+    // const isRegisted = localStorage.getItem('userNickname');
 
     const accessCodeDuplicateCheck = () => {
       let duplicatedCheck = false;

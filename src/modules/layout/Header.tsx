@@ -5,26 +5,22 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import { useNavigate } from 'react-router-dom';
-import { Button, Drawer, IconButton } from '@mui/material';
+import { Drawer, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import axios from '../login/components/customApi';
 import '../../global.css';
-import logoblack from './logoblack.png';
-import './Header.css';
+import logoplus from './logoplus.png';
 import Menu from './Menu';
+import logoutbutton from './logoutbutton.png';
+import loginbutton from './loginbutton.png';
 
 const ANCHOR_TYPE = 'left';
-
-const fontFamily = "'Gaegu', sans-serif";
-const textStyle = {
-  fontFamily,
-};
 
 function Header() {
   const navigate = useNavigate();
 
   const goMain = () => {
-    navigate('/survey/main');
+    navigate('/');
   };
 
   const login = () => {
@@ -46,13 +42,17 @@ function Header() {
 
     navigate('/login');
   };
-  const hasProperLogin = localStorage.getItem('userNickname');
 
   const properLogin = () => {
+    const hasProperLogin = localStorage.getItem('userNickname');
+
     let loginCheck = false;
-    if (hasProperLogin !== null) {
+
+    if (hasProperLogin !== 'null') {
+      console.log('????');
       loginCheck = true;
     }
+
     return loginCheck;
   };
 
@@ -81,14 +81,23 @@ function Header() {
         sx={{
           backgroundColor: '#FFFFFF',
           boxShadow: 'none',
-          height: '90px',
+          height: '110px',
           marginBottom: '0',
         }}
       >
-        <Toolbar>
+        <Toolbar
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignContent: 'center',
+            width: '100%',
+            height: '60px',
+            marginTop: '15px',
+          }}
+        >
           <IconButton
             size="large"
-            sx={{ color: '#000000' }}
+            sx={{ color: '#272727', marginTop: '15px' }}
             aria-label="menu"
             onClick={toggleDrawer(true)}
           >
@@ -105,20 +114,22 @@ function Header() {
           </React.Fragment>
           <div
             style={{
-              maxWidth: '250px', // 최대 너비 설정
-              maxHeight: '60px', // 최대 높이 설정
+              maxWidth: '125px', // 최대 너비 설정
+              maxHeight: '110px', // 최대 높이 설정
               display: 'center',
               justifyItems: 'center',
             }}
           >
             {/* 로고 타이틀, 이미지로 삽입했음 */}
             <img
-              src={logoblack}
+              src={logoplus}
               alt="로고"
               style={{
                 width: '100%', // 너비 100%로 설정하여 부모 요소에 맞추기
                 height: 'auto', // 원본 이미지의 비율 유지
                 color: '#000000',
+                marginLeft: '10px',
+                marginTop: '20px',
               }}
               onClick={goMain}
               onKeyDown={goMain}
@@ -126,19 +137,33 @@ function Header() {
             />
           </div>
           {!properLogin() ? (
-            <Button
+            <img
+              src={loginbutton}
+              alt="로그인"
+              style={{
+                width: '40px', // 너비 100%로 설정하여 부모 요소에 맞추기
+                height: 'auto', // 원본 이미지의 비율 유지
+                marginRight: '12px',
+                marginTop: '20px',
+              }}
               onClick={login}
-              sx={{ color: '#000000', fontStyle: textStyle, fontSize: '20px' }}
-            >
-              LogIn
-            </Button>
+              onKeyDown={login}
+              role="presentation"
+            />
           ) : (
-            <Button
+            <img
+              src={logoutbutton}
+              alt="로그아웃"
+              style={{
+                width: '50px', // 너비 100%로 설정하여 부모 요소에 맞추기
+                height: 'auto', // 원본 이미지의 비율 유지
+                marginRight: '12px',
+                marginTop: '20px',
+              }}
               onClick={logout}
-              sx={{ color: '#000000', fontStyle: textStyle, fontSize: '20px' }}
-            >
-              Logout
-            </Button>
+              onKeyDown={logout}
+              role="presentation"
+            />
           )}
         </Toolbar>
       </AppBar>
