@@ -156,18 +156,6 @@ export default function BasicModal({ onClose }: ModalProps) {
       return;
     }
 
-    if (formData.isRegexCheckCheckedOnChange === true) {
-      Swal.fire({
-        icon: 'error',
-        title: '특수문자는 입력할 수 없습니다!',
-        customClass: {
-          popup: 'swal-custom-popup',
-          container: 'swal-custom-container',
-        },
-      });
-      return;
-    }
-
     if (formData.userBirth !== '' && formData.userGender !== '') {
       const userInfo = {
         userNickname: formData.userNickname,

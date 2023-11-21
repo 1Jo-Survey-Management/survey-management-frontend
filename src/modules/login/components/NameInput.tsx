@@ -140,9 +140,9 @@ export default function ComposedTextField({
       component="form"
       sx={{
         display: 'flex',
-        flexDirection: 'row', // 세로에서 가로로 변경
-        alignItems: 'center', // 수직 가운데 정렬
-        justifyContent: 'flex-start', // 수평 왼쪽 정렬
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
       }}
     >
       <Box>
