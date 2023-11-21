@@ -155,6 +155,7 @@ function CreateMoveableSingleSelection({
 
   /**
    * 해당 선택지에 다음 문항 이동 번호를 등록해주는 메서드 입니다.
+   * 해당 다음 문항부터 선택된 최대 문항 이동번호 이전까지 문항 필수 여부를 false로 변경합니다.
    *
    * @param selectionId
    */
@@ -190,11 +191,23 @@ function CreateMoveableSingleSelection({
 
     if (selectedValue === NEXT_QUESTION) {
       changedQuestionMoveId = questionIndex + CREATE_NEXT_QUESTION_INDEX;
-    } else {
-      const selectedQuestionMoveId = Number(selectedValue);
-      if (selectedQuestionMoveId > changedQuestionMoveId) {
-        changedQuestionMoveId = selectedQuestionMoveId;
-      }
+    }
+    const selectedQuestionMoveId = Number(selectedValue);
+
+    if (selectedQuestionMoveId > changedQuestionMoveId) {
+      changedQuestionMoveId = selectedQuestionMoveId;
+    }
+
+    const updatedQuestions = [...questions];
+
+    for (let i = questionIndex + 1; i < selectedQuestionMoveId - 1; i += 1) {
+      const prevQuestion = updatedQuestions[i];
+      const updatedPrevQuestion = {
+        ...prevQuestion,
+        questionRequired: false,
+      };
+
+      updatedQuestions[i] = updatedPrevQuestion;
     }
 
     const updatedSelection = {
@@ -210,7 +223,8 @@ function CreateMoveableSingleSelection({
       selections: updateSelections,
     };
 
-    setQuestions(findQuestionAndUpdateQuestions(updateQuestion));
+    updatedQuestions[questionIndex] = updateQuestion;
+    setQuestions(updatedQuestions);
   };
 
   /**
