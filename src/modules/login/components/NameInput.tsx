@@ -10,11 +10,15 @@ import { Button } from '@mui/material';
 import axios from '../components/customApi';
 
 interface InputNickNameProps {
-  onChange: (value: string, isChecked: boolean) => void;
+  onChange: (value: string, isChecked: boolean, isOverLimited: boolean) => void;
 }
 
 interface isNicknameCheckedOnChange {
   isNicknameCheckedOnChangeCallback: (isChecked: boolean) => void;
+}
+
+interface isOverLimitCheckedOnChange {
+  isOverLimitChecked: (isOverLimited: boolean) => void;
 }
 /**
  * 닉네임을 입력할수 있는 input box 입니다
@@ -24,7 +28,10 @@ interface isNicknameCheckedOnChange {
 export default function ComposedTextField({
   onChange,
   isNicknameCheckedOnChangeCallback,
-}: InputNickNameProps & isNicknameCheckedOnChange) {
+  isOverLimitChecked,
+}: InputNickNameProps &
+  isNicknameCheckedOnChange &
+  isOverLimitCheckedOnChange) {
   const [isNicknameChecked, setIsNicknameChecked] = useState<boolean>(false);
   const [nicknameCheckResult, setNicknameCheckResult] = useState<string | null>(
     ''
@@ -32,6 +39,7 @@ export default function ComposedTextField({
   const [nickName, setNickName] = useState<string>('');
   const [error, setError] = useState(true);
   const [submitWithoutCheck, setSubmitWithoutCheck] = useState(false);
+  const [isOverLimit, setIsOverLimit] = useState(false);
 
   useEffect(() => {
     setIsNicknameChecked(false);
@@ -41,7 +49,13 @@ export default function ComposedTextField({
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    setNickName(value);
+
+    if (value.length <= 16) {
+      setNickName(value);
+      setIsOverLimit(false);
+    } else {
+      setIsOverLimit(true);
+    }
 
     if (value.trim() === '' || value.trim() === null) {
       setError(true);
@@ -49,17 +63,17 @@ export default function ComposedTextField({
       setError(false);
     }
 
-    onChange(value, isNicknameChecked);
+    onChange(value, isNicknameChecked, isOverLimit);
   };
 
   useEffect(() => {
     isNicknameCheckedOnChangeCallback(isNicknameChecked);
-  }, [isNicknameChecked]);
+    isOverLimitChecked(isOverLimit);
+  }, [isNicknameChecked, isOverLimit]);
 
   const handleNicknameSubmit = async () => {
     if (nickName.trim() === '') {
       setSubmitWithoutCheck(false);
-      alert('닉네임을 입력하세요!');
       return;
     }
 
@@ -93,13 +107,16 @@ export default function ComposedTextField({
   return (
     <Container
       component="form"
-      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left' }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'row', // 세로에서 가로로 변경
+        alignItems: 'center', // 수직 가운데 정렬
+        justifyContent: 'flex-start', // 수평 왼쪽 정렬
+      }}
     >
       <Box>
-        <FormControl variant="standard" sx={{ padding: 0 }}>
-          <InputLabel htmlFor="component-helper">
-            닉네임을 입력하세요
-          </InputLabel>
+        <FormControl variant="standard">
+          <InputLabel htmlFor="component-helper">닉네임</InputLabel>
           <Input
             id="component-helper"
             aria-describedby="component-helper-text"
@@ -113,23 +130,30 @@ export default function ComposedTextField({
             </FormHelperText>
           )}
 
+          {/* {isOverLimit && (
+            <FormHelperText sx={{ color: 'red' }}>
+              닉네임은 16자를 초과할 수 없습니다.
+            </FormHelperText>
+          )} */}
+
           {!submitWithoutCheck && (
             <FormHelperText id="component-helper-text" error>
               중복확인을 하지 않았습니다!
             </FormHelperText>
           )}
-
-          <Button
-            onClick={() => {
-              setSubmitWithoutCheck(true);
-              handleNicknameSubmit();
-            }}
-            variant="contained"
-            color="primary"
-          >
-            중복확인
-          </Button>
         </FormControl>
+
+        <Button
+          onClick={() => {
+            setSubmitWithoutCheck(true);
+            handleNicknameSubmit();
+          }}
+          variant="contained"
+          color="secondary"
+          sx={{ marginTop: '10px' }}
+        >
+          중복확인
+        </Button>
       </Box>
     </Container>
   );

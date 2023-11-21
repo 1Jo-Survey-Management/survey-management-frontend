@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 import { Container } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -18,13 +19,17 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: '80%',
   bgcolor: 'background.paper',
-  border: '0px solid #000',
-  boxShadow: 24,
-  p: 4,
+  border: '1px solid #000',
+  boxShadow: '0 0 0 1px black, 0 0 0 5px white, 0 0 0 1px black',
+  p: 2,
+  borderRadius: '10px',
 };
 
 const columnStyle = {
   display: 'flex',
+  marginTop: '20px',
+  justifyContent: 'center',
+  textAlign: 'center',
 };
 
 interface ModalProps {
@@ -36,6 +41,7 @@ interface FormData {
   userNickname: string;
   userGender: string;
   isNicknameCheckedOnChange: boolean;
+  isOverLimitCheckedOnChange: boolean;
 }
 
 /**
@@ -53,13 +59,19 @@ export default function BasicModal({ onClose }: ModalProps) {
     userGender: '',
     userBirth: '',
     isNicknameCheckedOnChange: false,
+    isOverLimitCheckedOnChange: false,
   });
 
-  const handleNickNameChange = (value: string, isChecked: boolean) => {
+  const handleNickNameChange = (
+    value: string,
+    isChecked: boolean,
+    isOverLimitChecked: boolean
+  ) => {
     setFormData({
       ...formData,
       userNickname: value,
       isNicknameCheckedOnChange: isChecked,
+      isOverLimitCheckedOnChange: isOverLimitChecked,
     });
   };
 
@@ -83,15 +95,26 @@ export default function BasicModal({ onClose }: ModalProps) {
 
   const handleSubmit = async () => {
     if (formData.isNicknameCheckedOnChange !== true) {
-      alert('닉네임 중복체크를 해주세요!');
+      Swal.fire({
+        icon: 'error',
+        title: '닉네임 중복체크 해주세요!',
+        customClass: {
+          popup: 'swal-custom-popup',
+          container: 'swal-custom-container',
+        },
+      });
       return;
     }
 
-    if (
-      formData.userNickname !== '' &&
-      formData.userBirth !== '' &&
-      formData.userGender !== ''
-    ) {
+    if (formData.isOverLimitCheckedOnChange === true) {
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: '닉네임은 16자 이내로 해주세요!',
+      // });
+      return;
+    }
+
+    if (formData.userBirth !== '' && formData.userGender !== '') {
       const userInfo = {
         userNickname: formData.userNickname,
         userBirth: formData.userBirth,
@@ -133,13 +156,18 @@ export default function BasicModal({ onClose }: ModalProps) {
         console.error(error);
       }
     } else {
-      alert('정보를 정확히 입력해주세요!');
+      if (formData.userGender === '') {
+        alert('성별을 선택하세요!');
+      }
+      if (formData.userBirth === '') {
+        alert('생년월일을 입력하세요!');
+      }
     }
   };
 
   const cancelSubmit = async () => {
     try {
-      const userNo = localStorage.getItem('userNo') ?? '';
+      const userNo = localStorage.getItem('userNo');
 
       const response = await axios.get(
         `${process.env.REACT_APP_BASE_URL}/api/oauthLogin/cancel`,
@@ -168,23 +196,39 @@ export default function BasicModal({ onClose }: ModalProps) {
 
   return (
     <Container>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={open} onClose={handleClose}>
         <Box sx={{ ...style }}>
-          <Typography id="modal-modal-title" variant="h5" component="h1">
+          <Typography
+            variant="h5"
+            component="h1"
+            sx={{
+              padding: '16px',
+              justifyContent: 'center',
+              textAlign: 'center',
+            }}
+          >
             필수 추가 정보 입력
           </Typography>
-          <Typography id="modal-modal-description">
+          <Typography
+            sx={{
+              padding: '16px',
+              fontSize: '0.7rem',
+              justifyContent: 'center',
+              textAlign: 'center',
+            }}
+          >
             필수 추가 정보를 입력해야 회원가입이 가능합니다.
           </Typography>
           <InputNickName
             onChange={handleNickNameChange}
             isNicknameCheckedOnChangeCallback={(isChecked) =>
               setFormData({ ...formData, isNicknameCheckedOnChange: isChecked })
+            }
+            isOverLimitChecked={(isOverLimitChecked) =>
+              setFormData({
+                ...formData,
+                isOverLimitCheckedOnChange: isOverLimitChecked,
+              })
             }
           />
           <RadioButton onChange={handleRadioChange} />
