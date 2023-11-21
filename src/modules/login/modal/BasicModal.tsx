@@ -42,6 +42,7 @@ interface FormData {
   userGender: string;
   isNicknameCheckedOnChange: boolean;
   isOverLimitCheckedOnChange: boolean;
+  isRegexCheckCheckedOnChange: boolean;
 }
 
 /**
@@ -70,18 +71,21 @@ export default function BasicModal({ onClose }: ModalProps) {
     userBirth: '',
     isNicknameCheckedOnChange: false,
     isOverLimitCheckedOnChange: false,
+    isRegexCheckCheckedOnChange: false,
   });
 
   const handleNickNameChange = (
     value: string,
     isChecked: boolean,
-    isOverLimitChecked: boolean
+    isOverLimitChecked: boolean,
+    isRegexCheckChecked: boolean
   ) => {
     setFormData({
       ...formData,
       userNickname: value,
       isNicknameCheckedOnChange: isChecked,
       isOverLimitCheckedOnChange: isOverLimitChecked,
+      isRegexCheckCheckedOnChange: isRegexCheckChecked,
     });
   };
 
@@ -144,6 +148,18 @@ export default function BasicModal({ onClose }: ModalProps) {
       Swal.fire({
         icon: 'error',
         title: '생년월일을 입력해주세요!',
+        customClass: {
+          popup: 'swal-custom-popup',
+          container: 'swal-custom-container',
+        },
+      });
+      return;
+    }
+
+    if (formData.isRegexCheckCheckedOnChange === true) {
+      Swal.fire({
+        icon: 'error',
+        title: '특수문자는 입력할 수 없습니다!',
         customClass: {
           popup: 'swal-custom-popup',
           container: 'swal-custom-container',
@@ -260,6 +276,12 @@ export default function BasicModal({ onClose }: ModalProps) {
               setFormData({
                 ...formData,
                 isOverLimitCheckedOnChange: isOverLimitChecked,
+              })
+            }
+            isRegexCheckChecked={(isRegexCheckChecked) =>
+              setFormData({
+                ...formData,
+                isRegexCheckCheckedOnChange: isRegexCheckChecked,
               })
             }
           />

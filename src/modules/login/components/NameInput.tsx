@@ -10,7 +10,12 @@ import { Button } from '@mui/material';
 import axios from '../components/customApi';
 
 interface InputNickNameProps {
-  onChange: (value: string, isChecked: boolean, isOverLimited: boolean) => void;
+  onChange: (
+    value: string,
+    isChecked: boolean,
+    isOverLimited: boolean,
+    isRegexCheck: boolean
+  ) => void;
 }
 
 interface isNicknameCheckedOnChange {
@@ -20,6 +25,11 @@ interface isNicknameCheckedOnChange {
 interface isOverLimitCheckedOnChange {
   isOverLimitChecked: (isOverLimited: boolean) => void;
 }
+
+interface isRegexCheckCheckedOnChange {
+  isRegexCheckChecked: (isRegexCheck: boolean) => void;
+}
+
 /**
  * 닉네임을 입력할수 있는 input box 입니다
  * @author 김선규
@@ -29,9 +39,11 @@ export default function ComposedTextField({
   onChange,
   isNicknameCheckedOnChangeCallback,
   isOverLimitChecked,
+  isRegexCheckChecked,
 }: InputNickNameProps &
   isNicknameCheckedOnChange &
-  isOverLimitCheckedOnChange) {
+  isOverLimitCheckedOnChange &
+  isRegexCheckCheckedOnChange) {
   const [isNicknameChecked, setIsNicknameChecked] = useState<boolean>(false);
   const [nicknameCheckResult, setNicknameCheckResult] = useState<string | null>(
     ''
@@ -40,6 +52,7 @@ export default function ComposedTextField({
   const [error, setError] = useState(true);
   const [submitWithoutCheck, setSubmitWithoutCheck] = useState(false);
   const [isOverLimit, setIsOverLimit] = useState(false);
+  const [isRegexCheck, setIsRegexCheck] = useState<boolean>(false);
 
   useEffect(() => {
     setIsNicknameChecked(false);
@@ -47,8 +60,15 @@ export default function ComposedTextField({
     setNicknameCheckResult(null);
   }, [nickName]);
 
+  useEffect(() => {
+    isNicknameCheckedOnChangeCallback(isNicknameChecked);
+    isOverLimitChecked(isOverLimit);
+    isRegexCheckChecked(isRegexCheck);
+  }, [isNicknameChecked, isOverLimit, isRegexCheck]);
+
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+    const regex = /^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]*$/;
 
     if (value.length <= 16) {
       setNickName(value);
@@ -57,22 +77,31 @@ export default function ComposedTextField({
       setIsOverLimit(true);
     }
 
+    if (regex.test(value)) {
+      setNickName(value);
+      setIsRegexCheck(false);
+    } else {
+      setIsRegexCheck(true);
+    }
+
     if (value.trim() === '' || value.trim() === null) {
       setError(true);
     } else {
       setError(false);
     }
 
-    onChange(value, isNicknameChecked, isOverLimit);
+    onChange(value, isNicknameChecked, isOverLimit, isRegexCheck);
   };
 
-  useEffect(() => {
-    isNicknameCheckedOnChangeCallback(isNicknameChecked);
-    isOverLimitChecked(isOverLimit);
-  }, [isNicknameChecked, isOverLimit]);
-
   const handleNicknameSubmit = async () => {
+    const regex = /^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]*$/;
+
     if (nickName.trim() === '') {
+      setSubmitWithoutCheck(false);
+      return;
+    }
+
+    if (!regex.test(nickName)) {
       setSubmitWithoutCheck(false);
       return;
     }
@@ -88,12 +117,14 @@ export default function ComposedTextField({
       if (response.status === 200) {
         if (response.data === 'Nickname is available') {
           setNicknameCheckResult('사용 가능한 닉네임입니다.');
+          setSubmitWithoutCheck(true);
           setIsNicknameChecked(true);
 
           isNicknameCheckedOnChangeCallback(true);
         }
         if (response.data === 'Nickname is not available') {
           setNicknameCheckResult('이미 사용 중인 닉네임입니다.');
+          setSubmitWithoutCheck(false);
           setIsNicknameChecked(false);
 
           isNicknameCheckedOnChangeCallback(false);
@@ -136,7 +167,13 @@ export default function ComposedTextField({
             </FormHelperText>
           )}
 
-          {!submitWithoutCheck && !isOverLimit && (
+          {isRegexCheck && (
+            <FormHelperText id="component-helper-text" sx={{ color: 'red' }}>
+              특수문자는 불가합니다!
+            </FormHelperText>
+          )}
+
+          {!submitWithoutCheck && !isOverLimit && !isRegexCheck && (
             <FormHelperText id="component-helper-text" error>
               중복확인을 하지 않았습니다!
             </FormHelperText>
@@ -145,7 +182,6 @@ export default function ComposedTextField({
 
         <Button
           onClick={() => {
-            setSubmitWithoutCheck(true);
             handleNicknameSubmit();
           }}
           variant="contained"
