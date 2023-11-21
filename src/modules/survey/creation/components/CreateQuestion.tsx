@@ -50,6 +50,7 @@ const styles = {
   iconAndSwitchContainer: css({
     display: 'flex',
     justifyContent: 'flex-end',
+    alignItems: 'center',
     marginTop: '-15px',
   }),
 
@@ -66,9 +67,10 @@ const styles = {
   }),
 
   questionBox: css({
-    borderColor: '#3f50b5',
+    border: 'none',
     boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
     marginBottom: '30px',
+    marginTop: '-3px',
   }),
 
   questionTitleBox: css({
@@ -99,6 +101,7 @@ const styles = {
   textStyle: css({
     marginRight: '10px',
     fontWeight: 'bold',
+    minWidth: '65px',
   }),
 
   requiredText: css({
@@ -269,6 +272,7 @@ function CreateQuestion({
             <Switch
               defaultChecked
               onChange={() => handleRequiredSwitchChange(question)}
+              color="default"
             />
           </Box>
         </FormGroup>

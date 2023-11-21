@@ -1,3 +1,7 @@
+/** @jsxImportSource @emotion/react */
+
+import { Typography } from '@mui/material';
+import Box from '@mui/material/Box';
 import React from 'react';
 import {
   DragDropContext,
@@ -89,6 +93,34 @@ function DragDropQuestion({ questions, setQuestions }: DragDropQuestionProps) {
                       ...draggableProvided.draggableProps.style,
                     }}
                   >
+                    <Box
+                      css={{
+                        border: 'none',
+                        backgroundColor: '#d3d3d366',
+                        minWidth: '33px', // 최소 너비를 설정
+                        display: 'inline-block', // 내용을 inline-block으로 표시
+                        width: 'auto',
+                        color: '#000',
+                        fontWeight: 'bold',
+                        borderRadius: '2px',
+                        textAlign: 'center',
+                        fontSize: '14px',
+                      }}
+                    >
+                      <Box css={{ display: 'flex', alignItems: 'center' }}>
+                        <img
+                          src="/q_letter_icon_212286.png"
+                          alt="Q"
+                          width="19px"
+                          css={{
+                            marginBottom: '2px',
+                          }}
+                        />
+                        <Typography css={{ fontSize: '17px' }}>
+                          {index + 1}
+                        </Typography>
+                      </Box>
+                    </Box>
                     <CreateQuestion
                       key={question.questionId}
                       question={question}

@@ -2,6 +2,7 @@
 
 import {
   Box,
+  Button,
   Card,
   CardContent,
   Chip,
@@ -12,13 +13,14 @@ import {
   OutlinedInput,
   Select,
   SelectChangeEvent,
+  styled,
   TextField,
   Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ImageIcon from '@mui/icons-material/Image';
 import { css } from '@emotion/react';
-
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { CreateSurveyInfoProps, SurveyInfoProps } from '../types/SurveyTypes';
 import { OpenStatusEnum } from '../../enums/OpenStatusEnum';
 
@@ -100,6 +102,18 @@ const styles = {
 const fontFamily = 'nanumsquare';
 const textStyle = css({
   fontFamily,
+});
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
 });
 
 const TITLE_MAX_LENGTH = 255;
@@ -337,12 +351,25 @@ function CreateSurveyInfo({
               </Box>
             </div>
           )}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            css={textStyle}
-          />
+          <Box>
+            <Button
+              component="label"
+              variant="contained"
+              startIcon={<CloudUploadIcon />}
+              sx={{ backgroundColor: '#3e3e3e' }}
+            >
+              Upload file
+              <VisuallyHiddenInput type="file" onChange={handleImageUpload} />
+            </Button>
+            {/* <input
+              type="file"
+              id="surveyImageInput"
+              name="surveyImageInput"
+              accept="image/*"
+              onChange={handleImageUpload}
+              css={textStyle}
+            /> */}
+          </Box>
         </Box>
 
         {surveyTagSelectBox}

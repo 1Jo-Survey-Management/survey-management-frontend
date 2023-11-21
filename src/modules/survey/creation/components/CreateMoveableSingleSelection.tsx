@@ -20,7 +20,7 @@ import {
 } from '../types/SurveyTypes';
 import { CREATE_NEXT_QUESTION_INDEX } from '../constant/SurveyCreationConstant';
 
-const primaryColor = '#3f50b5';
+const primaryColor = '#3e3e3e';
 
 const styles = {
   icon: css({

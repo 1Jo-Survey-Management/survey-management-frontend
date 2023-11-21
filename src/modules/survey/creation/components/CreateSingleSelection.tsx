@@ -11,7 +11,7 @@ import {
   SelectionProps,
 } from '../types/SurveyTypes';
 
-const primaryColor = '#3f50b5';
+const primaryColor = '#3e3e3e';
 
 const styles = {
   plusIcon: css({

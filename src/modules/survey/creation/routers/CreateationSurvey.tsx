@@ -174,8 +174,7 @@ function CreateationSurvey() {
       <Box sx={{ marginRight: '10px', marginBottom: '100px' }}>
         <Button
           variant="contained"
-          color="success"
-          sx={{ marginRight: '20px' }}
+          sx={{ marginRight: '20px', backgroundColor: '#747474' }}
           onClick={handleSubmitSurveyWrite}
           css={textStyle}
         >
@@ -185,6 +184,7 @@ function CreateationSurvey() {
         <Button
           variant="contained"
           onClick={handleSubmitSurveyPost}
+          sx={{ backgroundColor: '#3e3e3e' }}
           css={textStyle}
         >
           게시하기
