@@ -29,7 +29,13 @@ export default function Layout() {
       {isLoginPage ? (
         <LoginPage />
       ) : ( */}
-      <Container sx={{ backgroundColor: '#FFFFFF', minHeight: '600px' }}>
+      <Container
+        sx={{
+          backgroundColor: '#FFFFFF',
+          minHeight: '600px',
+          minWidth: '375px',
+        }}
+      >
         <Outlet />
       </Container>
       {/* )} */}

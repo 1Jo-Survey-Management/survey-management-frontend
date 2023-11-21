@@ -210,6 +210,9 @@ function AttendSingleChoice({
               fontWeight: '600',
               color: 'black',
               marginBottom: '10px',
+              '&.Mui-focused': {
+                color: '#3e3e3e', // 포커스 시 색상 변경
+              },
             }}
           >
             {currentQuestion?.surveyQuestionTitle}
@@ -244,6 +247,9 @@ function AttendSingleChoice({
                           width: '18px',
                           height: '18px',
                         },
+                        '&.Mui-checked': {
+                          color: '#3e3e3e', // 선택 시 라디오 버튼 색상 변경
+                        },
                       }}
                       onClick={() =>
                         handleRadioToggle(item.selectionValue || '')
@@ -256,7 +262,7 @@ function AttendSingleChoice({
                       sx={{
                         color:
                           selectedValue === item.selectionValue
-                            ? 'blue'
+                            ? '#3e3e3e'
                             : 'inherit',
                         fontWeight:
                           selectedValue === item.selectionValue
