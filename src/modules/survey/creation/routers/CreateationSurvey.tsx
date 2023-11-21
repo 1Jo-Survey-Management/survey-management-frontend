@@ -211,7 +211,6 @@ function CreateationSurvey() {
       <FloatingActionButtons
         onClickAddQuestion={handleAddQuestion}
         surveyInfo={surveyInfo}
-        surveyImage={surveyImage || undefined}
         questions={questions}
       />
     </Container>

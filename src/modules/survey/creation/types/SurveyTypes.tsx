@@ -65,7 +65,5 @@ export interface DragDropQuestionProps {
 export interface FloatingActionButtonsProps {
   onClickAddQuestion: () => void;
   surveyInfo: SurveyInfoProps;
-  surveyImage: File | undefined;
   questions: QuestionProps[];
-  previewImageUrl?: string;
 }
