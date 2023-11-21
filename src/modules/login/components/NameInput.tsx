@@ -7,6 +7,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { Button } from '@mui/material';
+import Swal from 'sweetalert2';
 import axios from '../components/customApi';
 
 interface InputNickNameProps {
@@ -54,6 +55,16 @@ export default function ComposedTextField({
   const [isOverLimit, setIsOverLimit] = useState(false);
   const [isRegexCheck, setIsRegexCheck] = useState<boolean>(false);
 
+  // style 태그를 사용해 커스텀 스타일 정의
+  const customStyles = `
+    .swal-custom-popup {
+      z-index: 1500; // 필요한 z-index 값
+    }
+    .swal-custom-container {
+      z-index: 1500; // 필요한 z-index 값
+    }
+  `;
+
   useEffect(() => {
     setIsNicknameChecked(false);
     setSubmitWithoutCheck(false);
@@ -68,7 +79,7 @@ export default function ComposedTextField({
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const regex = /^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]*$/;
+    const regex = /^[A-Za-z0-9가-힣]{2,16}$/;
 
     if (value.length <= 16) {
       setNickName(value);
@@ -94,14 +105,30 @@ export default function ComposedTextField({
   };
 
   const handleNicknameSubmit = async () => {
-    const regex = /^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]*$/;
+    const regex = /^[A-Za-z0-9가-힣]{2,16}$/;
 
     if (nickName.trim() === '') {
+      Swal.fire({
+        icon: 'error',
+        title: '닉네임을 입력해주세요!',
+        customClass: {
+          popup: 'swal-custom-popup',
+          container: 'swal-custom-container',
+        },
+      });
       setSubmitWithoutCheck(false);
       return;
     }
 
     if (!regex.test(nickName)) {
+      Swal.fire({
+        icon: 'error',
+        title: '2글자이상,자음/모음/특수문자 불가합니다!',
+        customClass: {
+          popup: 'swal-custom-popup',
+          container: 'swal-custom-container',
+        },
+      });
       setSubmitWithoutCheck(false);
       return;
     }
@@ -121,6 +148,15 @@ export default function ComposedTextField({
           setIsNicknameChecked(true);
 
           isNicknameCheckedOnChangeCallback(true);
+
+          Swal.fire({
+            icon: 'success',
+            title: '사용 가능한 닉네임입니다.',
+            customClass: {
+              popup: 'swal-custom-popup',
+              container: 'swal-custom-container',
+            },
+          });
         }
         if (response.data === 'Nickname is not available') {
           setNicknameCheckResult('이미 사용 중인 닉네임입니다.');
@@ -128,6 +164,14 @@ export default function ComposedTextField({
           setIsNicknameChecked(false);
 
           isNicknameCheckedOnChangeCallback(false);
+          Swal.fire({
+            icon: 'error',
+            title: '이미 사용 중인 닉네임입니다.',
+            customClass: {
+              popup: 'swal-custom-popup',
+              container: 'swal-custom-container',
+            },
+          });
         }
       }
     } catch (submitError) {
@@ -145,7 +189,8 @@ export default function ComposedTextField({
         justifyContent: 'flex-start',
       }}
     >
-      <Box>
+      <style>{customStyles}</style>
+      <Box sx={{ height: '100px' }}>
         <FormControl variant="standard">
           <InputLabel htmlFor="component-helper">닉네임</InputLabel>
           <Input
@@ -154,6 +199,7 @@ export default function ComposedTextField({
             value={nickName}
             onChange={handleInputChange}
             error={error}
+            sx={{ width: '90%' }}
           />
           {!error && nicknameCheckResult && (
             <FormHelperText id="component-helper-text">
@@ -162,35 +208,47 @@ export default function ComposedTextField({
           )}
 
           {isOverLimit && (
-            <FormHelperText sx={{ color: 'red' }}>
-              닉네임은 16자를 초과할 수 없습니다.
+            <FormHelperText sx={{ color: 'red' }} style={{ width: '150px' }}>
+              닉네임은 16자를 초과할 수 없습니다!
             </FormHelperText>
           )}
 
-          {isRegexCheck && (
-            <FormHelperText id="component-helper-text" sx={{ color: 'red' }}>
-              특수문자는 불가합니다!
+          {isRegexCheck && !isOverLimit && (
+            <FormHelperText
+              id="component-helper-text"
+              sx={{ color: 'red' }}
+              style={{ width: '150px' }}
+            >
+              2글자이상,자음/모음/특수문자 불가합니다!
             </FormHelperText>
           )}
 
           {!submitWithoutCheck && !isOverLimit && !isRegexCheck && (
-            <FormHelperText id="component-helper-text" error>
+            <FormHelperText
+              id="component-helper-text"
+              error
+              style={{ width: '150px' }}
+            >
               중복확인을 하지 않았습니다!
             </FormHelperText>
           )}
         </FormControl>
-
-        <Button
-          onClick={() => {
-            handleNicknameSubmit();
-          }}
-          variant="contained"
-          color="secondary"
-          sx={{ marginTop: '10px' }}
-        >
-          중복확인
-        </Button>
       </Box>
+      <Button
+        onClick={() => {
+          handleNicknameSubmit();
+        }}
+        variant="contained"
+        color="info"
+        sx={{
+          margin: '10px',
+          width: '100px',
+          height: '40px',
+          fontSize: '0.8rem',
+        }}
+      >
+        중복확인
+      </Button>
     </Container>
   );
 }
