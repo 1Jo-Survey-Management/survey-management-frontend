@@ -44,8 +44,6 @@ function Header() {
   };
   const hasProperLogin = localStorage.getItem('userNickname');
 
-  console.log('유저닉네임 : ' + hasProperLogin);
-
   const properLogin = () => {
     let loginCheck = false;
     if (hasProperLogin !== null) {
@@ -134,7 +132,7 @@ function Header() {
               role="presentation"
             />
           </div>
-          {properLogin() ? (
+          {!properLogin() ? (
             <img
               src={loginbutton}
               alt="로그인"

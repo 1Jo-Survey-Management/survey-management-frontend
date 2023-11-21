@@ -57,16 +57,11 @@ const styles = {
   }),
 };
 
-const fontFamily = 'nanumsquare';
-const textStyle = css({
-  fontFamily,
-});
-
 interface ModalProps {
   onClose: () => void;
 }
 
-interface FormData {
+interface UserInfo {
   userBirth: string;
   userNickname: string;
   userGender: string;
@@ -85,9 +80,7 @@ interface FormData {
 export default function BasicModal({ onClose }: ModalProps) {
   const navigate = useNavigate();
 
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    '/broken-image.jpg'
-  );
+  const [imagePreview] = useState<string | null>('/broken-image.jpg');
 
   // style 태그를 사용해 커스텀 스타일 정의
   const customStyles = `
@@ -100,7 +93,7 @@ export default function BasicModal({ onClose }: ModalProps) {
   `;
 
   const [open, setOpen] = useState(true);
-  const [formData, setFormData] = useState<FormData>({
+  const [userInfo, setUserInfo] = useState<UserInfo>({
     userNickname: '',
     userGender: '',
     userBirth: '',
@@ -121,9 +114,7 @@ export default function BasicModal({ onClose }: ModalProps) {
 
       try {
         const imageUrl = await imageUploadToS3(uploadFile);
-        setFormData({ ...formData, userImage: imageUrl });
-        //콘솔 지우기
-        console.log(imageUrl);
+        setUserInfo({ ...userInfo, userImage: imageUrl });
       } catch (error) {
         console.error(error);
       }
@@ -136,8 +127,8 @@ export default function BasicModal({ onClose }: ModalProps) {
     isOverLimitChecked: boolean,
     isRegexCheckChecked: boolean
   ) => {
-    setFormData({
-      ...formData,
+    setUserInfo({
+      ...userInfo,
       userNickname: value,
       isNicknameCheckedOnChange: isChecked,
       isOverLimitCheckedOnChange: isOverLimitChecked,
@@ -146,11 +137,11 @@ export default function BasicModal({ onClose }: ModalProps) {
   };
 
   const handleRadioChange = (value: string) => {
-    setFormData({ ...formData, userGender: value });
+    setUserInfo({ ...userInfo, userGender: value });
   };
 
   const handleBirthChange = (value: string) => {
-    setFormData({ ...formData, userBirth: value });
+    setUserInfo({ ...userInfo, userBirth: value });
   };
 
   const handleClose = () => {
@@ -164,7 +155,7 @@ export default function BasicModal({ onClose }: ModalProps) {
   };
 
   const handleSubmit = async () => {
-    if (formData.isNicknameCheckedOnChange !== true) {
+    if (userInfo.isNicknameCheckedOnChange !== true) {
       Swal.fire({
         icon: 'error',
         title: '닉네임 중복체크 해주세요!',
@@ -176,7 +167,7 @@ export default function BasicModal({ onClose }: ModalProps) {
       return;
     }
 
-    if (formData.isOverLimitCheckedOnChange === true) {
+    if (userInfo.isOverLimitCheckedOnChange === true) {
       Swal.fire({
         icon: 'error',
         title: '닉네임은 16자 이내로 해주세요!',
@@ -188,7 +179,7 @@ export default function BasicModal({ onClose }: ModalProps) {
       return;
     }
 
-    if (formData.userGender === '') {
+    if (userInfo.userGender === '') {
       Swal.fire({
         icon: 'error',
         title: '성별을 선택해주세요!',
@@ -200,7 +191,7 @@ export default function BasicModal({ onClose }: ModalProps) {
       return;
     }
 
-    if (formData.userBirth === '') {
+    if (userInfo.userBirth === '') {
       Swal.fire({
         icon: 'error',
         title: '생년월일을 입력해주세요!',
@@ -212,18 +203,18 @@ export default function BasicModal({ onClose }: ModalProps) {
       return;
     }
 
-    if (formData.userBirth !== '' && formData.userGender !== '') {
-      const userInfo = {
-        userNickname: formData.userNickname,
-        userBirth: formData.userBirth,
-        userGender: formData.userGender,
-        userImage: formData.userImage,
+    if (userInfo.userBirth !== '' && userInfo.userGender !== '') {
+      const userInfoRegist = {
+        userNickname: userInfo.userNickname,
+        userBirth: userInfo.userBirth,
+        userGender: userInfo.userGender,
+        userImage: userInfo.userImage,
       };
 
       try {
         const response = await axios.post(
           `${process.env.REACT_APP_BASE_URL}/api/oauthLogin/regist`,
-          userInfo,
+          userInfoRegist,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -378,17 +369,17 @@ export default function BasicModal({ onClose }: ModalProps) {
           <InputNickName
             onChange={handleNickNameChange}
             isNicknameCheckedOnChangeCallback={(isChecked) =>
-              setFormData({ ...formData, isNicknameCheckedOnChange: isChecked })
+              setUserInfo({ ...userInfo, isNicknameCheckedOnChange: isChecked })
             }
             isOverLimitChecked={(isOverLimitChecked) =>
-              setFormData({
-                ...formData,
+              setUserInfo({
+                ...userInfo,
                 isOverLimitCheckedOnChange: isOverLimitChecked,
               })
             }
             isRegexCheckChecked={(isRegexCheckChecked) =>
-              setFormData({
-                ...formData,
+              setUserInfo({
+                ...userInfo,
                 isRegexCheckCheckedOnChange: isRegexCheckChecked,
               })
             }
