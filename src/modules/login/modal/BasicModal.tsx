@@ -53,6 +53,16 @@ interface FormData {
 export default function BasicModal({ onClose }: ModalProps) {
   const navigate = useNavigate();
 
+  // style 태그를 사용해 커스텀 스타일 정의
+  const customStyles = `
+    .swal-custom-popup {
+      z-index: 1500; // 필요한 z-index 값
+    }
+    .swal-custom-container {
+      z-index: 1500; // 필요한 z-index 값
+    }
+  `;
+
   const [open, setOpen] = useState(true);
   const [formData, setFormData] = useState<FormData>({
     userNickname: '',
@@ -107,10 +117,38 @@ export default function BasicModal({ onClose }: ModalProps) {
     }
 
     if (formData.isOverLimitCheckedOnChange === true) {
-      // Swal.fire({
-      //   icon: 'error',
-      //   title: '닉네임은 16자 이내로 해주세요!',
-      // });
+      Swal.fire({
+        icon: 'error',
+        title: '닉네임은 16자 이내로 해주세요!',
+        customClass: {
+          popup: 'swal-custom-popup',
+          container: 'swal-custom-container',
+        },
+      });
+      return;
+    }
+
+    if (formData.userGender === '') {
+      Swal.fire({
+        icon: 'error',
+        title: '성별을 선택해주세요!',
+        customClass: {
+          popup: 'swal-custom-popup',
+          container: 'swal-custom-container',
+        },
+      });
+      return;
+    }
+
+    if (formData.userBirth === '') {
+      Swal.fire({
+        icon: 'error',
+        title: '생년월일을 입력해주세요!',
+        customClass: {
+          popup: 'swal-custom-popup',
+          container: 'swal-custom-container',
+        },
+      });
       return;
     }
 
@@ -155,13 +193,6 @@ export default function BasicModal({ onClose }: ModalProps) {
       } catch (error) {
         console.error(error);
       }
-    } else {
-      if (formData.userGender === '') {
-        alert('성별을 선택하세요!');
-      }
-      if (formData.userBirth === '') {
-        alert('생년월일을 입력하세요!');
-      }
     }
   };
 
@@ -196,6 +227,7 @@ export default function BasicModal({ onClose }: ModalProps) {
 
   return (
     <Container>
+      <style>{customStyles}</style>
       <Modal open={open} onClose={handleClose}>
         <Box sx={{ ...style }}>
           <Typography

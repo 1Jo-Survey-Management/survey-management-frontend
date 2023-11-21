@@ -130,13 +130,13 @@ export default function ComposedTextField({
             </FormHelperText>
           )}
 
-          {/* {isOverLimit && (
+          {isOverLimit && (
             <FormHelperText sx={{ color: 'red' }}>
               닉네임은 16자를 초과할 수 없습니다.
             </FormHelperText>
-          )} */}
+          )}
 
-          {!submitWithoutCheck && (
+          {!submitWithoutCheck && !isOverLimit && (
             <FormHelperText id="component-helper-text" error>
               중복확인을 하지 않았습니다!
             </FormHelperText>
