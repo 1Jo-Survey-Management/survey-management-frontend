@@ -126,7 +126,7 @@ function FloatingActionButtons({
     <Box css={styles.fabBox}>
       <Fab
         sx={{
-          bgcolor: '#B4B4B4',
+          bgcolor: '#3e3e3e',
           '&:hover': {
             backgroundColor: '#6C6B6B', // Change this to the desired color on hover
           },
@@ -139,7 +139,7 @@ function FloatingActionButtons({
       </Fab>
       <Fab
         sx={{
-          bgcolor: '#B4B4B4',
+          bgcolor: '#3e3e3e',
           '&:hover': {
             backgroundColor: '#6C6B6B', // Change this to the desired color on hover
           },
@@ -152,7 +152,7 @@ function FloatingActionButtons({
       </Fab>
       <Fab
         sx={{
-          bgcolor: '#B4B4B4',
+          bgcolor: '#3e3e3e',
           '&:hover': {
             backgroundColor: '#6C6B6B', // Change this to the desired color on hover
           },
@@ -165,7 +165,7 @@ function FloatingActionButtons({
       </Fab>
       <Fab
         sx={{
-          bgcolor: '#B4B4B4',
+          bgcolor: '#3e3e3e',
           '&:hover': {
             backgroundColor: '#6C6B6B', // Change this to the desired color on hover
           },

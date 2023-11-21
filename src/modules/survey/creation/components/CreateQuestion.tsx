@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
@@ -20,6 +20,7 @@ import {
 } from '@mui/material';
 
 import { css } from '@emotion/react';
+import Swal from 'sweetalert2';
 import CreateSingleSelection from './CreateSingleSelection';
 import CreateMultipleSelection from './CreateMultipleSelection';
 import CreateShortAnswer from './CreatShortAnswer';
@@ -50,6 +51,7 @@ const styles = {
   iconAndSwitchContainer: css({
     display: 'flex',
     justifyContent: 'flex-end',
+    alignItems: 'center',
     marginTop: '-15px',
   }),
 
@@ -66,9 +68,10 @@ const styles = {
   }),
 
   questionBox: css({
-    borderColor: '#3f50b5',
+    border: 'none',
     boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);',
     marginBottom: '30px',
+    marginTop: '-3px',
   }),
 
   questionTitleBox: css({
@@ -99,6 +102,7 @@ const styles = {
   textStyle: css({
     marginRight: '10px',
     fontWeight: 'bold',
+    minWidth: '65px',
   }),
 
   requiredText: css({
@@ -122,8 +126,10 @@ const textStyle = css({
 function CreateQuestion({
   question,
   questions,
-  setQuestions, // selections,
+  setQuestions,
 }: CreateQuestionProps) {
+  const [switchChecked, setSwitchChecked] = useState<boolean>(true);
+
   /**
    * 셀렉박스의 선택에 따라 문항 타입을 랜더링하기 위한 메서드입니다.
    *
@@ -209,6 +215,30 @@ function CreateQuestion({
    * @author 강명관
    */
   const handleRequiredSwitchChange = (targetQuestion: QuestionProps) => {
+    const checkMovableQuestionBetweenTargetQuestion = questions.some(
+      (prevQuestion) => {
+        if (
+          prevQuestion.questionType === QuestionTypeEnum.MOVEABLE_QUESTION &&
+          prevQuestion.selections.some(
+            (selection) =>
+              selection.questionMoveId &&
+              selection.questionMoveId > questions.indexOf(targetQuestion) + 1
+          )
+        ) {
+          return true;
+        }
+        return false;
+      }
+    );
+
+    if (checkMovableQuestionBetweenTargetQuestion) {
+      Swal.fire({
+        icon: 'error',
+        title: '문항 이동사이의 문항은 필수가 될 수 없습니다.',
+      });
+      return;
+    }
+
     const updateQuestions = questions.map((prevQuestion) => {
       if (prevQuestion.questionId === targetQuestion.questionId) {
         return {
@@ -218,9 +248,16 @@ function CreateQuestion({
       }
       return prevQuestion;
     });
-
     setQuestions(updateQuestions);
   };
+
+  const handelSwitchChange = () => {
+    setSwitchChecked(question.questionRequired);
+  };
+
+  useEffect(() => {
+    handelSwitchChange();
+  }, [question]);
 
   /**
    * 설문 문항의 제목과 설명을 작성하는 메서드 입니다.
@@ -267,8 +304,9 @@ function CreateQuestion({
           <Box css={styles.switchBox}>
             <Typography css={[styles.requiredText, textStyle]}>필수</Typography>
             <Switch
-              defaultChecked
+              checked={switchChecked}
               onChange={() => handleRequiredSwitchChange(question)}
+              color="default"
             />
           </Box>
         </FormGroup>
