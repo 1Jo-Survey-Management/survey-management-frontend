@@ -14,14 +14,35 @@ import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
 import { OpenStatusEnum } from '../../enums/OpenStatusEnum';
 import { SurveyStatusEunm } from '../../enums/SurveyStatusEnum';
 import DragDropQuestion from '../components/DragDropQuestions';
+import { imageUploadToS3 } from '../../utils/ImageUploadUtil';
 
 const MAIN_PAGE = '/survey/main';
 const MYPAGE_WRITE_PAGE = '/survey/mypage/write';
-const fontFamily = 'nanumsquare';
-const textStyle = css({
-  fontFamily,
-});
 
+const styles = {
+  container: css({
+    marginTop: '30px',
+  }),
+
+  buttonBox: css({
+    marginRight: '10px',
+  }),
+
+  writeButton: css({
+    marginRight: '20px',
+    backgroundColor: '#747474',
+  }),
+
+  postButton: css({
+    backgroundColor: '#3e3e3e',
+  }),
+};
+
+/**
+ * 섦문 작성페이지를 담당하는 컴포넌트 입니다.
+ *
+ * @author 강명관
+ */
 function CreateationSurvey() {
   const navigate = useNavigate();
 
@@ -84,23 +105,25 @@ function CreateationSurvey() {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('surveyInfoCreateDto', JSON.stringify(surveyInfo));
-    formData.append('surveyQuestionCreateDtoList', JSON.stringify(questions));
+    const requestData = {
+      surveyInfoCreateDto: surveyInfo,
+      surveyQuestionCreateDtoList: questions,
+    };
 
     if (surveyImage !== undefined) {
-      formData.append('surveyImage', surveyImage);
+      try {
+        const imageUrl = await imageUploadToS3(surveyImage);
+        surveyInfo.surveyImageUrl = imageUrl;
+        console.log(imageUrl);
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/api/surveys`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+        requestData
       );
 
       if (response.status === 201) {
@@ -162,7 +185,7 @@ function CreateationSurvey() {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" css={styles.container}>
       <CreateSurveyInfo
         surveyInfo={surveyInfo}
         setSurveyInfo={setSurveyInfo}
@@ -171,13 +194,11 @@ function CreateationSurvey() {
 
       <DragDropQuestion questions={questions} setQuestions={setQuestions} />
 
-      <Box sx={{ marginRight: '10px', marginBottom: '100px' }}>
+      <Box css={styles.buttonBox}>
         <Button
           variant="contained"
-          color="success"
-          sx={{ marginRight: '20px' }}
+          css={styles.writeButton}
           onClick={handleSubmitSurveyWrite}
-          css={textStyle}
         >
           작성하기
         </Button>
@@ -185,7 +206,7 @@ function CreateationSurvey() {
         <Button
           variant="contained"
           onClick={handleSubmitSurveyPost}
-          css={textStyle}
+          css={styles.postButton}
         >
           게시하기
         </Button>

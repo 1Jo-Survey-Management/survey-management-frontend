@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
 import './Modal.css';
 import FaceIcon from '@mui/icons-material/Face';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import {
   Button,
   Card,
@@ -167,7 +168,7 @@ function WeeklySurvey() {
     spaceBetween: 3,
     breakpoints: {
       920: {
-        slidesPerView: 5,
+        slidesPerView: 6,
         spaceBetween: 3,
       },
       750: {
@@ -202,9 +203,6 @@ function WeeklySurvey() {
       <Box
         sx={{
           height: '180px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
         }}
       >
         {isDataAvailable ? (
@@ -234,6 +232,7 @@ function WeeklySurvey() {
                           height: '160px',
 
                           borderRadius: 2,
+                          marginLeft: '5px',
                           backgroundColor: '#FBFBFB',
                           boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                         }}
@@ -251,7 +250,7 @@ function WeeklySurvey() {
                           <Stack
                             direction="row"
                             spacing={1}
-                            justifyContent="space-around"
+                            justifyContent="space-between"
                             paddingBottom="12px"
                           >
                             <Chip
@@ -298,8 +297,7 @@ function WeeklySurvey() {
                           <div
                             style={{
                               display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
+                              alignItems: 'stretch',
                               fontSize: 12,
                               color: 'text.secondary',
                               fontWeight: 600,
@@ -307,6 +305,12 @@ function WeeklySurvey() {
                               fontFamily,
                             }}
                           >
+                            <EventAvailableIcon
+                              sx={{
+                                fontSize: '15px',
+                                marginRight: '4px',
+                              }}
+                            />
                             {card.surveyClosingAt}
                           </div>
 

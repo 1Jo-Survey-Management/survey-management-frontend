@@ -1,7 +1,18 @@
+/** @jsxImportSource @emotion/react */
+
+import { Container } from '@mui/material';
 import React from 'react';
+import { css } from '@emotion/react';
 import PreviewQuestion from '../components/PreviewQuestion';
 import PreviewSurveyInfo from '../components/PreviewSurveyInfo';
 import { PreviewSurveyProps } from '../types/PreviewSurveyTypes';
+
+const styles = {
+  container: css({
+    paddingLeft: '5px',
+    paddingRight: '5px',
+  }),
+};
 
 /**
  * 설문 작성 중 미리보기 페이지를 담당하는 컴포넌트 입니다.
@@ -19,14 +30,14 @@ function SurveyPreview({
   previewImageUrl,
 }: PreviewSurveyProps) {
   return (
-    <div>
+    <Container css={styles.container}>
       <PreviewSurveyInfo
         surveyInfo={surveyInfo}
         surveyImage={surveyImage}
         previewImageUrl={previewImageUrl || undefined}
       />
       <PreviewQuestion questions={questions} />
-    </div>
+    </Container>
   );
 }
 

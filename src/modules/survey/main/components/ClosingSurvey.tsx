@@ -128,10 +128,10 @@ function ClosingSurvey() {
 
   const swiperParams: SwiperOptions = {
     slidesPerView: 'auto',
-    spaceBetween: 5,
+    spaceBetween: 3,
     breakpoints: {
       920: {
-        slidesPerView: 5,
+        slidesPerView: 6,
         spaceBetween: 5,
       },
       750: {
@@ -209,7 +209,7 @@ function ClosingSurvey() {
                         sx={{
                           width: '150px',
                           height: '160px',
-
+                          marginLeft: '5px',
                           borderRadius: 2,
                           backgroundColor: '#F2F2F2',
                           boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',

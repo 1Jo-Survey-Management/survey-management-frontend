@@ -148,7 +148,7 @@ function RecentSurvey() {
     spaceBetween: 3,
     breakpoints: {
       920: {
-        slidesPerView: 5,
+        slidesPerView: 6,
         spaceBetween: 3,
       },
       750: {
@@ -226,6 +226,7 @@ function RecentSurvey() {
                           borderRadius: 2,
                           backgroundColor: '#FBFBFB',
                           boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+                          marginLeft: '5px',
                         }}
                         style={textStyle}
                         onClick={() => openCardModal(card)}
@@ -241,7 +242,7 @@ function RecentSurvey() {
                           <Stack
                             direction="row"
                             spacing={1}
-                            justifyContent="space-around"
+                            justifyContent="space-between"
                             paddingBottom="12px"
                           >
                             <Chip

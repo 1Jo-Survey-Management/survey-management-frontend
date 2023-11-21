@@ -601,11 +601,21 @@ function AttendSurvey() {
       <Stack spacing={2}>
         <Button
           variant="contained"
-          color="primary"
           fullWidth
           onClick={handleSubmit}
           sx={{
             marginBottom: '60px',
+            backgroundColor: '#ffffff', // 기본 배경색
+            color: 'black', // 기본 폰트 색상
+            fontWeight: '600',
+            '&:hover': {
+              backgroundColor: '#3e3e3e', // 호버 시 배경색
+              color: 'white', // 호버 시 폰트 색상
+            },
+            '&.Mui-focusVisible': {
+              backgroundColor: '#ffffff', // 포커스 시 배경색
+              color: 'black', // 포커스 시 폰트 색상
+            },
           }}
         >
           설문 제출

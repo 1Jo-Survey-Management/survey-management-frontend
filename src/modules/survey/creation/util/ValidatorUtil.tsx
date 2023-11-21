@@ -60,6 +60,21 @@ const validationFileExtension = (fileName: string) => {
 };
 
 /**
+ * 파일 사이즈(최대 10MB)를 검증하는 메서드 입니다.
+ *
+ * @param file 업로드할 파일
+ * @returns 성공 ture, 실패 false
+ */
+const validationFileSize = (file: File) => {
+  const maxSizeInBytes = 10 * 1024 * 1024;
+  if (file.size > maxSizeInBytes) {
+    return false;
+  }
+
+  return true;
+};
+
+/**
  * 설문의 이미지 존재 여부를 검증하는 메서드 입니다.
  *
  * @param surveyImage File 타입의 이미지 파일
@@ -81,7 +96,6 @@ const validationSurveyImage = (surveyImage: File | undefined) => {
  */
 const validationSurveyInfo = async (
   surveyInfo: SurveyInfoProps
-  //   surveyImage: File | undefined
 ): Promise<boolean> => {
   let surveyInfoValidationCheck: boolean = true;
 
@@ -275,6 +289,15 @@ export const validationSurvey = async (
       icon: 'error',
       title: '입력되지 않은 사항이 존재합니다.',
       text: `설문 이미지는 JPG, JPEG, PNG 형식만 가능합니다`,
+    });
+    return false;
+  }
+
+  if (validSurveyImage && !validationFileSize(validSurveyImage)) {
+    Swal.fire({
+      icon: 'error',
+      title: '입력되지 않은 사항이 존재합니다.',
+      text: `설문 이미지의 크기는 최대 10MB까지 가능합니다.`,
     });
     return false;
   }
