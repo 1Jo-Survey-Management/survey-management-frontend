@@ -11,7 +11,6 @@ const Api = axios.create({
 Api.interceptors.request.use(
   // eslint-disable-next-line no-shadow
   (config) => {
-    // 여기서 localStorage 등을 통해 토큰을 가져와 헤더에 추가
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
       // eslint-disable-next-line no-param-reassign

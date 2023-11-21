@@ -121,6 +121,7 @@ function LoginDisplay() {
 
     const accessCode = searchParams.get('code');
     const duplicateAccessCode = localStorage.getItem('accessCode');
+    // const isRegisted = localStorage.getItem('userNickname');
 
     const accessCodeDuplicateCheck = () => {
       let duplicatedCheck = false;
