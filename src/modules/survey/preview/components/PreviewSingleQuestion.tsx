@@ -13,6 +13,7 @@ import {
 import React from 'react';
 import { css } from '@emotion/react';
 import { PreviewEachQuestionProps } from '../types/PreviewSurveyTypes';
+import RequiredQuestionText from './RequiredQuestionText';
 
 const styles = {
   questionBox: css({
@@ -20,10 +21,10 @@ const styles = {
   }),
 
   questionTitle: css({
-    fontSize: '0.9rem',
+    fontSize: '1rem',
     fontWeight: '600',
-    marginBottom: '10px',
     color: 'black',
+    marginBottom: '10px',
   }),
 
   questionDescription: css({
@@ -55,26 +56,39 @@ function PreviewSingleQuestion({ question }: PreviewEachQuestionProps) {
   return (
     <Card css={styles.questionBox}>
       <CardContent>
+        {question.questionRequired && <RequiredQuestionText />}
         <FormControl component="fieldset">
           <FormLabel component="legend" css={styles.questionTitle}>
             {question.questionTitle ? question.questionTitle : '제목 없는 문항'}
           </FormLabel>
 
-          {question.questionDescription && (
-            <p css={styles.questionDescription}>
-              {question.questionDescription}
-            </p>
-          )}
+          <Typography
+            variant="body1"
+            sx={{
+              fontSize: '0.9rem',
+            }}
+          >
+            {question.questionDescription}
+          </Typography>
 
-          <RadioGroup>
+          <RadioGroup sx={{ paddingTop: '10x' }}>
             {question.selections.map((selection, index) => (
               <FormControlLabel
                 key={selection.selectionId}
                 value={index}
                 css={styles.controlBox}
-                control={<Radio size="small" />}
+                control={
+                  <Radio
+                    sx={{
+                      '& svg': {
+                        width: '18px',
+                        height: '18px',
+                      },
+                    }}
+                  />
+                }
                 label={
-                  <Typography variant="subtitle1" css={styles.selectionText}>
+                  <Typography variant="subtitle1">
                     {selection.selectionValue
                       ? selection.selectionValue
                       : '제목 없는 선택지'}
