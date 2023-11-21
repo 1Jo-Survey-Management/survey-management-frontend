@@ -73,28 +73,33 @@ function PreviewSingleQuestion({ question }: PreviewEachQuestionProps) {
 
           <RadioGroup sx={{ paddingTop: '10x' }}>
             {question.selections.map((selection, index) => (
-              <FormControlLabel
-                key={selection.selectionId}
-                value={index}
-                css={styles.controlBox}
-                control={
-                  <Radio
-                    sx={{
-                      '& svg': {
-                        width: '18px',
-                        height: '18px',
-                      },
-                    }}
-                  />
-                }
-                label={
-                  <Typography variant="subtitle1">
-                    {selection.selectionValue
-                      ? selection.selectionValue
-                      : '제목 없는 선택지'}
-                  </Typography>
-                }
-              />
+              <div key={selection.questionId}>
+                <FormControlLabel
+                  key={selection.selectionId}
+                  value={index}
+                  css={styles.controlBox}
+                  control={
+                    <Radio
+                      sx={{
+                        '& svg': {
+                          width: '18px',
+                          height: '18px',
+                        },
+                      }}
+                    />
+                  }
+                  label={
+                    <Typography
+                      variant="subtitle1"
+                      css={{ fontSize: '0.8rem' }}
+                    >
+                      {selection.selectionValue
+                        ? selection.selectionValue
+                        : '제목 없는 선택지'}
+                    </Typography>
+                  }
+                />
+              </div>
             ))}
           </RadioGroup>
         </FormControl>

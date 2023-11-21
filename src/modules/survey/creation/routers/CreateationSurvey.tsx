@@ -17,11 +17,31 @@ import DragDropQuestion from '../components/DragDropQuestions';
 
 const MAIN_PAGE = '/survey/main';
 const MYPAGE_WRITE_PAGE = '/survey/mypage/write';
-const fontFamily = 'nanumsquare';
-const textStyle = css({
-  fontFamily,
-});
 
+const styles = {
+  container: css({
+    marginTop: '30px',
+  }),
+
+  buttonBox: css({
+    marginRight: '10px',
+  }),
+
+  writeButton: css({
+    marginRight: '20px',
+    backgroundColor: '#747474',
+  }),
+
+  postButton: css({
+    backgroundColor: '#3e3e3e',
+  }),
+};
+
+/**
+ * 섦문 작성페이지를 담당하는 컴포넌트 입니다.
+ *
+ * @author 강명관
+ */
 function CreateationSurvey() {
   const navigate = useNavigate();
 
@@ -162,7 +182,7 @@ function CreateationSurvey() {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" css={styles.container}>
       <CreateSurveyInfo
         surveyInfo={surveyInfo}
         setSurveyInfo={setSurveyInfo}
@@ -171,12 +191,11 @@ function CreateationSurvey() {
 
       <DragDropQuestion questions={questions} setQuestions={setQuestions} />
 
-      <Box sx={{ marginRight: '10px', marginBottom: '100px' }}>
+      <Box css={styles.buttonBox}>
         <Button
           variant="contained"
-          sx={{ marginRight: '20px', backgroundColor: '#747474' }}
+          css={styles.writeButton}
           onClick={handleSubmitSurveyWrite}
-          css={textStyle}
         >
           작성하기
         </Button>
@@ -184,8 +203,7 @@ function CreateationSurvey() {
         <Button
           variant="contained"
           onClick={handleSubmitSurveyPost}
-          sx={{ backgroundColor: '#3e3e3e' }}
-          css={textStyle}
+          css={styles.postButton}
         >
           게시하기
         </Button>
