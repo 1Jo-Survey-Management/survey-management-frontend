@@ -20,7 +20,7 @@ function Header() {
   const navigate = useNavigate();
 
   const goMain = () => {
-    navigate('/survey/main');
+    navigate('/');
   };
 
   const login = () => {

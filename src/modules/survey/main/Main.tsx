@@ -36,7 +36,7 @@ function Main() {
 
   return (
     // eslint-disable-next-line react/react-in-jsx-scope
-    <Container maxWidth="md">
+    <Container sx={{ maxWidth: '1150px' }}>
       <h3 style={textStyle}>인기 설문🔥</h3>
       <WeeklySurvey />
       <div style={arrowStyle} />
