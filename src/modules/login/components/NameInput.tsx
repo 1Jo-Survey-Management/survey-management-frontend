@@ -192,7 +192,9 @@ export default function ComposedTextField({
       <style>{customStyles}</style>
       <Box sx={{ height: '100px' }}>
         <FormControl variant="standard">
-          <InputLabel htmlFor="component-helper">닉네임</InputLabel>
+          <InputLabel htmlFor="component-helper" sx={{ color: 'black' }}>
+            닉네임
+          </InputLabel>
           <Input
             id="component-helper"
             aria-describedby="component-helper-text"
@@ -245,6 +247,27 @@ export default function ComposedTextField({
           width: '100px',
           height: '40px',
           fontSize: '0.8rem',
+          fontWeight: 600,
+          border: '0px solid white',
+          backgroundColor: '#3e3e3e',
+          '&:hover': {
+            backgroundColor: '#ffffff', // 호버 시 배경 색상
+            color: 'black', // 호버 시 폰트 색상
+            border: '1px solid #3e3e3e',
+            fontWeight: '600',
+          },
+          '&.Mui-focusVisible': {
+            backgroundColor: '#ffffff', // 클릭 시 배경 색상
+            color: 'black', // 클릭 시 폰트 색상
+            border: '1px solid #3e3e3e',
+            fontWeight: '600',
+          },
+          '&:active': {
+            backgroundColor: '#ffffff', // 클릭 시 배경 색상 (또 다른 옵션)
+            color: 'black', // 클릭 시 폰트 색상
+            border: '1px solid #3e3e3e',
+            fontWeight: '600',
+          },
         }}
       >
         중복확인

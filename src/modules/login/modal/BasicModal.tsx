@@ -1,6 +1,4 @@
 import * as React from 'react';
-// import ImageIcon from '@mui/icons-material/Image';
-import { css } from '@emotion/react';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { Avatar, Container } from '@mui/material';
@@ -14,48 +12,6 @@ import InputNickName from '../components/NameInput';
 import GetBirth from '../components/BasicDatePicker';
 import StyledButton from '../components/StyledButton';
 import { imageUploadToS3 } from '../../survey/creation/utils/ImageUploadUtil';
-
-const styles = {
-  container: css({
-    position: 'relative',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '80%',
-    bgcolor: 'background.paper',
-    border: '1px solid #000',
-    boxShadow: '0 0 0 1px black, 0 0 0 5px white, 0 0 0 1px black',
-    p: 2,
-    borderRadius: '10px',
-  }),
-
-  columnStyle: css({
-    display: 'flex',
-    marginTop: '20px',
-    justifyContent: 'center',
-    textAlign: 'center',
-  }),
-
-  iamgeBox: css({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    border: '1px dashed #D1D1D1',
-    height: '50px',
-    marginBottom: '10px',
-  }),
-
-  noImageIcon: css({
-    fontSize: '30px',
-    color: '#757575',
-  }),
-
-  uploadImage: css({
-    width: '50%',
-    height: '50%',
-    objectFit: 'contain',
-  }),
-};
 
 interface ModalProps {
   onClose: () => void;
@@ -80,8 +36,6 @@ interface UserInfo {
 export default function BasicModal({ onClose }: ModalProps) {
   const navigate = useNavigate();
 
-  const [imagePreview] = useState<string | null>('/broken-image.jpg');
-
   // style 태그를 사용해 커스텀 스타일 정의
   const customStyles = `
     .swal-custom-popup {
@@ -103,6 +57,12 @@ export default function BasicModal({ onClose }: ModalProps) {
     isRegexCheckCheckedOnChange: false,
   });
   const [selectedImage, setSelectedImage] = useState<string>('');
+
+  const fontFamily = 'GmarketSansMedium';
+
+  const textStyle = {
+    fontFamily,
+  };
 
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -289,8 +249,7 @@ export default function BasicModal({ onClose }: ModalProps) {
             transform: 'translate(-50%, -50%)',
             width: '80%',
             bgcolor: 'background.paper',
-            border: '1px solid #000',
-            boxShadow: '0 0 0 1px black, 0 0 0 5px white, 0 0 0 1px black',
+            border: '0px solid #000',
             p: 2,
             borderRadius: '10px',
           }}
@@ -302,17 +261,10 @@ export default function BasicModal({ onClose }: ModalProps) {
               padding: '16px',
               justifyContent: 'center',
               textAlign: 'center',
+              ...textStyle,
             }}
           >
             필수 추가 정보 입력
-          </Typography>
-          <Typography
-            sx={{
-              padding: '16px',
-              fontSize: '0.7rem',
-            }}
-          >
-            필수 추가 정보를 입력해야 회원가입이 가능합니다.
           </Typography>
 
           {!selectedImage && (
@@ -327,10 +279,11 @@ export default function BasicModal({ onClose }: ModalProps) {
               }}
             >
               <Avatar
-                src={imagePreview || undefined}
+                src={undefined}
                 sx={{
                   width: 60,
                   height: 60,
+                  backgroundColor: '#747474',
                 }}
               />
             </Box>
@@ -352,6 +305,7 @@ export default function BasicModal({ onClose }: ModalProps) {
                   sx={{
                     width: 80,
                     height: 80,
+                    backgroundColor: '#747474',
                   }}
                   id="surveyImage"
                   alt="설문 이미지"
@@ -359,13 +313,17 @@ export default function BasicModal({ onClose }: ModalProps) {
               </Box>
             </div>
           )}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            style={{ marginLeft: '16px' }}
-          />
-
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '80px',
+            }}
+          >
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
+          </Box>
           <InputNickName
             onChange={handleNickNameChange}
             isNicknameCheckedOnChangeCallback={(isChecked) =>
@@ -386,7 +344,7 @@ export default function BasicModal({ onClose }: ModalProps) {
           />
           <RadioButton onChange={handleRadioChange} />
           <GetBirth onChange={handleBirthChange} />
-          <Box css={styles.columnStyle}>
+          <Box fontStyle={{ ...textStyle }}>
             <StyledButton buttonText="회원가입" onClick={handleSubmit} />
             <StyledButton buttonText="취소" onClick={cancelSubmit} />
           </Box>

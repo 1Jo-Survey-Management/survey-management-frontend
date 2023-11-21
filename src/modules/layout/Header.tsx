@@ -42,13 +42,17 @@ function Header() {
 
     navigate('/login');
   };
-  const hasProperLogin = localStorage.getItem('userNickname');
 
   const properLogin = () => {
+    const hasProperLogin = localStorage.getItem('userNickname');
+
     let loginCheck = false;
-    if (hasProperLogin !== null) {
+
+    if (hasProperLogin !== 'null') {
+      console.log('????');
       loginCheck = true;
     }
+
     return loginCheck;
   };
 

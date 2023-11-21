@@ -121,7 +121,7 @@ function LoginDisplay() {
 
     const accessCode = searchParams.get('code');
     const duplicateAccessCode = localStorage.getItem('accessCode');
-    const isRegisted = localStorage.getItem('userNickname');
+    // const isRegisted = localStorage.getItem('userNickname');
 
     const accessCodeDuplicateCheck = () => {
       let duplicatedCheck = false;
@@ -132,9 +132,7 @@ function LoginDisplay() {
       return duplicatedCheck;
     };
 
-    if (accessCode && accessCodeDuplicateCheck() && isRegisted !== '') {
-      console.log('들어옴');
-
+    if (accessCode && accessCodeDuplicateCheck()) {
       axios
         .get(redirectUri, {
           params: {
