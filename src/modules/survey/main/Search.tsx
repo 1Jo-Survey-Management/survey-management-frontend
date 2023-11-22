@@ -6,7 +6,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
 import '../../../global.css';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {
   Button,
@@ -25,7 +24,6 @@ import InputBase from '@mui/material/InputBase';
 import FaceIcon from '@mui/icons-material/Face';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import Swal from 'sweetalert2';
-
 import axios from '../../login/components/customApi';
 import Floating from './components/Floating';
 
@@ -77,6 +75,7 @@ function SurveySearch() {
   const [selectedState, setSelectedState] = useState<string>('전체(모든 카드)');
   const [openModal, setOpenModal] = useState(false);
   const [allData, setAllData] = useState<CardData[]>([]);
+
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
