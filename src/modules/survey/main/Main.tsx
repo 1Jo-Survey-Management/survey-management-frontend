@@ -110,7 +110,7 @@ function Main() {
       <div style={arrowStyle} />
 
       <Box sx={containerStyle}>
-        <h3 style={textStyle}>최근 등록된 설문📝</h3>
+        <h2 style={textStyle}>최근 등록된 설문📝</h2>
         <Button onClick={() => navigate('/survey/search')} style={searchAll}>
           전체 보기
         </Button>

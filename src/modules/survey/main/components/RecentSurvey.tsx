@@ -166,7 +166,7 @@ function RecentSurvey({ cardList }: CardDataListProps) {
     <div>
       <div>
         <style>{customStyles}</style>
-        <Box sx={{ height: '180px' }}>
+        <Box sx={{ height: '190px' }}>
           <Swiper style={styles.CardSwiper} {...swiperParams}>
             <Box
               sx={{
@@ -189,8 +189,8 @@ function RecentSurvey({ cardList }: CardDataListProps) {
                       <Card
                         variant="elevation"
                         sx={{
-                          width: '150px',
-                          height: '160px',
+                          width: '156px',
+                          height: '180px',
                           borderRadius: 2,
                           backgroundColor: '#FBFBFB',
                           boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
@@ -270,7 +270,6 @@ function RecentSurvey({ cardList }: CardDataListProps) {
                               sx={{
                                 fontSize: '15px',
                                 marginRight: '4px',
-                                marginLeft: '3px',
                               }}
                             />
                             {card.surveyClosingAt}
@@ -280,15 +279,15 @@ function RecentSurvey({ cardList }: CardDataListProps) {
                             variant="h5"
                             component="div"
                             sx={{
-                              fontSize: 15,
+                              fontSize: 18,
                               fontWeight: 600,
                               marginBottom: '8px',
                               cursor: 'pointer',
-                              maxHeight: '43px',
+                              maxHeight: '47px',
                               overflow: 'hidden',
                               display: '-webkit-box',
                               WebkitLineClamp: 2,
-                              height: '41px',
+                              height: '47px',
                               WebkitBoxOrient: 'vertical',
                             }}
                             style={textStyle}
@@ -296,7 +295,11 @@ function RecentSurvey({ cardList }: CardDataListProps) {
                             {card.surveyTitle}
                           </Typography>
                           {/* 태그 등 카드에 관한 내용 표시 */}
-                          <Stack direction="row" spacing={1}>
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            sx={{ marginTop: '30px' }}
+                          >
                             {card.tagName.map((tag) => (
                               <Chip
                                 key={tag}

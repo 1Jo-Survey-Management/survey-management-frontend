@@ -151,7 +151,7 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
   return (
     <div>
       <div>
-        <Box sx={{ height: '180px' }}>
+        <Box sx={{ height: '190px' }}>
           <Swiper style={styles.CardSwiper} {...swiperParams}>
             <Box
               sx={{
@@ -179,8 +179,8 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                       <Card
                         variant="elevation"
                         sx={{
-                          width: '150px',
-                          height: '160px',
+                          width: '156px',
+                          height: '180px',
                           marginLeft: '5px',
                           borderRadius: 2,
                           backgroundColor: '#F2F2F2',
@@ -200,7 +200,7 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                           <Stack
                             direction="row"
                             spacing={1}
-                            justifyContent="space-around"
+                            justifyContent="space-between"
                             paddingBottom="12px"
                           >
                             <Chip
@@ -264,15 +264,15 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                             variant="h5"
                             component="div"
                             sx={{
-                              fontSize: 15,
+                              fontSize: 18,
                               fontWeight: 600,
                               marginBottom: '8px',
                               cursor: 'pointer',
-                              maxHeight: '43px', // 원하는 높이 설정
+                              maxHeight: '47px', // 원하는 높이 설정
                               overflow: 'hidden',
                               display: '-webkit-box',
                               WebkitLineClamp: 2,
-                              height: '41px',
+                              height: '47px',
                               WebkitBoxOrient: 'vertical',
                               color: '#8B8B8B',
                             }}
@@ -281,7 +281,11 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                             {card.surveyTitle}
                           </Typography>
                           {/* 태그 등 카드에 관한 내용 표시 */}
-                          <Stack direction="row" spacing={1}>
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            sx={{ marginTop: '30px' }}
+                          >
                             {card.tagName.map((tag) => (
                               <Chip
                                 key={tag}
