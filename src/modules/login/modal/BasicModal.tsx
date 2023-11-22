@@ -363,10 +363,14 @@ export default function BasicModal({ onClose }: ModalProps) {
               파일을 선택하세요.
             </div>
           </Box>
+
           <InputNickName
             onChange={handleNickNameChange}
             isNicknameCheckedOnChangeCallback={(isChecked) =>
-              setUserInfo({ ...userInfo, isNicknameCheckedOnChange: isChecked })
+              setUserInfo({
+                ...userInfo,
+                isNicknameCheckedOnChange: isChecked,
+              })
             }
             isOverLimitChecked={(isOverLimitChecked) =>
               setUserInfo({
@@ -383,6 +387,7 @@ export default function BasicModal({ onClose }: ModalProps) {
           />
           <RadioButton onChange={handleRadioChange} />
           <GetBirth onChange={handleBirthChange} />
+
           <Box fontStyle={textStyle}>
             <StyledButton buttonText="회원가입" onClick={handleSubmit} />
             <StyledButton buttonText="취소" onClick={cancelSubmit} />

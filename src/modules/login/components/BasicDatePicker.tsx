@@ -5,7 +5,7 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { Container } from '@mui/system';
+import { Box } from '@mui/system';
 
 interface InputBirthDateProps {
   onChange: (value: string) => void;
@@ -42,7 +42,7 @@ export default function ResponsiveDatePickers({
   };
 
   return (
-    <Container>
+    <Box sx={{ padding: '0 16px 0 16px' }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer
           components={[
@@ -61,6 +61,6 @@ export default function ResponsiveDatePickers({
           </DemoItem>
         </DemoContainer>
       </LocalizationProvider>
-    </Container>
+    </Box>
   );
 }

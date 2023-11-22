@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useState, ChangeEvent, useEffect } from 'react';
-import { Container } from '@mui/system';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -180,12 +179,12 @@ export default function ComposedTextField({
   };
 
   return (
-    <Container
+    <Box
       component="form"
       sx={{
-        width: '100%',
+        width: '270px',
         display: 'flex',
-        padding: '0 16px 0 16px',
+        padding: '0 0 0 16px',
         alignItems: 'center',
         justifyContent: 'space-between',
       }}
@@ -270,6 +269,6 @@ export default function ComposedTextField({
       >
         중복확인
       </Button>
-    </Container>
+    </Box>
   );
 }
