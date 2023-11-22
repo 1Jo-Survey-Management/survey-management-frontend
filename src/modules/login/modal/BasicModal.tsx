@@ -14,8 +14,6 @@ import { imageUploadToS3 } from '../../survey/creation/utils/ImageUploadUtil';
 
 import axios from '../components/customApi';
 
-// import Input from '@mui/material/Input';
-
 interface ModalProps {
   onClose: () => void;
 }
