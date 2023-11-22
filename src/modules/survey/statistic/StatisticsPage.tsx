@@ -347,7 +347,7 @@ export default function StatisticsPage() {
           <Button
             variant="contained"
             fullWidth
-            onClick={() => navigate('/survey/main')}
+            onClick={() => navigate(-1)}
             sx={{
               padding: '10px 20px 10px 20px',
               backgroundColor: '#ffffff', // 기본 배경색
