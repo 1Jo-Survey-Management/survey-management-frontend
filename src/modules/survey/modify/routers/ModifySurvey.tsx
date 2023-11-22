@@ -281,9 +281,7 @@ function ModifySurvey() {
       <FloatingActionButtons
         onClickAddQuestion={handleAddQuestion}
         surveyInfo={surveyInfo}
-        surveyImage={surveyImage}
         questions={questions}
-        previewImageUrl={previewImageUrl}
       />
 
       <Box css={styles.buttonBox}>

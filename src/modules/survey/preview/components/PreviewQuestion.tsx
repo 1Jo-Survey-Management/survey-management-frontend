@@ -1,4 +1,3 @@
-import { Container } from '@mui/material';
 import React from 'react';
 import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
 import { PreviewQuestionProps } from '../types/PreviewSurveyTypes';
@@ -9,7 +8,7 @@ import PreviewSubjectiveDescriptionQuestion from './PreviewSubjectiveDescription
 
 function PreviewQuestion({ questions }: PreviewQuestionProps) {
   return (
-    <Container>
+    <div>
       {questions.map((question) => {
         switch (question.questionType) {
           case QuestionTypeEnum.SINGLE_QUESTION:
@@ -45,7 +44,7 @@ function PreviewQuestion({ questions }: PreviewQuestionProps) {
             return null;
         }
       })}
-    </Container>
+    </div>
   );
 }
 
