@@ -6,7 +6,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
 import '../../../global.css';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {
   Button,
@@ -25,7 +24,6 @@ import InputBase from '@mui/material/InputBase';
 import FaceIcon from '@mui/icons-material/Face';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import Swal from 'sweetalert2';
-
 import axios from '../../login/components/customApi';
 import Floating from './components/Floating';
 
@@ -269,13 +267,16 @@ function SurveySearch() {
       <Typography
         component="div"
         sx={{
-          fontSize: 24,
+          marginTop: '30px',
+          fontSize: 30,
           fontWeight: 600,
-          marginBottom: '8px',
+          marginBottom: '20px',
           cursor: 'pointer',
+          display: 'flex',
+          justifyContent: 'center',
           fontFamily: contentFont,
           '@media (max-width: 600px)': {
-            fontSize: 20,
+            fontSize: 24,
           },
         }}
       >
@@ -356,7 +357,13 @@ function SurveySearch() {
             />
             <IconButton
               type="button"
-              sx={{ p: '10px' }}
+              sx={{
+                p: '10px',
+                '&:hover': {
+                  backgroundColor: '#747474',
+                  color: '#FFFFFF',
+                },
+              }}
               aria-label="search"
               onClick={handleSearch}
             >
@@ -384,6 +391,11 @@ function SurveySearch() {
               width: '75px',
               fontSize: '15px',
               padding: 0,
+              '&:hover': {
+                backgroundColor: '#747474',
+                borderColor: '#3E3E3E',
+                color: '#ffffff',
+              },
             }}
             onClick={() => {
               // 초기화 버튼 클릭 시 검색 옵션 및 검색어 초기화
@@ -415,7 +427,7 @@ function SurveySearch() {
             height: '100%',
             marginBottom: '5px',
             '@media (max-width: 600px)': {
-              gap: '20px',
+              gap: '15px',
               justifyContent: 'space-between', // 작은 화면 크기일 때의 gap 크기
             },
           }}
@@ -443,6 +455,7 @@ function SurveySearch() {
                   '@media (max-width: 600px)': {
                     width: '152px',
                     height: '170px',
+                    marginRight: '7px',
                   },
                 }}
                 style={textStyle}
@@ -529,11 +542,11 @@ function SurveySearch() {
                       fontWeight: 600,
                       marginBottom: '8px',
                       cursor: 'pointer',
-                      maxHeight: '70px', // 원하는 높이 설정
+                      maxHeight: '47px', // 원하는 높이 설정
                       overflow: 'hidden',
                       display: '-webkit-box',
-                      height: '70px',
-                      WebkitLineClamp: 3,
+                      height: '47px',
+                      WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical',
                     }}
                     style={textStyle}
@@ -551,7 +564,7 @@ function SurveySearch() {
                     }}
                   />
                   {/* 태그 등 카드에 관한 내용 표시 */}
-                  <Stack direction="row" spacing={1}>
+                  <Stack direction="row" spacing={1} sx={{ marginTop: '30px' }}>
                     {card.tagName.map((tag) => (
                       <Chip
                         key={tag}

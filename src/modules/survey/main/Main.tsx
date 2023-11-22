@@ -37,12 +37,12 @@ function Main() {
   return (
     // eslint-disable-next-line react/react-in-jsx-scope
     <Container sx={{ maxWidth: '1150px' }}>
-      <h3 style={textStyle}>인기 설문🔥</h3>
+      <h2 style={textStyle}>인기 설문🔥</h2>
       <WeeklySurvey />
       <div style={arrowStyle} />
 
       <Box sx={containerStyle}>
-        <h3 style={textStyle}>최근 등록된 설문📝</h3>
+        <h2 style={textStyle}>최근 등록된 설문📝</h2>
         <Button onClick={() => navigate('/survey/search')} style={searchAll}>
           전체 보기
         </Button>
@@ -50,7 +50,7 @@ function Main() {
 
       <RecentSurvey />
       <div style={arrowStyle} />
-      <h3 style={textStyle}>최근 마감된 설문⌛</h3>
+      <h2 style={textStyle}>최근 마감된 설문⌛</h2>
       <ClosingSurvey />
       <div style={arrowStyle} />
       <Floating />
