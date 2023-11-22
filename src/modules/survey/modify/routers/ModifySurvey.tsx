@@ -24,6 +24,7 @@ import {
 } from '../../creation/types/SurveyTypes';
 import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
 import { validationSurveyWithoutSurveyImage } from '../../creation/util/ValidatorUtil';
+import { imageUploadToS3 } from '../../utils/ImageUploadUtil';
 
 interface ModifySurveyProps {
   surveyInfo: SurveyInfoProps;
@@ -42,8 +43,6 @@ const styles = {
     marginRight: '20px',
   }),
 };
-
-const previewImageBaseUrl = `${process.env.REACT_APP_BASE_URL}/api/images/surveys/`;
 
 /**
  * 설문을 수정하는 페이지를 담당하는 페이지 입니다.
@@ -116,7 +115,10 @@ function ModifySurvey() {
       openStatusNo: responseData.openStatusNo,
       surveyDescription: responseData.surveyDescription,
       surveyStatusNo: responseData.surveyStatusNo,
+      surveyImageUrl: responseData.surveyImage,
     });
+
+    setPreviewImageUrl(responseData.surveyImage);
 
     const questionPropsArray: QuestionProps[] = responseData.questions.map(
       (question: any) => ({
@@ -157,11 +159,7 @@ function ModifySurvey() {
       try {
         const responseData = await getSurveyDetails();
 
-        if (responseData) {
-          settingResponseDataToState(responseData);
-        }
-
-        setPreviewImageUrl(`${previewImageBaseUrl}${surveyNo}`);
+        settingResponseDataToState(responseData);
 
         setIsLoading(false);
       } catch (error) {
@@ -206,7 +204,7 @@ function ModifySurvey() {
    *
    * @author 강명관
    */
-  const handleModifySubmit = async () => {
+  const handleModifySubmit = async (): Promise<void> => {
     const validationResult = await validationSurveyWithoutSurveyImage(
       surveyInfo,
       questions
@@ -216,23 +214,24 @@ function ModifySurvey() {
       return;
     }
 
-    // const formData = new FormData();
-    // formData.append('surveyInfoUpdateDto', JSON.stringify(surveyInfo));
-    // formData.append('surveyQuestionCreateDtoList', JSON.stringify(questions));
+    if (surveyImage !== undefined) {
+      try {
+        const imageUrl = await imageUploadToS3(surveyImage);
+        surveyInfo.surveyImageUrl = imageUrl;
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-    // if (surveyImage !== undefined) {
-    //   formData.append('surveyImage', surveyImage);
-    // }
+    const surveyUpdateDto = {
+      surveyInfoUpdateDto: surveyInfo,
+      surveyQuestionCreateDtoList: questions,
+    };
 
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_BASE_URL}/api/surveys`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+        surveyUpdateDto
       );
 
       if (response.status === 200) {
@@ -271,18 +270,14 @@ function ModifySurvey() {
 
   return (
     <Container css={{ marginTop: '30px' }}>
-      {surveyInfo && (
-        <CreateSurveyInfo
-          surveyInfo={surveyInfo}
-          setSurveyInfo={setSurveyInfo}
-          previewImage={previewImageUrl}
-          setSurveyImage={setSurveyImage}
-        />
-      )}
+      <CreateSurveyInfo
+        surveyInfo={surveyInfo}
+        setSurveyInfo={setSurveyInfo}
+        previewImage={previewImageUrl}
+        setSurveyImage={setSurveyImage}
+      />
 
-      {questions && (
-        <DragDropQuestion questions={questions} setQuestions={setQuestions} />
-      )}
+      <DragDropQuestion questions={questions} setQuestions={setQuestions} />
 
       <FloatingActionButtons
         onClickAddQuestion={handleAddQuestion}
