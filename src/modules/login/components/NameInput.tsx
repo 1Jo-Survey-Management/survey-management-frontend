@@ -244,8 +244,6 @@ export default function ComposedTextField({
         variant="contained"
         color="info"
         sx={{
-          // width: '100px',
-          // height: '40px',
           fontSize: '0.8rem',
           fontWeight: 600,
           border: '0px solid white',
