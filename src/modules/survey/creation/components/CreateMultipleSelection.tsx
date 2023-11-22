@@ -177,6 +177,7 @@ function CreateMultipleSelection({
               css={[styles.input, textStyle]}
               value={selection.selectionValue}
               onChange={(event) => handleSelectionValueChange(selection, event)}
+              inputProps={{ maxLength: 255 }}
             />
           </Box>
         </div>
