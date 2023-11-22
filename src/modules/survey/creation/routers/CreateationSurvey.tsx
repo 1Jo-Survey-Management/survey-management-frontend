@@ -121,11 +121,6 @@ function CreateationSurvey() {
       return;
     }
 
-    const requestData = {
-      surveyInfoCreateDto: surveyInfo,
-      surveyQuestionCreateDtoList: questions,
-    };
-
     if (surveyImage !== undefined) {
       try {
         const imageUrl = await imageUploadToS3(surveyImage);
@@ -135,6 +130,11 @@ function CreateationSurvey() {
         console.error(error);
       }
     }
+
+    const requestData = {
+      surveyInfoCreateDto: surveyInfo,
+      surveyQuestionCreateDtoList: questions,
+    };
 
     try {
       const response = await axios.post(
@@ -171,23 +171,25 @@ function CreateationSurvey() {
 
     surveyInfo.surveyStatusNo = SurveyStatusEunm.PROGRESS;
 
-    const formData = new FormData();
-    formData.append('surveyInfoCreateDto', JSON.stringify(surveyInfo));
-    formData.append('surveyQuestionCreateDtoList', JSON.stringify(questions));
-
     if (surveyImage !== undefined) {
-      formData.append('surveyImage', surveyImage);
+      try {
+        const imageUrl = await imageUploadToS3(surveyImage);
+        surveyInfo.surveyImageUrl = imageUrl;
+        console.log(imageUrl);
+      } catch (error) {
+        console.error(error);
+      }
     }
+
+    const requestData = {
+      surveyInfoCreateDto: surveyInfo,
+      surveyQuestionCreateDtoList: questions,
+    };
 
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/api/surveys`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+        requestData
       );
 
       if (response.status === 201) {
