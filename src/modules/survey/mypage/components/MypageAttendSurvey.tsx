@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * 사용자의 마이페이지를 위한 컴포넌트입니다. 사용자가 참여한 설문 목록을 보여주고,
@@ -6,9 +7,13 @@
  * @component
  * @author 박창우
  */
+import './MypageWriteModal.css';
 import React, { useState, useEffect } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 
 import {
   Button,
@@ -20,6 +25,9 @@ import {
   Stack,
   Modal,
   Fade,
+  Alert,
+  IconButton,
+  Avatar,
 } from '@mui/material';
 import FaceIcon from '@mui/icons-material/Face';
 import MenuItem from '@mui/material/MenuItem';
@@ -28,7 +36,31 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
+
+import Swal from 'sweetalert2';
 import axios from '../../../login/components/customApi';
+import '../../../../global.css';
+
+const showSwalAlert = () => {
+  Swal.fire({
+    icon: 'warning',
+    title: '설문 참여자가 아직 없습니다.',
+    customClass: {
+      popup: 'swal-custom-popup',
+      container: 'swal-custom-container',
+    },
+  });
+};
+
+// style 태그를 사용해 커스텀 스타일 정의
+const customStyles = `
+  .swal-custom-popup {
+    z-index: 1500; /* 필요한 z-index 값 */
+  }
+  .swal-custom-container {
+    z-index: 1500; /* 필요한 z-index 값 */
+  }
+`;
 
 interface CardData {
   userNo: any;
@@ -45,11 +77,33 @@ interface CardData {
   userNickname: string;
 }
 
+const MAIN_PAGE = '/survey/main';
+const modalSubText = {
+  fontSize: '15px',
+  marginBottom: '10px',
+  color: '#858585',
+};
+
+const fontFamily = 'nanumsquare';
+const contentFont = 'GmarketSansMedium';
+const textStyle = {
+  fontFamily,
+  contentFont,
+  textOverflow: 'ellipsis',
+};
+
+const titleStyle = {
+  display: 'flex',
+  fontFamily,
+  textOverflow: 'ellipsis',
+  justifyContent: 'center',
+};
+
 /**
- * 설문의 상태 번호에 따라 해당하는 상태 텍스트를 반환합니다.
+ * 설문 상태 번호에 따라 상태 텍스트를 반환합니다.
  *
- * @param {number} surveyStatusNo 설문의 상태 번호
- * @returns {string} 설문 상태를 나타내는 텍스트
+ * @param {number} surveyStatusNo - 설문의 상태 번호
+ * @returns {string} 해당 상태 번호에 대한 텍스트 설명
  */
 function getStatusText(surveyStatusNo: number) {
   switch (surveyStatusNo) {
@@ -63,22 +117,47 @@ function getStatusText(surveyStatusNo: number) {
       return '';
   }
 }
-const fontFamily = 'GmarketSansMedium';
 
-const textStyle = {
-  fontFamily,
+function getOpenStatusLabel(openStatusNo: number | undefined) {
+  switch (openStatusNo) {
+    case 1:
+      return '전체 공개';
+    case 2:
+      return '회원 공개';
+    case 3:
+      return '비공개';
+    default:
+      return ''; // 다른 경우에 대한 기본 값 설정
+  }
+}
+
+const tagColor = (tag: string) => {
+  switch (tag) {
+    case '공지':
+      return '#F8E5E5';
+    case '중요':
+      return '#F5F9DE';
+    case '업무':
+      return '#F9ECDF';
+    case '기타':
+      return '#E5ECF5';
+    case '일상':
+      return '#EDEBF6';
+    default:
+      return 'default';
+  }
 };
 
 /**
- * 설문의 상태 번호에 따라 해당하는 칩 색상을 반환합니다.
+ * 설문 상태 번호에 따라 Material UI Chip 컴포넌트의 색상을 반환합니다.
  *
- * @param {number} surveyStatusNo 설문의 상태 번호
- * @returns {string} Material UI 칩 컴포넌트에 사용될 색상
+ * @param {number} surveyStatusNo - 설문의 상태 번호
+ * @returns {string} 해당 상태에 맞는 색상 이름
  */
 function getChipColor(surveyStatusNo: number) {
   switch (surveyStatusNo) {
     case 1:
-      return 'primary';
+      return '#000000';
     case 2:
       return 'secondary';
     default:
@@ -87,44 +166,143 @@ function getChipColor(surveyStatusNo: number) {
 }
 
 /**
- * 설문의 상태 번호에 따라 해당하는 카드 색상을 반환합니다.
+ * 설문 상태 번호에 따라 카드 배경색을 반환합니다.
  *
- * @param {number} surveyStatusNo 설문의 상태 번호
- * @returns {string} 카드 배경에 사용될 색상
+ * @param {number} surveyStatusNo - 설문의 상태 번호
+ * @returns {string} 해당 상태에 맞는 배경색
  */
-function getCardColor(surveyStatusNo: number) {
-  switch (surveyStatusNo) {
-    case 1:
-      return 'rgba(51, 122, 255, 0.1)';
-    case 2:
-      return 'rgba(153, 102, 255, 0.1)';
-    case 3:
-      return 'rgba(128, 128, 128, 0.1)';
-    default:
-      return 'rgba(0, 0, 0, 0.5)';
-  }
-}
+// function getCardColor(surveyStatusNo: number) {
+//   switch (surveyStatusNo) {
+//     case 1:
+//       return 'rgba(51, 122, 255, 0.1)';
+//     case 2:
+//       return 'rgba(153, 102, 255, 0.1)';
+//     case 3:
+//       return 'rgba(128, 128, 128, 0.1)';
+//     default:
+//       return 'rgba(0, 0, 0, 0.5)';
+//   }
+// }
 
 function Mypage() {
   const [filteredData, setFilteredData] = useState<CardData[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
+  const [allData, setAllData] = useState<CardData[]>([]);
 
   const [state, setState] = useState('전체');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const [isUpdateData, setIsUpdateData] = useState<boolean>(false);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const navigate = useNavigate();
+
+  const naviagte = useNavigate();
+
+  const handleSearch = () => {
+    if (!searchTerm) {
+      // 검색어가 비어있으면 전체 설문을 다시 불러옵니다.
+      setFilteredData(allData);
+      return;
+    }
+
+    // 검색어가 있는 경우, 로컬에서 필터링합니다.
+    const filteredResults = allData.filter(
+      (card: CardData) =>
+        card.surveyTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        // card.tagNames.includes(searchTerm.toLowerCase())
+        card.tagNames.some((tag) =>
+          tag.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+    );
+
+    setFilteredData(filteredResults);
+  };
+
+  const resetData = async () => {
+    const loggedInUserNo = localStorage.getItem('userNo');
+
+    const response = await axios.get(
+      `${process.env.REACT_APP_BASE_URL}/api/my-surveys/write-surveys`
+    );
+
+    const cardData: CardData[] = response.data.content || [];
+
+    let filtered = cardData.filter(
+      (card) => card.userNo.toString() === loggedInUserNo
+    );
+
+    if (state !== '전체') {
+      const filterStatus = parseInt(state, 10);
+      filtered = cardData.filter(
+        (card) => card.surveyStatusNo === filterStatus
+      );
+    }
+
+    setFilteredData(filtered);
+  };
+
+  /**
+   * 설문수정 페이지로 리다이렉트 시키는 onClick 메서드 입니다.
+   *
+   * @param surveyNo 설문 번호
+   * @author 강명관
+   */
+  const handleClickSurveyModify = (surveyNo: number) => {
+    naviagte(`/survey/modify/${surveyNo}`);
+  };
+
+  /**
+   * 설문을 진행 상태에서 게시 상태로 변경하는 API Call 하는 메서드 입니다.
+   *
+   * @param surveyNo 설문 번호
+   * @author 강명관
+   */
+  const handleClickPostSurvey = async (surveyNo: number) => {
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_BASE_URL}/api/surveys/${surveyNo}/post`
+      );
+
+      if (response.status === 200) {
+        setOpenModal(false);
+        setIsUpdateData(true);
+
+        Swal.fire({
+          icon: 'success',
+          title: '설문 게시가 완료되었습니다!',
+        });
+        naviagte(MAIN_PAGE);
+      } else {
+        setOpenModal(false);
+
+        Swal.fire({
+          icon: 'error',
+          title: '설문 게시에 실패했습니다.',
+          text: `설문의 상태 혹은 설문의 마감일을 확인해주세요.`,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+
+      setOpenModal(false);
+      Swal.fire({
+        icon: 'error',
+        title: '설문 게시에 실패했습니다.',
+        text: `설문의 상태 혹은 설문의 마감일을 확인해주세요.`,
+      });
+    }
+  };
 
   const handleChange = (event: SelectChangeEvent) => {
     setState(event.target.value);
   };
 
   /**
-   * 서버로부터 사용자가 참여한 설문 데이터를 가져와 상태를 업데이트합니다.
+   * 선택된 상태나 검색 쿼리에 따라 필터링된 설문 데이터를 서버로부터 가져옵니다.
    */
   const fetchCardData = () => {
     const loggedInUserNo = localStorage.getItem('userNo');
-
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/api/my-surveys/attend-surveys`)
       .then((response) => {
@@ -133,35 +311,14 @@ function Mypage() {
         let filtered = cardData.filter(
           (card) => card.userNo.toString() === loggedInUserNo
         );
+
         if (state !== '전체') {
           const filterStatus = parseInt(state, 10);
           filtered = cardData.filter(
             (card) => card.surveyStatusNo === filterStatus
           );
         }
-
-        if (searchQuery) {
-          const lowercaseQuery = searchQuery.toLowerCase();
-
-          filtered = filtered.filter((card) => {
-            const lowercaseTitle = card.surveyTitle.toLowerCase();
-            const lowercaseTags = card.tagNames.map((tag) => tag.toLowerCase());
-
-            let allCharsFound = true;
-
-            lowercaseQuery.split('').forEach((char) => {
-              if (
-                !lowercaseTitle.includes(char) &&
-                !lowercaseTags.some((tag) => tag.includes(lowercaseQuery))
-              ) {
-                allCharsFound = false;
-              }
-            });
-
-            return allCharsFound;
-          });
-        }
-
+        setAllData(filtered);
         setFilteredData(filtered);
       })
       .catch((error) => {
@@ -170,14 +327,20 @@ function Mypage() {
   };
 
   useEffect(() => {
+    if (isUpdateData) {
+      fetchCardData();
+    }
+  }, [isUpdateData]);
+
+  useEffect(() => {
     fetchCardData();
   }, [state, searchQuery]);
 
-  /**
-   * 사용자가 검색 입력란에 입력할 때마다 호출되어 검색 쿼리 상태를 업데이트합니다.
-   *
-   * @param {React.ChangeEvent<HTMLInputElement>} event 입력 이벤트
-   */
+  // /**
+  //  * 검색 입력란의 값이 변경될 때 호출되며, 검색 쿼리 상태를 업데이트합니다.
+  //  *
+  //  * @param {React.ChangeEvent<HTMLInputElement>} event - 입력 변경 이벤트
+  //  */
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchQuery = event.target.value;
     setSearchQuery(newSearchQuery);
@@ -186,9 +349,9 @@ function Mypage() {
   };
 
   /**
-   * 카드를 클릭했을 때 모달을 열어 해당 설문의 상세 정보를 보여줍니다.
+   * 설문 카드를 클릭했을 때 모달을 열어 상세 정보를 보여줍니다.
    *
-   * @param {CardData} card 사용자가 클릭한 설문 데이터
+   * @param {CardData} card - 선택된 카드 데이터
    */
   const openCardModal = (card: CardData) => {
     setSelectedCard(card);
@@ -196,23 +359,67 @@ function Mypage() {
   };
 
   /**
-   * 모달을 닫고 선택된 설문의 상태를 초기화합니다.
+   * 모달을 닫고 선택된 설문 상태를 초기화합니다.
    */
   const closeCardModal = () => {
     setSelectedCard(null);
     setOpenModal(false);
   };
 
+  /**
+   * 삭제 버튼 클릭 시 작성 중인 설문을 삭제합니다.
+   */
+  const handleDeleteClick = () => {
+    if (selectedCard) {
+      if (window.confirm('작성 중인 설문을 삭제하시겠습니까?')) {
+        const mySurveyDTO = {
+          surveyStatusNo: selectedCard.surveyStatusNo,
+          surveyNo: selectedCard.surveyNo,
+        };
+        axios
+          .put(
+            `${process.env.REACT_APP_BASE_URL}/api/my-surveys/update-write-surveys`,
+            mySurveyDTO
+          )
+          .then(() => {
+            Swal.fire({
+              icon: 'success',
+              title: '설문이 삭제 완료되었습니다!',
+            });
+
+            closeCardModal();
+
+            fetchCardData();
+          })
+          .catch((error) => {
+            console.error('설문 삭제 중 오류 발생:', error);
+          });
+      }
+    }
+  };
+
   return (
-    <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
-      <h1
-        style={{
-          fontSize: '25px',
-          ...textStyle,
+    <Container maxWidth="md" sx={{ paddingLeft: '3px', paddingRight: '3px' }}>
+      <style>{customStyles}</style>
+
+      <Typography
+        component="div"
+        sx={{
+          marginTop: '30px',
+          fontSize: 30,
+          fontWeight: 600,
+          marginBottom: '20px',
+          cursor: 'pointer',
+          display: 'flex',
+          justifyContent: 'center',
+          fontFamily: contentFont,
+          '@media (max-width: 600px)': {
+            fontSize: 24,
+          },
         }}
       >
-        내가 참여한 설문 목록
-      </h1>
+        내가 작성한 설문 목록
+      </Typography>
 
       <Box
         sx={{
@@ -231,10 +438,17 @@ function Mypage() {
             width: '100px', // 모든 화면 크기에서 너비 100px 고정
             height: '35px',
           }}
+          // onClick={() => {
+          //   setState('전체');
+          //   setSearchQuery('');
+          //   fetchCardData();
+          // }}
           onClick={() => {
+            // 초기화 버튼 클릭 시 검색 옵션 및 검색어 초기화
+            // setSearchOptions([]);
+            setSearchTerm('');
             setState('전체');
-            setSearchQuery('');
-            fetchCardData();
+            resetData();
           }}
         >
           초기화
@@ -274,13 +488,31 @@ function Mypage() {
           }}
         >
           <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="제목 또는 태그를 입력해주세요"
-            inputProps={{ 'aria-label': '제목 또는 태그를 입력해주세요' }}
-            value={searchQuery}
-            onChange={handleSearchChange}
+            sx={{ ml: 1, flex: 1, height: '35px' }}
+            placeholder="제목, 작성자를 입력해주세요"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSearch();
+              }
+            }}
           />
-          <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+          <IconButton
+            type="button"
+            sx={{
+              p: '10px',
+              '&:hover': {
+                backgroundColor: '#747474',
+                color: '#FFFFFF',
+              },
+            }}
+            aria-label="search"
+            onClick={handleSearch}
+          >
+            <SearchIcon />
+          </IconButton>
         </Paper>
       </div>
 
@@ -289,7 +521,7 @@ function Mypage() {
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'flex-start',
-          gap: { xs: 2, sm: 4, md: 10.5 },
+          gap: { xs: 2, sm: 3, md: 8.7 },
           height: '100%',
         }}
       >
@@ -303,10 +535,11 @@ function Mypage() {
           >
             <Card
               sx={{
-                minWidth: 100,
-                maxWidth: 150,
-                minHeight: 80,
-                backgroundColor: getCardColor(card.surveyStatusNo),
+                width: '160px',
+                height: '180px',
+                borderRadius: 2,
+                backgroundColor: '#F9F9F9',
+                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
               }}
             >
               <CardContent
@@ -344,15 +577,17 @@ function Mypage() {
 
                   <Chip
                     label={getStatusText(card.surveyStatusNo)}
-                    color={getChipColor(card.surveyStatusNo)}
+                    variant="outlined"
                     sx={{
-                      width: '50px',
+                      width: '40px',
                       height: '20px',
                       fontSize: '10px',
                       fontWeight: 600,
                       '& .MuiChip-label': {
                         padding: 0,
                       },
+                      backgroundColor: '#F9F9F9',
+                      color: getChipColor(card.surveyStatusNo),
                     }}
                   />
                 </Stack>
@@ -360,15 +595,20 @@ function Mypage() {
                 <div
                   style={{
                     display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
+                    alignItems: 'stretch',
                     fontSize: 12,
                     color: 'text.secondary',
-                    marginBottom: '10px',
+                    marginBottom: '5px',
                     fontWeight: 600,
                   }}
                 >
-                  마감: {card.surveyClosingAt}
+                  <EventAvailableIcon
+                    sx={{
+                      fontSize: '15px',
+                      marginRight: '4px',
+                    }}
+                  />
+                  {card.surveyClosingAt}
                 </div>
                 <Typography
                   variant="h5"
@@ -378,12 +618,26 @@ function Mypage() {
                     fontWeight: 600,
                     marginBottom: '8px',
                     cursor: 'pointer',
+                    maxHeight: '47px',
                     overflow: 'hidden',
-                    whiteSpace: 'nowrap',
-                    textOverflow: 'ellipsis',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    height: '47px',
+                    WebkitBoxOrient: 'vertical',
                   }}
+                  style={textStyle}
                 >
                   {card.surveyTitle}
+                </Typography>
+
+                <Typography
+                  sx={{
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    paddingLeft: '2px',
+                  }}
+                >
+                  작성: {card.userNickname}
                 </Typography>
 
                 <Typography
@@ -394,26 +648,28 @@ function Mypage() {
                       marginRight: '8px',
                     },
                   }}
-                >
-                  {card.tagNames.map((tag, index, array) => (
-                    <React.Fragment key={tag}>
-                      #{tag}
-                      {index !== array.length - 1 && ', '}
-                    </React.Fragment>
-                  ))}
-                </Typography>
-                <Typography
+                />
+                <Stack
+                  direction="row"
+                  spacing={1}
                   sx={{
-                    fontSize: 12,
-                    fontWeight: 600,
-                    paddingTop: '12px',
-                    overflow: 'hidden',
-                    whiteSpace: 'nowrap',
-                    textOverflow: 'ellipsis',
+                    marginTop: '10px',
                   }}
                 >
-                  작성자: {card.userNickname}
-                </Typography>
+                  {card.tagNames.map((tag) => (
+                    <Chip
+                      key={tag}
+                      label={tag}
+                      size="small"
+                      sx={{
+                        fontSize: 11,
+                        marginRight: 1,
+                        height: '20px',
+                        backgroundColor: tagColor(tag),
+                      }}
+                    />
+                  ))}
+                </Stack>
               </CardContent>
             </Card>
           </div>
@@ -432,58 +688,325 @@ function Mypage() {
         }}
       >
         <Fade in={openModal}>
-          <div
-            style={{
-              backgroundColor: '#fff',
-              boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
-              width: '350px',
-              height: '500px',
-              padding: '16px',
-              outline: 0,
-              borderRadius: '8px',
-              textAlign: 'center',
-            }}
-          >
-            <h2 id="modal-title">
-              {selectedCard ? selectedCard.surveyTitle : ''}
-            </h2>
-            <p>
-              날짜:{' '}
-              {selectedCard
-                ? `${selectedCard.surveyCreatedAt.replace(
-                    '~',
-                    ''
-                  )} ~ ${selectedCard.surveyClosingAt.replace('~', '')}`
-                : ''}
-            </p>
+          <div className="modal">
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Chip
+                key="0"
+                label={getOpenStatusLabel(selectedCard?.openStatusNo)}
+                size="small"
+                style={textStyle}
+                sx={{
+                  fontSize: 14,
+                  marginRight: 1,
+                  height: '25px',
+                  backgroundColor: tagColor('0'),
+                  opacity: 0.7,
+                }}
+              />
+              <ClearTwoToneIcon onClick={closeCardModal} />
+            </Box>
 
-            <p>작성자: {selectedCard ? selectedCard.userNickname : ''}</p>
-            <p>태그: {selectedCard ? selectedCard.tagNames.join(', ') : ''}</p>
-            <p>참석자 수: {selectedCard ? selectedCard.attendeeCount : ''}</p>
-            <p id="modal-description">
-              {selectedCard ? selectedCard.surveyDescription : ''}
-            </p>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+              }}
+            >
+              <Avatar
+                src=""
+                sx={{
+                  width: 28,
+                  height: 28,
+                  marginRight: '8px',
+                }}
+              />
+              <Typography
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: '#393939',
 
-            {selectedCard && selectedCard.surveyStatusNo === 1 && (
-              <>
-                <Button>수정하기</Button>
-                <Button>게시하기</Button>
-              </>
-            )}
+                  height: '45px',
+                  fontWeight: '700',
+                }}
+              >
+                {selectedCard ? selectedCard.userNickname : ''}
+              </Typography>
+            </Box>
+            {/* 설문 조사 타이틀 */}
+            <Box
+              sx={titleStyle}
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+                height: '120px',
+              }}
+            >
+              <Typography
+                variant="h5"
+                id="modal-title"
+                style={{
+                  fontFamily,
+                  textOverflow: 'ellipsis',
+                  fontWeight: 'bold',
+                  paddingTop: '15px',
+                  marginBottom: '15px',
+                  // marginBottom: '35px',
+                }}
+              >
+                {selectedCard ? selectedCard.surveyTitle : ''}
+              </Typography>
+            </Box>
 
-            {selectedCard &&
-              (selectedCard.surveyStatusNo === 2 ||
-                selectedCard.surveyStatusNo === 3) && (
-                <Button
-                  onClick={() =>
-                    navigate(`/survey/statistics/${selectedCard?.surveyNo}`)
-                  }
+            {/* 참여자수, 태그들 */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                flexDirection: 'column',
+              }}
+            >
+              {/* 설문 조사 기간 */}
+              <Typography
+                style={modalSubText}
+                sx={{ display: 'flex', alignItems: 'center' }}
+              >
+                <EventAvailableIcon
+                  sx={{
+                    fontSize: '18px',
+                    marginRight: '4px',
+                  }}
+                />{' '}
+                {selectedCard
+                  ? `작성일: ${selectedCard.surveyCreatedAt.slice(0, 10)} ~ ${
+                      selectedCard.surveyClosingAt
+                    }`
+                  : ''}
+              </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: '#808080',
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                  }}
                 >
-                  통계보기
+                  <FaceIcon
+                    sx={{
+                      fontSize: '20px',
+                      marginRight: '8px',
+                    }}
+                  />{' '}
+                  {selectedCard ? selectedCard.attendeeCount : ''}
+                </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  {selectedCard?.tagNames.map((tag) => (
+                    <Chip
+                      key={tag}
+                      label={tag}
+                      size="small"
+                      style={textStyle}
+                      sx={{
+                        fontSize: 12,
+                        marginRight: 1,
+                        height: '25px',
+                        backgroundColor: tagColor(tag),
+                        opacity: 0.7,
+                      }}
+                    />
+                  ))}
+                </Box>
+              </Box>
+            </Box>
+            <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
+            <Box
+              className="modal-scroll-box"
+              sx={{
+                overflow: 'auto',
+                height: '370px',
+                '@media screen and (max-width: 600px)': {
+                  overflow: 'auto',
+                  height: '200px',
+                },
+              }}
+            >
+              {/* 설문조사 사진 */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  paddingBottom: '15px',
+                }}
+              >
+                <img
+                  src={`${process.env.PUBLIC_URL}/LoginFig.png`}
+                  alt="Naver Button"
+                  style={{ width: '100%', height: 'auto' }}
+                />
+              </Box>
+
+              <Typography
+                id="modal-description"
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
+                  textAlign: 'start',
+                  paddingBottom: '15px',
+                  fontFamily,
+                }}
+              >
+                {selectedCard
+                  ? `설문 설명: ${selectedCard.surveyDescription}`
+                  : ''}
+              </Typography>
+            </Box>
+            <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
+
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100px',
+              }}
+            >
+              {selectedCard &&
+                (selectedCard.surveyStatusNo === 2 ||
+                  selectedCard.surveyStatusNo === 3) && (
+                  <Button
+                    onClick={() => {
+                      if (selectedCard?.attendeeCount === 0) {
+                        showSwalAlert();
+                      } else {
+                        naviagte(
+                          `/survey/statistics/${selectedCard?.surveyNo}`
+                        );
+                      }
+                    }}
+                    sx={{
+                      width: '100%',
+                      marginBottom: '8px',
+                      marginTop: '30px',
+                      backgroundColor: '#ebebeb',
+                      '&:hover': {
+                        backgroundColor: 'gray',
+                        color: 'white',
+                        fontWeight: '900',
+                        fontSize: '15px',
+                      },
+                      color: 'black',
+                      fontWeight: '600',
+                      '@media (max-width: 600px)': {
+                        marginTop: '30px',
+                      },
+                    }}
+                  >
+                    설문 결과보기
+                  </Button>
+                )}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '100%',
+                  height: '50px',
+                }}
+              >
+                {selectedCard && selectedCard.surveyStatusNo === 1 && (
+                  <Button
+                    className="modify-button"
+                    onClick={() =>
+                      handleClickSurveyModify(selectedCard.surveyNo)
+                    }
+                    sx={{
+                      width: '165px',
+                      marginBottom: '8px',
+                      backgroundColor: '#ebebeb',
+                      '&:hover': {
+                        backgroundColor: 'gray',
+                        color: 'white',
+                        fontWeight: '900',
+                        fontSize: '15px',
+                      },
+                      color: 'black',
+                      fontWeight: '600',
+                      '@media (max-width: 600px)': {
+                        width: '145px',
+                      },
+                    }}
+                  >
+                    수정하기
+                  </Button>
+                )}
+                {selectedCard && selectedCard.surveyStatusNo === 1 && (
+                  <Button
+                    className="post-button"
+                    onClick={() => handleClickPostSurvey(selectedCard.surveyNo)}
+                    sx={{
+                      width: '165px',
+                      marginBottom: '8px',
+                      backgroundColor: '#ebebeb',
+                      '&:hover': {
+                        backgroundColor: 'gray',
+                        color: 'white',
+                        fontWeight: '900',
+                        fontSize: '15px',
+                      },
+                      color: 'black',
+                      fontWeight: '600',
+                      '@media (max-width: 600px)': {
+                        width: '145px',
+                      },
+                    }}
+                  >
+                    게시하기
+                  </Button>
+                )}
+              </div>
+              {selectedCard && selectedCard.surveyStatusNo === 1 && (
+                <Button
+                  onClick={() => handleDeleteClick()}
+                  sx={{
+                    width: '100%',
+                    marginBottom: '8px',
+                    backgroundColor: '#ebebeb',
+                    '&:hover': {
+                      backgroundColor: 'gray',
+                      color: 'white',
+                      fontWeight: '900',
+                      fontSize: '15px',
+                    },
+                    color: 'black',
+                    fontWeight: '600',
+                  }}
+                >
+                  삭제하기
                 </Button>
               )}
-
-            <Button onClick={closeCardModal}>닫기</Button>
+            </div>
           </div>
         </Fade>
       </Modal>
