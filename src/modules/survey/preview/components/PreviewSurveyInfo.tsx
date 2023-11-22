@@ -1,37 +1,24 @@
 /** @jsxImportSource @emotion/react */
 
-import { Box, Card, CardContent, Container, Typography } from '@mui/material';
-import ImageIcon from '@mui/icons-material/Image';
-import React, { useEffect, useState } from 'react';
+import { Box, Typography } from '@mui/material';
+import React from 'react';
 import { css } from '@emotion/react';
 import { PreviewSurveyInfoProps } from '../types/PreviewSurveyTypes';
 
 const styles = {
-  card: css({
-    marginBottom: '30px',
+  surveyTitleBox: css({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '25px',
     marginTop: '30px',
   }),
 
   surveyInfoTitileStyle: css({
     fontWeight: 'bold',
-    fontSize: '18px',
+    fontSize: '25px',
     marginBottom: '10px',
   }),
-
-  iamgeBox: css({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '140px',
-    marginBottom: '10px',
-  }),
-
-  imageIcon: css({
-    fontSize: '30px',
-    color: '#757575',
-  }),
-
-  image: css({ width: '100%', height: '100%', objectFit: 'contain' }),
 };
 
 /**
@@ -43,61 +30,13 @@ const styles = {
  * @component
  * @author 강명관
  */
-function PreviewSurveyInfo({
-  surveyInfo,
-  surveyImage,
-  previewImageUrl,
-}: PreviewSurveyInfoProps) {
-  const [selectedImage, setSelectedImage] = useState<string>('');
-
-  useEffect(() => {
-    if (surveyImage === undefined && previewImageUrl !== undefined) {
-      setSelectedImage(previewImageUrl);
-      return;
-    }
-
-    if (surveyImage !== undefined) {
-      const imageUrl: string = URL.createObjectURL(surveyImage);
-
-      setSelectedImage(imageUrl);
-    }
-  }, []);
-
+function PreviewSurveyInfo({ surveyInfo }: PreviewSurveyInfoProps) {
   return (
-    <Container>
-      <Card css={styles.card}>
-        <CardContent>
-          <Box>
-            <Typography css={styles.surveyInfoTitileStyle}>
-              {surveyInfo.surveyTitle
-                ? surveyInfo.surveyTitle
-                : '제목 없는 설문지'}
-            </Typography>
-          </Box>
-
-          {!selectedImage && (
-            <Box css={styles.iamgeBox}>
-              <ImageIcon css={styles.imageIcon} />
-            </Box>
-          )}
-          {selectedImage && (
-            <div>
-              <Box css={styles.iamgeBox}>
-                <img src={selectedImage} alt="설문 이미지" css={styles.image} />
-              </Box>
-            </div>
-          )}
-
-          <Box>
-            <Typography sx={{ fontSize: '14px', color: '#4a4a4a' }}>
-              {surveyInfo.surveyDescription
-                ? surveyInfo.surveyDescription
-                : '설문지 설명'}
-            </Typography>
-          </Box>
-        </CardContent>
-      </Card>
-    </Container>
+    <Box css={styles.surveyTitleBox}>
+      <Typography css={styles.surveyInfoTitileStyle}>
+        {surveyInfo.surveyTitle ? surveyInfo.surveyTitle : '제목 없는 설문지'}
+      </Typography>
+    </Box>
   );
 }
 

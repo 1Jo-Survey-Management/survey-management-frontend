@@ -47,7 +47,6 @@ const styles = {
   previewTitle: css({
     ml: 2,
     flex: 1,
-    color: '#000000',
   }),
 };
 const fontFamily = 'GmarketSansMedium';
@@ -77,9 +76,7 @@ Transition.displayName = 'previewDialogTransition';
 function FloatingActionButtons({
   onClickAddQuestion,
   surveyInfo,
-  surveyImage,
   questions,
-  previewImageUrl,
 }: FloatingActionButtonsProps) {
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
@@ -185,7 +182,7 @@ function FloatingActionButtons({
         sx={{ bgcolor: '#E4E4E4' }}
       >
         <AppBar css={styles.appBar}>
-          <Toolbar sx={{ bgcolor: '#E4E4E4' }}>
+          <Toolbar sx={{ bgcolor: '#3e3e3e' }}>
             <Typography
               css={styles.previewTitle}
               fontStyle={textStyle}
@@ -196,20 +193,15 @@ function FloatingActionButtons({
             </Typography>
             <IconButton
               edge="start"
-              sx={{ bgcolor: '#E4E4E4' }}
+              sx={{ bgcolor: '#3e3e3e' }}
               onClick={handleClosePreviewModal}
               aria-label="close"
             >
-              <CloseIcon />
+              <CloseIcon css={{ color: '#ffffff' }} />
             </IconButton>
           </Toolbar>
         </AppBar>
-        <SurveyPreview
-          surveyInfo={surveyInfo}
-          surveyImage={surveyImage || undefined}
-          questions={questions}
-          previewImageUrl={previewImageUrl || undefined}
-        />
+        <SurveyPreview surveyInfo={surveyInfo} questions={questions} />
       </Dialog>
     </Box>
   );
