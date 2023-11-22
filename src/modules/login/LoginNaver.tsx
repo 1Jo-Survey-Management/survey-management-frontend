@@ -1,32 +1,6 @@
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
 
-const bottonBoxStyle = {
-  width: '100%',
-};
-
-const webButtonBoxStyle = {
-  '@media (minWidth: 800px)': {
-    width: '100%',
-  },
-};
-
-const buttonStyle = {
-  border: 'none',
-  background: 'none',
-  cursor: 'pointer',
-};
-
-const imageStyle = {
-  width: '60%',
-};
-
-const webImageStyle = {
-  '@media (minWidth: 800px)': {
-    width: '10%',
-  },
-};
-
 /**
  * 네이버 OAuth 로그인
  * @author 김선규
@@ -46,19 +20,25 @@ function LoginNaver() {
       : `${process.env.PUBLIC_URL}/naverButton.png`;
 
   return (
-    <Box sx={{ ...bottonBoxStyle, ...webButtonBoxStyle }}>
+    <Box sx={{ textAlign: 'center' }}>
       <button
         type="button"
         onClick={handleOAuthLogin}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        style={buttonStyle}
+        style={{
+          backgroundImage: `url(${getImageSrc()})`,
+          backgroundColor: '#ffffff',
+          border: '0px solid #000',
+          borderRadius: '10px',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          width: '180px',
+          height: '45px',
+          cursor: 'pointer',
+        }}
       >
-        <img
-          src={getImageSrc()}
-          style={{ ...webImageStyle, ...imageStyle }}
-          alt="대체_텍스트"
-        />
+        {}
       </button>
     </Box>
   );
