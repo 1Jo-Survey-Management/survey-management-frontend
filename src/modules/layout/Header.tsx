@@ -15,10 +15,6 @@ const ANCHOR_TYPE = 'left';
 
 /**
  * 웹 애플리케이션의 헤더 컴포넌트입니다.
- * @component
- * @memberof Header
- * @inner
- * @see {@link https://reactrouter.com/web/api/useNavigate|useNavigate()}
  * @author 김선규
  */
 function Header() {
@@ -26,9 +22,6 @@ function Header() {
 
   /**
    * 메인 페이지로 이동하는 함수
-   * @function
-   * @memberof Header
-   * @inner
    * @author 김선규
    */
   const goMain = () => {
@@ -37,9 +30,6 @@ function Header() {
 
   /**
    * 로그인 페이지로 이동하는 함수
-   * @function
-   * @memberof Header
-   * @inner
    * @author 김선규
    */
   const login = () => {
@@ -50,9 +40,6 @@ function Header() {
 
   /**
    * 로그아웃을 수행하고 로그인 정보를 로컬 스토리지에서 제거하는 함수
-   * @function
-   * @memberof Header
-   * @inner
    * @authro 김선규
    */
   const logout = () => {
@@ -71,9 +58,6 @@ function Header() {
 
   /**
    * 현재 사용자가 로그인 상태인지 확인하는 함수
-   * @function
-   * @memberof Header
-   * @inner
    * @returns {boolean} 로그인 상태 여부
    * @author 김선규
    */
@@ -148,19 +132,18 @@ function Header() {
           </React.Fragment>
           <div
             style={{
-              maxWidth: '125px', // 최대 너비 설정
-              maxHeight: '110px', // 최대 높이 설정
+              maxWidth: '125px',
+              maxHeight: '110px',
               display: 'center',
               justifyItems: 'center',
             }}
           >
-            {/* 로고 타이틀, 이미지로 삽입했음 */}
             <img
               src={`${process.env.PUBLIC_URL}/images/surveyLogo/logoplus.png`}
               alt="로고"
               style={{
-                width: '100%', // 너비 100%로 설정하여 부모 요소에 맞추기
-                height: 'auto', // 원본 이미지의 비율 유지
+                width: '100%',
+                height: 'auto',
                 color: '#000000',
                 marginLeft: '10px',
                 marginTop: '20px',
@@ -175,8 +158,8 @@ function Header() {
               src={`${process.env.PUBLIC_URL}/images/loginImage/loginbutton.png`}
               alt="로그인"
               style={{
-                width: '40px', // 너비 100%로 설정하여 부모 요소에 맞추기
-                height: 'auto', // 원본 이미지의 비율 유지
+                width: '40px',
+                height: 'auto',
                 marginRight: '12px',
                 marginTop: '20px',
               }}
@@ -189,8 +172,8 @@ function Header() {
               src={`${process.env.PUBLIC_URL}/images/loginImage/logoutbutton.png`}
               alt="로그아웃"
               style={{
-                width: '50px', // 너비 100%로 설정하여 부모 요소에 맞추기
-                height: 'auto', // 원본 이미지의 비율 유지
+                width: '50px',
+                height: 'auto',
                 marginRight: '12px',
                 marginTop: '20px',
               }}

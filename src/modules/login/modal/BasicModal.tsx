@@ -274,7 +274,6 @@ export default function BasicModal({ onClose }: ModalProps) {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-around',
-                padding: '20px 0 20px 0',
                 alignItems: 'center',
                 height: '100px',
                 borderRadius: '20px',
@@ -353,15 +352,6 @@ export default function BasicModal({ onClose }: ModalProps) {
                 display: 'none',
               }}
             />
-            <div
-              style={{
-                marginTop: '8px',
-                fontSize: '0.75rem',
-                color: '#747474',
-              }}
-            >
-              파일을 선택하세요.
-            </div>
           </Box>
 
           <InputNickName

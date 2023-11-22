@@ -1,12 +1,6 @@
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
 
-// const webButtonBoxStyle = {
-//   '@media (minWidth: 800px)': {
-//     width: '100%',
-//   },
-// };
-
 /**
  * 네이버 OAuth 로그인
  * @author 김선규

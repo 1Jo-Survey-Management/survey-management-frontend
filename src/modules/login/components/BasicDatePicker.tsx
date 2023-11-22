@@ -42,7 +42,7 @@ export default function ResponsiveDatePickers({
   };
 
   return (
-    <Box sx={{ padding: '0 16px 0 16px' }}>
+    <Box sx={{ padding: '0 16px 0 16px', marginBottom: '20px' }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer
           components={[
