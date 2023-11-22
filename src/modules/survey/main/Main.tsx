@@ -105,7 +105,7 @@ function Main() {
 
   return (
     <Container sx={{ maxWidth: '1150px' }}>
-      <h3 style={textStyle}>인기 설문🔥</h3>
+      <h2 style={textStyle}>인기 설문🔥</h2>
       <WeeklySurvey cardList={weeklySurveyData} />
       <div style={arrowStyle} />
 
@@ -118,7 +118,7 @@ function Main() {
 
       <RecentSurvey cardList={recentSurveyData} />
       <div style={arrowStyle} />
-      <h3 style={textStyle}>최근 마감된 설문⌛</h3>
+      <h2 style={textStyle}>최근 마감된 설문⌛</h2>
       <ClosingSurvey cardList={closingSurveyData} />
       <div style={arrowStyle} />
       <Floating />
