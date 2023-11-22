@@ -77,7 +77,6 @@ function ModifySurvey() {
     initialSurveyData.questions
   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
   const [previewImageUrl, setPreviewImageUrl] = useState<string>('');
 
   /**
@@ -193,7 +192,14 @@ function ModifySurvey() {
     ]);
   };
 
-  const handleModifyCancle = () => {};
+  /**
+   * 설문에서 취소버튼을 눌렀을시에 뒤로 가는 이벤트 핸들 메서드 입니다.
+   *
+   * @author 강명관
+   */
+  const handleModifyCancle = () => {
+    navigate(-1);
+  };
 
   /**
    * 설문 수정을 제출하는 메서드 입니다.
@@ -210,13 +216,13 @@ function ModifySurvey() {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('surveyInfoUpdateDto', JSON.stringify(surveyInfo));
-    formData.append('surveyQuestionCreateDtoList', JSON.stringify(questions));
+    // const formData = new FormData();
+    // formData.append('surveyInfoUpdateDto', JSON.stringify(surveyInfo));
+    // formData.append('surveyQuestionCreateDtoList', JSON.stringify(questions));
 
-    if (surveyImage !== undefined) {
-      formData.append('surveyImage', surveyImage);
-    }
+    // if (surveyImage !== undefined) {
+    //   formData.append('surveyImage', surveyImage);
+    // }
 
     try {
       const response = await axios.put(
