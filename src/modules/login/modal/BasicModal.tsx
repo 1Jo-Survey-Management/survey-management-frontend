@@ -14,10 +14,6 @@ import { imageUploadToS3 } from '../../survey/creation/utils/ImageUploadUtil';
 
 import axios from '../components/customApi';
 
-interface ModalProps {
-  onClose: () => void;
-}
-
 interface UserInfo {
   userBirth: string;
   userNickname: string;
@@ -34,7 +30,7 @@ interface UserInfo {
  * @param param0
  * @returns
  */
-export default function BasicModal({ onClose }: ModalProps) {
+export default function BasicModal() {
   const navigate = useNavigate();
 
   // style 태그를 사용해 커스텀 스타일 정의
@@ -111,7 +107,6 @@ export default function BasicModal({ onClose }: ModalProps) {
     localStorage.removeItem('userNickname');
     localStorage.removeItem('userImage');
     localStorage.removeItem('expiresIn');
-    onClose();
     setOpen(false);
   };
 

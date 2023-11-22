@@ -213,7 +213,7 @@ function LoginDisplay() {
         <Box sx={{ padding: '20px 0 20px 0' }}>
           <LoginNaver />
         </Box>
-        {showModal && <BasicModal onClose={() => {}} />}
+        {showModal && <BasicModal />}
         <Box sx={{ padding: '20px 0 20px 0' }}>
           <Typography
             variant="h2"
