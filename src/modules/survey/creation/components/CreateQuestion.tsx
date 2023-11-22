@@ -178,7 +178,7 @@ function CreateQuestion({
    * @author 강명관
    */
   useEffect(() => {
-    if (questions.length === 0) {
+    if (question.selections.length === 0) {
       handleQuestionTypeChange({
         target: {
           name: 'questionType',
