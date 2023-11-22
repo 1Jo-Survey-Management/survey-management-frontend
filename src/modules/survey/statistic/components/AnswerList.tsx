@@ -13,6 +13,12 @@ import { useState, useEffect } from 'react';
 import '../../../../global.css';
 import { Selection } from '../types/SurveyStatisticTypes';
 
+/**
+ * 주관식 리스트 테이블 컴포넌트 입니다.
+ * @param {Selection[]} selectList - 답변 목록에 대한 통계 데이터 배열
+ * @returns 주관식 테이블 페이지
+ * @author 김선규
+ */
 interface selectionList {
   selectList: Selection[];
 }
@@ -25,6 +31,13 @@ export default function AnswerList({ selectList }: selectionList) {
   const [, setSelectStat] = useState<Selection[]>([]);
   const [selectStats, setSelectStats] = useState<Selection[]>([]);
 
+  /**
+   * 답변 목록을 표시하고 업데이트하는 함수입니다.
+   * @param {Selection[]} data - 통계 데이터 배열
+   * @param {string} newSurveySubjectiveAnswer - 새로운 주관식 답변
+   * @returns {Selection[]} 업데이트된 답변 목록 배열
+   * @author 김선규
+   */
   function updateArrayList(
     data: Selection[],
     newSurveySubjectiveAnswer: string
@@ -54,17 +67,27 @@ export default function AnswerList({ selectList }: selectionList) {
       });
     }
 
-    // Sort the data array based on surveySubjectiveAnswerCount in descending order
     data.sort(
       (a, b) => b.surveySubjectiveAnswerCount - a.surveySubjectiveAnswerCount
     );
 
     return data;
   }
+
+  /**
+   * 주관식 답변이 들어왔을때 답변 객체를 상태 세팅 해주는 함수입니다
+   * @returns 없음
+   * @author 김선규
+   */
   useEffect(() => {
     setSelectStat(selectList);
   }, [selectList]);
 
+  /**
+   * 받아온 답변 리스트의 중복을 제거하는 함수입니다.
+   * @returns 없음
+   * @author 김선균
+   */
   useEffect(() => {
     const updateArrayLists = selectList.reduce(
       (acc, word) => updateArrayList(acc, word.surveySubjectiveAnswer),
@@ -99,12 +122,6 @@ export default function AnswerList({ selectList }: selectionList) {
         style={textStyle}
       >
         <Table sx={{ minWidth: 300 }} aria-label="simple table">
-          {/* <TableHead>
-            <TableRow>
-              <TableCell>답변</TableCell>
-              <TableCell>답변수</TableCell>
-            </TableRow>
-          </TableHead> */}
           <TableBody>
             {selectStats.map((row) => (
               <TableRow key={row.surveySubjectiveAnswer}>

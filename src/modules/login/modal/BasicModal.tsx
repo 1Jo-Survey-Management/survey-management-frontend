@@ -1,21 +1,18 @@
 import * as React from 'react';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-import { Avatar, Container } from '@mui/material';
+import { Avatar, Container, Input, InputLabel } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { useNavigate } from 'react-router-dom';
-import axios from '../components/customApi';
 import RadioButton from '../components/RowRadioButtonsGroup';
 import InputNickName from '../components/NameInput';
 import GetBirth from '../components/BasicDatePicker';
 import StyledButton from '../components/StyledButton';
 import { imageUploadToS3 } from '../../survey/creation/utils/ImageUploadUtil';
 
-interface ModalProps {
-  onClose: () => void;
-}
+import axios from '../components/customApi';
 
 interface UserInfo {
   userBirth: string;
@@ -33,7 +30,7 @@ interface UserInfo {
  * @param param0
  * @returns
  */
-export default function BasicModal({ onClose }: ModalProps) {
+export default function BasicModal() {
   const navigate = useNavigate();
 
   // style 태그를 사용해 커스텀 스타일 정의
@@ -110,7 +107,6 @@ export default function BasicModal({ onClose }: ModalProps) {
     localStorage.removeItem('userNickname');
     localStorage.removeItem('userImage');
     localStorage.removeItem('expiresIn');
-    onClose();
     setOpen(false);
   };
 
@@ -247,7 +243,7 @@ export default function BasicModal({ onClose }: ModalProps) {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: '80%',
+            width: '300px',
             bgcolor: 'background.paper',
             border: '0px solid #000',
             p: 2,
@@ -281,8 +277,8 @@ export default function BasicModal({ onClose }: ModalProps) {
               <Avatar
                 src={undefined}
                 sx={{
-                  width: 60,
-                  height: 60,
+                  width: 90,
+                  height: 90,
                   backgroundColor: '#747474',
                 }}
               />
@@ -319,15 +315,47 @@ export default function BasicModal({ onClose }: ModalProps) {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              height: '80px',
+              height: '50px',
             }}
           >
-            <input type="file" accept="image/*" onChange={handleImageUpload} />
+            <Box
+              sx={{
+                width: '100px',
+                height: '30px',
+                borderRadius: '10px',
+              }}
+            >
+              <InputLabel
+                htmlFor="input-with-icon-adornment"
+                sx={{
+                  padding: '3px 0 3px 0',
+                  textAlign: 'center',
+                  color: '#ffffff',
+                  backgroundColor: '#747474',
+                  borderRadius: '10px',
+                }}
+              >
+                사진 선택
+              </InputLabel>
+            </Box>
+            <Input
+              id="input-with-icon-adornment"
+              type="file"
+              onChange={handleImageUpload}
+              inputProps={{ accept: 'image/*' }}
+              style={{
+                display: 'none',
+              }}
+            />
           </Box>
+
           <InputNickName
             onChange={handleNickNameChange}
             isNicknameCheckedOnChangeCallback={(isChecked) =>
-              setUserInfo({ ...userInfo, isNicknameCheckedOnChange: isChecked })
+              setUserInfo({
+                ...userInfo,
+                isNicknameCheckedOnChange: isChecked,
+              })
             }
             isOverLimitChecked={(isOverLimitChecked) =>
               setUserInfo({
@@ -344,7 +372,8 @@ export default function BasicModal({ onClose }: ModalProps) {
           />
           <RadioButton onChange={handleRadioChange} />
           <GetBirth onChange={handleBirthChange} />
-          <Box fontStyle={{ ...textStyle }}>
+
+          <Box fontStyle={textStyle}>
             <StyledButton buttonText="회원가입" onClick={handleSubmit} />
             <StyledButton buttonText="취소" onClick={cancelSubmit} />
           </Box>

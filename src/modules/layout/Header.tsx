@@ -9,26 +9,39 @@ import { Drawer, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import axios from '../login/components/customApi';
 import '../../global.css';
-import logoplus from './logoplus.png';
 import Menu from './Menu';
-import logoutbutton from './logoutbutton.png';
-import loginbutton from './loginbutton.png';
 
 const ANCHOR_TYPE = 'left';
 
+/**
+ * 웹 애플리케이션의 헤더 컴포넌트입니다.
+ * @author 김선규
+ */
 function Header() {
   const navigate = useNavigate();
 
+  /**
+   * 메인 페이지로 이동하는 함수
+   * @author 김선규
+   */
   const goMain = () => {
     navigate('/');
   };
 
+  /**
+   * 로그인 페이지로 이동하는 함수
+   * @author 김선규
+   */
   const login = () => {
     console.log('login');
 
     navigate('/login');
   };
 
+  /**
+   * 로그아웃을 수행하고 로그인 정보를 로컬 스토리지에서 제거하는 함수
+   * @authro 김선규
+   */
   const logout = () => {
     console.log('logout');
 
@@ -43,6 +56,11 @@ function Header() {
     navigate('/login');
   };
 
+  /**
+   * 현재 사용자가 로그인 상태인지 확인하는 함수
+   * @returns {boolean} 로그인 상태 여부
+   * @author 김선규
+   */
   const properLogin = () => {
     const hasProperLogin = localStorage.getItem('userNickname');
 
@@ -114,19 +132,18 @@ function Header() {
           </React.Fragment>
           <div
             style={{
-              maxWidth: '125px', // 최대 너비 설정
-              maxHeight: '110px', // 최대 높이 설정
+              maxWidth: '125px',
+              maxHeight: '110px',
               display: 'center',
               justifyItems: 'center',
             }}
           >
-            {/* 로고 타이틀, 이미지로 삽입했음 */}
             <img
-              src={logoplus}
+              src={`${process.env.PUBLIC_URL}/images/surveyLogo/logoplus.png`}
               alt="로고"
               style={{
                 width: '100%',
-                height: 'auto', // 원본 이미지의 비율 유지
+                height: 'auto',
                 color: '#000000',
                 marginLeft: '10px',
                 marginTop: '20px',
@@ -138,11 +155,11 @@ function Header() {
           </div>
           {!properLogin() ? (
             <img
-              src={loginbutton}
+              src={`${process.env.PUBLIC_URL}/images/loginImage/loginbutton.png`}
               alt="로그인"
               style={{
                 width: '40px',
-                height: 'auto', // 원본 이미지의 비율 유지
+                height: 'auto',
                 marginRight: '12px',
                 marginTop: '20px',
               }}
@@ -152,11 +169,11 @@ function Header() {
             />
           ) : (
             <img
-              src={logoutbutton}
+              src={`${process.env.PUBLIC_URL}/images/loginImage/logoutbutton.png`}
               alt="로그아웃"
               style={{
                 width: '50px',
-                height: 'auto', // 원본 이미지의 비율 유지
+                height: 'auto',
                 marginRight: '12px',
                 marginTop: '20px',
               }}

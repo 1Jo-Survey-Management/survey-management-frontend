@@ -5,7 +5,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { Container } from '@mui/system';
+import { Box } from '@mui/system';
 
 interface InputGenderProps {
   onChange: (value: string) => void;
@@ -30,9 +30,12 @@ export default function RowRadioButtonsGroup({ onChange }: InputGenderProps) {
   };
 
   return (
-    <Container>
+    <Box sx={{ padding: '0 10px 0 10px' }}>
       <FormControl sx={radioStyle}>
-        <FormLabel id="genderRadioButton"> 성별 </FormLabel>
+        <FormLabel id="genderRadioButton" sx={{ color: 'black' }}>
+          {' '}
+          성별{' '}
+        </FormLabel>
         <RadioGroup
           row
           aria-labelledby="gender-group-of-radio-button"
@@ -52,6 +55,6 @@ export default function RowRadioButtonsGroup({ onChange }: InputGenderProps) {
           />
         </RadioGroup>
       </FormControl>
-    </Container>
+    </Box>
   );
 }
