@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
 interface ColorButtonsProps {
@@ -12,7 +11,32 @@ const defaultProps: Partial<ColorButtonsProps> = {
 };
 
 const style = {
-  padding: '10px',
+  margin: '10px 15px 10px 15px',
+  width: '270px',
+  height: '40px',
+  fontSize: '0.8rem',
+  fontWeight: 600,
+  color: 'white',
+  border: '0px solid white',
+  backgroundColor: '#3e3e3e',
+  '&:hover': {
+    backgroundColor: '#ffffff', // 호버 시 배경 색상
+    color: 'black', // 호버 시 폰트 색상
+    border: '1px solid #3e3e3e',
+    fontWeight: '600',
+  },
+  '&.Mui-focusVisible': {
+    backgroundColor: '#ffffff', // 클릭 시 배경 색상
+    color: 'black', // 클릭 시 폰트 색상
+    border: '1px solid #3e3e3e',
+    fontWeight: '600',
+  },
+  '&:active': {
+    backgroundColor: '#ffffff', // 클릭 시 배경 색상 (또 다른 옵션)
+    color: 'black', // 클릭 시 폰트 색상
+    border: '1px solid #3e3e3e',
+    fontWeight: '600',
+  },
 };
 
 /**
@@ -28,11 +52,9 @@ export default function StyledButton({
   const handleClick = onClick;
 
   return (
-    <Stack spacing={2} direction="column" sx={style}>
-      <Button variant="text" onClick={handleClick}>
-        {buttonText}
-      </Button>
-    </Stack>
+    <Button variant="text" onClick={handleClick} sx={style}>
+      {buttonText}
+    </Button>
   );
 }
 

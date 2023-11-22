@@ -19,26 +19,22 @@ export default function Layout() {
     backgroundColor: '#FFFFFF',
   };
 
-  // const isLoginPage = location.pathname === '/loginDisplay';
   return (
     <div style={backStyle}>
       <CssBaseline />
 
       <Header />
-      {/* 
-      {isLoginPage ? (
-        <LoginPage />
-      ) : ( */}
       <Container
         sx={{
           backgroundColor: '#FFFFFF',
           minHeight: '600px',
           minWidth: '375px',
+          paddingLeft: 0,
+          paddingRight: 0,
         }}
       >
         <Outlet />
       </Container>
-      {/* )} */}
       <Footer />
     </div>
   );
