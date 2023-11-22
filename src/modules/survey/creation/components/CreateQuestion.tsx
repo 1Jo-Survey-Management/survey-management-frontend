@@ -323,6 +323,7 @@ function CreateQuestion({
         value={question.questionTitle}
         name="questionTitle"
         onChange={(event) => handelQuestionInputChange(event)}
+        inputProps={{ maxLength: 255 }}
       />
     </Box>
   );

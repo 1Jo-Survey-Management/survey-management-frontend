@@ -13,6 +13,7 @@ import {
 import React from 'react';
 import { css } from '@emotion/react';
 import { PreviewEachQuestionProps } from '../types/PreviewSurveyTypes';
+import RequiredQuestionText from './RequiredQuestionText';
 
 const styles = {
   questionBox: css({
@@ -20,26 +21,35 @@ const styles = {
   }),
 
   questionTitle: css({
-    fontSize: '0.9rem',
+    fontSize: '1rem',
     fontWeight: '600',
-    marginBottom: '10px',
     color: 'black',
+    marginBottom: '10px',
+
+    '&.Mui-focused': {
+      color: '#3e3e3e',
+    },
   }),
 
   questionDescription: css({
-    fontSize: '0.8rem',
-    fontWeight: '600',
-    color: '#00000088',
-    margin: '8px',
-    paddingLeft: '10px',
+    fontSize: '0.9rem',
   }),
 
   selectionText: css({
-    fontSize: '0.7rem',
+    fontSize: '0.8rem',
   }),
 
-  controlBox: css({
-    height: '25px',
+  checkBox: css({
+    '& svg': {
+      width: '18px',
+      height: '18px',
+    },
+    '&.Mui-checked': {
+      color: '#3e3e3e',
+    },
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
   }),
 };
 
@@ -47,6 +57,7 @@ function PreviewMultipleQuestion({ question }: PreviewEachQuestionProps) {
   return (
     <Card css={styles.questionBox}>
       <CardContent>
+        {question.questionRequired && <RequiredQuestionText />}
         <FormControl component="fieldset">
           <FormLabel component="legend" css={styles.questionTitle}>
             {question.questionTitle ? question.questionTitle : '제목 없는 문항'}
@@ -61,10 +72,9 @@ function PreviewMultipleQuestion({ question }: PreviewEachQuestionProps) {
           <RadioGroup>
             {question.selections.map((selection, index) => (
               <FormControlLabel
-                css={styles.controlBox}
                 key={selection.selectionId}
                 value={index}
-                control={<Checkbox size="small" />}
+                control={<Checkbox css={styles.checkBox} />}
                 label={
                   <Typography variant="subtitle1" css={styles.selectionText}>
                     {selection.selectionValue

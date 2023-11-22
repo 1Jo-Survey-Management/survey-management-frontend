@@ -42,13 +42,17 @@ function Header() {
 
     navigate('/login');
   };
-  const hasProperLogin = localStorage.getItem('userNickname');
 
   const properLogin = () => {
+    const hasProperLogin = localStorage.getItem('userNickname');
+
     let loginCheck = false;
-    if (hasProperLogin !== null) {
+
+    if (hasProperLogin !== 'null') {
+      console.log('????');
       loginCheck = true;
     }
+
     return loginCheck;
   };
 
@@ -121,7 +125,7 @@ function Header() {
               src={logoplus}
               alt="로고"
               style={{
-                width: '100%', // 너비 100%로 설정하여 부모 요소에 맞추기
+                width: '100%',
                 height: 'auto', // 원본 이미지의 비율 유지
                 color: '#000000',
                 marginLeft: '10px',
@@ -137,7 +141,7 @@ function Header() {
               src={loginbutton}
               alt="로그인"
               style={{
-                width: '40px', // 너비 100%로 설정하여 부모 요소에 맞추기
+                width: '40px',
                 height: 'auto', // 원본 이미지의 비율 유지
                 marginRight: '12px',
                 marginTop: '20px',
@@ -151,7 +155,7 @@ function Header() {
               src={logoutbutton}
               alt="로그아웃"
               style={{
-                width: '50px', // 너비 100%로 설정하여 부모 요소에 맞추기
+                width: '50px',
                 height: 'auto', // 원본 이미지의 비율 유지
                 marginRight: '12px',
                 marginTop: '20px',

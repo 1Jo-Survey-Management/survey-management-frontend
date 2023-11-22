@@ -97,8 +97,8 @@ function DragDropQuestion({ questions, setQuestions }: DragDropQuestionProps) {
                       css={{
                         border: 'none',
                         backgroundColor: '#d3d3d366',
-                        minWidth: '33px', // 최소 너비를 설정
-                        display: 'inline-block', // 내용을 inline-block으로 표시
+                        minWidth: '33px',
+                        display: 'inline-block',
                         width: 'auto',
                         color: '#000',
                         fontWeight: 'bold',
