@@ -21,13 +21,17 @@ const basicBox = {
 };
 
 const secBasicBox = {
-  width: '250px',
-  height: '330px',
+  width: '330px',
+  height: '450px',
   padding: '20px 0px 20px 0px ',
   border: '0px solid #747474',
   backgroundColor: 'white',
   borderRadius: '10px',
   opacity: '95%',
+  '@media (min-width: 600px)': {
+    width: '430px',
+    height: '450px',
+  },
 };
 
 const guestLogin = {
@@ -190,7 +194,7 @@ function LoginDisplay() {
         <Box sx={{ textAlign: 'center', padding: '30px 0 20px 0' }}>
           <img
             src={`${process.env.PUBLIC_URL}/images/surveyLogo/logoplus.png`}
-            style={{ width: '180px', height: '95px' }}
+            style={{ width: '250px', height: '130px' }}
             alt="not Logo"
           />
         </Box>
@@ -198,7 +202,7 @@ function LoginDisplay() {
           variant="h1"
           sx={{
             textAlign: 'center',
-            margin: '5px 0 20px 0',
+            margin: '20px 0 20px 0',
             fontSize: '1rem',
             color: '#747474',
             fontWeight: 'bold',
@@ -206,26 +210,27 @@ function LoginDisplay() {
         >
           설문의 새로운 경험
         </Typography>
-        <Box sx={{ margin: '20px 0 20px 0' }}>
+        <Box sx={{ padding: '20px 0 20px 0' }}>
           <LoginNaver />
         </Box>
         {showModal && <BasicModal onClose={() => {}} />}
-
-        <Typography
-          variant="h2"
-          sx={{
-            fontSize: '100%',
-            position: 'relative',
-            marginBottom: '1px',
-            fontWeight: 'bold',
-            textAlign: 'center',
-          }}
-        >
-          Nice to See you Again
-        </Typography>
-        <Button sx={guestLogin} onClick={goLogin}>
-          비회원으로 로그인
-        </Button>
+        <Box sx={{ padding: '20px 0 20px 0' }}>
+          <Typography
+            variant="h2"
+            sx={{
+              padding: '10px 0 10px 0',
+              fontSize: '1rem',
+              position: 'relative',
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}
+          >
+            Nice to See you Again
+          </Typography>
+          <Button sx={guestLogin} onClick={goLogin}>
+            비회원으로 로그인
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

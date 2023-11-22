@@ -40,7 +40,7 @@ function LoginNaver() {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           width: '180px',
-          height: '40px',
+          height: '45px',
           cursor: 'pointer',
         }}
       >
