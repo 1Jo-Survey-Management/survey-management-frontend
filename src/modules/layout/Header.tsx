@@ -16,19 +16,48 @@ import loginbutton from './loginbutton.png';
 
 const ANCHOR_TYPE = 'left';
 
+/**
+ * 웹 애플리케이션의 헤더 컴포넌트입니다.
+ * @component
+ * @memberof Header
+ * @inner
+ * @see {@link https://reactrouter.com/web/api/useNavigate|useNavigate()}
+ * @author 김선규
+ */
 function Header() {
   const navigate = useNavigate();
 
+  /**
+   * 메인 페이지로 이동하는 함수
+   * @function
+   * @memberof Header
+   * @inner
+   * @author 김선규
+   */
   const goMain = () => {
     navigate('/');
   };
 
+  /**
+   * 로그인 페이지로 이동하는 함수
+   * @function
+   * @memberof Header
+   * @inner
+   * @author 김선규
+   */
   const login = () => {
     console.log('login');
 
     navigate('/login');
   };
 
+  /**
+   * 로그아웃을 수행하고 로그인 정보를 로컬 스토리지에서 제거하는 함수
+   * @function
+   * @memberof Header
+   * @inner
+   * @authro 김선규
+   */
   const logout = () => {
     console.log('logout');
 
@@ -43,6 +72,14 @@ function Header() {
     navigate('/login');
   };
 
+  /**
+   * 현재 사용자가 로그인 상태인지 확인하는 함수
+   * @function
+   * @memberof Header
+   * @inner
+   * @returns {boolean} 로그인 상태 여부
+   * @author 김선규
+   */
   const properLogin = () => {
     const hasProperLogin = localStorage.getItem('userNickname');
 
