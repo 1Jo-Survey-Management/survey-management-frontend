@@ -23,7 +23,7 @@ const basicBox = {
 const secBasicBox = {
   width: '250px',
   height: '330px',
-  padding: '20px 20px 20px 20px ',
+  padding: '20px 0px 20px 0px ',
   border: '0px solid #747474',
   backgroundColor: 'white',
   borderRadius: '10px',
@@ -154,7 +154,6 @@ function LoginDisplay() {
               localStorage.removeItem('userImage');
               localStorage.removeItem('accessToken');
               localStorage.removeItem('expiresIn');
-              localStorage.removeItem('refreshToken');
 
               navigate('/login');
             }
@@ -188,10 +187,10 @@ function LoginDisplay() {
   return (
     <Box sx={basicBox}>
       <Box sx={secBasicBox}>
-        <Box sx={{ textAlign: 'center', padding: '35px 0 20px 0' }}>
+        <Box sx={{ textAlign: 'center', padding: '30px 0 20px 0' }}>
           <img
             src={`${process.env.PUBLIC_URL}/images/surveyLogo/logoplus.png`}
-            style={{ width: '150px', height: '80px' }}
+            style={{ width: '180px', height: '95px' }}
             alt="not Logo"
           />
         </Box>

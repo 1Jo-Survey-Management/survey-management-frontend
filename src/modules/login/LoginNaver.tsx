@@ -39,8 +39,8 @@ function LoginNaver() {
           borderRadius: '10px',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          width: '200px',
-          height: '50px',
+          width: '180px',
+          height: '40px',
           cursor: 'pointer',
         }}
       >
