@@ -31,10 +31,26 @@ const styles = {
   writeButton: css({
     marginRight: '20px',
     backgroundColor: '#747474',
+    '&:hover': {
+      backgroundColor: '#3e3e3e', // 호버 시 배경색
+      color: 'white', // 호버 시 폰트 색상
+    },
+    '&.Mui-focusVisible': {
+      backgroundColor: '#ffffff', // 포커스 시 배경색
+      color: 'black', // 포커스 시 폰트 색상
+    },
   }),
 
   postButton: css({
     backgroundColor: '#3e3e3e',
+    '&:hover': {
+      backgroundColor: '#3e3e3e', // 호버 시 배경색
+      color: 'white', // 호버 시 폰트 색상
+    },
+    '&.Mui-focusVisible': {
+      backgroundColor: '#ffffff', // 포커스 시 배경색
+      color: 'black', // 포커스 시 폰트 색상
+    },
   }),
 };
 
@@ -214,7 +230,6 @@ function CreateationSurvey() {
       <FloatingActionButtons
         onClickAddQuestion={handleAddQuestion}
         surveyInfo={surveyInfo}
-        surveyImage={surveyImage || undefined}
         questions={questions}
       />
     </Container>

@@ -35,10 +35,10 @@ export default function FloatingActionButtons() {
       <Fab
         sx={{
           ...styles.fabStyles,
-          backgroundColor: '#B4B4B4',
+          backgroundColor: '#3E3E3E',
           marginRight: '25px',
           '&:hover': {
-            backgroundColor: '#6C6B6B', // Change this to the desired color on hover
+            backgroundColor: '#747474', // Change this to the desired color on hover
           },
         }}
         color="primary"
@@ -50,10 +50,10 @@ export default function FloatingActionButtons() {
       <Fab
         sx={{
           ...styles.fabStyles,
-          backgroundColor: '#B4B4B4',
+          backgroundColor: '#3E3E3E',
           marginRight: '25px',
           '&:hover': {
-            backgroundColor: '#6C6B6B', // Change this to the desired color on hover
+            backgroundColor: '#747474', // Change this to the desired color on hover
           },
         }}
         color="primary"

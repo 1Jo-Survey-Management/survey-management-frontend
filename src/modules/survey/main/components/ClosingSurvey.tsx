@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
@@ -19,72 +19,44 @@ import {
 } from '@mui/material';
 import Swal from 'sweetalert2';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
-import axios from '../../../login/components/customApi';
 import '../../../../global.css';
+import { CardDataListProps, CardDataProps } from '../types/MainType';
 
-function ClosingSurvey() {
-  const styles = {
-    CardSwiper: {
-      width: '100%',
-      height: '100%',
-    },
-    Slide: {
-      width: '100%',
-      height: '170px',
-    },
-  };
+const styles = {
+  CardSwiper: {
+    width: '100%',
+    height: '100%',
+  },
+  Slide: {
+    width: '100%',
+    height: '170px',
+  },
+};
 
-  type CardData = {
-    surveyNo: number;
-    surveyTitle: string;
-    surveyDescription: string;
-    surveyImage: string;
-    surveyPostAt: string;
-    surveyClosingAt: string;
-    userNo: number;
-    userNickName: string;
-    userImage: string;
-    attendUserNo: Array<number>;
-    surveyStatusName: string;
-    openStatusName: string;
-    tagName: string[];
-    surveyAttendCount: number;
-    isDeleted: boolean;
-    attend_check: boolean;
-  };
-  const fontFamily = 'nanumsquare';
-  const textStyle = {
-    fontFamily,
-    textOverflow: 'ellipsis',
-  };
-  const modalSubText = {
-    fontSize: '15px',
-    marginBottom: '10px',
-    color: '#858585',
-  };
+const fontFamily = 'nanumsquare';
 
-  const titleStyle = {
-    display: 'flex',
-    fontFamily,
-    textOverflow: 'ellipsis',
-    justifyContent: 'center',
-  };
+const textStyle = {
+  fontFamily,
+  textOverflow: 'ellipsis',
+};
+const modalSubText = {
+  fontSize: '15px',
+  marginBottom: '10px',
+  color: '#858585',
+};
 
+const titleStyle = {
+  display: 'flex',
+  fontFamily,
+  textOverflow: 'ellipsis',
+  justifyContent: 'center',
+};
+
+function ClosingSurvey({ cardList }: CardDataListProps) {
   const [openModal, setOpenModal] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
+  const [selectedCard, setSelectedCard] = useState<CardDataProps | null>(null);
+
   const navigate = useNavigate();
-  const [cardList, setCardList] = useState<CardData[]>([]);
-
-  useEffect(() => {
-    const data = async () => {
-      const card = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/api/surveys/closing`
-      );
-
-      setCardList(card.data);
-    };
-    data();
-  }, []);
 
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
@@ -116,7 +88,7 @@ function ClosingSurvey() {
     return numUserNo;
   };
 
-  const openCardModal = (card: CardData) => {
+  const openCardModal = (card: CardDataProps) => {
     setSelectedCard(card);
     setOpenModal(true);
   };
@@ -179,7 +151,7 @@ function ClosingSurvey() {
   return (
     <div>
       <div>
-        <Box sx={{ height: '180px' }}>
+        <Box sx={{ height: '190px' }}>
           <Swiper style={styles.CardSwiper} {...swiperParams}>
             <Box
               sx={{
@@ -207,8 +179,8 @@ function ClosingSurvey() {
                       <Card
                         variant="elevation"
                         sx={{
-                          width: '150px',
-                          height: '160px',
+                          width: '156px',
+                          height: '180px',
                           marginLeft: '5px',
                           borderRadius: 2,
                           backgroundColor: '#F2F2F2',
@@ -228,7 +200,7 @@ function ClosingSurvey() {
                           <Stack
                             direction="row"
                             spacing={1}
-                            justifyContent="space-around"
+                            justifyContent="space-between"
                             paddingBottom="12px"
                           >
                             <Chip
@@ -266,8 +238,6 @@ function ClosingSurvey() {
                                   padding: 0,
                                 },
                                 backgroundColor: '#FFFDF8',
-                                // boxShadow:
-                                //   'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                                 color: getChipColor(card.surveyStatusName),
                               }}
                               style={textStyle}
@@ -294,15 +264,15 @@ function ClosingSurvey() {
                             variant="h5"
                             component="div"
                             sx={{
-                              fontSize: 15,
+                              fontSize: 18,
                               fontWeight: 600,
                               marginBottom: '8px',
                               cursor: 'pointer',
-                              maxHeight: '43px', // 원하는 높이 설정
+                              maxHeight: '47px', // 원하는 높이 설정
                               overflow: 'hidden',
                               display: '-webkit-box',
                               WebkitLineClamp: 2,
-                              height: '41px',
+                              height: '47px',
                               WebkitBoxOrient: 'vertical',
                               color: '#8B8B8B',
                             }}
@@ -311,7 +281,11 @@ function ClosingSurvey() {
                             {card.surveyTitle}
                           </Typography>
                           {/* 태그 등 카드에 관한 내용 표시 */}
-                          <Stack direction="row" spacing={1}>
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            sx={{ marginTop: '30px' }}
+                          >
                             {card.tagName.map((tag) => (
                               <Chip
                                 key={tag}

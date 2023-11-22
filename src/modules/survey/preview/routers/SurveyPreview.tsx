@@ -23,19 +23,10 @@ const styles = {
  * @returns 설문 미리보기
  * @author 강명관
  */
-function SurveyPreview({
-  surveyInfo,
-  surveyImage,
-  questions,
-  previewImageUrl,
-}: PreviewSurveyProps) {
+function SurveyPreview({ surveyInfo, questions }: PreviewSurveyProps) {
   return (
-    <Container css={styles.container}>
-      <PreviewSurveyInfo
-        surveyInfo={surveyInfo}
-        surveyImage={surveyImage}
-        previewImageUrl={previewImageUrl || undefined}
-      />
+    <Container maxWidth="md" css={styles.container}>
+      <PreviewSurveyInfo surveyInfo={surveyInfo} />
       <PreviewQuestion questions={questions} />
     </Container>
   );

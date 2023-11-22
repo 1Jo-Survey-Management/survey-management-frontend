@@ -25,22 +25,36 @@ const styles = {
     fontWeight: '600',
     color: 'black',
     marginBottom: '10px',
+
+    '&.Mui-focused': {
+      color: '#3e3e3e',
+    },
   }),
 
   questionDescription: css({
-    fontSize: '0.8rem',
-    fontWeight: '600',
-    color: '#00000088',
-    margin: '8px',
-    paddingLeft: '10px',
+    fontSize: '0.9rem',
   }),
 
   selectionText: css({
-    fontSize: '0.7rem',
+    fontSize: '0.8rem',
   }),
 
   controlBox: css({
     height: '25px',
+  }),
+
+  radioGroup: css({
+    paddingTop: '10px',
+  }),
+
+  radio: css({
+    '& svg': {
+      width: '18px',
+      height: '18px',
+    },
+    '&.Mui-checked': {
+      color: '#3e3e3e',
+    },
   }),
 };
 
@@ -62,37 +76,20 @@ function PreviewSingleQuestion({ question }: PreviewEachQuestionProps) {
             {question.questionTitle ? question.questionTitle : '제목 없는 문항'}
           </FormLabel>
 
-          <Typography
-            variant="body1"
-            sx={{
-              fontSize: '0.9rem',
-            }}
-          >
+          <Typography variant="body1" css={styles.questionDescription}>
             {question.questionDescription}
           </Typography>
 
-          <RadioGroup sx={{ paddingTop: '10x' }}>
+          <RadioGroup css={styles.radioGroup}>
             {question.selections.map((selection, index) => (
               <div key={selection.questionId}>
                 <FormControlLabel
                   key={selection.selectionId}
                   value={index}
                   css={styles.controlBox}
-                  control={
-                    <Radio
-                      sx={{
-                        '& svg': {
-                          width: '18px',
-                          height: '18px',
-                        },
-                      }}
-                    />
-                  }
+                  control={<Radio css={styles.radio} />}
                   label={
-                    <Typography
-                      variant="subtitle1"
-                      css={{ fontSize: '0.8rem' }}
-                    >
+                    <Typography variant="subtitle1" css={styles.selectionText}>
                       {selection.selectionValue
                         ? selection.selectionValue
                         : '제목 없는 선택지'}
