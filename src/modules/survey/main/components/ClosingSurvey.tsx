@@ -21,7 +21,7 @@ import Swal from 'sweetalert2';
 import Avatar from '@mui/material/Avatar';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import axios from '../../../login/components/customApi';
+
 import '../../../../global.css';
 import { CardDataListProps, CardDataProps } from '../types/MainType';
 
