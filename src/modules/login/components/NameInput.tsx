@@ -183,10 +183,11 @@ export default function ComposedTextField({
     <Container
       component="form"
       sx={{
+        width: '100%',
         display: 'flex',
-        flexDirection: 'row',
+        padding: '0 16px 0 16px',
         alignItems: 'center',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
       }}
     >
       <style>{customStyles}</style>
@@ -243,9 +244,8 @@ export default function ComposedTextField({
         variant="contained"
         color="info"
         sx={{
-          margin: '10px',
-          width: '100px',
-          height: '40px',
+          // width: '100px',
+          // height: '40px',
           fontSize: '0.8rem',
           fontWeight: 600,
           border: '0px solid white',
