@@ -9,10 +9,7 @@ import { Drawer, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import axios from '../login/components/customApi';
 import '../../global.css';
-import logoplus from './logoplus.png';
 import Menu from './Menu';
-import logoutbutton from './logoutbutton.png';
-import loginbutton from './loginbutton.png';
 
 const ANCHOR_TYPE = 'left';
 
@@ -159,7 +156,7 @@ function Header() {
           >
             {/* 로고 타이틀, 이미지로 삽입했음 */}
             <img
-              src={logoplus}
+              src={`${process.env.PUBLIC_URL}/images/surveyLogo/logoplus.png`}
               alt="로고"
               style={{
                 width: '100%', // 너비 100%로 설정하여 부모 요소에 맞추기
@@ -175,7 +172,7 @@ function Header() {
           </div>
           {!properLogin() ? (
             <img
-              src={loginbutton}
+              src={`${process.env.PUBLIC_URL}/images/loginImage/loginbutton.png`}
               alt="로그인"
               style={{
                 width: '40px', // 너비 100%로 설정하여 부모 요소에 맞추기
@@ -189,7 +186,7 @@ function Header() {
             />
           ) : (
             <img
-              src={logoutbutton}
+              src={`${process.env.PUBLIC_URL}/images/loginImage/logoutbutton.png`}
               alt="로그아웃"
               style={{
                 width: '50px', // 너비 100%로 설정하여 부모 요소에 맞추기
