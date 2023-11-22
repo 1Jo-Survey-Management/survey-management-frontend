@@ -4,6 +4,7 @@ import { Card, CardContent, TextField } from '@mui/material';
 import React from 'react';
 import { css } from '@emotion/react';
 import { PreviewEachQuestionProps } from '../types/PreviewSurveyTypes';
+import RequiredQuestionText from './RequiredQuestionText';
 
 const styles = {
   questionBox: css({
@@ -11,22 +12,35 @@ const styles = {
   }),
 
   questionTitle: css({
-    fontSize: '0.9rem',
+    fontSize: '1rem',
     fontWeight: '600',
-    marginBottom: '10px',
     color: 'black',
+    marginBottom: '10px',
+
+    '&.Mui-focused': {
+      color: '#3e3e3e',
+    },
   }),
 
   questionDescription: css({
-    fontSize: '0.8rem',
-    fontWeight: '600',
-    color: '#00000088',
-    margin: '8px',
-    paddingLeft: '10px',
+    fontSize: '0.9rem',
   }),
 
-  selectionText: css({
-    fontSize: '0.7rem',
+  answerInput: css({
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'lightgray',
+      },
+      '&:hover fieldset': {
+        borderColor: 'gray',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#3e3e3e',
+      },
+    },
+    '& .MuiInputLabel-root.Mui-focused': {
+      color: '#3e3e3e',
+    },
   }),
 };
 
@@ -44,6 +58,7 @@ function PreviewSubjectiveDescriptionQuestion({
   return (
     <Card css={styles.questionBox}>
       <CardContent>
+        {question.questionRequired && <RequiredQuestionText />}
         <p css={styles.questionTitle}>
           {question.questionTitle ? question.questionTitle : '제목 없는 문항'}
         </p>
@@ -53,11 +68,12 @@ function PreviewSubjectiveDescriptionQuestion({
         )}
 
         <TextField
-          label="답변 입력란"
+          placeholder="답변 입력란"
           variant="outlined"
           fullWidth
           multiline
           rows={6}
+          css={styles.answerInput}
         />
       </CardContent>
     </Card>
