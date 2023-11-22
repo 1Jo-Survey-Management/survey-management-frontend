@@ -236,7 +236,6 @@ function SurveySearch() {
   };
 
   const resetData = async () => {
-    // Reset data to initial state
     setPage(0);
     setHasMore(true);
 
@@ -400,8 +399,6 @@ function SurveySearch() {
               },
             }}
             onClick={() => {
-              // 초기화 버튼 클릭 시 검색 옵션 및 검색어 초기화
-              // setSearchOptions([]);
               setSearchTerm('');
               removePage();
               setSelectedState('전체(모든 카드)');

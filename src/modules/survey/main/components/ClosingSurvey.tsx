@@ -372,22 +372,34 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
 
                   {/* 닫기 아이콘 */}
                 </Box>
-                <Typography
+                <Box
                   sx={{
                     display: 'flex',
+                    justifyContent: 'flex-start',
                     alignItems: 'center',
-                    color: '#393939',
-
-                    height: '45px',
-                    fontWeight: '700',
                   }}
                 >
                   <Avatar
                     src=""
-                    sx={{ width: 28, height: 28, marginRight: '8px' }}
+                    sx={{
+                      width: 28,
+                      height: 28,
+                      marginRight: '8px',
+                    }}
                   />
-                  {selectedCard ? selectedCard.userNickName : ''}
-                </Typography>
+                  <Typography
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: '#393939',
+
+                      height: '45px',
+                      fontWeight: '700',
+                    }}
+                  >
+                    {selectedCard ? selectedCard.userNickName : ''}
+                  </Typography>
+                </Box>
                 {/* 설문 조사 타이틀 */}
                 <Box sx={titleStyle}>
                   <Typography
@@ -472,6 +484,7 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                   </Box>
                 </Box>
                 <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
+
                 <div className="modal-scroll-box">
                   {/* 설문조사 사진 */}
                   <Box
