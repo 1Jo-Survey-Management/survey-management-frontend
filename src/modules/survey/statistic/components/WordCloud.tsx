@@ -46,15 +46,12 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
   useEffect(() => {
     const containerWidth = svgRef.current?.getBoundingClientRect().width;
 
-    // console.log('크기가 어떻길래 : ' + containerWidth);
-
     if (containerWidth) {
       setWidth(containerWidth);
     }
 
     const handleResize = () => {
       const newContainerWidth = svgRef.current?.getBoundingClientRect().width;
-      // console.log('리사이즈 크기가 어떻길래 : ' + newContainerWidth);
 
       if (newContainerWidth) {
         setWidth(newContainerWidth);
@@ -68,18 +65,7 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
 
   useEffect(() => {
     if (wordCloudData && wordCloudData.length && width && height) {
-      // console.log(
-      //   '워드클라우드 다음내용 : ' + JSON.stringify(wordCloudData, null, 2)
-      // );
-
       const svg = svgRef.current;
-
-      // for (let i = 0; i < wordCloudData.length; i++) {
-      //   const wordData = wordCloudData[i]; // 현재 요소에 접근
-      //   const text = wordData.text; // 단어 텍스트
-      //   const size = wordData.size; // 단어 크기
-
-      //   console.log('단어:', text, '크기:', size);
 
       if (svg) {
         const selection = d3

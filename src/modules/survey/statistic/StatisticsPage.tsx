@@ -13,7 +13,7 @@ import {
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
 import axios from '../../login/components/customApi';
-import WordCloud from './components/WordCloudTest';
+import WordCloud from './components/WordCloud';
 import GooglePieChart from './components/GooglePieChart';
 import { Selection } from './types/SurveyStatisticTypes';
 
@@ -56,8 +56,8 @@ const styles = {
   },
   titleText: {
     width: '100%',
-    fontSize: '40px',
     textAlign: 'center',
+    fontSize: '30px',
     fontWeight: 'bold',
     margin: '20px 0 20px 0',
     '@media (max-width: 400px)': {
@@ -179,8 +179,7 @@ export default function StatisticsPage() {
           {surveyTitle}
         </Typography>
       </Box>
-      {/* </Box> */}
-      {Object.keys(allItems).map((questionNo) => {
+      {Object.keys(allItems).map((questionNo, index) => {
         const itemsForQuestion: Selection[] = allItems[questionNo];
         const { questionTypeNo } = itemsForQuestion[0];
 
@@ -280,12 +279,11 @@ export default function StatisticsPage() {
               <CardContent>
                 <Box>
                   <Typography style={textStyle} sx={styles.componentText}>
-                    {itemsForQuestion[0].surveyQuestionNo} .{' '}
-                    {itemsForQuestion[0].surveyQuestionTitle}
+                    {index + 1} . {itemsForQuestion[0].surveyQuestionTitle}
                   </Typography>
 
                   <Typography style={textStyle} sx={styles.surveyInfo}>
-                    &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
+                    설문 참여자 수:
                     {itemsForQuestion[0].selectionCount !== 0
                       ? countSelections(itemsForQuestion)
                       : countSubjectiveAnswerCount(itemsForQuestion)}
