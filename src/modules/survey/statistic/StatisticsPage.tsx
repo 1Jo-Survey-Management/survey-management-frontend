@@ -19,31 +19,29 @@ import { Selection } from './types/SurveyStatisticTypes';
 
 const styles = {
   card: {
-    '@media (min-width: 700px)': {
+    '@media (min-width: 600px)': {
       display: 'flex',
-      alignItems: 'center',
       justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
     },
   },
   cardTitle: {
     marginTop: '20px',
     borderRadius: '4px',
-    '@media (min-width: 700px)': {
-      width: '70%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+    '@media (min-width: 600px)': {
+      width: '100%',
     },
   },
   cardContent: {
     border: '1px solid #757575',
     borderRadius: '3%',
-    '@media (min-width: 700px)': {
-      width: '40%',
+    '@media (min-width: 600px)': {
+      width: '100%',
     },
   },
   googleChartContent: {
-    '@media (min-width: 700px)': {
+    '@media (min-width: 600px)': {
       width: '100%',
     },
   },
@@ -57,10 +55,11 @@ const styles = {
     color: '#757575',
   },
   titleText: {
+    width: '100%',
     fontSize: '40px',
     textAlign: 'center',
     fontWeight: 'bold',
-    marginBottom: '30px',
+    margin: '20px 0 20px 0',
     '@media (max-width: 400px)': {
       fontSize: '30px',
     },
@@ -97,12 +96,7 @@ const textStyle = {
 export default function StatisticsPage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectStat, setSelectStat] = useState<Selection[]>([]);
-  const [totalSelectionCount, setTotalSelectionCount] = useState<number>();
   const [surveyTitle, setSurveyTitle] = useState<string>();
-  const [surveyNo, setSurveyNo] = useState<number>();
-  const [surveyPostAt, setSurveyPostAt] = useState<string>();
-  const [surveyWriter, setSurveyWriter] = useState<string>();
-
   const [allItems, setAllItems] = useState<Record<string, Selection[]>>({});
   const params = useParams();
   const statSurveyNo = params.surveyNo;
@@ -143,11 +137,7 @@ export default function StatisticsPage() {
           `${process.env.REACT_APP_BASE_URL}/api/survey/resultall?surveyno=${statSurveyNo}`
         );
         setSelectStat(response.data.content);
-        setTotalSelectionCount(response.data.content[0].totalAttend);
         setSurveyTitle(response.data.content[0].surveyTitle);
-        setSurveyNo(response.data.content[0].surveyNo);
-        setSurveyPostAt(response.data.content[0].surveyPostAt);
-
         setIsLoading(false);
       } catch (error) {
         console.error('통계 보기 중 오류 발생:', error);
@@ -164,12 +154,6 @@ export default function StatisticsPage() {
    */
   useEffect(() => {
     setAllItems(surveyBranch(selectStat));
-
-    selectStat.forEach((item) => {
-      if (item.surveyWriter != null) {
-        setSurveyWriter(item.surveyWriter);
-      }
-    });
   }, [selectStat]);
 
   if (isLoading) {
@@ -183,24 +167,19 @@ export default function StatisticsPage() {
     );
   }
   return (
-    <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
+    <Container
+      maxWidth="md"
+      sx={{
+        paddingLeft: '5px',
+        paddingRight: '5px',
+      }}
+    >
       <Box sx={styles.card}>
-        <Card sx={styles.cardTitle}>
-          <CardContent>
-            <Typography style={textStyle} sx={styles.titleText}>
-              {surveyTitle}
-            </Typography>
-            <Typography style={textStyle} sx={styles.surveyInfo}>
-              설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
-              {surveyWriter}
-              &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt} &nbsp;&nbsp;&nbsp;
-              설문 참여자 수: {totalSelectionCount}
-              <Button onClick={() => navigate('/survey/main')}>돌아가기</Button>
-              &nbsp;&nbsp;&nbsp;
-            </Typography>
-          </CardContent>
-        </Card>
+        <Typography fontStyle={textStyle} sx={styles.titleText}>
+          {surveyTitle}
+        </Typography>
       </Box>
+      {/* </Box> */}
       {Object.keys(allItems).map((questionNo) => {
         const itemsForQuestion: Selection[] = allItems[questionNo];
         const { questionTypeNo } = itemsForQuestion[0];
@@ -361,6 +340,33 @@ export default function StatisticsPage() {
           </Box>
         );
       })}
+
+      <Box sx={styles.card}>
+        <Card sx={styles.cardTitle}>
+          {' '}
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={() => navigate('/survey/main')}
+            sx={{
+              padding: '10px 20px 10px 20px',
+              backgroundColor: '#ffffff', // 기본 배경색
+              color: 'black', // 기본 폰트 색상
+              fontWeight: '600',
+              '&:hover': {
+                backgroundColor: '#3e3e3e', // 호버 시 배경색
+                color: 'white', // 호버 시 폰트 색상
+              },
+              '&.Mui-focusVisible': {
+                backgroundColor: '#ffffff', // 포커스 시 배경색
+                color: 'black', // 포커스 시 폰트 색상
+              },
+            }}
+          >
+            돌아가기
+          </Button>
+        </Card>
+      </Box>
     </Container>
   );
 }
