@@ -8,6 +8,7 @@ import {
   Button,
   Backdrop,
   CircularProgress,
+  Container,
 } from '@mui/material';
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
@@ -182,25 +183,21 @@ export default function StatisticsPage() {
     );
   }
   return (
-    <>
+    <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
       <Box sx={styles.card}>
         <Card sx={styles.cardTitle}>
           <CardContent>
-            <Box>
-              <Typography style={textStyle} sx={styles.titleText}>
-                {surveyTitle}
-              </Typography>
-              <Typography style={textStyle} sx={styles.surveyInfo}>
-                설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
-                {surveyWriter}
-                &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt}{' '}
-                &nbsp;&nbsp;&nbsp; 설문 참여자 수: {totalSelectionCount}
-                <Button onClick={() => navigate('/survey/main')}>
-                  돌아가기
-                </Button>
-                &nbsp;&nbsp;&nbsp;
-              </Typography>
-            </Box>
+            <Typography style={textStyle} sx={styles.titleText}>
+              {surveyTitle}
+            </Typography>
+            <Typography style={textStyle} sx={styles.surveyInfo}>
+              설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
+              {surveyWriter}
+              &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt} &nbsp;&nbsp;&nbsp;
+              설문 참여자 수: {totalSelectionCount}
+              <Button onClick={() => navigate('/survey/main')}>돌아가기</Button>
+              &nbsp;&nbsp;&nbsp;
+            </Typography>
           </CardContent>
         </Card>
       </Box>
@@ -364,6 +361,6 @@ export default function StatisticsPage() {
           </Box>
         );
       })}
-    </>
+    </Container>
   );
 }
