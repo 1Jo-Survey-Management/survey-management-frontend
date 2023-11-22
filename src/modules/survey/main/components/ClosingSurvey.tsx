@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
@@ -21,72 +21,45 @@ import Swal from 'sweetalert2';
 import Avatar from '@mui/material/Avatar';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import axios from '../../../login/components/customApi';
 import '../../../../global.css';
+import { CardDataListProps, CardDataProps } from '../types/MainType';
 
-function ClosingSurvey() {
-  const styles = {
-    CardSwiper: {
-      width: '100%',
-      height: '100%',
-    },
-    Slide: {
-      width: '100%',
-      height: '170px',
-    },
-  };
+const styles = {
+  CardSwiper: {
+    width: '100%',
+    height: '100%',
+  },
+  Slide: {
+    width: '100%',
+    height: '170px',
+  },
+};
 
-  type CardData = {
-    surveyNo: number;
-    surveyTitle: string;
-    surveyDescription: string;
-    surveyImage: string;
-    surveyPostAt: string;
-    surveyClosingAt: string;
-    userNo: number;
-    userNickName: string;
-    userImage: string;
-    attendUserNo: Array<number>;
-    surveyStatusName: string;
-    openStatusName: string;
-    tagName: string[];
-    surveyAttendCount: number;
-    isDeleted: boolean;
-    attendCheck: boolean;
-  };
-  const fontFamily = 'nanumsquare';
-  const textStyle = {
-    fontFamily,
-    textOverflow: 'ellipsis',
-  };
-  const modalSubText = {
-    fontSize: '15px',
-    marginBottom: '10px',
-    color: '#858585',
-  };
 
-  const titleStyle = {
-    display: 'flex',
-    fontFamily,
-    textOverflow: 'ellipsis',
-    justifyContent: 'center',
-  };
+const fontFamily = 'nanumsquare';
 
+const textStyle = {
+  fontFamily,
+  textOverflow: 'ellipsis',
+};
+const modalSubText = {
+  fontSize: '15px',
+  marginBottom: '10px',
+  color: '#858585',
+};
+
+const titleStyle = {
+  display: 'flex',
+  fontFamily,
+  textOverflow: 'ellipsis',
+  justifyContent: 'center',
+};
+
+function ClosingSurvey({ cardList }: CardDataListProps) {
   const [openModal, setOpenModal] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
+  const [selectedCard, setSelectedCard] = useState<CardDataProps | null>(null);
+
   const navigate = useNavigate();
-  const [cardList, setCardList] = useState<CardData[]>([]);
-
-  useEffect(() => {
-    const data = async () => {
-      const card = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/api/surveys/closing`
-      );
-
-      setCardList(card.data);
-    };
-    data();
-  }, []);
 
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
@@ -118,7 +91,7 @@ function ClosingSurvey() {
     return numUserNo;
   };
 
-  const openCardModal = (card: CardData) => {
+  const openCardModal = (card: CardDataProps) => {
     setSelectedCard(card);
     setOpenModal(true);
   };
@@ -268,8 +241,6 @@ function ClosingSurvey() {
                                   padding: 0,
                                 },
                                 backgroundColor: '#FFFDF8',
-                                // boxShadow:
-                                //   'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                                 color: getChipColor(card.surveyStatusName),
                               }}
                               style={textStyle}

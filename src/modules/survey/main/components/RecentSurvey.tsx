@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// Import Swiper React components
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
@@ -23,27 +21,14 @@ import {
 import Swal from 'sweetalert2';
 import Avatar from '@mui/material/Avatar';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
-import axios from '../../../login/components/customApi';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/pagination';
 import 'swiper/swiper-bundle.css';
 import '../../../../global.css';
+import { CardDataListProps, CardDataProps } from '../types/MainType';
 
-function RecentSurvey() {
-  const showSwalAlert = () => {
-    Swal.fire({
-      icon: 'warning',
-      title: '설문 참여자가 아직 없습니다.',
-      customClass: {
-        popup: 'swal-custom-popup',
-        container: 'swal-custom-container',
-      },
-    });
-  };
-
-  // style 태그를 사용해 커스텀 스타일 정의
-  const customStyles = `
+const customStyles = `
     .swal-custom-popup {
       z-index: 1500; // 필요한 z-index 값
     }
@@ -52,56 +37,41 @@ function RecentSurvey() {
     }
   `;
 
-  const styles = {
-    CardSwiper: {
-      width: '100%',
-      height: '100%',
-    },
-    Slide: {
-      width: '100%',
-      height: '170px',
-    },
-  };
-  const fontFamily = 'nanumsquare';
-  const textStyle = {
-    fontFamily,
-    textOverflow: 'ellipsis',
-  };
-  const modalSubText = {
-    fontSize: '15px',
-    marginBottom: '10px',
-    color: '#858585',
-  };
 
-  const titleStyle = {
-    display: 'flex',
-    fontFamily,
-    textOverflow: 'ellipsis',
-    justifyContent: 'center',
-  };
+const styles = {
+  CardSwiper: {
+    width: '100%',
+    height: '100%',
+  },
+  Slide: {
+    width: '100%',
+    height: '170px',
+  },
+};
+const fontFamily = 'nanumsquare';
+const textStyle = {
+  fontFamily,
+  textOverflow: 'ellipsis',
+};
+const modalSubText = {
+  fontSize: '15px',
+  marginBottom: '10px',
+  color: '#858585',
+};
 
-  type CardData = {
-    surveyNo: number;
-    surveyTitle: string;
-    surveyDescription: string;
-    surveyImage: string;
-    surveyPostAt: string;
-    surveyClosingAt: string;
-    userNo: number;
-    userNickName: string;
-    userImage: string;
-    attendUserList: Array<number>;
-    surveyStatusName: string;
-    openStatusName: string;
-    tagName: string[];
-    surveyAttendCount: number;
-    isDeleted: boolean;
-    attendCheckList: Array<boolean>;
-  };
+const titleStyle = {
+  display: 'flex',
+  fontFamily,
+  textOverflow: 'ellipsis',
+  justifyContent: 'center',
+};
+
+function RecentSurvey({ cardList }: CardDataListProps) {
   const [openModal, setOpenModal] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
+  const [selectedCard, setSelectedCard] = useState<CardDataProps | null>(null);
+
   const navigate = useNavigate();
-  const [cardList, setCardList] = useState<CardData[]>([]);
+
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
       case '진행':
@@ -113,19 +83,18 @@ function RecentSurvey() {
     }
   };
 
-  useEffect(() => {
-    const data = async () => {
-      const card = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/api/surveys/recent`
-      );
-      setCardList(card.data);
-    };
-    data();
-  }, []);
+  const showSwalAlert = () => {
+    Swal.fire({
+      icon: 'warning',
+      title: '설문 참여자가 아직 없습니다.',
+      customClass: {
+        popup: 'swal-custom-popup',
+        container: 'swal-custom-container',
+      },
+    });
+  };
 
-  console.log(cardList);
-
-  const openCardModal = (card: CardData) => {
+  const openCardModal = (card: CardDataProps) => {
     setSelectedCard(card);
     setOpenModal(true);
   };

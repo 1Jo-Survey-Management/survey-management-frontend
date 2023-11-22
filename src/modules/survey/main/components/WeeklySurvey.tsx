@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
@@ -22,10 +21,52 @@ import {
 import Swal from 'sweetalert2';
 import Avatar from '@mui/material/Avatar';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
-import axios from '../../../login/components/customApi';
 import '../../../../global.css';
+import { CardDataListProps, CardDataProps } from '../types/MainType';
 
-function WeeklySurvey() {
+// style 태그를 사용해 커스텀 스타일 정의
+const customStyles = `
+  .swal-custom-popup {
+    z-index: 1500; /* 필요한 z-index 값 */
+  }
+  .swal-custom-container {
+    z-index: 1500; /* 필요한 z-index 값 */
+  }
+`;
+const styles = {
+  CardSwiper: {
+    width: '100%',
+    height: '100%',
+  },
+  Slide: {
+    width: '100%',
+    height: '170px',
+  },
+};
+const fontFamily = 'nanumsquare';
+const textStyle = {
+  fontFamily,
+  textOverflow: 'ellipsis',
+};
+const modalSubText = {
+  fontSize: '15px',
+  marginBottom: '10px',
+  color: '#858585',
+};
+
+const titleStyle = {
+  display: 'flex',
+  fontFamily,
+  textOverflow: 'ellipsis',
+  justifyContent: 'center',
+};
+
+function WeeklySurvey({ cardList }: CardDataListProps) {
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedCard, setSelectedCard] = useState<CardDataProps | null>(null);
+
+  const navigate = useNavigate();
+
   const showSwalAlert = () => {
     Swal.fire({
       icon: 'warning',
@@ -37,66 +78,6 @@ function WeeklySurvey() {
     });
   };
 
-  // style 태그를 사용해 커스텀 스타일 정의
-  const customStyles = `
-  .swal-custom-popup {
-    z-index: 1500; /* 필요한 z-index 값 */
-  }
-  .swal-custom-container {
-    z-index: 1500; /* 필요한 z-index 값 */
-  }
-`;
-  const styles = {
-    CardSwiper: {
-      width: '100%',
-      height: '100%',
-    },
-    Slide: {
-      width: '100%',
-      height: '170px',
-    },
-  };
-  const fontFamily = 'nanumsquare';
-  const textStyle = {
-    fontFamily,
-    textOverflow: 'ellipsis',
-  };
-  const modalSubText = {
-    fontSize: '15px',
-    marginBottom: '10px',
-    color: '#858585',
-  };
-
-  const titleStyle = {
-    display: 'flex',
-    fontFamily,
-    textOverflow: 'ellipsis',
-    justifyContent: 'center',
-  };
-
-  type CardData = {
-    surveyNo: number;
-    surveyTitle: string;
-    surveyDescription: string;
-    surveyImage: string;
-    surveyPostAt: string;
-    surveyClosingAt: string;
-    userNo: number;
-    userNickName: string;
-    userImage: string;
-    attendUserNo: Array<number>;
-    surveyStatusName: string;
-    openStatusName: string;
-    tagName: string[];
-    surveyAttendCount: number;
-    isDeleted: boolean;
-    attendCheckList: boolean[];
-  };
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
-  const navigate = useNavigate();
-  const [cardList, setCardList] = useState<CardData[]>([]);
-  const [isDataAvailable, setIsDataAvailable] = useState(true);
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
       case '진행':
@@ -108,28 +89,7 @@ function WeeklySurvey() {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const weeklyResponse = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/api/surveys/weekly`
-        );
-
-        if (weeklyResponse.data.length > 0) {
-          setCardList(weeklyResponse.data);
-          setIsDataAvailable(true);
-        } else {
-          setIsDataAvailable(false);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const openCardModal = (card: CardData) => {
+  const openCardModal = (card: CardDataProps) => {
     setSelectedCard(card);
     setOpenModal(true);
   };
@@ -207,7 +167,7 @@ function WeeklySurvey() {
           height: '190px',
         }}
       >
-        {isDataAvailable ? (
+        {cardList.length > 0 ? (
           <Swiper style={styles.CardSwiper} {...swiperParams}>
             <Box
               sx={{
