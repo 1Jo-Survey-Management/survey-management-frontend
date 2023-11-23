@@ -18,7 +18,7 @@ interface UserInfo {
   userBirth: string;
   userNickname: string;
   userGender: string;
-  userImage?: string;
+  userImage?: string | null;
   isNicknameCheckedOnChange: boolean;
   isOverLimitCheckedOnChange: boolean;
   isRegexCheckCheckedOnChange: boolean;
@@ -48,7 +48,7 @@ export default function BasicModal() {
     userNickname: '',
     userGender: '',
     userBirth: '',
-    userImage: '',
+    userImage: null,
     isNicknameCheckedOnChange: false,
     isOverLimitCheckedOnChange: false,
     isRegexCheckCheckedOnChange: false,

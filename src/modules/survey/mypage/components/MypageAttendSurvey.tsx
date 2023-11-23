@@ -52,7 +52,6 @@ const showSwalAlert = () => {
   });
 };
 
-// style 태그를 사용해 커스텀 스타일 정의
 const customStyles = `
   .swal-custom-popup {
     z-index: 1500; /* 필요한 z-index 값 */
@@ -75,6 +74,7 @@ interface CardData {
   surveyPostAt: string;
   openStatusNo: number;
   userNickname: string;
+  surveyAttendCreatedAt: string;
 }
 
 const MAIN_PAGE = '/survey/main';
@@ -127,7 +127,7 @@ function getOpenStatusLabel(openStatusNo: number | undefined) {
     case 3:
       return '비공개';
     default:
-      return ''; // 다른 경우에 대한 기본 값 설정
+      return '';
   }
 }
 
@@ -171,18 +171,18 @@ function getChipColor(surveyStatusNo: number) {
  * @param {number} surveyStatusNo - 설문의 상태 번호
  * @returns {string} 해당 상태에 맞는 배경색
  */
-// function getCardColor(surveyStatusNo: number) {
-//   switch (surveyStatusNo) {
-//     case 1:
-//       return 'rgba(51, 122, 255, 0.1)';
-//     case 2:
-//       return 'rgba(153, 102, 255, 0.1)';
-//     case 3:
-//       return 'rgba(128, 128, 128, 0.1)';
-//     default:
-//       return 'rgba(0, 0, 0, 0.5)';
-//   }
-// }
+function getCardColor(surveyStatusNo: number) {
+  switch (surveyStatusNo) {
+    case 1:
+      return 'rgba(51, 122, 255, 0.1)';
+    case 2:
+      return 'rgba(153, 102, 255, 0.1)';
+    case 3:
+      return 'rgba(128, 128, 128, 0.1)';
+    default:
+      return 'rgba(0, 0, 0, 0.5)';
+  }
+}
 
 function Mypage() {
   const [filteredData, setFilteredData] = useState<CardData[]>([]);
@@ -201,16 +201,13 @@ function Mypage() {
 
   const handleSearch = () => {
     if (!searchTerm) {
-      // 검색어가 비어있으면 전체 설문을 다시 불러옵니다.
       setFilteredData(allData);
       return;
     }
 
-    // 검색어가 있는 경우, 로컬에서 필터링합니다.
     const filteredResults = allData.filter(
       (card: CardData) =>
         card.surveyTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        // card.tagNames.includes(searchTerm.toLowerCase())
         card.tagNames.some((tag) =>
           tag.toLowerCase().includes(searchTerm.toLowerCase())
         )
@@ -223,7 +220,7 @@ function Mypage() {
     const loggedInUserNo = localStorage.getItem('userNo');
 
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/api/my-surveys/write-surveys`
+      `${process.env.REACT_APP_BASE_URL}/api/my-surveys/attend-surveys`
     );
 
     const cardData: CardData[] = response.data.content || [];
@@ -307,6 +304,7 @@ function Mypage() {
       .get(`${process.env.REACT_APP_BASE_URL}/api/my-surveys/attend-surveys`)
       .then((response) => {
         const cardData: CardData[] = response.data.content || [];
+        console.log(`카드 데이터: ${response.data.content}`);
 
         let filtered = cardData.filter(
           (card) => card.userNo.toString() === loggedInUserNo
@@ -336,11 +334,11 @@ function Mypage() {
     fetchCardData();
   }, [state, searchQuery]);
 
-  // /**
-  //  * 검색 입력란의 값이 변경될 때 호출되며, 검색 쿼리 상태를 업데이트합니다.
-  //  *
-  //  * @param {React.ChangeEvent<HTMLInputElement>} event - 입력 변경 이벤트
-  //  */
+  /**
+   * 검색 입력란의 값이 변경될 때 호출되며, 검색 쿼리 상태를 업데이트합니다.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event - 입력 변경 이벤트
+   */
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchQuery = event.target.value;
     setSearchQuery(newSearchQuery);
@@ -399,7 +397,7 @@ function Mypage() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ paddingLeft: '3px', paddingRight: '3px' }}>
+    <Container maxWidth="md" sx={{ paddingLeft: '16px', paddingRight: '16px' }}>
       <style>{customStyles}</style>
 
       <Typography
@@ -418,7 +416,7 @@ function Mypage() {
           },
         }}
       >
-        내가 작성한 설문 목록
+        내가 참여한 설문 목록
       </Typography>
 
       <Box
@@ -429,23 +427,16 @@ function Mypage() {
           width: '100%',
           marginBottom: '15px',
           marginTop: '15px',
-          gap: { xs: 1, sm: 1 }, // 간격 일관성 유지
+          gap: { xs: 1, sm: 1 },
         }}
       >
         <Button
           variant="outlined"
           sx={{
-            width: '100px', // 모든 화면 크기에서 너비 100px 고정
+            width: '100px',
             height: '35px',
           }}
-          // onClick={() => {
-          //   setState('전체');
-          //   setSearchQuery('');
-          //   fetchCardData();
-          // }}
           onClick={() => {
-            // 초기화 버튼 클릭 시 검색 옵션 및 검색어 초기화
-            // setSearchOptions([]);
             setSearchTerm('');
             setState('전체');
             resetData();
@@ -462,7 +453,7 @@ function Mypage() {
             sx={{ width: '100%', height: '100%' }}
           >
             <MenuItem value="전체">전체</MenuItem>
-            <MenuItem value={1}>작성 중</MenuItem>
+            {/* <MenuItem value={1}>작성 중</MenuItem> */}
             <MenuItem value={2}>진행 중</MenuItem>
             <MenuItem value={3}>마감</MenuItem>
           </Select>
@@ -608,7 +599,7 @@ function Mypage() {
                       marginRight: '4px',
                     }}
                   />
-                  {card.surveyClosingAt}
+                  {`참여일: ${card.surveyAttendCreatedAt.split(' ')[0]}`}
                 </div>
                 <Typography
                   variant="h5"
@@ -747,18 +738,18 @@ function Mypage() {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'flex-start',
-                height: '120px',
+                height: '62.02px',
               }}
             >
               <Typography
-                variant="h5"
+                variant="h6"
                 id="modal-title"
                 style={{
                   fontFamily,
                   textOverflow: 'ellipsis',
                   fontWeight: 'bold',
-                  paddingTop: '15px',
-                  marginBottom: '15px',
+                  // paddingTop: '15px',
+                  marginBottom: '30px',
                   // marginBottom: '35px',
                 }}
               >
@@ -882,6 +873,17 @@ function Mypage() {
               </Typography>
             </Box>
             <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
+
+            <Box
+              sx={{
+                marginTop: '15px',
+                paddingBottom: '15px',
+              }}
+            >
+              <Alert severity="success">
+                {selectedCard?.surveyAttendCreatedAt}에 참여한 설문
+              </Alert>
+            </Box>
 
             <div
               style={{
