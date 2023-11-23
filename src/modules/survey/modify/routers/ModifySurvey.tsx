@@ -77,6 +77,7 @@ function ModifySurvey() {
   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [previewImageUrl, setPreviewImageUrl] = useState<string>('');
+  const [previosImage, setPreviosImage] = useState<string>('');
 
   /**
    * 설문 수정을 위해 설문의 정보를 가져오는 API Call 메서드 입니다.
@@ -119,6 +120,7 @@ function ModifySurvey() {
     });
 
     setPreviewImageUrl(responseData.surveyImage);
+    setPreviosImage(responseData.surveyImage);
 
     const questionPropsArray: QuestionProps[] = responseData.questions.map(
       (question: any) => ({
@@ -214,10 +216,14 @@ function ModifySurvey() {
       return;
     }
 
+    const headers = {
+      'X-Previous-Image-URL': '',
+    };
     if (surveyImage !== undefined) {
       try {
         const imageUrl = await imageUploadToS3(surveyImage);
         surveyInfo.surveyImageUrl = imageUrl;
+        headers['X-Previous-Image-URL'] = previosImage;
       } catch (error) {
         console.error(error);
       }
@@ -231,7 +237,8 @@ function ModifySurvey() {
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_BASE_URL}/api/surveys`,
-        surveyUpdateDto
+        surveyUpdateDto,
+        { headers }
       );
 
       if (response.status === 200) {
