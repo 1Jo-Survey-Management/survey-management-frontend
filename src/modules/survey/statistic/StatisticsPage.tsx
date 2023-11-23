@@ -10,12 +10,13 @@ import {
   CircularProgress,
   Container,
 } from '@mui/material';
+import Swal from 'sweetalert2';
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
-import axios from '../../login/components/customApi';
 import WordCloud from './components/WordCloud';
 import GooglePieChart from './components/GooglePieChart';
 import { Selection } from './types/SurveyStatisticTypes';
+import axios from '../../login/components/customApi';
 
 const styles = {
   card: {
@@ -93,6 +94,15 @@ const textStyle = {
   fontFamily,
 };
 
+const customStyles = `
+.swal-custom-popup {
+  z-index: 1500; // 필요한 z-index 값
+}
+.swal-custom-container {
+  z-index: 1500; // 필요한 z-index 값
+}
+`;
+
 /**
  * 통계보기 페이지의 각 문항별 유형에 따른 통계 카드들을 보여주는 함수입니다.
  * @component
@@ -135,19 +145,43 @@ export default function StatisticsPage() {
    * @function
    */
   useEffect(() => {
+    const isMember = localStorage.getItem('isMember');
+
     const fetchData = async () => {
       setIsLoading(true);
 
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/api/survey/resultall?surveyno=${statSurveyNo}`
-        );
-        setSelectStat(response.data.content);
-        setSurveyTitle(response.data.content[0].surveyTitle);
-        setIsLoading(false);
+        // 비회원이라면
+        if (isMember === '비회원') {
+          const response = await axios.get(
+            `${process.env.REACT_APP_BASE_URL}/api/survey/nonMember/resultall?surveyno=${statSurveyNo}`
+          );
+          setSelectStat(response.data.content);
+          setSurveyTitle(response.data.content[0].surveyTitle);
+          setIsLoading(false);
+        }
+
+        // 회원이라면
+        if (isMember === '회원') {
+          const response = await axios.get(
+            `${process.env.REACT_APP_BASE_URL}/api/survey/resultall?surveyno=${statSurveyNo}`
+          );
+          setSelectStat(response.data.content);
+          setSurveyTitle(response.data.content[0].surveyTitle);
+          setIsLoading(false);
+        }
       } catch (error) {
         console.error('통계 보기 중 오류 발생:', error);
         setIsLoading(false);
+        Swal.fire({
+          icon: 'error',
+          title: '요청 오류! 재로그인 부탁드려요!',
+          customClass: {
+            popup: 'swal-custom-popup',
+            container: 'swal-custom-container',
+          },
+        });
+        navigate('/login');
       }
     };
 
@@ -281,6 +315,7 @@ export default function StatisticsPage() {
 
         return (
           <Box sx={styles.card} key={questionNo}>
+            <style>{customStyles}</style>
             <Card sx={styles.cardTitle} key={questionNo}>
               <CardContent>
                 <Box>

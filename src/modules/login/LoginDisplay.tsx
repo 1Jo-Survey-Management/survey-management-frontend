@@ -54,6 +54,16 @@ function LoginDisplay() {
     const userNo = localStorage.getItem('userNo');
     const userNickname = localStorage.getItem('userNickname');
 
+    const itemsToRemove = [
+      'userNo',
+      'accessToken',
+      'userNickname',
+      'userImage',
+      'expiresIn',
+      'accessCode',
+      'isMember',
+    ];
+
     if (userNo !== '' && userNickname === '') {
       try {
         const response = await axios.get(
@@ -74,16 +84,21 @@ function LoginDisplay() {
         console.error(error);
       }
 
-      localStorage.removeItem('userNo');
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('userNickname');
-      localStorage.removeItem('userImage');
-      localStorage.removeItem('expiresIn');
-      localStorage.removeItem('accessCode');
+      itemsToRemove.forEach((item) => localStorage.removeItem(item));
     }
   };
 
   useEffect(() => {
+    const itemsToRemove = [
+      'userNo',
+      'accessToken',
+      'userNickname',
+      'userImage',
+      'expiresIn',
+      'isMember',
+    ];
+    itemsToRemove.forEach((item) => localStorage.removeItem(item));
+
     const localStorageAccessToken = localStorage.getItem('accessToken');
     const searchParams = new URLSearchParams(location.search);
     const redirectUri = `${process.env.REACT_APP_BASE_URL}/api/oauthLogin/oauth2/code/naver`;
@@ -109,68 +124,60 @@ function LoginDisplay() {
           },
         })
         .then((response) => {
-          const responseCheck = response;
-          const responseUserNo = responseCheck.data.content.userNo;
-          const responseAccessToken = responseCheck.data.content.accessToken;
-          const responseImage = responseCheck.data.content.userImage;
-          const responseNickName = responseCheck.data.content.userNickname;
-          const responseExpiresIn = responseCheck.data.content.expiresIn;
+          const { userNo, accessToken, userImage, userNickname, expiresIn } =
+            response.data.content;
 
           localStorage.setItem('accessCode', accessCode);
-          localStorage.setItem('userNo', responseUserNo);
-          localStorage.setItem('userNickname', responseNickName);
-          localStorage.setItem('userImage', responseImage);
-          localStorage.setItem('accessToken', responseAccessToken);
-          localStorage.setItem('expiresIn', responseExpiresIn);
+          localStorage.setItem('userNo', userNo);
+          localStorage.setItem('userNickname', userNickname);
+          localStorage.setItem('userImage', userImage);
+          localStorage.setItem('accessToken', accessToken);
+          localStorage.setItem('expiresIn', expiresIn);
 
-          if (responseUserNo != null && responseNickName != null) {
+          if (userNo != null && userNickname != null) {
             if (
               localStorageAccessToken == null ||
-              responseAccessToken !== localStorageAccessToken
+              accessToken !== localStorageAccessToken
             ) {
-              localStorage.setItem('userNo', responseUserNo);
-              localStorage.setItem('userNickname', responseNickName);
-              localStorage.setItem('userImage', responseImage);
-              localStorage.setItem('accessToken', responseAccessToken);
-              localStorage.setItem('expiresIn', responseExpiresIn);
+              localStorage.setItem('userNo', userNo);
+              localStorage.setItem('userNickname', userNickname);
+              localStorage.setItem('userImage', userImage);
+              localStorage.setItem('accessToken', accessToken);
+              localStorage.setItem('expiresIn', expiresIn);
 
-              axios.defaults.headers.common.Authorization = `Bearer ${responseAccessToken}`;
+              axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
               navigate('/survey/main');
               return;
             }
 
-            if (responseExpiresIn) {
-              localStorage.setItem('userNo', responseUserNo);
-              localStorage.setItem('userNickname', responseNickName);
-              localStorage.setItem('userImage', responseImage);
-              localStorage.setItem('accessToken', responseAccessToken);
-              localStorage.setItem('expiresIn', responseExpiresIn);
+            if (expiresIn) {
+              localStorage.setItem('userNo', userNo);
+              localStorage.setItem('userNickname', userNickname);
+              localStorage.setItem('userImage', userImage);
+              localStorage.setItem('accessToken', accessToken);
+              localStorage.setItem('expiresIn', expiresIn);
             }
             navigate('/survey/main');
 
-            if (responseAccessToken === localStorageAccessToken) {
-              axios.defaults.headers.common.Authorization = `Bearer ${responseAccessToken}`;
+            if (accessToken === localStorageAccessToken) {
+              axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
               navigate('/survey/main');
             } else {
-              localStorage.removeItem('userNo');
-              localStorage.removeItem('userNickname');
-              localStorage.removeItem('userImage');
-              localStorage.removeItem('accessToken');
-              localStorage.removeItem('expiresIn');
+              itemsToRemove.forEach((item) => localStorage.removeItem(item));
 
               navigate('/login');
             }
           }
 
-          if (responseUserNo != null && !responseNickName) {
-            localStorage.setItem('userNo', responseUserNo);
-            localStorage.setItem('userNickname', responseNickName);
-            localStorage.setItem('userImage', responseImage);
-            localStorage.setItem('accessToken', responseAccessToken);
-            localStorage.setItem('expiresIn', responseExpiresIn);
+          if (userNo != null && !userNickname) {
+            localStorage.setItem('userNo', userNo);
+            localStorage.setItem('userNickname', userNickname);
+            localStorage.setItem('userImage', userImage);
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('expiresIn', expiresIn);
 
-            axios.defaults.headers.common.Authorization = `Bearer ${responseAccessToken}`;
+            axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
             setShowModal(true);
           }
