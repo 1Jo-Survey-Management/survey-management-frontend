@@ -389,7 +389,7 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
                 }}
               >
                 <Avatar
-                  src=""
+                  src={selectedCard?.userImage}
                   sx={{
                     width: 28,
                     height: 28,
@@ -503,7 +503,7 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
                   }}
                 >
                   <img
-                    src={`${process.env.PUBLIC_URL}/LoginFig.png`}
+                    src={selectedCard?.surveyImage}
                     alt="Naver Button"
                     style={{ width: '100%', height: 'auto' }}
                   />{' '}
