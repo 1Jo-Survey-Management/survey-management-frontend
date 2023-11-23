@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import { Backdrop, Box, CircularProgress } from '@mui/material';
-import Floating from './components/Floating';
-import ClosingSurvey from './components/ClosingSurvey';
-import RecentSurvey from './components/RecentSurvey';
-import WeeklySurvey from './components/WeeklySurvey';
-import '../../../global.css';
-import { CardDataProps } from './types/MainType';
-import axios from '../../login/components/customApi';
+import Floating from '../components/Floating';
+import ClosingSurvey from '../components/ClosingSurvey';
+import RecentSurvey from '../components/RecentSurvey';
+import WeeklySurvey from '../components/WeeklySurvey';
+import '../../../../global.css';
+import { CardDataProps } from '../types/MainType';
+import axios from '../../../login/components/customApi';
 
 const fontFamily = 'GmarketSansMedium';
 const textStyle = {
@@ -123,7 +123,7 @@ function Main() {
 
   return (
     <Container sx={{ maxWidth: '1150px' }}>
-      <h3 style={textStyle}>인기 설문🔥</h3>
+      <h2 style={textStyle}>인기 설문🔥</h2>
       <WeeklySurvey cardList={weeklySurveyData} />
       <div style={arrowStyle} />
 
@@ -136,7 +136,7 @@ function Main() {
 
       <RecentSurvey cardList={recentSurveyData} />
       <div style={arrowStyle} />
-      <h3 style={textStyle}>최근 마감된 설문⌛</h3>
+      <h2 style={textStyle}>최근 마감된 설문⌛</h2>
       <ClosingSurvey cardList={closingSurveyData} />
       <div style={arrowStyle} />
       <Floating />

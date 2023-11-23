@@ -1,0 +1,17 @@
+.modal {
+  background-color: #fff;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  width: 375px;
+  height: 800px;
+  padding: 16px;
+  outline: 0;
+  border-radius: 8px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .modal {
+    width: 330px;
+    height: 620px;
+  }
+}
