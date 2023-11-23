@@ -44,7 +44,7 @@ const styles = {
   },
   Slide: {
     width: '100%',
-    height: '170px',
+    height: '200px',
   },
 };
 const fontFamily = 'nanumsquare';
@@ -167,7 +167,7 @@ function RecentSurvey({ cardList }: CardDataListProps) {
     <div>
       <div>
         <style>{customStyles}</style>
-        <Box sx={{ height: '190px' }}>
+        <Box sx={{ height: '200px' }}>
           <Swiper style={styles.CardSwiper} {...swiperParams}>
             <Box
               sx={{
@@ -203,7 +203,6 @@ function RecentSurvey({ cardList }: CardDataListProps) {
                       >
                         <CardContent
                           sx={{
-                            padding: '8px',
                             justifyContent: 'space-between',
                           }}
                         >
@@ -388,7 +387,7 @@ function RecentSurvey({ cardList }: CardDataListProps) {
                   }}
                 >
                   <Avatar
-                    src=""
+                    src={selectedCard?.userImage}
                     sx={{
                       width: 28,
                       height: 28,
@@ -411,7 +410,7 @@ function RecentSurvey({ cardList }: CardDataListProps) {
                 {/* 설문 조사 타이틀 */}
                 <Box sx={titleStyle}>
                   <Typography
-                    variant="h5"
+                    variant="h6"
                     id="modal-title"
                     style={{
                       fontFamily,
@@ -502,7 +501,7 @@ function RecentSurvey({ cardList }: CardDataListProps) {
                     }}
                   >
                     <img
-                      src={`${process.env.PUBLIC_URL}/LoginFig.png`}
+                      src={selectedCard?.surveyImage}
                       alt="Naver Button"
                       style={{ width: '100%', height: 'auto' }}
                     />{' '}
