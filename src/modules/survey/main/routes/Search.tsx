@@ -118,10 +118,6 @@ function SurveySearch() {
   };
 
   useEffect(() => {
-    console.log(filteredData);
-  }, [filteredData]);
-
-  useEffect(() => {
     const fetchData = async () => {
       if (selectedState === '전체(모든 카드)') {
         const response = await axios.get(
