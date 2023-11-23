@@ -676,7 +676,7 @@ function SurveySearch() {
               {/* 설문 조사 타이틀 */}
               <Box sx={titleStyle}>
                 <Typography
-                  variant="h5"
+                  variant="h6"
                   id="modal-title"
                   style={{
                     fontFamily,

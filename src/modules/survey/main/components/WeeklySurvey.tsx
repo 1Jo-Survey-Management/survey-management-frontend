@@ -22,6 +22,7 @@ import Swal from 'sweetalert2';
 import Avatar from '@mui/material/Avatar';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import '../../../../global.css';
+// import { css } from '@emotion/react';
 import { CardDataListProps, CardDataProps } from '../types/MainType';
 
 // style 태그를 사용해 커스텀 스타일 정의
@@ -38,9 +39,10 @@ const styles = {
     width: '100%',
     height: '100%',
   },
-  Slide: {
+
+  slide: {
     width: '100%',
-    height: '170px',
+    height: '200px',
   },
 };
 const fontFamily = 'nanumsquare';
@@ -164,11 +166,11 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
       <style>{customStyles}</style>
       <Box
         sx={{
-          height: '190px',
+          height: '200px',
         }}
       >
         {cardList.length > 0 ? (
-          <Swiper style={styles.CardSwiper} {...swiperParams}>
+          <Swiper css={styles.CardSwiper} {...swiperParams}>
             <Box
               sx={{
                 display: 'flex',
@@ -185,7 +187,7 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
                     {/* 카드를 클릭하면 해당 카드 정보를 전달하여 모달 열기 */}
                     <SwiperSlide
                       key={`slide_${card.surveyNo}`}
-                      style={styles.Slide}
+                      style={styles.slide}
                     >
                       <Card
                         variant="elevation"
@@ -204,7 +206,6 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
                       >
                         <CardContent
                           sx={{
-                            padding: '8px',
                             justifyContent: 'space-between',
                           }}
                         >
@@ -412,7 +413,7 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
               {/* 설문 조사 타이틀 */}
               <Box sx={titleStyle}>
                 <Typography
-                  variant="h5"
+                  variant="h6"
                   id="modal-title"
                   style={{
                     fontFamily,
