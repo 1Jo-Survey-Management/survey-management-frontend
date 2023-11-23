@@ -47,8 +47,13 @@ const styles = {
   },
 
   subjectContent: {
+    width: '100%',
     border: '1px solid #757575',
-    borderRadius: '3%',
+    borderRadius: '10%',
+    '@media (max-width: 600px)': {
+      width: '100%',
+      height: '40%',
+    },
   },
   typography: {
     fontSize: '25px',
@@ -74,6 +79,7 @@ const styles = {
     },
   },
   surveyInfo: {
+    width: '95%',
     fontSize: '15px',
     textAlign: 'right',
     '@media (max-width: 400px)': {
@@ -283,51 +289,129 @@ export default function StatisticsPage() {
                   </Typography>
 
                   <Typography style={textStyle} sx={styles.surveyInfo}>
-                    설문 참여자 수:
+                    설문 참여자 수 :{' '}
                     {itemsForQuestion[0].selectionCount !== 0
                       ? countSelections(itemsForQuestion)
                       : countSubjectiveAnswerCount(itemsForQuestion)}
                   </Typography>
 
                   {questionTypeNo === 1 && (
-                    <Box sx={styles.googleChartContent}>
-                      <GooglePieChart selectionAnswer={chartData} />
-                    </Box>
+                    <>
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
+                        }}
+                      >
+                        📝 파이차트로 보는 통계!
+                      </Typography>
+                      <Box sx={styles.googleChartContent}>
+                        <GooglePieChart selectionAnswer={chartData} />
+                      </Box>
+                    </>
                   )}
                   {questionTypeNo === 2 && (
-                    <Box sx={styles.googleChartContent}>
-                      <GooglePieChart selectionAnswer={chartData} />
-                    </Box>
+                    <>
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
+                        }}
+                      >
+                        📝 파이차트로 보는 통계!
+                      </Typography>
+                      <Box sx={styles.googleChartContent}>
+                        <GooglePieChart selectionAnswer={chartData} />
+                      </Box>
+                    </>
                   )}
                   {questionTypeNo === 3 && (
-                    <Box sx={styles.googleChartContent}>
-                      <GooglePieChart selectionAnswer={chartData} />
-                    </Box>
+                    <>
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
+                        }}
+                      >
+                        📝 파이차트로 보는 통계!
+                      </Typography>
+                      <Box sx={styles.googleChartContent}>
+                        <GooglePieChart selectionAnswer={chartData} />
+                      </Box>
+                    </>
                   )}
                   {questionTypeNo === 4 && (
                     <>
-                      <Typography style={textStyle}>
-                        ## 단답형의 답들은 다음과 같은 것들이 있었습니다!
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
+                        }}
+                      >
+                        📝 워드클라우드로 보는 통계!
                       </Typography>
-                      <Box sx={styles.subjectContent}>
-                        <WordCloud
-                          wordCloud={shortSubData.map((item) => ({
-                            text: item.surveySubjectiveAnswer,
-                            size: item.questionTypeNo,
-                          }))}
-                        />
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          padding: '10px 10px 10px 10px',
+                        }}
+                      >
+                        <Box sx={styles.subjectContent}>
+                          <WordCloud
+                            wordCloud={shortSubData.map((item) => ({
+                              text: item.surveySubjectiveAnswer,
+                              size: item.questionTypeNo,
+                            }))}
+                          />
+                        </Box>
                       </Box>
-                      <Typography style={textStyle}>답변 랭킹!!</Typography>
-                      <AnswerList selectList={shortSubData} />
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
+                        }}
+                      >
+                        🔥답변 랭킹!!
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          padding: '10px 10px 10px 10px',
+                        }}
+                      >
+                        <AnswerList selectList={shortSubData} />
+                      </Box>
                     </>
                   )}
 
                   {questionTypeNo === 5 && (
                     <>
-                      <Typography style={textStyle}>
-                        ## 서술형의 답들은 다음과 같은 것들이 있었습니다!
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
+                        }}
+                      >
+                        📝 장문의 긴 답변!!
                       </Typography>
-                      <Box>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          padding: '10px 10px 10px 10px',
+                        }}
+                      >
                         <AnswerList selectList={LongSubData} />
                       </Box>
                     </>

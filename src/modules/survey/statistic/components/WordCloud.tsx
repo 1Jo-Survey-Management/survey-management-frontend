@@ -29,8 +29,8 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
     { text: string; size: number }[]
   >([]);
 
-  const [width, setWidth] = useState<number>(800);
-  const [height] = useState<number>(400);
+  const [width] = useState<number>(window.innerWidth < 600 ? 300 : 500);
+  const [height] = useState<number>(window.innerWidth < 600 ? 200 : 500);
 
   const incrementValue = 10;
 
@@ -44,22 +44,6 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
   };
 
   useEffect(() => {
-    const containerWidth = svgRef.current?.getBoundingClientRect().width;
-
-    if (containerWidth) {
-      setWidth(containerWidth);
-    }
-
-    const handleResize = () => {
-      const newContainerWidth = svgRef.current?.getBoundingClientRect().width;
-
-      if (newContainerWidth) {
-        setWidth(newContainerWidth);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
     updateWordCloud();
   }, [wordCloud]);
 
@@ -79,15 +63,13 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
             wordCloudData.map((d) => ({
               text: d.text,
               size: d.size,
-              x: Math.random() * width, // 무작위 x 좌표
-              y: Math.random() * height, // 무작위 y 좌표
               rotate: Math.random() * 90 - 45, // 무작위 회전 각도 (-45도에서 45도 사이)
             }))
           )
 
           .padding(5)
           .rotate(() => Math.random() * 90 - 45) // 무작위 회전 각도 (-45도에서 45도 사이)
-          .fontSize((d) => d.size)
+          .fontSize((d) => d.size + 40)
           .on('end', (wordData) => {
             selection
               .selectAll('text')
@@ -97,8 +79,14 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
               .attr(
                 'transform',
                 () =>
-                  `translate(${Math.random() * width},${
-                    Math.random() * height
+                  `translate(${
+                    window.innerWidth <= 600
+                      ? Math.random() * 130 + 55 // 600px 이하일 때
+                      : Math.random() * 250 + 90 // 600px 초과일 때
+                  },${
+                    window.innerWidth <= 600
+                      ? Math.random() * 140 + 35
+                      : Math.random() * 250 + 90
                   }) rotate(${Math.random() * 90 - 45})`
               )
               .style('font-size', (d) => `${d.size}px`)
@@ -110,7 +98,6 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
         layout.start();
       }
     }
-    // }
   }, [wordCloudData, width, height]);
 
   return <svg ref={svgRef} />;

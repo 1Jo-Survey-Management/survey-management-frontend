@@ -66,7 +66,7 @@ function Header() {
 
     let loginCheck = false;
 
-    if (hasProperLogin !== 'null') {
+    if (hasProperLogin !== null) {
       loginCheck = true;
     }
 
