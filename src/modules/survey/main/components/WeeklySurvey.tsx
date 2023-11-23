@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types/swiper-options';
@@ -15,15 +14,61 @@ import {
   Chip,
   Stack,
   Modal,
+  Fade,
   Divider,
   Alert,
 } from '@mui/material';
 import Swal from 'sweetalert2';
+import Avatar from '@mui/material/Avatar';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
-import axios from '../../../login/components/customApi';
 import '../../../../global.css';
+// import { css } from '@emotion/react';
+import { CardDataListProps, CardDataProps } from '../types/MainType';
 
-function WeeklySurvey() {
+// style 태그를 사용해 커스텀 스타일 정의
+const customStyles = `
+  .swal-custom-popup {
+    z-index: 1500; /* 필요한 z-index 값 */
+  }
+  .swal-custom-container {
+    z-index: 1500; /* 필요한 z-index 값 */
+  }
+`;
+const styles = {
+  CardSwiper: {
+    width: '100%',
+    height: '100%',
+  },
+
+  slide: {
+    width: '100%',
+    height: '200px',
+  },
+};
+const fontFamily = 'nanumsquare';
+const textStyle = {
+  fontFamily,
+  textOverflow: 'ellipsis',
+};
+const modalSubText = {
+  fontSize: '15px',
+  marginBottom: '10px',
+  color: '#858585',
+};
+
+const titleStyle = {
+  display: 'flex',
+  fontFamily,
+  textOverflow: 'ellipsis',
+  justifyContent: 'center',
+};
+
+function WeeklySurvey({ cardList }: CardDataListProps) {
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedCard, setSelectedCard] = useState<CardDataProps | null>(null);
+
+  const navigate = useNavigate();
+
   const showSwalAlert = () => {
     Swal.fire({
       icon: 'warning',
@@ -35,66 +80,6 @@ function WeeklySurvey() {
     });
   };
 
-  // style 태그를 사용해 커스텀 스타일 정의
-  const customStyles = `
-  .swal-custom-popup {
-    z-index: 1500; /* 필요한 z-index 값 */
-  }
-  .swal-custom-container {
-    z-index: 1500; /* 필요한 z-index 값 */
-  }
-`;
-  const styles = {
-    CardSwiper: {
-      width: '100%',
-      height: '100%',
-    },
-    Slide: {
-      width: '100%',
-      height: '170px',
-    },
-  };
-  const fontFamily = 'nanumsquare';
-  const textStyle = {
-    fontFamily,
-    textOverflow: 'ellipsis',
-  };
-  const modalSubText = {
-    fontSize: '15px',
-    marginBottom: '10px',
-    color: '#858585',
-  };
-
-  const titleStyle = {
-    display: 'flex',
-    fontFamily,
-    textOverflow: 'ellipsis',
-    justifyContent: 'center',
-  };
-
-  type CardData = {
-    surveyNo: number;
-    surveyTitle: string;
-    surveyDescription: string;
-    surveyImage: string;
-    surveyPostAt: string;
-    surveyClosingAt: string;
-    userNo: number;
-    userNickName: string;
-    userImage: string;
-    attendUserNo: Array<number>;
-    surveyStatusName: string;
-    openStatusName: string;
-    tagName: string[];
-    surveyAttendCount: number;
-    isDeleted: boolean;
-    attendCheckList: boolean[];
-  };
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
-  const navigate = useNavigate();
-  const [cardList, setCardList] = useState<CardData[]>([]);
-  const [isDataAvailable, setIsDataAvailable] = useState(true);
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
       case '진행':
@@ -106,28 +91,7 @@ function WeeklySurvey() {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const weeklyResponse = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/api/surveys/weekly`
-        );
-
-        if (weeklyResponse.data.length > 0) {
-          setCardList(weeklyResponse.data);
-          setIsDataAvailable(true);
-        } else {
-          setIsDataAvailable(false);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const openCardModal = (card: CardData) => {
+  const openCardModal = (card: CardDataProps) => {
     setSelectedCard(card);
     setOpenModal(true);
   };
@@ -202,11 +166,11 @@ function WeeklySurvey() {
       <style>{customStyles}</style>
       <Box
         sx={{
-          height: '180px',
+          height: '200px',
         }}
       >
-        {isDataAvailable ? (
-          <Swiper style={styles.CardSwiper} {...swiperParams}>
+        {cardList.length > 0 ? (
+          <Swiper css={styles.CardSwiper} {...swiperParams}>
             <Box
               sx={{
                 display: 'flex',
@@ -223,13 +187,13 @@ function WeeklySurvey() {
                     {/* 카드를 클릭하면 해당 카드 정보를 전달하여 모달 열기 */}
                     <SwiperSlide
                       key={`slide_${card.surveyNo}`}
-                      style={styles.Slide}
+                      style={styles.slide}
                     >
                       <Card
                         variant="elevation"
                         sx={{
-                          width: '150px',
-                          height: '160px',
+                          width: '156px',
+                          height: '180px',
 
                           borderRadius: 2,
                           marginLeft: '5px',
@@ -242,7 +206,6 @@ function WeeklySurvey() {
                       >
                         <CardContent
                           sx={{
-                            padding: '8px',
                             justifyContent: 'space-between',
                           }}
                         >
@@ -301,7 +264,7 @@ function WeeklySurvey() {
                               fontSize: 12,
                               color: 'text.secondary',
                               fontWeight: 600,
-                              marginBottom: 'Zpx',
+                              marginBottom: '5px',
                               fontFamily,
                             }}
                           >
@@ -318,15 +281,15 @@ function WeeklySurvey() {
                             variant="h5"
                             component="div"
                             sx={{
-                              fontSize: 15,
+                              fontSize: 18,
                               fontWeight: 600,
                               marginBottom: '8px',
                               cursor: 'pointer',
-                              maxHeight: '43px',
+                              maxHeight: '47px',
                               overflow: 'hidden',
                               display: '-webkit-box',
                               WebkitLineClamp: 2,
-                              height: '41px',
+                              height: '47px',
                               WebkitBoxOrient: 'vertical',
                             }}
                             style={textStyle}
@@ -334,7 +297,11 @@ function WeeklySurvey() {
                             {card.surveyTitle}
                           </Typography>
                           {/* 태그 등 카드에 관한 내용 표시 */}
-                          <Stack direction="row" spacing={1}>
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            sx={{ marginTop: '30px' }}
+                          >
                             {card.tagName.map((tag) => (
                               <Chip
                                 key={tag}
@@ -361,8 +328,6 @@ function WeeklySurvey() {
           <Typography variant="h5">인기설문이 없습니다🥲</Typography>
         )}
       </Box>
-
-      {/* -------------------------------------------------------- 모달 창 생성 수정 중 ------------------- */}
       <Modal
         open={openModal}
         onClose={closeCardModal}
@@ -374,240 +339,258 @@ function WeeklySurvey() {
           justifyContent: 'center',
         }}
       >
-        <div className="modal">
-          <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Chip
-                key="0"
-                label={selectedCard?.openStatusName}
-                size="small"
-                style={textStyle}
-                sx={{
-                  fontSize: 16,
-                  marginRight: 1,
-                  height: '35px',
-                  backgroundColor: tagColor('0'),
-                  opacity: 0.7,
-                }}
-              />
-              {numUser() === selectedCard?.userNo && (
-                <Chip
-                  label="본인 작성"
-                  size="small"
-                  style={textStyle}
-                  sx={{
-                    fontSize: 16,
-                    marginRight: 1,
-                    height: '35px',
-                    backgroundColor: tagColor('0'),
-                    opacity: 0.7,
-                  }}
-                />
-              )}
-              {/* 닫기 아이콘 */}
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <ClearTwoToneIcon onClick={handleIconClick} />
-              </Box>
-            </Box>
-
-            {/* 설문 조사 타이틀 */}
-            <Box sx={titleStyle} style={{ height: '94.03px' }}>
-              <Typography
-                variant="h5"
-                id="modal-title"
-                style={{
-                  fontFamily,
-                  textOverflow: 'ellipsis',
-                  fontWeight: 'bold',
-                  paddingTop: '15px',
-                  paddingBottom: '15px',
-                }}
-              >
-                {selectedCard ? selectedCard.surveyTitle : ''}
-              </Typography>
-            </Box>
-
-            {/* 작성자, 참여자수, 태그들 */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Fade in={openModal}>
+          <div className="modal">
+            <Box>
               <Box
                 sx={{
                   display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
                 }}
               >
+                <div>
+                  <Chip
+                    key="0"
+                    label={selectedCard?.openStatusName}
+                    size="small"
+                    style={textStyle}
+                    sx={{
+                      fontSize: 14,
+                      marginRight: 1,
+                      height: '25px',
+                      backgroundColor: tagColor('0'),
+                      opacity: 0.7,
+                    }}
+                  />
+                  {numUser() === selectedCard?.userNo && (
+                    <Chip
+                      label="본인 작성"
+                      size="small"
+                      style={textStyle}
+                      sx={{
+                        fontSize: 14,
+                        marginRight: 1,
+                        height: '25px',
+                        backgroundColor: tagColor('0'),
+                        opacity: 0.7,
+                      }}
+                    />
+                  )}
+                </div>
+                <ClearTwoToneIcon onClick={handleIconClick} />
+
+                {/* 닫기 아이콘 */}
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
+                }}
+              >
+                <Avatar
+                  src={selectedCard?.userImage}
+                  sx={{
+                    width: 28,
+                    height: 28,
+                    marginRight: '8px',
+                  }}
+                />
                 <Typography
                   sx={{
                     display: 'flex',
-                    alignItems: 'left',
-                    color: '#808080',
+                    alignItems: 'center',
+                    color: '#393939',
+
+                    height: '45px',
+                    fontWeight: '700',
                   }}
                 >
-                  작성자: {selectedCard ? selectedCard.userNickName : ''}
+                  {selectedCard ? selectedCard.userNickName : ''}
                 </Typography>
+              </Box>
+              {/* 설문 조사 타이틀 */}
+              <Box sx={titleStyle}>
                 <Typography
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'left',
-                    color: '#808080',
+                  variant="h6"
+                  id="modal-title"
+                  style={{
+                    fontFamily,
+                    textOverflow: 'ellipsis',
+                    fontWeight: 'bold',
+                    paddingBottom: '30px',
                   }}
                 >
-                  참석자 수:{' '}
-                  {selectedCard ? selectedCard.surveyAttendCount : ''}
+                  {selectedCard ? selectedCard.surveyTitle : ''}
                 </Typography>
+              </Box>
+
+              {/* 작성자, 참여자수, 태그들 */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  flexDirection: 'column',
+                }}
+              >
                 {/* 설문 조사 기간 */}
-                <Typography style={modalSubText}>
-                  {' '}
+                <Typography
+                  style={modalSubText}
+                  sx={{ display: 'flex', alignItems: 'center' }}
+                >
+                  <EventAvailableIcon
+                    sx={{
+                      fontSize: '18px',
+                      marginRight: '4px',
+                    }}
+                  />{' '}
                   {selectedCard
-                    ? `기간: ${selectedCard.surveyPostAt.slice(0, 10)} ~ ${
+                    ? ` ${selectedCard.surveyPostAt.slice(0, 10)} ~ ${
                         selectedCard.surveyClosingAt
                       }`
                     : ''}
                 </Typography>
-              </Box>
-              <Stack direction="row" spacing={1}>
-                {selectedCard?.tagName.map((tag) => (
-                  <Chip
-                    key={tag}
-                    label={tag}
-                    size="small"
-                    style={textStyle}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                  }}
+                >
+                  <Typography
                     sx={{
-                      fontSize: 16,
-                      marginRight: 1,
-                      height: '35px',
-                      backgroundColor: tagColor(tag),
-                      opacity: 0.7,
+                      color: '#808080',
+                      display: 'flex',
+                      justifyContent: 'flex-start',
+                      alignItems: 'center',
                     }}
-                  />
-                ))}
-              </Stack>
-            </Box>
-            <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
-            <div className="modal-scroll-box">
-              {/* 설문조사 사진 */}
+                  >
+                    <FaceIcon
+                      sx={{
+                        fontSize: '20px',
+                        marginRight: '8px',
+                      }}
+                    />{' '}
+                    {selectedCard ? selectedCard.surveyAttendCount : ''}
+                  </Typography>
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    {selectedCard?.tagName.map((tag) => (
+                      <Chip
+                        key={tag}
+                        label={tag}
+                        size="small"
+                        style={textStyle}
+                        sx={{
+                          fontSize: 12,
+                          marginRight: 1,
+                          height: '25px',
+                          backgroundColor: tagColor(tag),
+                          opacity: 0.7,
+                        }}
+                      />
+                    ))}
+                  </Box>
+                </Box>
+              </Box>
+              <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
+              <div className="modal-scroll-box">
+                {/* 설문조사 사진 */}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    paddingBottom: '15px',
+                  }}
+                >
+                  <img
+                    src={selectedCard?.surveyImage}
+                    alt="Naver Button"
+                    style={{ width: '100%', height: 'auto' }}
+                  />{' '}
+                </Box>
+
+                <Typography
+                  id="modal-description"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    textAlign: 'start',
+                    paddingBottom: '15px',
+                    fontFamily,
+                  }}
+                >
+                  {selectedCard
+                    ? `설문 설명: ${selectedCard.surveyDescription}`
+                    : ''}
+                </Typography>
+              </div>
+              <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
+
               <Box
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
+                  marginTop: '15px',
                   paddingBottom: '15px',
                 }}
               >
-                <img
-                  src={`${process.env.PUBLIC_URL}/LoginFig.png`}
-                  alt="Naver Button"
-                  style={{ width: '100%', height: 'auto' }}
-                />{' '}
+                {/* 참여하기 제한 조건 */}
+                {selectedCard?.attendCheckList &&
+                  selectedCard.attendCheckList.includes(false) && (
+                    <Alert severity="info">이미 참여한 설문입니다.</Alert>
+                  )}
+
+                {selectedCard?.userNo === numUser() &&
+                  selectedCard?.openStatusName === '전체 공개' && (
+                    <Alert severity="success">본인이 작성한 설문입니다.</Alert>
+                  )}
+                {selectedCard?.userNo === numUser() &&
+                  selectedCard?.openStatusName === '회원 공개' && (
+                    <Alert severity="success">본인이 작성한 설문입니다.</Alert>
+                  )}
+
+                {selectedCard?.openStatusName === '비공개' &&
+                  (numUser() !== selectedCard.userNo ? (
+                    <Alert severity="warning">
+                      설문 작성자만 볼 수 있습니다.
+                    </Alert>
+                  ) : (
+                    <Alert severity="success">
+                      해당 비공개 설문의 작성자입니다.
+                    </Alert>
+                  ))}
+
+                {selectedCard?.openStatusName === '회원 공개' &&
+                  numUser() === null && (
+                    <Alert severity="error">
+                      설문 결과를 보시려면 로그인해주세요.
+                    </Alert>
+                  )}
+
+                {numUser() === null &&
+                  selectedCard?.openStatusName === '전체 공개' && (
+                    <Alert severity="error">
+                      설문 참여를 원하시면 로그인해주세요
+                    </Alert>
+                  )}
               </Box>
-
-              <Typography
-                id="modal-description"
-                style={{
-                  display: 'flex',
-                  justifyContent: 'flex-start',
-                  alignItems: 'center',
-                  textAlign: 'start',
-                  paddingBottom: '15px',
-                  fontFamily,
-                }}
-              >
-                {selectedCard
-                  ? `설문 설명: ${selectedCard.surveyDescription}`
-                  : ''}
-              </Typography>
-            </div>
-            <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
-
-            <Box
-              sx={{
-                marginTop: '15px',
-                paddingBottom: '15px',
-              }}
-            >
-              {/* 참여하기 제한 조건 */}
-              {selectedCard?.attendCheckList &&
-                selectedCard.attendCheckList.includes(false) && (
-                  <Alert severity="info">이미 참여한 설문입니다.</Alert>
-                )}
-
-              {selectedCard?.userNo === numUser() &&
-                selectedCard?.openStatusName === '전체 공개' && (
-                  <Alert severity="success">본인이 작성한 설문입니다.</Alert>
-                )}
-              {selectedCard?.userNo === numUser() &&
-                selectedCard?.openStatusName === '회원 공개' && (
-                  <Alert severity="success">본인이 작성한 설문입니다.</Alert>
-                )}
-
-              {selectedCard?.openStatusName === '비공개' &&
-                (numUser() !== selectedCard.userNo ? (
-                  <Alert severity="warning">
-                    설문 작성자만 볼 수 있습니다.
-                  </Alert>
-                ) : (
-                  <Alert severity="success">
-                    해당 비공개 설문의 작성자입니다.
-                  </Alert>
-                ))}
-
-              {selectedCard?.openStatusName === '회원 공개' &&
-                numUser() === null && (
-                  <Alert severity="error">
-                    설문 결과를 보시려면 로그인해주세요.
-                  </Alert>
-                )}
-
-              {numUser() === null &&
-                selectedCard?.openStatusName === '전체 공개' && (
-                  <Alert severity="error">
-                    설문 참여를 원하시면 로그인해주세요
-                  </Alert>
-                )}
-            </Box>
-            {/* 결과보기, 참여하기 버튼 */}
-            {/* 결과보기 버튼 */}
-            {(!selectedCard?.openStatusName ||
-              selectedCard?.openStatusName === '전체 공개' ||
-              (selectedCard?.openStatusName === '비공개' &&
-                numUser() !== null &&
-                numUser() === selectedCard?.userNo) ||
-              (selectedCard?.openStatusName === '회원 공개' &&
-                numUser() !== null)) && (
-              <Button
-                onClick={() => {
-                  if (selectedCard?.surveyAttendCount === 0) {
-                    showSwalAlert();
-                  } else {
-                    navigate(`/survey/statistics/${selectedCard?.surveyNo}`);
-                  }
-                }}
-                sx={{
-                  width: '100%',
-                  marginBottom: '8px',
-                  backgroundColor: '#ebebeb',
-                  '&:hover': {
-                    backgroundColor: 'gray',
-                    color: 'white',
-                    fontWeight: '900',
-                    fontSize: '15px',
-                  },
-                  color: 'black',
-                  fontWeight: '600',
-                }}
-              >
-                설문 결과보기
-              </Button>
-            )}
-
-            {/* 참여하기 버튼 */}
-            {numUser() !== null &&
-              (!selectedCard?.attendCheckList ||
-                (!selectedCard.attendCheckList.some((item) => item === false) &&
-                  selectedCard?.userNo !== numUser())) && (
+              {/* 결과보기, 참여하기 버튼 */}
+              {/* 결과보기 버튼 */}
+              {(!selectedCard?.openStatusName ||
+                selectedCard?.openStatusName === '전체 공개' ||
+                (selectedCard?.openStatusName === '비공개' &&
+                  numUser() !== null &&
+                  numUser() === selectedCard?.userNo) ||
+                (selectedCard?.openStatusName === '회원 공개' &&
+                  numUser() !== null)) && (
                 <Button
-                  onClick={() =>
-                    navigate(`/survey/attend/${selectedCard?.surveyNo}`)
-                  }
+                  onClick={() => {
+                    if (selectedCard?.surveyAttendCount === 0) {
+                      showSwalAlert();
+                    } else {
+                      navigate(`/survey/statistics/${selectedCard?.surveyNo}`);
+                    }
+                  }}
                   sx={{
                     width: '100%',
                     marginBottom: '8px',
@@ -622,13 +605,42 @@ function WeeklySurvey() {
                     fontWeight: '600',
                   }}
                 >
-                  설문 참여하기
+                  설문 결과보기
                 </Button>
               )}
-          </Box>
-        </div>
+
+              {/* 참여하기 버튼 */}
+              {numUser() !== null &&
+                (!selectedCard?.attendCheckList ||
+                  (!selectedCard.attendCheckList.some(
+                    (item) => item === false
+                  ) &&
+                    selectedCard?.userNo !== numUser())) && (
+                  <Button
+                    onClick={() =>
+                      navigate(`/survey/attend/${selectedCard?.surveyNo}`)
+                    }
+                    sx={{
+                      width: '100%',
+                      marginBottom: '8px',
+                      backgroundColor: '#ebebeb',
+                      '&:hover': {
+                        backgroundColor: 'gray',
+                        color: 'white',
+                        fontWeight: '900',
+                        fontSize: '15px',
+                      },
+                      color: 'black',
+                      fontWeight: '600',
+                    }}
+                  >
+                    설문 참여하기
+                  </Button>
+                )}
+            </Box>
+          </div>
+        </Fade>
       </Modal>
-      {/* ----------------------------------------------------------------------------------- */}
     </div>
   );
 }

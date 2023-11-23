@@ -3,72 +3,41 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import axios from './components/customApi';
-import Logo from './img/SurveyLogo.png';
-import LoginFig from './img/LoginFig.png';
 import BasicModal from './modal/BasicModal';
 import LoginNaver from './LoginNaver';
 
-const emptyBoxSimple = {
-  height: 20,
-};
-
-const emptyBox = {
-  height: '50px',
-};
-
 const basicBox = {
   display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
   position: 'absolute',
   width: '100%',
   height: '100%',
-  backgroundImage: `url(${LoginFig})`,
+
+  backgroundImage: `url(${process.env.PUBLIC_URL}/images/loginImage/LoginPageImage2.png)`,
   backgroundPosition: 'center',
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
-  alignItems: 'center',
-  textAlign: 'center',
-  justifyContent: 'center',
 };
 
 const secBasicBox = {
-  width: '80%',
-  height: '50%',
+  width: '330px',
+  height: '450px',
+  padding: '20px 0px 20px 0px ',
+  border: '0px solid #747474',
   backgroundColor: 'white',
   borderRadius: '10px',
-};
-
-const webSecBasicBox = {
-  '@media (min-width: 800px)': {
-    width: '25%',
-    height: '50%',
+  opacity: '95%',
+  '@media (min-width: 600px)': {
+    width: '430px',
+    height: '450px',
   },
-};
-
-const loginBox = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
-
-const webImageStyle = {
-  '@media (minWidth: 800px)': {
-    width: '20%',
-  },
-};
-
-const mobileImageStyle = {
-  width: '20%',
-};
-
-const naverloginButton = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
 };
 
 const guestLogin = {
-  position: 'relative',
-  color: '#9E9E9E',
+  width: '100%',
+  textAlign: 'center',
+  color: '#747474',
 };
 
 /**
@@ -189,7 +158,6 @@ function LoginDisplay() {
               localStorage.removeItem('userImage');
               localStorage.removeItem('accessToken');
               localStorage.removeItem('expiresIn');
-              localStorage.removeItem('refreshToken');
 
               navigate('/login');
             }
@@ -222,51 +190,47 @@ function LoginDisplay() {
 
   return (
     <Box sx={basicBox}>
-      <Box sx={{ ...secBasicBox, ...webSecBasicBox }}>
-        <Box sx={emptyBoxSimple}> </Box>
-        <Box sx={loginBox}>
-          <Box sx={{ ...mobileImageStyle, ...webImageStyle }}>
-            <img
-              src={`${Logo}`}
-              style={{ width: '70%', padding: '15%' }}
-              alt="not Logo"
-            />
-          </Box>
-          <Typography
-            variant="h1"
-            sx={{
-              fontSize: '150%',
-              color: '#9E9E9E',
-              position: 'relative',
-              fontWeight: 'bold',
-            }}
-          >
-            NoName Survey
-          </Typography>
+      <Box sx={secBasicBox}>
+        <Box sx={{ textAlign: 'center', padding: '30px 0 20px 0' }}>
+          <img
+            src={`${process.env.PUBLIC_URL}/images/surveyLogo/logoplus.png`}
+            style={{ width: '250px', height: '130px' }}
+            alt="not Logo"
+          />
         </Box>
-        <Box sx={emptyBoxSimple}> </Box>
-        <Box sx={emptyBoxSimple}> </Box>
-        <Box sx={naverloginButton}>
-          <LoginNaver />
-        </Box>
-
-        {showModal && <BasicModal onClose={() => {}} />}
-
-        <Box sx={emptyBox} />
         <Typography
-          variant="h2"
+          variant="h1"
           sx={{
-            fontSize: '100%',
-            position: 'relative',
-            marginBottom: '1px',
+            textAlign: 'center',
+            margin: '20px 0 20px 0',
+            fontSize: '1rem',
+            color: '#747474',
             fontWeight: 'bold',
           }}
         >
-          Nice to See you Again
+          설문의 새로운 경험
         </Typography>
-        <Button sx={guestLogin} onClick={goLogin}>
-          비회원으로 로그인
-        </Button>
+        <Box sx={{ padding: '20px 0 20px 0' }}>
+          <LoginNaver />
+        </Box>
+        {showModal && <BasicModal />}
+        <Box sx={{ padding: '20px 0 20px 0' }}>
+          <Typography
+            variant="h2"
+            sx={{
+              padding: '10px 0 10px 0',
+              fontSize: '1rem',
+              position: 'relative',
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}
+          >
+            Nice to See you Again
+          </Typography>
+          <Button sx={guestLogin} onClick={goLogin}>
+            비회원으로 로그인
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

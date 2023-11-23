@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
@@ -88,6 +87,12 @@ const textStyle = {
   fontFamily,
 };
 
+/**
+ * 통계보기 페이지의 각 문항별 유형에 따른 통계 카드들을 보여주는 함수입니다.
+ * @component
+ * @returns 통계 페이지
+ * @author 김선규
+ */
 export default function StatisticsPage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectStat, setSelectStat] = useState<Selection[]>([]);
@@ -102,6 +107,12 @@ export default function StatisticsPage() {
   const statSurveyNo = params.surveyNo;
   const navigate = useNavigate();
 
+  /**
+   * 주어진 데이터를 설문 질문 번호에 따라 그룹화합니다.
+   * @param {Selection[]} data - 통계 데이터 배열
+   * @returns {Record<string, Selection[]>} 통계 데이터 객체
+   * @function
+   */
   const surveyBranch = (data: Selection[]): Record<string, Selection[]> => {
     const itemGroups: Record<string, Selection[]> = {};
 
@@ -117,6 +128,11 @@ export default function StatisticsPage() {
     return itemGroups;
   };
 
+  /**
+   * 주어진 설문 번호에 해당하는 통계 데이터를 불러오는 비동기 함수입니다.
+   * @async
+   * @function
+   */
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -141,6 +157,10 @@ export default function StatisticsPage() {
     fetchData();
   }, [statSurveyNo]);
 
+  /**
+   * 선택된 통계 데이터를 설문 질문 번호에 따라 그룹화하고 모든 아이템 상태를 업데이트합니다.
+   * @function
+   */
   useEffect(() => {
     setAllItems(surveyBranch(selectStat));
 
@@ -188,6 +208,15 @@ export default function StatisticsPage() {
         const itemsForQuestion: Selection[] = allItems[questionNo];
         const { questionTypeNo } = itemsForQuestion[0];
 
+        /**
+         * 주어진 통계 데이터 배열에서 선택형 답변의 총 개수를 계산하는 함수입니다.
+         * @param {Array<{ selectionCount: number }>} itemsForQuestionCount - 선택형 답변 통계 데이터 배열
+         * @returns {number} 선택형 답변의 총 개수
+         * @function
+         * @memberof StatisticsPage
+         * @inner
+         * @author 김선규
+         */
         const countSelections = (
           itemsForQuestionCount: { selectionCount: number }[]
         ): number => {
@@ -199,7 +228,15 @@ export default function StatisticsPage() {
 
           return CounttotalSelectionCount;
         };
-
+        /**
+         * 주어진 통계 데이터 배열에서 주관식 답변의 총 개수를 계산하는 함수입니다.
+         * @param {Selection[]} itemsForQuestionCountSub - 주관식 답변 통계 데이터 배열
+         * @returns {number} 주관식 답변의 총 개수
+         * @function
+         * @memberof StatisticsPage
+         * @inner
+         * @author 김선규
+         */
         const countSubjectiveAnswerCount = (
           itemsForQuestionCountSub: Selection[]
         ): number => {
@@ -212,11 +249,28 @@ export default function StatisticsPage() {
 
           return totalSurveySubjectiveAnswerCount;
         };
-
+        /**
+         * 주어진 통계 데이터 배열에서 선택형 답변의 데이터를 추출하는 함수입니다.
+         * @param {Selection[]} data - 선택형 답변 통계 데이터 배열
+         * @returns {[string, number][]} 선택형 답변 데이터를 [선택값, 개수] 형태로 담은 배열
+         * @function
+         * @memberof StatisticsPage
+         * @inner
+         * @author 김선규
+         */
         const extractChartData = (data: Selection[]): [string, number][] =>
           data.map((item) => [item.selectionValue, item.selectionCount]);
         const chartData = extractChartData(itemsForQuestion);
 
+        /**
+         * 주어진 통계 데이터 배열에서 단답형 주관식 답변의 데이터를 추출하는 함수입니다.
+         * @param {Selection[]} data - 통계 데이터 배열
+         * @returns {Selection[]} 단답형 주관식 답변 데이터 배열
+         * @function
+         * @memberof StatisticsPage
+         * @inner
+         * @author 김선규
+         */
         const extractShortSubjectiveAnswer = (
           data: Selection[]
         ): Selection[] => {
@@ -226,6 +280,15 @@ export default function StatisticsPage() {
         };
         const shortSubData = extractShortSubjectiveAnswer(itemsForQuestion);
 
+        /**
+         * 주어진 통계 데이터 배열에서 서술형 주관식 답변의 데이터를 추출하는 함수입니다.
+         * @param {Selection[]} data - 통계 데이터 배열
+         * @returns {Selection[]} 서술형 주관식 답변 데이터 배열
+         * @function
+         * @memberof StatisticsPage
+         * @inner
+         * @author 김선규
+         */
         const extractLongSubjectiveAnswer = (
           data: Selection[]
         ): Selection[] => {

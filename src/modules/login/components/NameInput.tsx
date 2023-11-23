@@ -1,21 +1,35 @@
 import * as React from 'react';
 import { useState, ChangeEvent, useEffect } from 'react';
-import { Container } from '@mui/system';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { Button } from '@mui/material';
+import Swal from 'sweetalert2';
 import axios from '../components/customApi';
 
 interface InputNickNameProps {
-  onChange: (value: string, isChecked: boolean) => void;
+  onChange: (
+    value: string,
+    isChecked: boolean,
+    isOverLimited: boolean,
+    isRegexCheck: boolean
+  ) => void;
 }
 
 interface isNicknameCheckedOnChange {
   isNicknameCheckedOnChangeCallback: (isChecked: boolean) => void;
 }
+
+interface isOverLimitCheckedOnChange {
+  isOverLimitChecked: (isOverLimited: boolean) => void;
+}
+
+interface isRegexCheckCheckedOnChange {
+  isRegexCheckChecked: (isRegexCheck: boolean) => void;
+}
+
 /**
  * 닉네임을 입력할수 있는 input box 입니다
  * @author 김선규
@@ -24,7 +38,12 @@ interface isNicknameCheckedOnChange {
 export default function ComposedTextField({
   onChange,
   isNicknameCheckedOnChangeCallback,
-}: InputNickNameProps & isNicknameCheckedOnChange) {
+  isOverLimitChecked,
+  isRegexCheckChecked,
+}: InputNickNameProps &
+  isNicknameCheckedOnChange &
+  isOverLimitCheckedOnChange &
+  isRegexCheckCheckedOnChange) {
   const [isNicknameChecked, setIsNicknameChecked] = useState<boolean>(false);
   const [nicknameCheckResult, setNicknameCheckResult] = useState<string | null>(
     ''
@@ -32,6 +51,18 @@ export default function ComposedTextField({
   const [nickName, setNickName] = useState<string>('');
   const [error, setError] = useState(true);
   const [submitWithoutCheck, setSubmitWithoutCheck] = useState(false);
+  const [isOverLimit, setIsOverLimit] = useState(false);
+  const [isRegexCheck, setIsRegexCheck] = useState<boolean>(false);
+
+  // style 태그를 사용해 커스텀 스타일 정의
+  const customStyles = `
+    .swal-custom-popup {
+      z-index: 1500; // 필요한 z-index 값
+    }
+    .swal-custom-container {
+      z-index: 1500; // 필요한 z-index 값
+    }
+  `;
 
   useEffect(() => {
     setIsNicknameChecked(false);
@@ -39,9 +70,29 @@ export default function ComposedTextField({
     setNicknameCheckResult(null);
   }, [nickName]);
 
+  useEffect(() => {
+    isNicknameCheckedOnChangeCallback(isNicknameChecked);
+    isOverLimitChecked(isOverLimit);
+    isRegexCheckChecked(isRegexCheck);
+  }, [isNicknameChecked, isOverLimit, isRegexCheck]);
+
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    setNickName(value);
+    const regex = /^[A-Za-z0-9가-힣]{2,16}$/;
+
+    if (value.length <= 16) {
+      setNickName(value);
+      setIsOverLimit(false);
+    } else {
+      setIsOverLimit(true);
+    }
+
+    if (regex.test(value)) {
+      setNickName(value);
+      setIsRegexCheck(false);
+    } else {
+      setIsRegexCheck(true);
+    }
 
     if (value.trim() === '' || value.trim() === null) {
       setError(true);
@@ -49,17 +100,35 @@ export default function ComposedTextField({
       setError(false);
     }
 
-    onChange(value, isNicknameChecked);
+    onChange(value, isNicknameChecked, isOverLimit, isRegexCheck);
   };
 
-  useEffect(() => {
-    isNicknameCheckedOnChangeCallback(isNicknameChecked);
-  }, [isNicknameChecked]);
-
   const handleNicknameSubmit = async () => {
+    const regex = /^[A-Za-z0-9가-힣]{2,16}$/;
+
     if (nickName.trim() === '') {
+      Swal.fire({
+        icon: 'error',
+        title: '닉네임을 입력해주세요!',
+        customClass: {
+          popup: 'swal-custom-popup',
+          container: 'swal-custom-container',
+        },
+      });
       setSubmitWithoutCheck(false);
-      alert('닉네임을 입력하세요!');
+      return;
+    }
+
+    if (!regex.test(nickName)) {
+      Swal.fire({
+        icon: 'error',
+        title: '2글자이상,자음/모음/특수문자 불가합니다!',
+        customClass: {
+          popup: 'swal-custom-popup',
+          container: 'swal-custom-container',
+        },
+      });
+      setSubmitWithoutCheck(false);
       return;
     }
 
@@ -74,15 +143,34 @@ export default function ComposedTextField({
       if (response.status === 200) {
         if (response.data === 'Nickname is available') {
           setNicknameCheckResult('사용 가능한 닉네임입니다.');
+          setSubmitWithoutCheck(true);
           setIsNicknameChecked(true);
 
           isNicknameCheckedOnChangeCallback(true);
+
+          Swal.fire({
+            icon: 'success',
+            title: '사용 가능한 닉네임입니다.',
+            customClass: {
+              popup: 'swal-custom-popup',
+              container: 'swal-custom-container',
+            },
+          });
         }
         if (response.data === 'Nickname is not available') {
           setNicknameCheckResult('이미 사용 중인 닉네임입니다.');
+          setSubmitWithoutCheck(false);
           setIsNicknameChecked(false);
 
           isNicknameCheckedOnChangeCallback(false);
+          Swal.fire({
+            icon: 'error',
+            title: '이미 사용 중인 닉네임입니다.',
+            customClass: {
+              popup: 'swal-custom-popup',
+              container: 'swal-custom-container',
+            },
+          });
         }
       }
     } catch (submitError) {
@@ -91,14 +179,21 @@ export default function ComposedTextField({
   };
 
   return (
-    <Container
+    <Box
       component="form"
-      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left' }}
+      sx={{
+        width: '270px',
+        display: 'flex',
+        padding: '0 0 0 16px',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}
     >
-      <Box>
-        <FormControl variant="standard" sx={{ padding: 0 }}>
-          <InputLabel htmlFor="component-helper">
-            닉네임을 입력하세요
+      <style>{customStyles}</style>
+      <Box sx={{ height: '100px' }}>
+        <FormControl variant="standard">
+          <InputLabel htmlFor="component-helper" sx={{ color: 'black' }}>
+            닉네임
           </InputLabel>
           <Input
             id="component-helper"
@@ -106,6 +201,7 @@ export default function ComposedTextField({
             value={nickName}
             onChange={handleInputChange}
             error={error}
+            sx={{ width: '90%' }}
           />
           {!error && nicknameCheckResult && (
             <FormHelperText id="component-helper-text">
@@ -113,24 +209,66 @@ export default function ComposedTextField({
             </FormHelperText>
           )}
 
-          {!submitWithoutCheck && (
-            <FormHelperText id="component-helper-text" error>
-              중복확인을 하지 않았습니다!
+          {isOverLimit && (
+            <FormHelperText sx={{ color: 'red' }} style={{ width: '150px' }}>
+              닉네임은 16자를 초과할 수 없습니다!
             </FormHelperText>
           )}
 
-          <Button
-            onClick={() => {
-              setSubmitWithoutCheck(true);
-              handleNicknameSubmit();
-            }}
-            variant="contained"
-            color="primary"
-          >
-            중복확인
-          </Button>
+          {isRegexCheck && !isOverLimit && (
+            <FormHelperText
+              id="component-helper-text"
+              sx={{ color: 'red' }}
+              style={{ width: '150px' }}
+            >
+              2글자이상,자음/모음/특수문자 불가합니다!
+            </FormHelperText>
+          )}
+
+          {!submitWithoutCheck && !isOverLimit && !isRegexCheck && (
+            <FormHelperText
+              id="component-helper-text"
+              error
+              style={{ width: '150px' }}
+            >
+              중복확인을 하지 않았습니다!
+            </FormHelperText>
+          )}
         </FormControl>
       </Box>
-    </Container>
+      <Button
+        onClick={() => {
+          handleNicknameSubmit();
+        }}
+        variant="contained"
+        color="info"
+        sx={{
+          fontSize: '0.8rem',
+          fontWeight: 600,
+          border: '0px solid white',
+          backgroundColor: '#3e3e3e',
+          '&:hover': {
+            backgroundColor: '#ffffff', // 호버 시 배경 색상
+            color: 'black', // 호버 시 폰트 색상
+            border: '1px solid #3e3e3e',
+            fontWeight: '600',
+          },
+          '&.Mui-focusVisible': {
+            backgroundColor: '#ffffff', // 클릭 시 배경 색상
+            color: 'black', // 클릭 시 폰트 색상
+            border: '1px solid #3e3e3e',
+            fontWeight: '600',
+          },
+          '&:active': {
+            backgroundColor: '#ffffff', // 클릭 시 배경 색상 (또 다른 옵션)
+            color: 'black', // 클릭 시 폰트 색상
+            border: '1px solid #3e3e3e',
+            fontWeight: '600',
+          },
+        }}
+      >
+        중복확인
+      </Button>
+    </Box>
   );
 }

@@ -31,23 +31,34 @@ const styles = {
 
   input: css({
     flexGrow: 1,
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'lightgray', // 기본 테두리 색상
+      },
+      '&:hover fieldset': {
+        borderColor: 'gray', // 호버 시 테두리 색상
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#3e3e3e', // 포커스 시 테두리 색상
+      },
+    },
+    '& .MuiInputLabel-root.Mui-focused': {
+      color: '#3e3e3e', // 포커스 시 레이블 색상
+    },
   }),
+
   removeAndAddIconBox: css({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'end',
     width: '53px',
   }),
+
   selectionBox: css({
     display: 'flex',
     alingItems: 'center',
   }),
 };
-
-const fontFamily = 'nanumsquare';
-const textStyle = css({
-  fontFamily,
-});
 
 /**
  * 문항 생성에서 단일 선택형 선택지를 만드는 컴포넌트 입니다.
@@ -164,23 +175,24 @@ function CreateSingleSelection({
             <Box css={styles.removeAndAddIconBox}>
               {index === question.selections.length - 1 && (
                 <AddIcon
-                  css={[styles.plusIcon, textStyle]}
+                  css={styles.plusIcon}
                   aria-label="Add"
                   onClick={handleAddSelection}
                 />
               )}
               <RemoveIcon
-                css={[styles.removeIcon, textStyle]}
+                css={styles.removeIcon}
                 aria-label="Remove"
                 onClick={() => handleRemoveSelection(selection.selectionId)}
               />
             </Box>
             <Radio disabled name={`radio-buttons-${selection.selectionId}`} />
             <Input
-              placeholder="문항을 입력해주세요."
-              css={[styles.input, textStyle]}
+              placeholder="선택지를 입력해주세요."
+              css={styles.input}
               value={selection.selectionValue}
               onChange={(event) => handleSelectionValueChange(selection, event)}
+              inputProps={{ maxLength: 255 }}
             />
           </Box>
         </div>

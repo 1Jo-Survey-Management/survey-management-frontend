@@ -24,6 +24,7 @@ import {
 } from '../../creation/types/SurveyTypes';
 import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
 import { validationSurveyWithoutSurveyImage } from '../../creation/util/ValidatorUtil';
+import { imageUploadToS3 } from '../../utils/ImageUploadUtil';
 
 interface ModifySurveyProps {
   surveyInfo: SurveyInfoProps;
@@ -42,8 +43,6 @@ const styles = {
     marginRight: '20px',
   }),
 };
-
-const previewImageBaseUrl = `${process.env.REACT_APP_BASE_URL}/api/images/surveys/`;
 
 /**
  * 설문을 수정하는 페이지를 담당하는 페이지 입니다.
@@ -77,8 +76,8 @@ function ModifySurvey() {
     initialSurveyData.questions
   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
   const [previewImageUrl, setPreviewImageUrl] = useState<string>('');
+  const [previosImage, setPreviosImage] = useState<string>('');
 
   /**
    * 설문 수정을 위해 설문의 정보를 가져오는 API Call 메서드 입니다.
@@ -117,7 +116,11 @@ function ModifySurvey() {
       openStatusNo: responseData.openStatusNo,
       surveyDescription: responseData.surveyDescription,
       surveyStatusNo: responseData.surveyStatusNo,
+      surveyImageUrl: responseData.surveyImage,
     });
+
+    setPreviewImageUrl(responseData.surveyImage);
+    setPreviosImage(responseData.surveyImage);
 
     const questionPropsArray: QuestionProps[] = responseData.questions.map(
       (question: any) => ({
@@ -158,11 +161,7 @@ function ModifySurvey() {
       try {
         const responseData = await getSurveyDetails();
 
-        if (responseData) {
-          settingResponseDataToState(responseData);
-        }
-
-        setPreviewImageUrl(`${previewImageBaseUrl}${surveyNo}`);
+        settingResponseDataToState(responseData);
 
         setIsLoading(false);
       } catch (error) {
@@ -193,14 +192,21 @@ function ModifySurvey() {
     ]);
   };
 
-  const handleModifyCancle = () => {};
+  /**
+   * 설문에서 취소버튼을 눌렀을시에 뒤로 가는 이벤트 핸들 메서드 입니다.
+   *
+   * @author 강명관
+   */
+  const handleModifyCancle = () => {
+    navigate(-1);
+  };
 
   /**
    * 설문 수정을 제출하는 메서드 입니다.
    *
    * @author 강명관
    */
-  const handleModifySubmit = async () => {
+  const handleModifySubmit = async (): Promise<void> => {
     const validationResult = await validationSurveyWithoutSurveyImage(
       surveyInfo,
       questions
@@ -210,23 +216,29 @@ function ModifySurvey() {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('surveyInfoUpdateDto', JSON.stringify(surveyInfo));
-    formData.append('surveyQuestionCreateDtoList', JSON.stringify(questions));
-
+    const headers = {
+      'X-Previous-Image-URL': '',
+    };
     if (surveyImage !== undefined) {
-      formData.append('surveyImage', surveyImage);
+      try {
+        const imageUrl = await imageUploadToS3(surveyImage);
+        surveyInfo.surveyImageUrl = imageUrl;
+        headers['X-Previous-Image-URL'] = previosImage;
+      } catch (error) {
+        console.error(error);
+      }
     }
+
+    const surveyUpdateDto = {
+      surveyInfoUpdateDto: surveyInfo,
+      surveyQuestionCreateDtoList: questions,
+    };
 
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_BASE_URL}/api/surveys`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+        surveyUpdateDto,
+        { headers }
       );
 
       if (response.status === 200) {
@@ -265,25 +277,19 @@ function ModifySurvey() {
 
   return (
     <Container css={{ marginTop: '30px' }}>
-      {surveyInfo && (
-        <CreateSurveyInfo
-          surveyInfo={surveyInfo}
-          setSurveyInfo={setSurveyInfo}
-          previewImage={previewImageUrl}
-          setSurveyImage={setSurveyImage}
-        />
-      )}
+      <CreateSurveyInfo
+        surveyInfo={surveyInfo}
+        setSurveyInfo={setSurveyInfo}
+        previewImage={previewImageUrl}
+        setSurveyImage={setSurveyImage}
+      />
 
-      {questions && (
-        <DragDropQuestion questions={questions} setQuestions={setQuestions} />
-      )}
+      <DragDropQuestion questions={questions} setQuestions={setQuestions} />
 
       <FloatingActionButtons
         onClickAddQuestion={handleAddQuestion}
         surveyInfo={surveyInfo}
-        surveyImage={surveyImage}
         questions={questions}
-        previewImageUrl={previewImageUrl}
       />
 
       <Box css={styles.buttonBox}>

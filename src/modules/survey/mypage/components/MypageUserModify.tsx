@@ -18,14 +18,14 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
+import { imageUploadToS3 } from '../../utils/ImageUploadUtil';
 import axios from '../../../login/components/customApi';
 
 function MypageUserModify() {
   const nicknameRegex = /^[A-Za-z0-9가-힣]{2,16}$/;
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    '/broken-image.jpg'
-  );
+  const [imagePreview, setImagePreview] = useState<string | null>();
+  const [previousImage, setPreviousImage] = useState<string>('');
   const [nickname, setNickname] = useState('');
   const [nicknameCheckResult, setNicknameCheckResult] = useState<string | null>(
     ''
@@ -48,6 +48,7 @@ function MypageUserModify() {
 
   const navigate = useNavigate();
 
+  // 기존의 useEffect 내부 로직을 수정하여 사용자의 현재 이미지를 불러옵니다.
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -57,10 +58,9 @@ function MypageUserModify() {
 
         if (response.status === 200) {
           const { userNickname, userImage, userNo } = response.data;
-
-          const imageURL = 'http://localhost:8080/api/users/image';
           setUserData({ userNickname, userImage, userNo });
-          setImagePreview(imageURL);
+          setImagePreview(userImage); // 사용자의 현재 이미지 URL을 미리보기에 설정
+          setPreviousImage(userImage); // 이전 이미지 URL을 저장
         }
       } catch (error) {
         console.error('유저 정보 불러오기 오류: ', error);
@@ -101,70 +101,47 @@ function MypageUserModify() {
     }
   };
 
-  /**
-   * 선택된 이미지 파일을 서버로 업로드합니다.
-   */
+  // 이미지 업로드 로직을 검토합니다.
   const uploadImage = async () => {
     if (selectedFile && userData.userNo) {
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-
       try {
-        const imageResponse = await axios.put(
-          `${process.env.REACT_APP_BASE_URL}/api/users/${userData.userNo}/image`,
-          formData,
+        // S3에 이미지 업로드 및 URL 반환
+        const s3ImageUrl = await imageUploadToS3(selectedFile);
+        if (!s3ImageUrl) {
+          throw new Error('Failed to upload image to S3');
+        }
+
+        // 헤더에 이전 이미지 URL 포함
+        const headers = {
+          'X-Previous-Image-URL': previousImage,
+        };
+
+        // 백엔드에 이미지 URL 업데이트 요청
+        await axios.put(
+          `${process.env.REACT_APP_BASE_URL}/api/users/image`,
           {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }
+            userImage: s3ImageUrl,
+          },
+          { headers }
         );
 
-        if (imageResponse.data.success) {
-          const response = await axios.get(
-            `${process.env.REACT_APP_BASE_URL}/api/users/${userData.userNo}`
-          );
-
-          const imageBox = response.data.userImage;
-
-          const imageURL = `http://localhost:3000/images/${imageBox
-            .split('\\')
-            .pop()}`;
-
-          setImagePreview(imageURL);
-
-          console.log('이미지 업로드 성공');
-          Swal.fire({
-            icon: 'success',
-            title: '이미지가 성공적으로 수정되었습니다!',
-          });
-          setSelectedFile(null);
-        } else {
-          console.error('이미지 업로드 실패');
-        }
+        setImagePreview(s3ImageUrl); // 업로드된 이미지의 URL을 미리보기에 설정
+        Swal.fire({
+          icon: 'success',
+          title: '이미지가 성공적으로 수정되었습니다!',
+        });
+        setSelectedFile(null);
+        setPreviousImage(s3ImageUrl);
       } catch (error) {
         console.error('이미지 업로드 오류:', error);
+        Swal.fire({
+          icon: 'error',
+          title: '이미지 업로드 실패',
+        });
       }
     }
   };
 
-  /**
-   * 닉네임 입력란의 값이 변경될 때마다 호출되어 닉네임 상태를 업데이트합니다.
-   *
-   * @param {React.ChangeEvent<HTMLInputElement>} e - 입력 이벤트 객체
-   */
-  // const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { value } = e.target;
-
-  //   if (value.length <= 16) {
-  //     setNickname(value);
-  //     setIsNicknameEmpty(value.trim() === '');
-  //     setIsNicknameChecked(false);
-  //     setIsOverLimit(false);
-  //   } else {
-  //     setIsOverLimit(true);
-  //   }
-  // };
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
 
@@ -319,7 +296,7 @@ function MypageUserModify() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
+    <Container maxWidth="md" sx={{ paddingLeft: '16px', paddingRight: '16px' }}>
       <Card sx={{ marginBottom: '60px', marginTop: '30px' }}>
         <CardContent>
           <h1
@@ -465,32 +442,6 @@ function MypageUserModify() {
                 onChange={handleFileSelect}
               />
             </div>
-            {/* <TextField
-          id="outlined-read-only-input"
-          label={userData.userNickname}
-          InputProps={{
-            readOnly: true,
-            sx: {
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#747474',
-              },
-            },
-          }}
-          InputLabelProps={{
-            shrink: false,
-            sx: {
-              // 포커스 상태일 때 라벨 색상 변경
-              '&.Mui-focused': {
-                color: '#3e3e3e',
-                fontWeight: '600',
-              },
-            },
-          }}
-          sx={{
-            width: '27ch',
-            backgroundColor: 'white',
-          }}
-        /> */}
 
             <div className="profile-modify-input">
               <div

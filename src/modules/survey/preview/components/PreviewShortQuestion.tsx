@@ -4,6 +4,7 @@ import { Card, CardContent, TextField } from '@mui/material';
 import React from 'react';
 import { css } from '@emotion/react';
 import { PreviewEachQuestionProps } from '../types/PreviewSurveyTypes';
+import RequiredQuestionText from './RequiredQuestionText';
 
 const styles = {
   questionBox: css({
@@ -11,22 +12,35 @@ const styles = {
   }),
 
   questionTitle: css({
-    fontSize: '0.9rem',
+    fontSize: '1rem',
     fontWeight: '600',
-    marginBottom: '10px',
     color: 'black',
+    marginBottom: '10px',
+
+    '&.Mui-focused': {
+      color: '#3e3e3e',
+    },
   }),
 
   questionDescription: css({
-    fontSize: '0.8rem',
-    fontWeight: '600',
-    color: '#00000088',
-    margin: '8px',
-    paddingLeft: '10px',
+    fontSize: '0.9rem',
   }),
 
-  selectionText: css({
-    fontSize: '0.7rem',
+  answerInput: css({
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'lightgray', // 기본 테두리 색상
+      },
+      '&:hover fieldset': {
+        borderColor: 'gray', // 호버 시 테두리 색상
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#3e3e3e', // 포커스 시 테두리 색상
+      },
+    },
+    '& .MuiInputLabel-root.Mui-focused': {
+      color: '#3e3e3e', // 포커스 시 레이블 색상
+    },
   }),
 };
 
@@ -42,6 +56,7 @@ function PreviewShortQuestion({ question }: PreviewEachQuestionProps) {
   return (
     <Card css={styles.questionBox}>
       <CardContent>
+        {question.questionRequired && <RequiredQuestionText />}
         <p css={styles.questionTitle}>
           {question.questionTitle ? question.questionTitle : '제목 없는 문항'}
         </p>
@@ -51,11 +66,12 @@ function PreviewShortQuestion({ question }: PreviewEachQuestionProps) {
         )}
 
         <TextField
-          label="답변 입력란 (최대 100자)"
+          placeholder="답변 입력란 (최대 100자)"
           variant="outlined"
           fullWidth
           multiline
           maxRows={4}
+          css={styles.answerInput}
         />
       </CardContent>
     </Card>

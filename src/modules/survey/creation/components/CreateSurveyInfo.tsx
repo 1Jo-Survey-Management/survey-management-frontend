@@ -30,6 +30,10 @@ const styles = {
     marginBottom: '30px',
   }),
 
+  imageContainer: css({
+    marginBottom: '20px',
+  }),
+
   iamgeBox: css({
     display: 'flex',
     alignItems: 'center',
@@ -46,6 +50,10 @@ const styles = {
 
   image: css({ width: '100%', height: '100%', objectFit: 'contain' }),
 
+  imageUploadButton: css({
+    backgroundColor: '#3e3e3e',
+  }),
+
   uploadImage: css({
     width: '100%',
     height: '100%',
@@ -56,6 +64,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     marginBottom: '10px',
+    minWidth: '62.25px',
   }),
 
   surveyDescriptionBox: css({
@@ -116,7 +125,7 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-const TITLE_MAX_LENGTH = 255;
+const TITLE_MAX_LENGTH = 32;
 
 const tagNames = ['일상', '업무', '공지', '중요', '기타'];
 
@@ -333,7 +342,7 @@ function CreateSurveyInfo({
       <CardContent css={textStyle}>
         {surveyTitle}
 
-        <Box sx={{ marginBottom: '20px' }}>
+        <Box css={styles.imageContainer}>
           {!selectedImage && (
             <Box css={styles.iamgeBox}>
               <ImageIcon css={styles.noImageIcon} />
@@ -356,19 +365,11 @@ function CreateSurveyInfo({
               component="label"
               variant="contained"
               startIcon={<CloudUploadIcon />}
-              sx={{ backgroundColor: '#3e3e3e' }}
+              css={styles.imageUploadButton}
             >
               Upload file
               <VisuallyHiddenInput type="file" onChange={handleImageUpload} />
             </Button>
-            {/* <input
-              type="file"
-              id="surveyImageInput"
-              name="surveyImageInput"
-              accept="image/*"
-              onChange={handleImageUpload}
-              css={textStyle}
-            /> */}
           </Box>
         </Box>
 

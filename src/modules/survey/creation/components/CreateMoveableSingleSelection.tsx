@@ -37,7 +37,7 @@ const styles = {
     marginLeft: '5px',
   }),
   input: css({
-    flexGrow: 0.8,
+    flexGrow: 0.9,
   }),
   removeAndAddIconBox: css({
     display: 'flex',
@@ -285,6 +285,7 @@ function CreateMoveableSingleSelection({
               value={selection.selectionValue}
               css={[styles.input, textStyle]}
               onChange={(event) => handleSelectionValueChange(selection, event)}
+              inputProps={{ maxLength: 255 }}
             />
             <Box css={styles.moveQuestionBox}>
               <FormControl css={styles.moveQuestionSelectionBox}>
