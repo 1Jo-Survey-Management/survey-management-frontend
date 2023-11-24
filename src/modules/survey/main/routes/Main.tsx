@@ -82,25 +82,7 @@ function Main() {
     }
   };
 
-  const memberCheck = async () => {
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/api/oauthLogin/user`
-      );
-
-      if (response.data.content !== null) {
-        localStorage.setItem('isMember', '회원');
-      } else {
-        localStorage.setItem('isMember', '비회원');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
-    memberCheck();
-
     fetchWeeklySurveyData();
     fetchRecentSurveyData();
     fetchClosingSurveyData();

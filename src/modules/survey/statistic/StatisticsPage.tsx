@@ -145,31 +145,16 @@ export default function StatisticsPage() {
    * @function
    */
   useEffect(() => {
-    const isMember = localStorage.getItem('isMember');
-
     const fetchData = async () => {
       setIsLoading(true);
 
       try {
-        // 비회원이라면
-        if (isMember === '비회원') {
-          const response = await axios.get(
-            `${process.env.REACT_APP_BASE_URL}/api/survey/nonMember/resultall?surveyno=${statSurveyNo}`
-          );
-          setSelectStat(response.data.content);
-          setSurveyTitle(response.data.content[0].surveyTitle);
-          setIsLoading(false);
-        }
-
-        // 회원이라면
-        if (isMember === '회원') {
-          const response = await axios.get(
-            `${process.env.REACT_APP_BASE_URL}/api/survey/resultall?surveyno=${statSurveyNo}`
-          );
-          setSelectStat(response.data.content);
-          setSurveyTitle(response.data.content[0].surveyTitle);
-          setIsLoading(false);
-        }
+        const response = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/api/survey/resultall?surveyno=${statSurveyNo}`
+        );
+        setSelectStat(response.data.content);
+        setSurveyTitle(response.data.content[0].surveyTitle);
+        setIsLoading(false);
       } catch (error) {
         console.error('통계 보기 중 오류 발생:', error);
         setIsLoading(false);
@@ -181,7 +166,7 @@ export default function StatisticsPage() {
             container: 'swal-custom-container',
           },
         });
-        navigate('/login');
+        // navigate('/login');
       }
     };
 
@@ -339,7 +324,7 @@ export default function StatisticsPage() {
                           margin: '20px 0 20px 0',
                         }}
                       >
-                        📝 파이차트로 보는 통계!
+                        📝 파이차트로 보는 통계
                       </Typography>
                       <Box sx={styles.googleChartContent}>
                         <GooglePieChart selectionAnswer={chartData} />
@@ -355,7 +340,7 @@ export default function StatisticsPage() {
                           margin: '20px 0 20px 0',
                         }}
                       >
-                        📝 파이차트로 보는 통계!
+                        📝 파이차트로 보는 통계
                       </Typography>
                       <Box sx={styles.googleChartContent}>
                         <GooglePieChart selectionAnswer={chartData} />
@@ -371,7 +356,7 @@ export default function StatisticsPage() {
                           margin: '20px 0 20px 0',
                         }}
                       >
-                        📝 파이차트로 보는 통계!
+                        📝 파이차트로 보는 통계
                       </Typography>
                       <Box sx={styles.googleChartContent}>
                         <GooglePieChart selectionAnswer={chartData} />
@@ -387,7 +372,7 @@ export default function StatisticsPage() {
                           margin: '20px 0 20px 0',
                         }}
                       >
-                        📝 워드클라우드로 보는 통계!
+                        📝 워드클라우드로 보는 통계
                       </Typography>
                       <Box
                         sx={{
@@ -413,7 +398,7 @@ export default function StatisticsPage() {
                           margin: '20px 0 20px 0',
                         }}
                       >
-                        🔥답변 랭킹!!
+                        🔥답변 랭킹
                       </Typography>
                       <Box
                         sx={{
@@ -437,7 +422,7 @@ export default function StatisticsPage() {
                           margin: '20px 0 20px 0',
                         }}
                       >
-                        📝 장문의 긴 답변!!
+                        📝 장문의 긴 답변
                       </Typography>
                       <Box
                         sx={{

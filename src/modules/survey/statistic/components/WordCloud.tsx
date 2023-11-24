@@ -69,7 +69,7 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
 
           .padding(5)
           .rotate(() => Math.random() * 90 - 45) // 무작위 회전 각도 (-45도에서 45도 사이)
-          .fontSize((d) => d.size + 40)
+          .fontSize((d) => d.size + 20)
           .on('end', (wordData) => {
             selection
               .selectAll('text')
@@ -81,7 +81,7 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
                 () =>
                   `translate(${
                     window.innerWidth <= 600
-                      ? Math.random() * 130 + 55 // 600px 이하일 때
+                      ? Math.random() * 110 + 50 // 600px 이하일 때
                       : Math.random() * 250 + 90 // 600px 초과일 때
                   },${
                     window.innerWidth <= 600
