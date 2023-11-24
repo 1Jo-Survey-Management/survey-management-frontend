@@ -40,6 +40,15 @@ const guestLogin = {
   color: '#747474',
 };
 
+const itemsToRemove = [
+  'userNo',
+  'accessToken',
+  'userNickname',
+  'userImage',
+  'expiresIn',
+  'isMember',
+];
+
 /**
  * 로그인 화면
  * @author 김선규
@@ -53,16 +62,6 @@ function LoginDisplay() {
   const cancelSubmit = async () => {
     const userNo = localStorage.getItem('userNo');
     const userNickname = localStorage.getItem('userNickname');
-
-    const itemsToRemove = [
-      'userNo',
-      'accessToken',
-      'userNickname',
-      'userImage',
-      'expiresIn',
-      'accessCode',
-      'isMember',
-    ];
 
     if (userNo !== '' && userNickname === '') {
       try {
@@ -84,19 +83,12 @@ function LoginDisplay() {
         console.error(error);
       }
 
+      itemsToRemove.push('accessCode');
       itemsToRemove.forEach((item) => localStorage.removeItem(item));
     }
   };
 
   useEffect(() => {
-    const itemsToRemove = [
-      'userNo',
-      'accessToken',
-      'userNickname',
-      'userImage',
-      'expiresIn',
-      'isMember',
-    ];
     itemsToRemove.forEach((item) => localStorage.removeItem(item));
 
     const localStorageAccessToken = localStorage.getItem('accessToken');
