@@ -36,15 +36,23 @@ const styles = {
     cursor: 'pointer',
     marginLeft: '5px',
   }),
+
+  inputBox: css({
+    display: 'flex',
+    flexGrow: '1',
+  }),
+
   input: css({
     flexGrow: 0.9,
   }),
+
   removeAndAddIconBox: css({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'end',
     width: '53px',
   }),
+
   selectionBox: css({
     display: 'flex',
     alingItems: 'center',
@@ -61,11 +69,6 @@ const styles = {
     minWidth: '200px',
   }),
 };
-
-const fontFamily = 'nanumsquare';
-const textStyle = css({
-  fontFamily,
-});
 
 const NEXT_QUESTION: string = 'nextQuestion';
 const END_OF_SURVEY: string = 'endOfSurvey';
@@ -279,14 +282,18 @@ function CreateMoveableSingleSelection({
                 }
               />
             </Box>
-            <Radio disabled name={`radio-buttons-${selection.selectionId}`} />
-            <Input
-              placeholder="문항을 입력해주세요."
-              value={selection.selectionValue}
-              css={[styles.input, textStyle]}
-              onChange={(event) => handleSelectionValueChange(selection, event)}
-              inputProps={{ maxLength: 255 }}
-            />
+            <Box css={styles.inputBox} sx={{ display: 'flex', flexGrow: '1' }}>
+              <Radio disabled name={`radio-buttons-${selection.selectionId}`} />
+              <Input
+                placeholder="문항을 입력해주세요."
+                value={selection.selectionValue}
+                css={styles.input}
+                onChange={(event) =>
+                  handleSelectionValueChange(selection, event)
+                }
+                inputProps={{ maxLength: 255 }}
+              />
+            </Box>
             <Box css={styles.moveQuestionBox}>
               <FormControl css={styles.moveQuestionSelectionBox}>
                 <Select
@@ -306,20 +313,15 @@ function CreateMoveableSingleSelection({
                       <MenuItem
                         key={que.questionId}
                         value={questions.indexOf(question) + queIndex + 2}
-                        css={textStyle}
                       >
                         {questions.indexOf(question) + queIndex + 2}번
                       </MenuItem>
                     ))}
 
                   {questions.indexOf(question) !== questions.length - 1 && (
-                    <MenuItem value={NEXT_QUESTION} css={textStyle}>
-                      다음 문항
-                    </MenuItem>
+                    <MenuItem value={NEXT_QUESTION}>다음 문항</MenuItem>
                   )}
-                  <MenuItem value={END_OF_SURVEY} css={textStyle}>
-                    종료
-                  </MenuItem>
+                  <MenuItem value={END_OF_SURVEY}>종료</MenuItem>
                 </Select>
               </FormControl>
             </Box>
