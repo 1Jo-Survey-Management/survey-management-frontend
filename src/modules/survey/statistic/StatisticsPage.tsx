@@ -119,6 +119,51 @@ export default function StatisticsPage() {
   const navigate = useNavigate();
 
   /**
+   * 주어진 설문 번호에 해당하는 통계 데이터를 불러오는 비동기 함수입니다.
+   * @async
+   * @function
+   */
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+
+      const isMember = localStorage.getItem('userNickname');
+
+      try {
+        if (isMember !== null) {
+          const response = await axios.get(
+            `${process.env.REACT_APP_BASE_URL}/api/survey/resultall?surveyno=${statSurveyNo}`
+          );
+          setSelectStat(response.data.content);
+          setSurveyTitle(response.data.content[0].surveyTitle);
+          setIsLoading(false);
+        } else {
+          const response = await axios.get(
+            `${process.env.REACT_APP_BASE_URL}/api/survey/resultall/nonMember?surveyno=${statSurveyNo}`
+          );
+          setSelectStat(response.data.content);
+          setSurveyTitle(response.data.content[0].surveyTitle);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error('통계 보기 중 오류 발생:', error);
+        setIsLoading(false);
+        Swal.fire({
+          icon: 'error',
+          title: '부적절한 접근!',
+          customClass: {
+            popup: 'swal-custom-popup',
+            container: 'swal-custom-container',
+          },
+        });
+        navigate('/login');
+      }
+    };
+
+    fetchData();
+  }, [statSurveyNo]);
+
+  /**
    * 주어진 데이터를 설문 질문 번호에 따라 그룹화합니다.
    * @param {Selection[]} data - 통계 데이터 배열
    * @returns {Record<string, Selection[]>} 통계 데이터 객체
@@ -138,40 +183,6 @@ export default function StatisticsPage() {
 
     return itemGroups;
   };
-
-  /**
-   * 주어진 설문 번호에 해당하는 통계 데이터를 불러오는 비동기 함수입니다.
-   * @async
-   * @function
-   */
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/api/survey/resultall?surveyno=${statSurveyNo}`
-        );
-        setSelectStat(response.data.content);
-        setSurveyTitle(response.data.content[0].surveyTitle);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('통계 보기 중 오류 발생:', error);
-        setIsLoading(false);
-        Swal.fire({
-          icon: 'error',
-          title: '요청 오류! 재로그인 부탁드려요!',
-          customClass: {
-            popup: 'swal-custom-popup',
-            container: 'swal-custom-container',
-          },
-        });
-        // navigate('/login');
-      }
-    };
-
-    fetchData();
-  }, [statSurveyNo]);
 
   /**
    * 선택된 통계 데이터를 설문 질문 번호에 따라 그룹화하고 모든 아이템 상태를 업데이트합니다.
