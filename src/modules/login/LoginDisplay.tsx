@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import axios from './components/customApi';
+import styled from '@emotion/styled';
+
 import BasicModal from './modal/BasicModal';
 import LoginNaver from './LoginNaver';
+import axios from './components/customApi';
 
 const basicBox = {
   display: 'flex',
@@ -14,7 +16,7 @@ const basicBox = {
   width: '100%',
   height: '100%',
 
-  backgroundImage: `url(${process.env.PUBLIC_URL}/images/loginImage/LoginPageImage2.png)`,
+  backgroundImage: `url(${process.env.PUBLIC_URL}/images/loginImage/LoginPageImage3.png)`,
   backgroundPosition: 'center',
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
@@ -30,7 +32,7 @@ const secBasicBox = {
   opacity: '95%',
   '@media (min-width: 600px)': {
     width: '430px',
-    height: '450px',
+    height: '550px',
   },
 };
 
@@ -38,6 +40,9 @@ const guestLogin = {
   width: '100%',
   textAlign: 'center',
   color: '#747474',
+  '@media (min-width: 600px)': {
+    fontSize: '1.3rem',
+  },
 };
 
 const itemsToRemove = [
@@ -187,13 +192,27 @@ function LoginDisplay() {
     navigate('/survey/main');
   };
 
+  const ResponsiveImage = styled.img`
+    width: 250px;
+    height: 130px;
+
+    @media (min-width: 600px) {
+      width: 300px;
+      height: auto;
+    }
+  `;
+
   return (
     <Box sx={basicBox}>
       <Box sx={secBasicBox}>
-        <Box sx={{ textAlign: 'center', padding: '30px 0 20px 0' }}>
-          <img
+        <Box
+          sx={{
+            textAlign: 'center',
+            padding: '30px 0 20px 0',
+          }}
+        >
+          <ResponsiveImage
             src={`${process.env.PUBLIC_URL}/images/surveyLogo/logoplus.png`}
-            style={{ width: '250px', height: '130px' }}
             alt="not Logo"
           />
         </Box>
@@ -205,6 +224,9 @@ function LoginDisplay() {
             fontSize: '1rem',
             color: '#747474',
             fontWeight: 'bold',
+            '@media (min-width: 600px)': {
+              fontSize: '1.5rem',
+            },
           }}
         >
           설문의 새로운 경험
@@ -222,6 +244,9 @@ function LoginDisplay() {
               position: 'relative',
               fontWeight: 'bold',
               textAlign: 'center',
+              '@media (min-width: 600px)': {
+                fontSize: '1.5rem',
+              },
             }}
           >
             Nice to See you Again
