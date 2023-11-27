@@ -49,8 +49,9 @@ const styles = {
   removeAndAddIconBox: css({
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'end',
+    justifyContent: 'flex-end',
     width: '53px',
+    minWidth: '53px',
   }),
 
   selectionBox: css({

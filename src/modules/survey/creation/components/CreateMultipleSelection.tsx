@@ -18,12 +18,15 @@ const styles = {
     display: 'flex',
     alingItems: 'center',
   }),
+
   removeAndAddIconBox: css({
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'end',
+    justifyContent: 'flex-end',
     width: '53px',
+    minWidth: '53px',
   }),
+
   plusIcon: css({
     color: primaryColor,
     border: `solid 1px ${primaryColor}`,
