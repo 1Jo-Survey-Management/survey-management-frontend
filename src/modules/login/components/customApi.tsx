@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Swal from 'sweetalert2';
 /**
  * intercepter를 통하여 토큰 만료시 refreshToken으로 자동 갱신하기 위한 axois 커스텀 컴포넌트입니다
  * @author 김선규
@@ -12,10 +13,10 @@ Api.interceptors.request.use(
   // eslint-disable-next-line no-shadow
   (config) => {
     const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
-      // eslint-disable-next-line no-param-reassign
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
+
+    // eslint-disable-next-line no-param-reassign, dot-notation
+    config.headers.Authorization = `Bearer ${accessToken}`;
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -23,7 +24,8 @@ Api.interceptors.request.use(
 // 응답 인터셉터를 설정
 Api.interceptors.response.use(
   (response) => {
-    const accessToken = response.config.headers.Authorization;
+    // eslint-disable-next-line no-param-reassign, dot-notation
+    const accessToken = response.headers['accesstoken'];
 
     if (typeof accessToken === 'string') {
       const token = accessToken.split(' ')[1];
@@ -31,15 +33,25 @@ Api.interceptors.response.use(
       if (token != null) {
         localStorage.setItem('accessToken', token);
         Api.defaults.headers.common.Authorization = accessToken;
-      } else {
-        console.log('갱신할 토큰 없음');
       }
     }
 
     return response;
   },
   (error) => {
-    throw error;
+    Swal.fire({
+      icon: 'error',
+      title: '요청 오류! 재로그인 부탁드려요!',
+      customClass: {
+        popup: 'swal-custom-popup',
+        container: 'swal-custom-container',
+      },
+      allowOutsideClick: false,
+    }).then(() => {
+      window.location.href = '/login';
+    });
+
+    return Promise.reject(error);
   }
 );
 

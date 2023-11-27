@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import axios from './components/customApi';
+import styled from '@emotion/styled';
+
 import BasicModal from './modal/BasicModal';
 import LoginNaver from './LoginNaver';
+import axios from './components/customApi';
 
 const basicBox = {
   display: 'flex',
@@ -14,7 +16,7 @@ const basicBox = {
   width: '100%',
   height: '100%',
 
-  backgroundImage: `url(${process.env.PUBLIC_URL}/images/loginImage/LoginPageImage2.png)`,
+  backgroundImage: `url(${process.env.PUBLIC_URL}/images/loginImage/LoginPageImage3.png)`,
   backgroundPosition: 'center',
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
@@ -30,7 +32,7 @@ const secBasicBox = {
   opacity: '95%',
   '@media (min-width: 600px)': {
     width: '430px',
-    height: '450px',
+    height: '550px',
   },
 };
 
@@ -38,7 +40,19 @@ const guestLogin = {
   width: '100%',
   textAlign: 'center',
   color: '#747474',
+  '@media (min-width: 600px)': {
+    fontSize: '1.3rem',
+  },
 };
+
+const itemsToRemove = [
+  'userNo',
+  'accessToken',
+  'userNickname',
+  'userImage',
+  'expiresIn',
+  'isMember',
+];
 
 /**
  * 로그인 화면
@@ -74,16 +88,14 @@ function LoginDisplay() {
         console.error(error);
       }
 
-      localStorage.removeItem('userNo');
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('userNickname');
-      localStorage.removeItem('userImage');
-      localStorage.removeItem('expiresIn');
-      localStorage.removeItem('accessCode');
+      itemsToRemove.push('accessCode');
+      itemsToRemove.forEach((item) => localStorage.removeItem(item));
     }
   };
 
   useEffect(() => {
+    itemsToRemove.forEach((item) => localStorage.removeItem(item));
+
     const localStorageAccessToken = localStorage.getItem('accessToken');
     const searchParams = new URLSearchParams(location.search);
     const redirectUri = `${process.env.REACT_APP_BASE_URL}/api/oauthLogin/oauth2/code/naver`;
@@ -109,68 +121,60 @@ function LoginDisplay() {
           },
         })
         .then((response) => {
-          const responseCheck = response;
-          const responseUserNo = responseCheck.data.content.userNo;
-          const responseAccessToken = responseCheck.data.content.accessToken;
-          const responseImage = responseCheck.data.content.userImage;
-          const responseNickName = responseCheck.data.content.userNickname;
-          const responseExpiresIn = responseCheck.data.content.expiresIn;
+          const { userNo, accessToken, userImage, userNickname, expiresIn } =
+            response.data.content;
 
           localStorage.setItem('accessCode', accessCode);
-          localStorage.setItem('userNo', responseUserNo);
-          localStorage.setItem('userNickname', responseNickName);
-          localStorage.setItem('userImage', responseImage);
-          localStorage.setItem('accessToken', responseAccessToken);
-          localStorage.setItem('expiresIn', responseExpiresIn);
+          localStorage.setItem('userNo', userNo);
+          localStorage.setItem('userNickname', userNickname);
+          localStorage.setItem('userImage', userImage);
+          localStorage.setItem('accessToken', accessToken);
+          localStorage.setItem('expiresIn', expiresIn);
 
-          if (responseUserNo != null && responseNickName != null) {
+          if (userNo != null && userNickname != null) {
             if (
               localStorageAccessToken == null ||
-              responseAccessToken !== localStorageAccessToken
+              accessToken !== localStorageAccessToken
             ) {
-              localStorage.setItem('userNo', responseUserNo);
-              localStorage.setItem('userNickname', responseNickName);
-              localStorage.setItem('userImage', responseImage);
-              localStorage.setItem('accessToken', responseAccessToken);
-              localStorage.setItem('expiresIn', responseExpiresIn);
+              localStorage.setItem('userNo', userNo);
+              localStorage.setItem('userNickname', userNickname);
+              localStorage.setItem('userImage', userImage);
+              localStorage.setItem('accessToken', accessToken);
+              localStorage.setItem('expiresIn', expiresIn);
 
-              axios.defaults.headers.common.Authorization = `Bearer ${responseAccessToken}`;
+              axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
               navigate('/survey/main');
               return;
             }
 
-            if (responseExpiresIn) {
-              localStorage.setItem('userNo', responseUserNo);
-              localStorage.setItem('userNickname', responseNickName);
-              localStorage.setItem('userImage', responseImage);
-              localStorage.setItem('accessToken', responseAccessToken);
-              localStorage.setItem('expiresIn', responseExpiresIn);
+            if (expiresIn) {
+              localStorage.setItem('userNo', userNo);
+              localStorage.setItem('userNickname', userNickname);
+              localStorage.setItem('userImage', userImage);
+              localStorage.setItem('accessToken', accessToken);
+              localStorage.setItem('expiresIn', expiresIn);
             }
             navigate('/survey/main');
 
-            if (responseAccessToken === localStorageAccessToken) {
-              axios.defaults.headers.common.Authorization = `Bearer ${responseAccessToken}`;
+            if (accessToken === localStorageAccessToken) {
+              axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
               navigate('/survey/main');
             } else {
-              localStorage.removeItem('userNo');
-              localStorage.removeItem('userNickname');
-              localStorage.removeItem('userImage');
-              localStorage.removeItem('accessToken');
-              localStorage.removeItem('expiresIn');
+              itemsToRemove.forEach((item) => localStorage.removeItem(item));
 
               navigate('/login');
             }
           }
 
-          if (responseUserNo != null && !responseNickName) {
-            localStorage.setItem('userNo', responseUserNo);
-            localStorage.setItem('userNickname', responseNickName);
-            localStorage.setItem('userImage', responseImage);
-            localStorage.setItem('accessToken', responseAccessToken);
-            localStorage.setItem('expiresIn', responseExpiresIn);
+          if (userNo != null && !userNickname) {
+            localStorage.setItem('userNo', userNo);
+            localStorage.setItem('userNickname', userNickname);
+            localStorage.setItem('userImage', userImage);
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('expiresIn', expiresIn);
 
-            axios.defaults.headers.common.Authorization = `Bearer ${responseAccessToken}`;
+            axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
             setShowModal(true);
           }
@@ -188,13 +192,27 @@ function LoginDisplay() {
     navigate('/survey/main');
   };
 
+  const ResponsiveImage = styled.img`
+    width: 250px;
+    height: 130px;
+
+    @media (min-width: 600px) {
+      width: 300px;
+      height: auto;
+    }
+  `;
+
   return (
     <Box sx={basicBox}>
       <Box sx={secBasicBox}>
-        <Box sx={{ textAlign: 'center', padding: '30px 0 20px 0' }}>
-          <img
+        <Box
+          sx={{
+            textAlign: 'center',
+            padding: '30px 0 20px 0',
+          }}
+        >
+          <ResponsiveImage
             src={`${process.env.PUBLIC_URL}/images/surveyLogo/logoplus.png`}
-            style={{ width: '250px', height: '130px' }}
             alt="not Logo"
           />
         </Box>
@@ -206,6 +224,9 @@ function LoginDisplay() {
             fontSize: '1rem',
             color: '#747474',
             fontWeight: 'bold',
+            '@media (min-width: 600px)': {
+              fontSize: '1.5rem',
+            },
           }}
         >
           설문의 새로운 경험
@@ -223,6 +244,9 @@ function LoginDisplay() {
               position: 'relative',
               fontWeight: 'bold',
               textAlign: 'center',
+              '@media (min-width: 600px)': {
+                fontSize: '1.5rem',
+              },
             }}
           >
             Nice to See you Again

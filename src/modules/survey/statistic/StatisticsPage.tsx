@@ -8,58 +8,64 @@ import {
   Button,
   Backdrop,
   CircularProgress,
+  Container,
 } from '@mui/material';
+import Swal from 'sweetalert2';
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
-import axios from '../../login/components/customApi';
-import WordCloud from './components/WordCloudTest';
+import WordCloud from './components/WordCloud';
 import GooglePieChart from './components/GooglePieChart';
 import { Selection } from './types/SurveyStatisticTypes';
+import axios from '../../login/components/customApi';
 
 const styles = {
   card: {
-    '@media (min-width: 700px)': {
+    '@media (min-width: 600px)': {
       display: 'flex',
-      alignItems: 'center',
       justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
     },
   },
   cardTitle: {
     marginTop: '20px',
     borderRadius: '4px',
-    '@media (min-width: 700px)': {
-      width: '70%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+    '@media (min-width: 600px)': {
+      width: '100%',
     },
   },
   cardContent: {
     border: '1px solid #757575',
     borderRadius: '3%',
-    '@media (min-width: 700px)': {
-      width: '40%',
+    '@media (min-width: 600px)': {
+      width: '100%',
     },
   },
   googleChartContent: {
-    '@media (min-width: 700px)': {
+    '@media (min-width: 600px)': {
       width: '100%',
     },
   },
 
   subjectContent: {
+    width: '100%',
     border: '1px solid #757575',
-    borderRadius: '3%',
+    borderRadius: '10%',
+    '@media (max-width: 600px)': {
+      width: '100%',
+      height: '40%',
+    },
   },
   typography: {
     fontSize: '25px',
     color: '#757575',
   },
   titleText: {
-    fontSize: '40px',
+    width: '100%',
     textAlign: 'center',
+    fontSize: '30px',
     fontWeight: 'bold',
-    marginBottom: '30px',
+    margin: '20px 0 20px 0',
     '@media (max-width: 400px)': {
       fontSize: '30px',
     },
@@ -74,6 +80,7 @@ const styles = {
     },
   },
   surveyInfo: {
+    width: '95%',
     fontSize: '15px',
     textAlign: 'right',
     '@media (max-width: 400px)': {
@@ -87,6 +94,15 @@ const textStyle = {
   fontFamily,
 };
 
+const customStyles = `
+.swal-custom-popup {
+  z-index: 1500; // 필요한 z-index 값
+}
+.swal-custom-container {
+  z-index: 1500; // 필요한 z-index 값
+}
+`;
+
 /**
  * 통계보기 페이지의 각 문항별 유형에 따른 통계 카드들을 보여주는 함수입니다.
  * @component
@@ -96,16 +112,56 @@ const textStyle = {
 export default function StatisticsPage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectStat, setSelectStat] = useState<Selection[]>([]);
-  const [totalSelectionCount, setTotalSelectionCount] = useState<number>();
   const [surveyTitle, setSurveyTitle] = useState<string>();
-  const [surveyNo, setSurveyNo] = useState<number>();
-  const [surveyPostAt, setSurveyPostAt] = useState<string>();
-  const [surveyWriter, setSurveyWriter] = useState<string>();
-
   const [allItems, setAllItems] = useState<Record<string, Selection[]>>({});
   const params = useParams();
   const statSurveyNo = params.surveyNo;
   const navigate = useNavigate();
+
+  /**
+   * 주어진 설문 번호에 해당하는 통계 데이터를 불러오는 비동기 함수입니다.
+   * @async
+   * @function
+   */
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+
+      const isMember = localStorage.getItem('userNickname');
+
+      try {
+        if (isMember !== null) {
+          const response = await axios.get(
+            `${process.env.REACT_APP_BASE_URL}/api/survey/resultall?surveyno=${statSurveyNo}`
+          );
+          setSelectStat(response.data.content);
+          setSurveyTitle(response.data.content[0].surveyTitle);
+          setIsLoading(false);
+        } else {
+          const response = await axios.get(
+            `${process.env.REACT_APP_BASE_URL}/api/survey/resultall/nonMember?surveyno=${statSurveyNo}`
+          );
+          setSelectStat(response.data.content);
+          setSurveyTitle(response.data.content[0].surveyTitle);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error('통계 보기 중 오류 발생:', error);
+        setIsLoading(false);
+        Swal.fire({
+          icon: 'error',
+          title: '부적절한 접근!',
+          customClass: {
+            popup: 'swal-custom-popup',
+            container: 'swal-custom-container',
+          },
+        });
+        navigate('/login');
+      }
+    };
+
+    fetchData();
+  }, [statSurveyNo]);
 
   /**
    * 주어진 데이터를 설문 질문 번호에 따라 그룹화합니다.
@@ -129,46 +185,11 @@ export default function StatisticsPage() {
   };
 
   /**
-   * 주어진 설문 번호에 해당하는 통계 데이터를 불러오는 비동기 함수입니다.
-   * @async
-   * @function
-   */
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/api/survey/resultall?surveyno=${statSurveyNo}`
-        );
-        setSelectStat(response.data.content);
-        setTotalSelectionCount(response.data.content[0].totalAttend);
-        setSurveyTitle(response.data.content[0].surveyTitle);
-        setSurveyNo(response.data.content[0].surveyNo);
-        setSurveyPostAt(response.data.content[0].surveyPostAt);
-
-        setIsLoading(false);
-      } catch (error) {
-        console.error('통계 보기 중 오류 발생:', error);
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [statSurveyNo]);
-
-  /**
    * 선택된 통계 데이터를 설문 질문 번호에 따라 그룹화하고 모든 아이템 상태를 업데이트합니다.
    * @function
    */
   useEffect(() => {
     setAllItems(surveyBranch(selectStat));
-
-    selectStat.forEach((item) => {
-      if (item.surveyWriter != null) {
-        setSurveyWriter(item.surveyWriter);
-      }
-    });
   }, [selectStat]);
 
   if (isLoading) {
@@ -182,29 +203,19 @@ export default function StatisticsPage() {
     );
   }
   return (
-    <>
+    <Container
+      maxWidth="md"
+      sx={{
+        paddingLeft: '5px',
+        paddingRight: '5px',
+      }}
+    >
       <Box sx={styles.card}>
-        <Card sx={styles.cardTitle}>
-          <CardContent>
-            <Box>
-              <Typography style={textStyle} sx={styles.titleText}>
-                {surveyTitle}
-              </Typography>
-              <Typography style={textStyle} sx={styles.surveyInfo}>
-                설문 번호: {surveyNo} &nbsp;&nbsp;&nbsp; 설문 작성자:{' '}
-                {surveyWriter}
-                &nbsp;&nbsp;&nbsp; 설문 개시일: {surveyPostAt}{' '}
-                &nbsp;&nbsp;&nbsp; 설문 참여자 수: {totalSelectionCount}
-                <Button onClick={() => navigate('/survey/main')}>
-                  돌아가기
-                </Button>
-                &nbsp;&nbsp;&nbsp;
-              </Typography>
-            </Box>
-          </CardContent>
-        </Card>
+        <Typography fontStyle={textStyle} sx={styles.titleText}>
+          {surveyTitle}
+        </Typography>
       </Box>
-      {Object.keys(allItems).map((questionNo) => {
+      {Object.keys(allItems).map((questionNo, index) => {
         const itemsForQuestion: Selection[] = allItems[questionNo];
         const { questionTypeNo } = itemsForQuestion[0];
 
@@ -300,60 +311,138 @@ export default function StatisticsPage() {
 
         return (
           <Box sx={styles.card} key={questionNo}>
+            <style>{customStyles}</style>
             <Card sx={styles.cardTitle} key={questionNo}>
               <CardContent>
                 <Box>
                   <Typography style={textStyle} sx={styles.componentText}>
-                    {itemsForQuestion[0].surveyQuestionNo} .{' '}
-                    {itemsForQuestion[0].surveyQuestionTitle}
+                    {index + 1} . {itemsForQuestion[0].surveyQuestionTitle}
                   </Typography>
 
                   <Typography style={textStyle} sx={styles.surveyInfo}>
-                    &nbsp;&nbsp;&nbsp; 설문 참여자 수:{' '}
+                    설문 참여자 수 :{' '}
                     {itemsForQuestion[0].selectionCount !== 0
                       ? countSelections(itemsForQuestion)
                       : countSubjectiveAnswerCount(itemsForQuestion)}
                   </Typography>
 
                   {questionTypeNo === 1 && (
-                    <Box sx={styles.googleChartContent}>
-                      <GooglePieChart selectionAnswer={chartData} />
-                    </Box>
+                    <>
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
+                        }}
+                      >
+                        📝 파이차트로 보는 통계
+                      </Typography>
+                      <Box sx={styles.googleChartContent}>
+                        <GooglePieChart selectionAnswer={chartData} />
+                      </Box>
+                    </>
                   )}
                   {questionTypeNo === 2 && (
-                    <Box sx={styles.googleChartContent}>
-                      <GooglePieChart selectionAnswer={chartData} />
-                    </Box>
+                    <>
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
+                        }}
+                      >
+                        📝 파이차트로 보는 통계
+                      </Typography>
+                      <Box sx={styles.googleChartContent}>
+                        <GooglePieChart selectionAnswer={chartData} />
+                      </Box>
+                    </>
                   )}
                   {questionTypeNo === 3 && (
-                    <Box sx={styles.googleChartContent}>
-                      <GooglePieChart selectionAnswer={chartData} />
-                    </Box>
+                    <>
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
+                        }}
+                      >
+                        📝 파이차트로 보는 통계
+                      </Typography>
+                      <Box sx={styles.googleChartContent}>
+                        <GooglePieChart selectionAnswer={chartData} />
+                      </Box>
+                    </>
                   )}
                   {questionTypeNo === 4 && (
                     <>
-                      <Typography style={textStyle}>
-                        ## 단답형의 답들은 다음과 같은 것들이 있었습니다!
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
+                        }}
+                      >
+                        📝 워드클라우드로 보는 통계
                       </Typography>
-                      <Box sx={styles.subjectContent}>
-                        <WordCloud
-                          wordCloud={shortSubData.map((item) => ({
-                            text: item.surveySubjectiveAnswer,
-                            size: item.questionTypeNo,
-                          }))}
-                        />
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          padding: '10px 10px 10px 10px',
+                        }}
+                      >
+                        <Box sx={styles.subjectContent}>
+                          <WordCloud
+                            wordCloud={shortSubData.map((item) => ({
+                              text: item.surveySubjectiveAnswer,
+                              size: item.questionTypeNo,
+                            }))}
+                          />
+                        </Box>
                       </Box>
-                      <Typography style={textStyle}>답변 랭킹!!</Typography>
-                      <AnswerList selectList={shortSubData} />
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
+                        }}
+                      >
+                        🔥답변 랭킹
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          padding: '10px 10px 10px 10px',
+                        }}
+                      >
+                        <AnswerList selectList={shortSubData} />
+                      </Box>
                     </>
                   )}
 
                   {questionTypeNo === 5 && (
                     <>
-                      <Typography style={textStyle}>
-                        ## 서술형의 답들은 다음과 같은 것들이 있었습니다!
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
+                        }}
+                      >
+                        📝 장문의 긴 답변
                       </Typography>
-                      <Box>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          padding: '10px 10px 10px 10px',
+                        }}
+                      >
                         <AnswerList selectList={LongSubData} />
                       </Box>
                     </>
@@ -364,6 +453,33 @@ export default function StatisticsPage() {
           </Box>
         );
       })}
-    </>
+
+      <Box sx={styles.card}>
+        <Card sx={styles.cardTitle}>
+          {' '}
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={() => navigate(-1)}
+            sx={{
+              padding: '10px 20px 10px 20px',
+              backgroundColor: '#ffffff', // 기본 배경색
+              color: 'black', // 기본 폰트 색상
+              fontWeight: '600',
+              '&:hover': {
+                backgroundColor: '#3e3e3e', // 호버 시 배경색
+                color: 'white', // 호버 시 폰트 색상
+              },
+              '&.Mui-focusVisible': {
+                backgroundColor: '#ffffff', // 포커스 시 배경색
+                color: 'black', // 포커스 시 폰트 색상
+              },
+            }}
+          >
+            돌아가기
+          </Button>
+        </Card>
+      </Box>
+    </Container>
   );
 }

@@ -122,7 +122,7 @@ export default function ComposedTextField({
     if (!regex.test(nickName)) {
       Swal.fire({
         icon: 'error',
-        title: '2글자이상,자음/모음/특수문자 불가합니다!',
+        title: '최소 2글자 최대 16글자, 특수문자 불가',
         customClass: {
           popup: 'swal-custom-popup',
           container: 'swal-custom-container',
@@ -221,7 +221,7 @@ export default function ComposedTextField({
               sx={{ color: 'red' }}
               style={{ width: '150px' }}
             >
-              2글자이상,자음/모음/특수문자 불가합니다!
+              최소 2글자 최대 16글자, 특수문자 불가
             </FormHelperText>
           )}
 
