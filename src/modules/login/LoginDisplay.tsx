@@ -54,6 +54,16 @@ const itemsToRemove = [
   'isMember',
 ];
 
+const ResponsiveImage = styled.img`
+  width: 250px;
+  height: 130px;
+
+  @media (min-width: 600px) {
+    width: 250px;
+    height: auto;
+  }
+`;
+
 /**
  * 로그인 화면
  * @author 김선규
@@ -191,16 +201,6 @@ function LoginDisplay() {
   const goLogin = () => {
     navigate('/survey/main');
   };
-
-  const ResponsiveImage = styled.img`
-    width: 250px;
-    height: 130px;
-
-    @media (min-width: 600px) {
-      width: 300px;
-      height: auto;
-    }
-  `;
 
   return (
     <Box sx={basicBox}>
