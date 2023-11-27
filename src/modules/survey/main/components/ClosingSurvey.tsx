@@ -158,7 +158,14 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
   return (
     <div>
       <div>
-        <Box sx={{ height: '400px' }}>
+        <Box
+          sx={{
+            height: '400px',
+            '@media (max-width: 600px)': {
+              height: '200px',
+            },
+          }}
+        >
           <Swiper style={styles.CardSwiper} {...swiperParams}>
             <Box
               sx={{

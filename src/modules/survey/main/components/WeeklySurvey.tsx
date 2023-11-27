@@ -172,6 +172,9 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          '@media (max-width: 600px)': {
+            height: '200px',
+          },
         }}
       >
         {cardList.length > 0 ? (
