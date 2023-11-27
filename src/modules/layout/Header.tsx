@@ -183,31 +183,40 @@ function Header() {
               role="presentation"
             />
           </div>
-          {!properLogin() ? (
-            <StyledButton
-              type="button"
-              onClick={login}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              style={{
-                backgroundImage: `url(${getLoginImageSrc()})`,
-              }}
-            >
-              {}
-            </StyledButton>
-          ) : (
-            <StyledButton
-              type="button"
-              onClick={logout}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              style={{
-                backgroundImage: `url(${getLogoutImageSrc()})`,
-              }}
-            >
-              {}
-            </StyledButton>
-          )}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: '15px',
+            }}
+          >
+            {!properLogin() ? (
+              <StyledButton
+                type="button"
+                onClick={login}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                style={{
+                  backgroundImage: `url(${getLoginImageSrc()})`,
+                }}
+              >
+                {}
+              </StyledButton>
+            ) : (
+              <StyledButton
+                type="button"
+                onClick={logout}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                style={{
+                  backgroundImage: `url(${getLogoutImageSrc()})`,
+                }}
+              >
+                {}
+              </StyledButton>
+            )}
+          </div>
         </Toolbar>
       </AppBar>
     </Box>
