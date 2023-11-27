@@ -59,12 +59,12 @@ const modalSubText = {
   color: '#858585',
 };
 
-const titleStyle = {
-  display: 'flex',
-  fontFamily,
-  textOverflow: 'ellipsis',
-  justifyContent: 'center',
-};
+// const titleStyle = {
+//   display: 'flex',
+//   fontFamily,
+//   textOverflow: 'ellipsis',
+//   justifyContent: 'center',
+// };
 
 function WeeklySurvey({ cardList }: CardDataListProps) {
   const [openModal, setOpenModal] = useState(false);
@@ -442,7 +442,15 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
                 </Typography>
               </Box>
               {/* 설문 조사 타이틀 */}
-              <Box sx={titleStyle}>
+              <Box
+                className="titleStyle"
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'flex-start',
+                  height: '80px',
+                }}
+              >
                 <Typography
                   variant="h6"
                   id="modal-title"
@@ -450,7 +458,7 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
                     fontFamily,
                     textOverflow: 'ellipsis',
                     fontWeight: 'bold',
-                    paddingBottom: '30px',
+                    marginBottom: '15px',
                   }}
                 >
                   {selectedCard ? selectedCard.surveyTitle : ''}
@@ -525,8 +533,31 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
                 </Box>
               </Box>
               <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
-              <div className="modal-scroll-box">
+              <Box
+                className="modal-scroll-box"
+                sx={{
+                  overflow: 'auto',
+                  height: '30vh',
+                  '@media screen and (max-width: 600px)': {
+                    overflow: 'auto',
+                    height: '20vh',
+                  },
+                }}
+              >
                 {/* 설문조사 사진 */}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    paddingBottom: '15px',
+                  }}
+                >
+                  <img
+                    src={selectedCard?.surveyImage}
+                    alt="Survey"
+                    style={{ width: '100%', height: 'auto' }}
+                  />{' '}
+                </Box>
                 <Typography
                   id="modal-description"
                   style={{
@@ -542,7 +573,7 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
                     ? `설문 설명: ${selectedCard.surveyDescription}`
                     : ''}
                 </Typography>
-              </div>
+              </Box>
               <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
 
               <Box

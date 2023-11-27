@@ -7,6 +7,8 @@
  */
 import React, { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, CardContent, FormHelperText } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
@@ -27,6 +29,7 @@ function MypageUserModify() {
   const [imagePreview, setImagePreview] = useState<string | null>();
   const [previousImage, setPreviousImage] = useState<string>('');
   const [nickname, setNickname] = useState('');
+  const [isLoading, setIsLoading] = useState<boolean>(true); // 로딩 상태 초기화
   const [nicknameCheckResult, setNicknameCheckResult] = useState<string | null>(
     ''
   );
@@ -64,6 +67,8 @@ function MypageUserModify() {
         }
       } catch (error) {
         console.error('유저 정보 불러오기 오류: ', error);
+      } finally {
+        setIsLoading(false); // 로딩 완료
       }
     };
     fetchUserData();
@@ -294,6 +299,17 @@ function MypageUserModify() {
       alert('업로드 또는 확인 버튼을 누르고 수정을 눌러주세요.');
     }
   };
+
+  if (isLoading) {
+    return (
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
 
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '16px', paddingRight: '16px' }}>
