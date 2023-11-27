@@ -945,7 +945,7 @@ function Mypage() {
               }}
             >
               <Alert severity="success">
-                {selectedCard?.surveyAttendCreatedAt}에 참여
+                {selectedCard?.surveyAttendCreatedAt}
               </Alert>
             </Box>
 
