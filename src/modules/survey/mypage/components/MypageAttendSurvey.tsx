@@ -28,6 +28,8 @@ import {
   Alert,
   IconButton,
   Avatar,
+  CardActionArea,
+  CardMedia,
 } from '@mui/material';
 import FaceIcon from '@mui/icons-material/Face';
 import MenuItem from '@mui/material/MenuItem';
@@ -64,6 +66,8 @@ const customStyles = `
 interface CardData {
   userNo: any;
   surveyNo: number;
+  userImage: string;
+  surveyImage: string;
   surveyTitle: string;
   tagNames: string[];
   surveyDescription: string;
@@ -92,12 +96,12 @@ const textStyle = {
   textOverflow: 'ellipsis',
 };
 
-const titleStyle = {
-  display: 'flex',
-  fontFamily,
-  textOverflow: 'ellipsis',
-  justifyContent: 'center',
-};
+// const titleStyle = {
+//   display: 'flex',
+//   fontFamily,
+//   textOverflow: 'ellipsis',
+//   justifyContent: 'center',
+// };
 
 /**
  * 설문 상태 번호에 따라 상태 텍스트를 반환합니다.
@@ -108,9 +112,9 @@ const titleStyle = {
 function getStatusText(surveyStatusNo: number) {
   switch (surveyStatusNo) {
     case 1:
-      return '작성 중';
+      return '작성';
     case 2:
-      return '진행 중';
+      return '진행';
     case 3:
       return '마감';
     default:
@@ -218,25 +222,18 @@ function Mypage() {
 
   const resetData = async () => {
     const loggedInUserNo = localStorage.getItem('userNo');
-
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/api/my-surveys/attend-surveys`
+      `${process.env.REACT_APP_BASE_URL}/api/my-surveys/write-surveys`
     );
 
     const cardData: CardData[] = response.data.content || [];
-
-    let filtered = cardData.filter(
+    const filtered = cardData.filter(
       (card) => card.userNo.toString() === loggedInUserNo
     );
 
-    if (state !== '전체') {
-      const filterStatus = parseInt(state, 10);
-      filtered = cardData.filter(
-        (card) => card.surveyStatusNo === filterStatus
-      );
-    }
-
     setFilteredData(filtered);
+    setState('전체'); // 상태를 '전체'로 설정
+    setSearchTerm(''); // 검색어를 비움
   };
 
   /**
@@ -397,7 +394,7 @@ function Mypage() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ paddingLeft: '16px', paddingRight: '16px' }}>
+    <Container sx={{ paddingLeft: '16px', paddingRight: '16px' }}>
       <style>{customStyles}</style>
 
       <Typography
@@ -435,6 +432,21 @@ function Mypage() {
           sx={{
             width: '100px',
             height: '35px',
+            borderColor: '#3e3e3e',
+            color: 'black',
+            fontWeight: '600',
+            '&:hover': {
+              backgroundColor: '#747474',
+              color: 'white',
+              borderColor: '#747474',
+              fontWeight: '600',
+            },
+            '&.Mui-focusVisible': {
+              backgroundColor: '#3e3e3e',
+              color: 'white',
+              borderColor: '#3e3e3e',
+              fontWeight: '600',
+            },
           }}
           onClick={() => {
             setSearchTerm('');
@@ -444,16 +456,37 @@ function Mypage() {
         >
           초기화
         </Button>
-        <FormControl sx={{ width: '100px', height: '35px' }}>
+        <FormControl
+          sx={{ width: '100px', height: '35px', borderColor: '#3e3e3e' }}
+        >
           <Select
             labelId="demo-simple-select-autowidth-label"
             id="demo-simple-select-autowidth"
             value={state}
             onChange={handleChange}
-            sx={{ width: '100%', height: '100%' }}
+            sx={{
+              width: '100%',
+              height: '100%',
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#3e3e3e', // 기본 테두리 색상
+                },
+                '&:hover fieldset': {
+                  borderColor: '#747474', // 호버 시 테두리 색상
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#3e3e3e', // 포커스 시 테두리 색상
+                },
+              },
+              '& .MuiSelect-select': {
+                '&:focus': {
+                  backgroundColor: 'transparent', // 포커스 시 배경 색상 유지
+                },
+              },
+            }}
           >
             <MenuItem value="전체">전체</MenuItem>
-            {/* <MenuItem value={1}>작성 중</MenuItem> */}
+            <MenuItem value={1}>작성 중</MenuItem>
             <MenuItem value={2}>진행 중</MenuItem>
             <MenuItem value={3}>마감</MenuItem>
           </Select>
@@ -480,7 +513,7 @@ function Mypage() {
         >
           <InputBase
             sx={{ ml: 1, flex: 1, height: '35px' }}
-            placeholder="제목, 작성자를 입력해주세요"
+            placeholder="제목, 태그를 입력해주세요"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={(e) => {
@@ -512,7 +545,7 @@ function Mypage() {
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'flex-start',
-          gap: { xs: 2, sm: 3, md: 8.7 },
+          gap: { xs: 1, sm: 2, md: 2 },
           height: '100%',
         }}
       >
@@ -526,142 +559,162 @@ function Mypage() {
           >
             <Card
               sx={{
-                width: '160px',
-                height: '180px',
-                borderRadius: 2,
-                backgroundColor: '#F9F9F9',
-                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+                width: '264px',
+                borderRadius: 4,
+                '@media (max-width: 600px)': {
+                  width: '160px',
+                },
               }}
             >
-              <CardContent
-                sx={{
-                  padding: '8px',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  justifyContent="space-between"
-                  paddingBottom="12px"
-                  width="140px"
-                  height="30px"
-                >
-                  <Chip
-                    icon={
-                      <FaceIcon
-                        sx={{
-                          fontSize: '15px',
-                        }}
-                      />
-                    }
-                    label={card.attendeeCount}
-                    variant="outlined"
-                    sx={{
-                      fontSize: '12px',
-                      width: '60px',
-                      height: '20px',
-                      fontWeight: 600,
-                      justifyContent: 'space-between',
-                    }}
-                  />
-
-                  <Chip
-                    label={getStatusText(card.surveyStatusNo)}
-                    variant="outlined"
-                    sx={{
-                      width: '40px',
-                      height: '20px',
-                      fontSize: '10px',
-                      fontWeight: 600,
-                      '& .MuiChip-label': {
-                        padding: 0,
-                      },
-                      backgroundColor: '#F9F9F9',
-                      color: getChipColor(card.surveyStatusNo),
-                    }}
-                  />
-                </Stack>
-
-                <div
-                  style={{
+              <CardActionArea onClick={() => openCardModal(card)}>
+                <CardMedia
+                  component="img"
+                  sx={{
                     display: 'flex',
-                    alignItems: 'stretch',
-                    fontSize: 12,
-                    color: 'text.secondary',
-                    marginBottom: '5px',
-                    fontWeight: 600,
-                  }}
-                >
-                  <EventAvailableIcon
-                    sx={{
-                      fontSize: '15px',
-                      marginRight: '4px',
-                    }}
-                  />
-                  {`참여일: ${card.surveyAttendCreatedAt.split(' ')[0]}`}
-                </div>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{
-                    fontSize: 18,
-                    fontWeight: 600,
-                    marginBottom: '8px',
-                    cursor: 'pointer',
-                    maxHeight: '47px',
-                    overflow: 'hidden',
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    height: '47px',
-                    WebkitBoxOrient: 'vertical',
-                  }}
-                  style={textStyle}
-                >
-                  {card.surveyTitle}
-                </Typography>
-
-                <Typography
-                  sx={{
-                    fontSize: '13px',
-                    fontWeight: '600',
-                    paddingLeft: '2px',
-                  }}
-                >
-                  작성: {card.userNickname}
-                </Typography>
-
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontSize: 11,
-                    '& > span:not(:last-child)': {
-                      marginRight: '8px',
+                    height: '150px',
+                    width: '274px',
+                    '@media (max-width: 600px)': {
+                      height: 0,
+                      width: '156px',
                     },
                   }}
+                  image={card.surveyImage}
+                  alt="survey image"
                 />
-                <Stack
-                  direction="row"
-                  spacing={1}
+                {/* <Card
+                        variant="elevation"
+                        sx={{
+                          width: '156px',
+                          height: '180px',
+
+                          borderRadius: 2,
+                          marginLeft: '5px',
+                          backgroundColor: '#FBFBFB',
+                          boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+                        }}
+                        style={textStyle}
+                        onClick={() => openCardModal(card)}
+                        role="button"
+                      > */}
+                <CardContent
                   sx={{
-                    marginTop: '10px',
+                    justifyContent: 'space-between',
                   }}
                 >
-                  {card.tagNames.map((tag) => (
+                  {/* 카드 내용 */}
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    justifyContent="space-between"
+                    paddingBottom="12px"
+                  >
                     <Chip
-                      key={tag}
-                      label={tag}
-                      size="small"
+                      label={card.attendeeCount}
                       sx={{
-                        fontSize: 11,
-                        marginRight: 1,
+                        fontSize: '12px',
+                        width: '60px',
                         height: '20px',
-                        backgroundColor: tagColor(tag),
+                        fontWeight: 600,
+                        justifyContent: 'space-between',
+                        backgroundColor: '#F9F9F9',
+                        boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
+                      }}
+                      style={textStyle}
+                      icon={
+                        <FaceIcon
+                          sx={{
+                            fontSize: '15px',
+                          }}
+                        />
+                      }
+                    />
+
+                    <Chip
+                      label={getStatusText(card.surveyStatusNo)}
+                      variant="outlined"
+                      sx={{
+                        width: '40px',
+                        height: '20px',
+                        fontSize: '10px',
+                        fontWeight: 600,
+                        '& .MuiChip-label': {
+                          padding: 0,
+                        },
+                        backgroundColor: '#F9F9F9',
+                        color: getChipColor(card.surveyStatusNo),
+                      }}
+                      style={textStyle}
+                    />
+                  </Stack>
+                  {/* </Stack> */}
+
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'stretch',
+                      fontSize: 12,
+                      color: 'text.secondary',
+                      fontWeight: 600,
+                      marginBottom: '5px',
+                      fontFamily,
+                    }}
+                  >
+                    <EventAvailableIcon
+                      sx={{
+                        fontSize: '15px',
+                        marginRight: '4px',
                       }}
                     />
-                  ))}
-                </Stack>
-              </CardContent>
+                    {`참여일: ${card.surveyAttendCreatedAt.split(' ')[0]}`}
+                  </div>
+
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    sx={{
+                      fontSize: 18,
+                      fontWeight: 600,
+                      marginBottom: '8px',
+                      cursor: 'pointer',
+                      maxHeight: '47px',
+                      overflow: 'hidden',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      height: '47px',
+                      WebkitBoxOrient: 'vertical',
+                    }}
+                    style={textStyle}
+                  >
+                    {card.surveyTitle}
+                  </Typography>
+                  {/* 태그 등 카드에 관한 내용 표시 */}
+                  <Typography
+                    sx={{
+                      fontSize: '13px',
+                      fontWeight: '600',
+                      paddingLeft: '2px',
+                    }}
+                  >
+                    작성: {card.userNickname}
+                  </Typography>
+                  <Stack direction="row" spacing={1} sx={{ marginTop: '10px' }}>
+                    {card.tagNames.map((tag) => (
+                      <Chip
+                        key={tag}
+                        label={tag}
+                        size="small"
+                        style={textStyle}
+                        sx={{
+                          fontSize: 11,
+                          marginRight: 1,
+                          height: '20px',
+                          backgroundColor: tagColor(tag),
+                        }}
+                      />
+                    ))}
+                  </Stack>
+                </CardContent>
+              </CardActionArea>
             </Card>
           </div>
         ))}
@@ -700,7 +753,10 @@ function Mypage() {
                   opacity: 0.7,
                 }}
               />
-              <ClearTwoToneIcon onClick={closeCardModal} />
+              <ClearTwoToneIcon
+                sx={{ cursor: 'pointer' }}
+                onClick={closeCardModal}
+              />
             </Box>
 
             <Box
@@ -711,7 +767,7 @@ function Mypage() {
               }}
             >
               <Avatar
-                src=""
+                src={selectedCard?.userImage}
                 sx={{
                   width: 28,
                   height: 28,
@@ -733,12 +789,12 @@ function Mypage() {
             </Box>
             {/* 설문 조사 타이틀 */}
             <Box
-              sx={titleStyle}
+              className="titleStyle"
               style={{
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'flex-start',
-                height: '62.02px',
+                height: '80px',
               }}
             >
               <Typography
@@ -748,9 +804,7 @@ function Mypage() {
                   fontFamily,
                   textOverflow: 'ellipsis',
                   fontWeight: 'bold',
-                  // paddingTop: '15px',
-                  marginBottom: '30px',
-                  // marginBottom: '35px',
+                  marginBottom: '15px',
                 }}
               >
                 {selectedCard ? selectedCard.surveyTitle : ''}
@@ -777,7 +831,7 @@ function Mypage() {
                   }}
                 />{' '}
                 {selectedCard
-                  ? `작성일: ${selectedCard.surveyCreatedAt.slice(0, 10)} ~ ${
+                  ? `기간: ${selectedCard.surveyCreatedAt.slice(0, 10)} ~ ${
                       selectedCard.surveyClosingAt
                     }`
                   : ''}
@@ -834,11 +888,21 @@ function Mypage() {
               className="modal-scroll-box"
               sx={{
                 overflow: 'auto',
-                height: '370px',
-                '@media screen and (max-width: 600px)': {
+                height: '30vh',
+                '@media screen and (min-height: 1000px)': {
                   overflow: 'auto',
-                  height: '200px',
+                  height: '36vh',
                 },
+
+                '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 800px) and (max-height: 1000px)':
+                  {
+                    height: '23vh',
+                  },
+
+                '@media screen and  (max-width: 376px) and (max-width: 600px)':
+                  {
+                    height: '24vh',
+                  },
               }}
             >
               {/* 설문조사 사진 */}
@@ -850,10 +914,10 @@ function Mypage() {
                 }}
               >
                 <img
-                  src={`${process.env.PUBLIC_URL}/LoginFig.png`}
-                  alt="Naver Button"
+                  src={selectedCard?.surveyImage}
+                  alt="Survey"
                   style={{ width: '100%', height: 'auto' }}
-                />
+                />{' '}
               </Box>
 
               <Typography
@@ -881,7 +945,7 @@ function Mypage() {
               }}
             >
               <Alert severity="success">
-                {selectedCard?.surveyAttendCreatedAt}에 참여한 설문
+                {selectedCard?.surveyAttendCreatedAt}
               </Alert>
             </Box>
 
@@ -910,7 +974,6 @@ function Mypage() {
                     sx={{
                       width: '100%',
                       marginBottom: '8px',
-                      marginTop: '30px',
                       backgroundColor: '#ebebeb',
                       '&:hover': {
                         backgroundColor: 'gray',
@@ -921,7 +984,7 @@ function Mypage() {
                       color: 'black',
                       fontWeight: '600',
                       '@media (max-width: 600px)': {
-                        marginTop: '30px',
+                        // marginTop: '30px',
                       },
                     }}
                   >
@@ -957,6 +1020,7 @@ function Mypage() {
                       fontWeight: '600',
                       '@media (max-width: 600px)': {
                         width: '145px',
+                        marginTop: '30px',
                       },
                     }}
                   >
@@ -981,6 +1045,7 @@ function Mypage() {
                       fontWeight: '600',
                       '@media (max-width: 600px)': {
                         width: '145px',
+                        marginTop: '30px',
                       },
                     }}
                   >
