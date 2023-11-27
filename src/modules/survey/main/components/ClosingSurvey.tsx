@@ -487,6 +487,19 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
 
                 <div className="modal-scroll-box">
                   {/* 설문조사 사진 */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      paddingBottom: '15px',
+                    }}
+                  >
+                    <img
+                      src={selectedCard?.surveyImage}
+                      alt="Survey"
+                      style={{ width: '100%', height: 'auto' }}
+                    />{' '}
+                  </Box>
 
                   <Typography
                     id="modal-description"
