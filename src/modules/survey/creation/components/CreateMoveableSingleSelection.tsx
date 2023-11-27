@@ -39,11 +39,11 @@ const styles = {
 
   inputBox: css({
     display: 'flex',
-    flexGrow: '1',
+    flexGrow: 0.9,
   }),
 
   input: css({
-    flexGrow: 0.9,
+    flexGrow: 0.85,
   }),
 
   removeAndAddIconBox: css({
