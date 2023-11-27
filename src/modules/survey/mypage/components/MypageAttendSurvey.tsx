@@ -450,6 +450,21 @@ function Mypage() {
           sx={{
             width: '100px',
             height: '35px',
+            borderColor: '#3e3e3e',
+            color: 'black',
+            fontWeight: '600',
+            '&:hover': {
+              backgroundColor: '#747474',
+              color: 'white',
+              borderColor: '#747474',
+              fontWeight: '600',
+            },
+            '&.Mui-focusVisible': {
+              backgroundColor: '#3e3e3e',
+              color: 'white',
+              borderColor: '#3e3e3e',
+              fontWeight: '600',
+            },
           }}
           onClick={() => {
             setSearchTerm('');
@@ -459,17 +474,38 @@ function Mypage() {
         >
           초기화
         </Button>
-        <FormControl sx={{ width: '100px', height: '35px' }}>
+        <FormControl
+          sx={{ width: '100px', height: '35px', borderColor: '#3e3e3e' }}
+        >
           <Select
             labelId="demo-simple-select-autowidth-label"
             id="demo-simple-select-autowidth"
             value={state}
             onChange={handleChange}
-            sx={{ width: '100%', height: '100%' }}
+            sx={{
+              width: '100%',
+              height: '100%',
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#3e3e3e', // 기본 테두리 색상
+                },
+                '&:hover fieldset': {
+                  borderColor: '#747474', // 호버 시 테두리 색상
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#3e3e3e', // 포커스 시 테두리 색상
+                },
+              },
+              '& .MuiSelect-select': {
+                '&:focus': {
+                  backgroundColor: 'transparent', // 포커스 시 배경 색상 유지
+                },
+              },
+            }}
           >
             <MenuItem value="전체">전체</MenuItem>
-            {/* <MenuItem value={1}>작성 중</MenuItem> */}
-            <MenuItem value={2}>진행</MenuItem>
+            <MenuItem value={1}>작성 중</MenuItem>
+            <MenuItem value={2}>진행 중</MenuItem>
             <MenuItem value={3}>마감</MenuItem>
           </Select>
         </FormControl>
