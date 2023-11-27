@@ -1,6 +1,6 @@
 import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Header from './Header';
 import Footer from './Footer';
@@ -11,10 +11,6 @@ import Footer from './Footer';
  * @returns Header,Body,Footer
  */
 export default function Layout() {
-  const location = useLocation();
-
-  console.log(`현재 위치 : ${location.pathname}`);
-
   const backStyle = {
     backgroundColor: '#FFFFFF',
   };

@@ -91,12 +91,12 @@ const textStyle = {
   textOverflow: 'ellipsis',
 };
 
-const titleStyle = {
-  display: 'flex',
-  fontFamily,
-  textOverflow: 'ellipsis',
-  justifyContent: 'center',
-};
+// const titleStyle = {
+//   display: 'flex',
+//   fontFamily,
+//   textOverflow: 'ellipsis',
+//   justifyContent: 'center',
+// };
 
 /**
  * 설문 상태 번호에 따라 상태 텍스트를 반환합니다.
@@ -107,9 +107,9 @@ const titleStyle = {
 function getStatusText(surveyStatusNo: number) {
   switch (surveyStatusNo) {
     case 1:
-      return '작성 중';
+      return '작성';
     case 2:
-      return '진행 중';
+      return '진행';
     case 3:
       return '마감';
     default:
@@ -215,27 +215,42 @@ function Mypage() {
     setFilteredData(filteredResults);
   };
 
+  // const resetData = async () => {
+  //   const loggedInUserNo = localStorage.getItem('userNo');
+
+  //   const response = await axios.get(
+  //     `${process.env.REACT_APP_BASE_URL}/api/my-surveys/write-surveys`
+  //   );
+
+  //   const cardData: CardData[] = response.data.content || [];
+
+  //   let filtered = cardData.filter(
+  //     (card) => card.userNo.toString() === loggedInUserNo
+  //   );
+
+  //   if (state !== '전체') {
+  //     const filterStatus = parseInt(state, 10);
+  //     filtered = cardData.filter(
+  //       (card) => card.surveyStatusNo === filterStatus
+  //     );
+  //   }
+
+  //   setFilteredData(filtered);
+  // };
   const resetData = async () => {
     const loggedInUserNo = localStorage.getItem('userNo');
-
     const response = await axios.get(
       `${process.env.REACT_APP_BASE_URL}/api/my-surveys/write-surveys`
     );
 
     const cardData: CardData[] = response.data.content || [];
-
-    let filtered = cardData.filter(
+    const filtered = cardData.filter(
       (card) => card.userNo.toString() === loggedInUserNo
     );
 
-    if (state !== '전체') {
-      const filterStatus = parseInt(state, 10);
-      filtered = cardData.filter(
-        (card) => card.surveyStatusNo === filterStatus
-      );
-    }
-
     setFilteredData(filtered);
+    setState('전체'); // 상태를 '전체'로 설정
+    setSearchTerm(''); // 검색어를 비움
   };
 
   /**
@@ -451,8 +466,8 @@ function Mypage() {
             sx={{ width: '100%', height: '100%' }}
           >
             <MenuItem value="전체">전체</MenuItem>
-            <MenuItem value={1}>작성 중</MenuItem>
-            <MenuItem value={2}>진행 중</MenuItem>
+            <MenuItem value={1}>작성</MenuItem>
+            <MenuItem value={2}>진행</MenuItem>
             <MenuItem value={3}>마감</MenuItem>
           </Select>
         </FormControl>
@@ -478,7 +493,7 @@ function Mypage() {
         >
           <InputBase
             sx={{ ml: 1, flex: 1, height: '35px' }}
-            placeholder="제목, 작성자를 입력해주세요"
+            placeholder="제목, 태그를 입력해주세요"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={(e) => {
@@ -605,13 +620,12 @@ function Mypage() {
                   sx={{
                     fontSize: 18,
                     fontWeight: 600,
-                    marginBottom: '8px',
                     cursor: 'pointer',
-                    maxHeight: '47px',
+                    maxHeight: '52px',
                     overflow: 'hidden',
                     display: '-webkit-box',
                     WebkitLineClamp: 2,
-                    height: '47px',
+                    height: '52px',
                     WebkitBoxOrient: 'vertical',
                   }}
                   style={textStyle}
@@ -688,12 +702,15 @@ function Mypage() {
                   opacity: 0.7,
                 }}
               />
-              <ClearTwoToneIcon onClick={closeCardModal} />
+              <ClearTwoToneIcon
+                sx={{ cursor: 'pointer' }}
+                onClick={closeCardModal}
+              />
             </Box>
 
             {/* 설문 조사 타이틀 */}
             <Box
-              sx={titleStyle}
+              className="titleStyle"
               style={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -736,7 +753,7 @@ function Mypage() {
                   }}
                 />{' '}
                 {selectedCard
-                  ? `작성일: ${selectedCard.surveyCreatedAt.slice(0, 10)} ~ ${
+                  ? `기간: ${selectedCard.surveyCreatedAt.slice(0, 10)} ~ ${
                       selectedCard.surveyClosingAt
                     }`
                   : ''}
@@ -811,7 +828,7 @@ function Mypage() {
                 <img
                   src={`${process.env.PUBLIC_URL}/LoginFig.png`}
                   alt="Naver Button"
-                  style={{ width: '100%', height: 'auto' }}
+                  // style={{ width: '100%', height: 'auto' }}
                 />
               </Box>
 

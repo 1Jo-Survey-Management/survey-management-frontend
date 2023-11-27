@@ -240,10 +240,6 @@ function AttendSurvey() {
         (item) => item.surveyQuestionNo === questionNo
       );
 
-      console.log(
-        `currentQuestionData 배열 값: ${JSON.stringify(currentQuestionData)}`
-      );
-
       if (!currentQuestionData) {
         console.error('Question not found');
         return;
@@ -414,12 +410,10 @@ function AttendSurvey() {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true); // 로딩 시작
-
       try {
         const response = await axios.get<SurveyData>(
           `${process.env.REACT_APP_BASE_URL}/api/for-attend/surveys/survey-data`
         );
-
         // surveyNo에 해당하는 데이터만 필터링합니다.
         const filteredData = response.data.content
           .filter((item) => item.surveyNo.toString() === surveyNo)
@@ -439,7 +433,6 @@ function AttendSurvey() {
         setIsLoading(false);
       }
     };
-    console.log(`surveyNo: ${JSON.stringify(surveyNo)}`);
 
     fetchData();
   }, [surveyNo]);
@@ -467,7 +460,10 @@ function AttendSurvey() {
   }, [surveyNo]);
 
   function alertAndScrollTo(item: SurveyItem) {
-    alert('필수 응답 문항에 답변하세요.');
+    Swal.fire({
+      icon: 'error',
+      title: '필수 응답 문항에 답변하세요.',
+    });
     const targetElement = document.getElementById(
       `question-${item.surveyQuestionNo}`
     );
@@ -489,8 +485,6 @@ function AttendSurvey() {
    * @author 박창우
    */
   const handleSubmit = async () => {
-    console.log(`제출 시: ${JSON.stringify(userResponses)}`);
-
     if (closingTime && new Date() > closingTime) {
       alert('이 설문은 이미 마감되었습니다.');
       return;
@@ -510,8 +504,6 @@ function AttendSurvey() {
         const responseExists = userResponses.find(
           (response) => response.surveyQuestionNo === item.surveyQuestionNo
         );
-
-        console.log(`required가 있는 애들: ${JSON.stringify(responseExists)}`);
 
         if (!responseExists) {
           console.log(
@@ -535,8 +527,20 @@ function AttendSurvey() {
       }
     }
 
-    const isConfirmed = window.confirm('설문을 제출하시겠습니까?');
-    if (!isConfirmed) return;
+    // Swal 사용하여 확인 받기
+    const isConfirmed = await Swal.fire({
+      title: '설문을 제출하시겠습니까?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3e3e3e',
+      cancelButtonColor: '#747474',
+      confirmButtonText: '예, 제출합니다',
+      cancelButtonText: '아니요',
+    });
+
+    if (!isConfirmed.value) {
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -550,14 +554,23 @@ function AttendSurvey() {
           title: '설문 응답이 완료되었습니다!',
         });
       } else if (response.data.errorCode === 'ERROR_SAVING_SURVEY') {
-        alert('설문 응답 저장 중 오류가 발생했습니다.');
+        Swal.fire({
+          icon: 'error',
+          title: '설문 응답 저장 중 오류가 발생했습니다.',
+        });
       } else {
-        alert('오류가 발생했습니다. 다시 시도해주세요.');
+        Swal.fire({
+          icon: 'error',
+          title: '오류가 발생했습니다. 다시 시도해주세요.',
+        });
       }
       navigate(MAIN_PAGE);
     } catch (error) {
       console.error('Error submitting data:', error);
-      alert('서버와의 통신 중 오류가 발생했습니다. 다시 시도해주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '서버와의 통신 중 오류가 발생했습니다. 다시 시도해주세요.',
+      });
     }
   };
 
