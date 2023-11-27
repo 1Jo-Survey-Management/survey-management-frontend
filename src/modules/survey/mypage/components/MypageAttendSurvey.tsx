@@ -665,7 +665,7 @@ function Mypage() {
                         marginRight: '4px',
                       }}
                     />
-                    {`참여일: ${card.surveyAttendCreatedAt.split(' ')[0]}`}
+                    {`${card.surveyAttendCreatedAt.split(' ')[0]}`}
                   </div>
 
                   <Typography
