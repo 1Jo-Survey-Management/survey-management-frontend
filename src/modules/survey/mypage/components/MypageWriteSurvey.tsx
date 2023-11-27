@@ -554,134 +554,6 @@ function Mypage() {
             role="button"
             tabIndex={0}
           >
-            {/* <Card
-              sx={{
-                width: '160px',
-                height: '180px',
-                borderRadius: 2,
-                backgroundColor: '#F9F9F9',
-                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-              }}
-            >
-              <CardContent
-                sx={{
-                  padding: '8px',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  justifyContent="space-between"
-                  paddingBottom="12px"
-                  width="140px"
-                  height="30px"
-                >
-                  <Chip
-                    icon={
-                      <FaceIcon
-                        sx={{
-                          fontSize: '15px',
-                        }}
-                      />
-                    }
-                    label={card.attendeeCount}
-                    variant="outlined"
-                    sx={{
-                      fontSize: '12px',
-                      width: '60px',
-                      height: '20px',
-                      fontWeight: 600,
-                      justifyContent: 'space-between',
-                    }}
-                  />
-
-                  <Chip
-                    label={getStatusText(card.surveyStatusNo)}
-                    variant="outlined"
-                    sx={{
-                      width: '40px',
-                      height: '20px',
-                      fontSize: '10px',
-                      fontWeight: 600,
-                      '& .MuiChip-label': {
-                        padding: 0,
-                      },
-                      backgroundColor: '#F9F9F9',
-                      color: getChipColor(card.surveyStatusNo),
-                    }}
-                  />
-                </Stack>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'stretch',
-                    fontSize: 12,
-                    color: 'text.secondary',
-                    marginBottom: '5px',
-                    fontWeight: 600,
-                  }}
-                >
-                  <EventAvailableIcon
-                    sx={{
-                      fontSize: '15px',
-                      marginRight: '4px',
-                    }}
-                  />
-                  {card.surveyClosingAt}
-                </div>
-                <Typography
-                  variant="h6"
-                  component="div"
-                  sx={{
-                    fontSize: 18,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    maxHeight: '52px',
-                    overflow: 'hidden',
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    height: '52px',
-                    WebkitBoxOrient: 'vertical',
-                  }}
-                  style={textStyle}
-                >
-                  {card.surveyTitle}
-                </Typography>
-
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontSize: 11,
-                    '& > span:not(:last-child)': {
-                      marginRight: '8px',
-                    },
-                  }}
-                />
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  sx={{
-                    marginTop: '30px',
-                  }}
-                >
-                  {card.tagNames.map((tag) => (
-                    <Chip
-                      key={tag}
-                      label={tag}
-                      size="small"
-                      sx={{
-                        fontSize: 11,
-                        marginRight: 1,
-                        height: '20px',
-                        backgroundColor: tagColor(tag),
-                      }}
-                    />
-                  ))}
-                </Stack>
-              </CardContent>
-            </Card> */}
             <Card
               sx={{
                 width: '264px',
@@ -1002,10 +874,10 @@ function Mypage() {
                 }}
               >
                 <img
-                  src={`${process.env.PUBLIC_URL}/LoginFig.png`}
-                  alt="Naver Button"
-                  // style={{ width: '100%', height: 'auto' }}
-                />
+                  src={selectedCard?.surveyImage}
+                  alt="Survey"
+                  style={{ width: '100%', height: 'auto' }}
+                />{' '}
               </Box>
 
               <Typography

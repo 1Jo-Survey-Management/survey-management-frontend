@@ -66,6 +66,7 @@ const customStyles = `
 interface CardData {
   userNo: any;
   surveyNo: number;
+  userImage: string;
   surveyImage: string;
   surveyTitle: string;
   tagNames: string[];
@@ -556,145 +557,6 @@ function Mypage() {
             role="button"
             tabIndex={0}
           >
-            {/* <Card
-              sx={{
-                width: '160px',
-                height: '180px',
-                borderRadius: 2,
-                backgroundColor: '#F9F9F9',
-                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-              }}
-            >
-              <CardContent
-                sx={{
-                  padding: '8px',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  justifyContent="space-between"
-                  paddingBottom="12px"
-                  width="140px"
-                  height="30px"
-                >
-                  <Chip
-                    icon={
-                      <FaceIcon
-                        sx={{
-                          fontSize: '15px',
-                        }}
-                      />
-                    }
-                    label={card.attendeeCount}
-                    variant="outlined"
-                    sx={{
-                      fontSize: '12px',
-                      width: '60px',
-                      height: '20px',
-                      fontWeight: 600,
-                      justifyContent: 'space-between',
-                    }}
-                  />
-
-                  <Chip
-                    label={getStatusText(card.surveyStatusNo)}
-                    variant="outlined"
-                    sx={{
-                      width: '40px',
-                      height: '20px',
-                      fontSize: '10px',
-                      fontWeight: 600,
-                      '& .MuiChip-label': {
-                        padding: 0,
-                      },
-                      backgroundColor: '#F9F9F9',
-                      color: getChipColor(card.surveyStatusNo),
-                    }}
-                  />
-                </Stack>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'stretch',
-                    fontSize: 12,
-                    color: 'text.secondary',
-                    marginBottom: '5px',
-                    fontWeight: 600,
-                  }}
-                >
-                  <EventAvailableIcon
-                    sx={{
-                      fontSize: '15px',
-                      marginRight: '4px',
-                    }}
-                  />
-                  {`참여일: ${card.surveyAttendCreatedAt.split(' ')[0]}`}
-                </div>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{
-                    fontSize: 18,
-                    fontWeight: 600,
-                    marginBottom: '8px',
-                    cursor: 'pointer',
-                    maxHeight: '47px',
-                    overflow: 'hidden',
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    height: '47px',
-                    WebkitBoxOrient: 'vertical',
-                  }}
-                  style={textStyle}
-                >
-                  {card.surveyTitle}
-                </Typography>
-
-                <Typography
-                  sx={{
-                    fontSize: '13px',
-                    fontWeight: '600',
-                    paddingLeft: '2px',
-                  }}
-                >
-                  작성: {card.userNickname}
-                </Typography>
-
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontSize: 11,
-                    '& > span:not(:last-child)': {
-                      marginRight: '8px',
-                    },
-                  }}
-                />
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  sx={{
-                    marginTop: '10px',
-                  }}
-                >
-                  {card.tagNames.map((tag) => (
-                    <Chip
-                      key={tag}
-                      label={tag}
-                      size="small"
-                      sx={{
-                        fontSize: 11,
-                        marginRight: 1,
-                        height: '20px',
-                        backgroundColor: tagColor(tag),
-                      }}
-                    />
-                  ))}
-                </Stack>
-              </CardContent>
-            </Card> */}
             <Card
               sx={{
                 width: '264px',
@@ -905,7 +767,7 @@ function Mypage() {
               }}
             >
               <Avatar
-                src=""
+                src={selectedCard?.userImage}
                 sx={{
                   width: 28,
                   height: 28,
@@ -1052,10 +914,10 @@ function Mypage() {
                 }}
               >
                 <img
-                  src={`${process.env.PUBLIC_URL}/LoginFig.png`}
-                  alt="Naver Button"
+                  src={selectedCard?.surveyImage}
+                  alt="Survey"
                   style={{ width: '100%', height: 'auto' }}
-                />
+                />{' '}
               </Box>
 
               <Typography
