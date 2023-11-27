@@ -22,7 +22,7 @@ export default function Layout() {
       <Container
         sx={{
           backgroundColor: '#FFFFFF',
-          minHeight: '600px',
+          minHeight: '800px',
           minWidth: '375px',
           paddingLeft: 0,
           paddingRight: 0,

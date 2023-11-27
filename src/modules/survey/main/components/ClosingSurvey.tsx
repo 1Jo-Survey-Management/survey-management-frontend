@@ -53,12 +53,12 @@ const modalSubText = {
   color: '#858585',
 };
 
-const titleStyle = {
-  display: 'flex',
-  fontFamily,
-  textOverflow: 'ellipsis',
-  justifyContent: 'center',
-};
+// const titleStyle = {
+//   display: 'flex',
+//   fontFamily,
+//   textOverflow: 'ellipsis',
+//   justifyContent: 'center',
+// };
 
 function ClosingSurvey({ cardList }: CardDataListProps) {
   const [openModal, setOpenModal] = useState(false);
@@ -433,7 +433,15 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                   </Typography>
                 </Box>
                 {/* 설문 조사 타이틀 */}
-                <Box sx={titleStyle}>
+                <Box
+                  className="titleStyle"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'flex-start',
+                    height: '80px',
+                  }}
+                >
                   <Typography
                     variant="h6"
                     id="modal-title"
@@ -441,7 +449,7 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                       fontFamily,
                       textOverflow: 'ellipsis',
                       fontWeight: 'bold',
-                      paddingBottom: '30px',
+                      marginBottom: '15px',
                     }}
                   >
                     {selectedCard ? selectedCard.surveyTitle : ''}
@@ -517,8 +525,41 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                 </Box>
                 <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
 
-                <div className="modal-scroll-box">
+                <Box
+                  className="modal-scroll-box"
+                  sx={{
+                    overflow: 'auto',
+                    height: '30vh',
+                    '@media screen and (min-height: 1000px)': {
+                      overflow: 'auto',
+                      height: '36vh',
+                    },
+
+                    '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 800px) and (max-height: 1000px)':
+                      {
+                        height: '23vh',
+                      },
+
+                    '@media screen and  (max-width: 376px) and (max-width: 600px)':
+                      {
+                        height: '24vh',
+                      },
+                  }}
+                >
                   {/* 설문조사 사진 */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      paddingBottom: '15px',
+                    }}
+                  >
+                    <img
+                      src={selectedCard?.surveyImage}
+                      alt="Survey"
+                      style={{ width: '100%', height: 'auto' }}
+                    />{' '}
+                  </Box>
 
                   <Typography
                     id="modal-description"
@@ -535,7 +576,7 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                       ? `설문 설명: ${selectedCard.surveyDescription}`
                       : ''}
                   </Typography>
-                </div>
+                </Box>
                 <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
 
                 <Box
@@ -593,6 +634,9 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                       },
                       color: 'black',
                       fontWeight: '600',
+                      '@media (min-height: 801px) and (max-height: 1000px)': {
+                        marginTop: '90px',
+                      },
                     }}
                   >
                     설문 결과보기
