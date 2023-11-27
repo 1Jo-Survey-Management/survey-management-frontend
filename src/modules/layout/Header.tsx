@@ -1,17 +1,35 @@
 /** @jsxImportSource @emotion/react */
 
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import { useNavigate } from 'react-router-dom';
 import { Drawer, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import axios from '../login/components/customApi';
 import '../../global.css';
 import Menu from './Menu';
 
+import axios from '../login/components/customApi';
+
 const ANCHOR_TYPE = 'left';
+
+const StyledButton = styled.button`
+  background-color: #ffffff;
+  border: 0px solid #000;
+  border-radius: 3px;
+  background-size: cover;
+  background-position: center;
+  width: 60px;
+  height: 20px;
+  cursor: pointer;
+
+  @media (max-width: 600px) {
+    width: 50px;
+    height: 20px;
+  }
+`;
 
 /**
  * 웹 애플리케이션의 헤더 컴포넌트입니다.
@@ -19,6 +37,17 @@ const ANCHOR_TYPE = 'left';
  */
 function Header() {
   const navigate = useNavigate();
+  const [isHovered, setIsHovered] = useState(false);
+
+  const getLogoutImageSrc = () =>
+    isHovered
+      ? `${process.env.PUBLIC_URL}/images/loginImage/logoutbuttonhover.png`
+      : `${process.env.PUBLIC_URL}/images/loginImage/logoutbutton.png`;
+
+  const getLoginImageSrc = () =>
+    isHovered
+      ? `${process.env.PUBLIC_URL}/images/loginImage/loginbuttonhover.png`
+      : `${process.env.PUBLIC_URL}/images/loginImage/loginbutton.png`;
 
   /**
    * 메인 페이지로 이동하는 함수
@@ -50,6 +79,7 @@ function Header() {
     localStorage.removeItem('userNickname');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('expiresIn');
+    localStorage.removeItem('isMember');
 
     axios.defaults.headers.common.Authorization = null;
 
@@ -118,8 +148,9 @@ function Header() {
             aria-label="menu"
             onClick={toggleDrawer(true)}
           >
-            <MenuIcon />
+            {!properLogin() ? '' : <MenuIcon />}
           </IconButton>
+
           <React.Fragment key={ANCHOR_TYPE}>
             <Drawer
               anchor={ANCHOR_TYPE}
@@ -152,35 +183,40 @@ function Header() {
               role="presentation"
             />
           </div>
-          {!properLogin() ? (
-            <img
-              src={`${process.env.PUBLIC_URL}/images/loginImage/loginbutton.png`}
-              alt="로그인"
-              style={{
-                width: '40px',
-                height: 'auto',
-                marginRight: '12px',
-                marginTop: '20px',
-              }}
-              onClick={login}
-              onKeyDown={login}
-              role="presentation"
-            />
-          ) : (
-            <img
-              src={`${process.env.PUBLIC_URL}/images/loginImage/logoutbutton.png`}
-              alt="로그아웃"
-              style={{
-                width: '50px',
-                height: 'auto',
-                marginRight: '12px',
-                marginTop: '20px',
-              }}
-              onClick={logout}
-              onKeyDown={logout}
-              role="presentation"
-            />
-          )}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: '15px',
+            }}
+          >
+            {!properLogin() ? (
+              <StyledButton
+                type="button"
+                onClick={login}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                style={{
+                  backgroundImage: `url(${getLoginImageSrc()})`,
+                }}
+              >
+                {}
+              </StyledButton>
+            ) : (
+              <StyledButton
+                type="button"
+                onClick={logout}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                style={{
+                  backgroundImage: `url(${getLogoutImageSrc()})`,
+                }}
+              >
+                {}
+              </StyledButton>
+            )}
+          </div>
         </Toolbar>
       </AppBar>
     </Box>
