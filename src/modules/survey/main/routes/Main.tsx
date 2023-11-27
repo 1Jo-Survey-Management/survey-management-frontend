@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import { Backdrop, Box, CircularProgress } from '@mui/material';
-import Floating from './components/Floating';
-import ClosingSurvey from './components/ClosingSurvey';
-import RecentSurvey from './components/RecentSurvey';
-import WeeklySurvey from './components/WeeklySurvey';
-import '../../../global.css';
-import { CardDataProps } from './types/MainType';
-import axios from '../../login/components/customApi';
+import Floating from '../components/Floating';
+import ClosingSurvey from '../components/ClosingSurvey';
+import RecentSurvey from '../components/RecentSurvey';
+import WeeklySurvey from '../components/WeeklySurvey';
+import '../../../../global.css';
+import { CardDataProps } from '../types/MainType';
+import axios from '../../../login/components/customApi';
 
 const fontFamily = 'GmarketSansMedium';
 const textStyle = {

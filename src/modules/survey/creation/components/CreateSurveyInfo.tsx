@@ -125,7 +125,7 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-const TITLE_MAX_LENGTH = 255;
+const TITLE_MAX_LENGTH = 32;
 
 const tagNames = ['일상', '업무', '공지', '중요', '기타'];
 

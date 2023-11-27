@@ -380,7 +380,7 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                   }}
                 >
                   <Avatar
-                    src=""
+                    src={selectedCard?.userImage}
                     sx={{
                       width: 28,
                       height: 28,
@@ -403,7 +403,7 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                 {/* 설문 조사 타이틀 */}
                 <Box sx={titleStyle}>
                   <Typography
-                    variant="h5"
+                    variant="h6"
                     id="modal-title"
                     style={{
                       fontFamily,
@@ -487,19 +487,6 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
 
                 <div className="modal-scroll-box">
                   {/* 설문조사 사진 */}
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      paddingBottom: '15px',
-                    }}
-                  >
-                    <img
-                      src={`${process.env.PUBLIC_URL}/LoginFig.png`}
-                      alt="Naver Button"
-                      style={{ width: '100%', height: 'auto' }}
-                    />{' '}
-                  </Box>
 
                   <Typography
                     id="modal-description"

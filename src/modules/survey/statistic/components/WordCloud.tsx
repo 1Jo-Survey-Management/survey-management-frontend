@@ -29,8 +29,8 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
     { text: string; size: number }[]
   >([]);
 
-  const [width, setWidth] = useState<number>(800);
-  const [height] = useState<number>(400);
+  const [width] = useState<number>(window.innerWidth < 600 ? 300 : 500);
+  const [height] = useState<number>(window.innerWidth < 600 ? 200 : 500);
 
   const incrementValue = 10;
 
@@ -44,42 +44,12 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
   };
 
   useEffect(() => {
-    const containerWidth = svgRef.current?.getBoundingClientRect().width;
-
-    // console.log('크기가 어떻길래 : ' + containerWidth);
-
-    if (containerWidth) {
-      setWidth(containerWidth);
-    }
-
-    const handleResize = () => {
-      const newContainerWidth = svgRef.current?.getBoundingClientRect().width;
-      // console.log('리사이즈 크기가 어떻길래 : ' + newContainerWidth);
-
-      if (newContainerWidth) {
-        setWidth(newContainerWidth);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
     updateWordCloud();
   }, [wordCloud]);
 
   useEffect(() => {
     if (wordCloudData && wordCloudData.length && width && height) {
-      // console.log(
-      //   '워드클라우드 다음내용 : ' + JSON.stringify(wordCloudData, null, 2)
-      // );
-
       const svg = svgRef.current;
-
-      // for (let i = 0; i < wordCloudData.length; i++) {
-      //   const wordData = wordCloudData[i]; // 현재 요소에 접근
-      //   const text = wordData.text; // 단어 텍스트
-      //   const size = wordData.size; // 단어 크기
-
-      //   console.log('단어:', text, '크기:', size);
 
       if (svg) {
         const selection = d3
@@ -93,15 +63,13 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
             wordCloudData.map((d) => ({
               text: d.text,
               size: d.size,
-              x: Math.random() * width, // 무작위 x 좌표
-              y: Math.random() * height, // 무작위 y 좌표
               rotate: Math.random() * 90 - 45, // 무작위 회전 각도 (-45도에서 45도 사이)
             }))
           )
 
           .padding(5)
           .rotate(() => Math.random() * 90 - 45) // 무작위 회전 각도 (-45도에서 45도 사이)
-          .fontSize((d) => d.size)
+          .fontSize((d) => d.size + 20)
           .on('end', (wordData) => {
             selection
               .selectAll('text')
@@ -111,8 +79,14 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
               .attr(
                 'transform',
                 () =>
-                  `translate(${Math.random() * width},${
-                    Math.random() * height
+                  `translate(${
+                    window.innerWidth <= 600
+                      ? Math.random() * 110 + 50 // 600px 이하일 때
+                      : Math.random() * 250 + 90 // 600px 초과일 때
+                  },${
+                    window.innerWidth <= 600
+                      ? Math.random() * 140 + 35
+                      : Math.random() * 250 + 90
                   }) rotate(${Math.random() * 90 - 45})`
               )
               .style('font-size', (d) => `${d.size}px`)
@@ -124,7 +98,6 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
         layout.start();
       }
     }
-    // }
   }, [wordCloudData, width, height]);
 
   return <svg ref={svgRef} />;

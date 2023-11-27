@@ -50,6 +50,7 @@ function Header() {
     localStorage.removeItem('userNickname');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('expiresIn');
+    localStorage.removeItem('isMember');
 
     axios.defaults.headers.common.Authorization = null;
 
@@ -67,7 +68,6 @@ function Header() {
     let loginCheck = false;
 
     if (hasProperLogin !== null) {
-      console.log('????');
       loginCheck = true;
     }
 

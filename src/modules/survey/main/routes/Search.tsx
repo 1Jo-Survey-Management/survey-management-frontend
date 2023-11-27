@@ -4,7 +4,7 @@ import Select from '@mui/material/Select';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
-import '../../../global.css';
+import '../../../../global.css';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {
@@ -27,8 +27,8 @@ import FaceIcon from '@mui/icons-material/Face';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import Swal from 'sweetalert2';
 import { Container } from '@mui/system';
-import axios from '../../login/components/customApi';
-import Floating from './components/Floating';
+import axios from '../../../login/components/customApi';
+import Floating from '../components/Floating';
 
 type CardData = {
   surveyNo: number;
@@ -653,7 +653,7 @@ function SurveySearch() {
                 }}
               >
                 <Avatar
-                  src=""
+                  src={selectedCard?.userImage} // 이미지
                   sx={{
                     width: 28,
                     height: 28,
@@ -676,7 +676,7 @@ function SurveySearch() {
               {/* 설문 조사 타이틀 */}
               <Box sx={titleStyle}>
                 <Typography
-                  variant="h5"
+                  variant="h6"
                   id="modal-title"
                   style={{
                     fontFamily,
@@ -767,7 +767,7 @@ function SurveySearch() {
                   }}
                 >
                   <img
-                    src={`${process.env.PUBLIC_URL}/LoginFig.png`}
+                    src={selectedCard?.surveyImage}
                     alt="Naver Button"
                     style={{ width: '100%', height: 'auto' }}
                   />{' '}
