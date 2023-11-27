@@ -27,6 +27,8 @@ import {
   Fade,
   Alert,
   IconButton,
+  CardActionArea,
+  CardMedia,
 } from '@mui/material';
 import FaceIcon from '@mui/icons-material/Face';
 import MenuItem from '@mui/material/MenuItem';
@@ -64,6 +66,7 @@ const customStyles = `
 interface CardData {
   userNo: any;
   surveyNo: number;
+  surveyImage: string;
   surveyTitle: string;
   tagNames: string[];
   surveyDescription: string;
@@ -215,28 +218,6 @@ function Mypage() {
     setFilteredData(filteredResults);
   };
 
-  // const resetData = async () => {
-  //   const loggedInUserNo = localStorage.getItem('userNo');
-
-  //   const response = await axios.get(
-  //     `${process.env.REACT_APP_BASE_URL}/api/my-surveys/write-surveys`
-  //   );
-
-  //   const cardData: CardData[] = response.data.content || [];
-
-  //   let filtered = cardData.filter(
-  //     (card) => card.userNo.toString() === loggedInUserNo
-  //   );
-
-  //   if (state !== '전체') {
-  //     const filterStatus = parseInt(state, 10);
-  //     filtered = cardData.filter(
-  //       (card) => card.surveyStatusNo === filterStatus
-  //     );
-  //   }
-
-  //   setFilteredData(filtered);
-  // };
   const resetData = async () => {
     const loggedInUserNo = localStorage.getItem('userNo');
     const response = await axios.get(
@@ -410,7 +391,7 @@ function Mypage() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ paddingLeft: '16px', paddingRight: '16px' }}>
+    <Container sx={{ paddingLeft: '16px', paddingRight: '16px' }}>
       <style>{customStyles}</style>
 
       <Typography
@@ -561,7 +542,7 @@ function Mypage() {
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'flex-start',
-          gap: { xs: 2, sm: 3, md: 8.7 },
+          gap: { xs: 1, sm: 2, md: 2 },
           height: '100%',
         }}
       >
@@ -573,7 +554,7 @@ function Mypage() {
             role="button"
             tabIndex={0}
           >
-            <Card
+            {/* <Card
               sx={{
                 width: '160px',
                 height: '180px',
@@ -700,6 +681,156 @@ function Mypage() {
                   ))}
                 </Stack>
               </CardContent>
+            </Card> */}
+            <Card
+              sx={{
+                width: '264px',
+                borderRadius: 4,
+                '@media (max-width: 600px)': {
+                  width: '160px',
+                },
+              }}
+            >
+              <CardActionArea onClick={() => openCardModal(card)}>
+                <CardMedia
+                  component="img"
+                  sx={{
+                    display: 'flex',
+                    height: '150px',
+                    width: '274px',
+                    '@media (max-width: 600px)': {
+                      height: 0,
+                      width: '156px',
+                    },
+                  }}
+                  image={card.surveyImage}
+                  alt="survey image"
+                />
+                {/* <Card
+                        variant="elevation"
+                        sx={{
+                          width: '156px',
+                          height: '180px',
+
+                          borderRadius: 2,
+                          marginLeft: '5px',
+                          backgroundColor: '#FBFBFB',
+                          boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+                        }}
+                        style={textStyle}
+                        onClick={() => openCardModal(card)}
+                        role="button"
+                      > */}
+                <CardContent
+                  sx={{
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  {/* 카드 내용 */}
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    justifyContent="space-between"
+                    paddingBottom="12px"
+                  >
+                    <Chip
+                      label={card.attendeeCount}
+                      sx={{
+                        fontSize: '12px',
+                        width: '60px',
+                        height: '20px',
+                        fontWeight: 600,
+                        justifyContent: 'space-between',
+                        backgroundColor: '#F9F9F9',
+                        boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
+                      }}
+                      style={textStyle}
+                      icon={
+                        <FaceIcon
+                          sx={{
+                            fontSize: '15px',
+                          }}
+                        />
+                      }
+                    />
+
+                    <Chip
+                      label={getStatusText(card.surveyStatusNo)}
+                      variant="outlined"
+                      sx={{
+                        width: '40px',
+                        height: '20px',
+                        fontSize: '10px',
+                        fontWeight: 600,
+                        '& .MuiChip-label': {
+                          padding: 0,
+                        },
+                        backgroundColor: '#F9F9F9',
+                        color: getChipColor(card.surveyStatusNo),
+                      }}
+                      style={textStyle}
+                    />
+                  </Stack>
+                  {/* </Stack> */}
+
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'stretch',
+                      fontSize: 12,
+                      color: 'text.secondary',
+                      fontWeight: 600,
+                      marginBottom: '5px',
+                      fontFamily,
+                    }}
+                  >
+                    <EventAvailableIcon
+                      sx={{
+                        fontSize: '15px',
+                        marginRight: '4px',
+                      }}
+                    />
+                    {card.surveyClosingAt}
+                  </div>
+
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    sx={{
+                      fontSize: 18,
+                      fontWeight: 600,
+                      marginBottom: '8px',
+                      cursor: 'pointer',
+                      maxHeight: '47px',
+                      overflow: 'hidden',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      height: '47px',
+                      WebkitBoxOrient: 'vertical',
+                    }}
+                    style={textStyle}
+                  >
+                    {card.surveyTitle}
+                  </Typography>
+                  {/* 태그 등 카드에 관한 내용 표시 */}
+                  <Stack direction="row" spacing={1} sx={{ marginTop: '30px' }}>
+                    {card.tagNames.map((tag) => (
+                      <Chip
+                        key={tag}
+                        label={tag}
+                        size="small"
+                        style={textStyle}
+                        sx={{
+                          fontSize: 11,
+                          marginRight: 1,
+                          height: '20px',
+                          backgroundColor: tagColor(tag),
+                        }}
+                      />
+                    ))}
+                  </Stack>
+                </CardContent>
+              </CardActionArea>
             </Card>
           </div>
         ))}
@@ -750,8 +881,8 @@ function Mypage() {
               style={{
                 display: 'flex',
                 justifyContent: 'center',
-                alignItems: 'center',
-                height: '120px',
+                alignItems: 'flex-start',
+                height: '80px',
               }}
             >
               <Typography
@@ -761,7 +892,6 @@ function Mypage() {
                   fontFamily,
                   textOverflow: 'ellipsis',
                   fontWeight: 'bold',
-                  paddingTop: '15px',
                   marginBottom: '15px',
                 }}
               >
@@ -789,7 +919,7 @@ function Mypage() {
                   }}
                 />{' '}
                 {selectedCard
-                  ? `기간: ${selectedCard.surveyCreatedAt.slice(0, 10)} ~ ${
+                  ? ` ${selectedCard.surveyCreatedAt.slice(0, 10)} ~ ${
                       selectedCard.surveyClosingAt
                     }`
                   : ''}
@@ -846,11 +976,21 @@ function Mypage() {
               className="modal-scroll-box"
               sx={{
                 overflow: 'auto',
-                height: '370px',
-                '@media screen and (max-width: 600px)': {
+                height: '30vh',
+                '@media screen and (min-height: 1000px)': {
                   overflow: 'auto',
-                  height: '200px',
+                  height: '36vh',
                 },
+
+                '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 800px) and (max-height: 1000px)':
+                  {
+                    height: '23vh',
+                  },
+
+                '@media screen and  (max-width: 376px) and (max-width: 600px)':
+                  {
+                    height: '24vh',
+                  },
               }}
             >
               {/* 설문조사 사진 */}
@@ -889,6 +1029,7 @@ function Mypage() {
               sx={{
                 marginTop: '15px',
                 paddingBottom: '5px',
+                '@media (max-width: 600px)': {},
               }}
             >
               {selectedCard?.surveyStatusNo === 1 && (
@@ -897,13 +1038,11 @@ function Mypage() {
 
               {selectedCard?.surveyStatusNo === 2 && (
                 <Alert severity="success">
-                  본인 작성 현재 진행 중인 설문입니다.
+                  본인 작성 진행 중인 설문입니다.
                 </Alert>
               )}
               {selectedCard?.surveyStatusNo === 3 && (
-                <Alert severity="info">
-                  본인 작성 이미 마감 된 설문입니다.
-                </Alert>
+                <Alert severity="info">본인 작성 마감 된 설문입니다.</Alert>
               )}
             </Box>
             <div
@@ -941,8 +1080,8 @@ function Mypage() {
                       },
                       color: 'black',
                       fontWeight: '600',
-                      '@media (max-width: 600px)': {
-                        marginTop: '30px',
+                      '@media (min-height: 801px) and (max-height: 1000px)': {
+                        marginTop: '90px',
                       },
                     }}
                   >
@@ -979,6 +1118,9 @@ function Mypage() {
                       '@media (max-width: 600px)': {
                         width: '145px',
                       },
+                      '@media (min-height: 801px) and (max-height: 1000px)': {
+                        marginTop: '90px',
+                      },
                     }}
                   >
                     수정하기
@@ -1003,6 +1145,9 @@ function Mypage() {
                       '@media (max-width: 600px)': {
                         width: '145px',
                       },
+                      '@media (min-height: 801px) and (max-height: 1000px)': {
+                        marginTop: '90px',
+                      },
                     }}
                   >
                     게시하기
@@ -1024,6 +1169,9 @@ function Mypage() {
                     },
                     color: 'black',
                     fontWeight: '600',
+                    '@media (min-height: 801px) and (max-height: 1000px)': {
+                      marginTop: '60px',
+                    },
                   }}
                 >
                   삭제하기
