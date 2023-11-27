@@ -1,4 +1,4 @@
-.modal {
+/* .modal {
   background-color: #fff;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   width: 375px;
@@ -14,4 +14,36 @@
     width: 330px;
     height: 620px;
   }
+} */
+
+.modal {
+  background-color: #fff;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  width: 80vw; /* 변경된 부분: 뷰포트의 80% */
+  max-width: 375px; /* 최대 너비 설정 */
+  height: 80vh; /* 변경된 부분: 뷰포트의 80% */
+  max-height: 800px; /* 최대 높이 설정 */
+  padding: 16px;
+  outline: 0;
+  border-radius: 8px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .modal {
+    max-width: 330px; /* 모바일 화면에서 최대 너비 조정 */
+    max-height: 620px; /* 모바일 화면에서 최대 높이 조정 */
+  }
+}
+
+.titleStyle {
+  font-family: 'nanumsquare';
+  font-size: calc(16px + (26 - 16) * ((100vw - 300px) / (1600 - 300)));
+  text-overflow: 'ellipsis';
+  justify-content: 'center';
+}
+
+.modal-scroll-box img {
+  width: 100%; /* 너비를 부모 컨테이너에 맞게 조정 */
+  height: auto; /* 높이를 자동으로 조정 */
 }

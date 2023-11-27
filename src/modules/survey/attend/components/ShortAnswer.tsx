@@ -26,6 +26,8 @@ function ShortAnswer({
 }: ShortAnswerProps) {
   const [answer, setAnswer] = useState<string>('');
   const [isOverLimit, setIsOverLimit] = useState<boolean>(false);
+  // 입력 필드의 값이 공백만 있는지 확인하는 상태
+  const [isOnlyWhitespace, setIsOnlyWhitespace] = useState<boolean>(false);
 
   /**
    * 사용자의 입력에 따라 텍스트 상태를 업데이트하는 함수입니다.
@@ -37,12 +39,11 @@ function ShortAnswer({
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
 
-    // setAnswer(newValue);
-    // onAnswerChange(newValue);
-    if (newValue.length <= 50) {
+    if (newValue.length <= 25) {
       setAnswer(newValue);
       onAnswerChange(newValue);
       setIsOverLimit(false);
+      setIsOnlyWhitespace(!newValue.trim()); // 공백만 있는 경우 true 설정
     } else {
       setIsOverLimit(true);
     }
@@ -70,7 +71,8 @@ function ShortAnswer({
       }}
     >
       <CardContent>
-        {!answer && currentQuestion?.required && (
+        {/* 필수 문항이고 답변이 없거나 공백만 있는 경우 메시지 표시 */}
+        {(isOnlyWhitespace || !answer) && currentQuestion.required && (
           <h1
             style={{
               fontSize: '9px',
@@ -111,9 +113,9 @@ function ShortAnswer({
           fullWidth
           value={answer}
           onChange={handleTextChange}
-          placeholder="단답 답변 입력(최대 50자)"
+          placeholder="단답 답변 입력(최대 25자)"
           error={isOverLimit}
-          helperText={isOverLimit ? '답변은 50자를 초과할 수 없습니다.' : ''}
+          helperText={isOverLimit ? '답변은 25자를 초과할 수 없습니다.' : ''}
           sx={{
             '& .MuiOutlinedInput-root': {
               '& fieldset': {

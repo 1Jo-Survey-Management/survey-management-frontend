@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
+import styled from '@emotion/styled';
 
 /**
  * 네이버 OAuth 로그인
@@ -14,6 +15,22 @@ function LoginNaver() {
     window.location.href = authorizationUrl;
   };
 
+  const StyledButton = styled.button`
+    background-color: #ffffff;
+    border: 0px solid #000;
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    width: 180px;
+    height: 45px;
+    cursor: pointer;
+
+    @media (min-width: 600px) {
+      width: 300px;
+      height: 70px;
+    }
+  `;
+
   const getImageSrc = () =>
     isHovered
       ? `${process.env.PUBLIC_URL}/naverhover.png`
@@ -21,25 +38,15 @@ function LoginNaver() {
 
   return (
     <Box sx={{ textAlign: 'center' }}>
-      <button
+      <StyledButton
         type="button"
         onClick={handleOAuthLogin}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        style={{
-          backgroundImage: `url(${getImageSrc()})`,
-          backgroundColor: '#ffffff',
-          border: '0px solid #000',
-          borderRadius: '10px',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          width: '180px',
-          height: '45px',
-          cursor: 'pointer',
-        }}
+        style={{ backgroundImage: `url(${getImageSrc()})` }}
       >
         {}
-      </button>
+      </StyledButton>
     </Box>
   );
 }
