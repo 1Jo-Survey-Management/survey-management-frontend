@@ -20,6 +20,8 @@ import {
   Divider,
   Alert,
   CardActionArea,
+  CircularProgress,
+  Backdrop,
 } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Paper from '@mui/material/Paper';
@@ -89,6 +91,8 @@ function SurveySearch() {
   const [searchData, setSearchData] = useState<CardData[]>([]);
   const [search, setSearch] = useState<string>('');
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
+  const [surveyLoaded, setSurveyLoaded] = useState(false);
+
   const getChipColor = (surveyStatusName: string) => {
     switch (surveyStatusName) {
       case '진행':
@@ -130,6 +134,7 @@ function SurveySearch() {
     const response = await axios.get(
       `${process.env.REACT_APP_BASE_URL}/api/surveys/surveyall?page=${page}`
     );
+    setSurveyLoaded(true);
     if (response.data.length === 0) {
       setHasMore(false);
       return;
@@ -147,6 +152,7 @@ function SurveySearch() {
     const response = await axios.get(
       `${process.env.REACT_APP_BASE_URL}/api/surveys/select-post?page=${page}`
     );
+    setSurveyLoaded(true);
 
     if (response.data.length === 0) {
       setHasMore(false);
@@ -164,6 +170,7 @@ function SurveySearch() {
     const response = await axios.get(
       `${process.env.REACT_APP_BASE_URL}/api/surveys/select-closing?page=${page}`
     );
+    setSurveyLoaded(true);
 
     if (response.data.length === 0) {
       if (page === 0) {
@@ -251,11 +258,9 @@ function SurveySearch() {
     const response = await axios.get(
       `${process.env.REACT_APP_BASE_URL}/api/surveys/search?searchWord=${test}`
     );
-    console.log(searchWord);
+    setSurveyLoaded(true);
 
     const statusFilter = response.data.filter((survey: CardData) => {
-      console.log('리스폰은?', response.data);
-
       if (selectedState === '전체(모든 카드)') {
         return true;
       }
@@ -274,7 +279,7 @@ function SurveySearch() {
     }
 
     setSearchData(statusFilter);
-    // console.log('검색결과', statusFilter);
+
     setSearching(false);
   }
 
@@ -323,6 +328,17 @@ function SurveySearch() {
 
     setFilteredData(sortedCardData);
   };
+
+  if (!surveyLoaded) {
+    return (
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={!surveyLoaded}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
 
   return (
     <div>
@@ -498,7 +514,15 @@ function SurveySearch() {
                 >
                   {/* 카드를 클릭하면 해당 카드 정보를 전달하여 모달 열기 */}
 
-                  <Card sx={{ width: '264px', borderRadius: 4 }}>
+                  <Card
+                    sx={{
+                      width: '264px',
+                      borderRadius: 4,
+                      '@media (max-width: 600px)': {
+                        width: '160px',
+                      },
+                    }}
+                  >
                     <CardActionArea onClick={() => openCardModal(card)}>
                       <CardMedia
                         component="img"
@@ -508,7 +532,7 @@ function SurveySearch() {
                           width: '264px',
                           '@media (max-width: 600px)': {
                             height: 0,
-                            width: '156px',
+                            maxWidth: '156px',
                           },
                         }}
                         image={card.surveyImage}
