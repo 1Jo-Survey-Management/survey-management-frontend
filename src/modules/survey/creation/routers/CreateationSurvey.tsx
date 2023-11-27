@@ -14,7 +14,7 @@ import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
 import { OpenStatusEnum } from '../../enums/OpenStatusEnum';
 import { SurveyStatusEunm } from '../../enums/SurveyStatusEnum';
 import DragDropQuestion from '../components/DragDropQuestions';
-import { imageUploadToS3 } from '../../utils/ImageUploadUtil';
+import { imageUploadToS3 } from '../../../utils/ImageUploadUtil';
 
 const MAIN_PAGE = '/survey/main';
 const MYPAGE_WRITE_PAGE = '/survey/mypage/write';

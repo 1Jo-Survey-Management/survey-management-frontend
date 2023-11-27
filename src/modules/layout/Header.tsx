@@ -10,6 +10,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import axios from '../login/components/customApi';
 import '../../global.css';
 import Menu from './Menu';
+import SNSSharingButtons from '../utils/SNSSharingButtons';
+import CopyToClipBoard from '../utils/CopyToClipBoard';
+import Sharing from '../utils/Sharing';
 
 const ANCHOR_TYPE = 'left';
 
@@ -93,6 +96,9 @@ function Header() {
       sx={{ flexGrow: 1, display: 'center', alignItems: 'flex-end' }}
       height={90}
     >
+      <CopyToClipBoard copyText="asdfasdf" />
+      <SNSSharingButtons />
+      <Sharing shareTitle="asdf" shareUrl="asdfs" />
       <AppBar
         position="static"
         sx={{

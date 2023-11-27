@@ -18,7 +18,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
-import { imageUploadToS3 } from '../../utils/ImageUploadUtil';
+import { imageUploadToS3 } from '../../../utils/ImageUploadUtil';
 import axios from '../../../login/components/customApi';
 
 function MypageUserModify() {
