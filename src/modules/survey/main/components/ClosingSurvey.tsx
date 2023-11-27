@@ -16,8 +16,10 @@ import {
   Fade,
   Divider,
   Alert,
+  CardActionArea,
 } from '@mui/material';
 import Swal from 'sweetalert2';
+import CardMedia from '@mui/material/CardMedia';
 import Avatar from '@mui/material/Avatar';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
@@ -29,9 +31,13 @@ const styles = {
     width: '100%',
     height: '100%',
   },
-  Slide: {
+  slide: {
     width: '100%',
-    height: '170px',
+    height: '400px',
+  },
+  slideNoImage: {
+    width: '100%',
+    height: 'auto',
   },
 };
 
@@ -102,11 +108,10 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
 
   const swiperParams: SwiperOptions = {
     slidesPerView: 'auto',
-    spaceBetween: 3,
     breakpoints: {
       920: {
-        slidesPerView: 6,
-        spaceBetween: 5,
+        slidesPerView: 4,
+        spaceBetween: 10,
       },
       750: {
         slidesPerView: 4,
@@ -153,14 +158,13 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
   return (
     <div>
       <div>
-        <Box sx={{ height: '190px' }}>
+        <Box sx={{ height: '400px' }}>
           <Swiper style={styles.CardSwiper} {...swiperParams}>
             <Box
               sx={{
                 display: 'flex',
                 flexWrap: 'wrap',
                 justifyContent: 'center',
-                gap: '8px',
                 height: '100%',
                 alignItems: 'center',
               }}
@@ -176,9 +180,29 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                   >
                     <SwiperSlide
                       key={`slide_${card.surveyNo}`}
-                      style={styles.Slide}
+                      style={
+                        window.innerWidth <= 600
+                          ? styles.slideNoImage
+                          : styles.slide
+                      }
                     >
-                      <Card
+                      <Card sx={{ maxWidth: 345, borderRadius: 4 }}>
+                        <CardActionArea onClick={() => openCardModal(card)}>
+                          <CardMedia
+                            component="img"
+                            sx={{
+                              display: 'flex',
+                              height: '150px',
+                              width: '274px',
+                              '@media (max-width: 600px)': {
+                                height: 0,
+                                width: '156px',
+                              },
+                            }}
+                            image={card.surveyImage}
+                            alt="survey image"
+                          />
+                          {/* <Card
                         variant="elevation"
                         sx={{
                           width: '156px',
@@ -191,125 +215,126 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                         style={textStyle}
                         onClick={() => openCardModal(card)}
                         role="button"
-                      >
-                        <CardContent
-                          sx={{
-                            padding: '8px',
-                            justifyContent: 'space-between',
-                          }}
-                        >
-                          {/* 카드 내용 */}
-                          <Stack
-                            direction="row"
-                            spacing={1}
-                            justifyContent="space-between"
-                            paddingBottom="12px"
-                          >
-                            <Chip
-                              label={card.surveyAttendCount}
-                              sx={{
-                                fontSize: '12px',
-                                color: '#D7D3D3',
-                                width: '60px',
-                                height: '20px',
-                                fontWeight: 600,
-                                justifyContent: 'space-between',
-                                backgroundColor: '#FFFDF8',
-                                boxShadow:
-                                  'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
-                              }}
-                              style={textStyle}
-                              icon={
-                                <FaceIcon
-                                  sx={{
-                                    fontSize: '15px',
-                                  }}
-                                />
-                              }
-                            />
-
-                            <Chip
-                              label={card.surveyStatusName}
-                              variant="outlined"
-                              sx={{
-                                width: '40px',
-                                height: '20px',
-                                fontSize: '10px',
-                                fontWeight: 600,
-                                '& .MuiChip-label': {
-                                  padding: 0,
-                                },
-                                backgroundColor: '#FFFDF8',
-                                color: getChipColor(card.surveyStatusName),
-                              }}
-                              style={textStyle}
-                            />
-                          </Stack>
-                          {/* </Stack> */}
-
-                          <div
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'stretch',
-                              fontSize: 12,
-                              color: '#8B8B8B',
-                              fontWeight: 600,
-                              marginBottom: '5px',
-                              fontFamily,
-                            }}
-                          >
-                            <EventAvailableIcon
-                              sx={{
-                                fontSize: '15px',
-                                marginRight: '4px',
-                              }}
-                            />
-                            {card.surveyClosingAt}
-                          </div>
-
-                          <Typography
-                            variant="h5"
-                            component="div"
+                      > */}
+                          <CardContent
                             sx={{
-                              fontSize: 18,
-                              fontWeight: 600,
-                              marginBottom: '8px',
-                              cursor: 'pointer',
-                              maxHeight: '47px', // 원하는 높이 설정
-                              overflow: 'hidden',
-                              display: '-webkit-box',
-                              WebkitLineClamp: 2,
-                              height: '47px',
-                              WebkitBoxOrient: 'vertical',
-                              color: '#8B8B8B',
+                              padding: '8px',
+                              justifyContent: 'space-between',
                             }}
-                            style={textStyle}
                           >
-                            {card.surveyTitle}
-                          </Typography>
-                          {/* 태그 등 카드에 관한 내용 표시 */}
-                          <Stack
-                            direction="row"
-                            spacing={1}
-                            sx={{ marginTop: '30px' }}
-                          >
-                            {card.tagName.map((tag) => (
+                            {/* 카드 내용 */}
+                            <Stack
+                              direction="row"
+                              spacing={1}
+                              justifyContent="space-between"
+                              paddingBottom="12px"
+                            >
                               <Chip
-                                key={tag}
-                                label={tag}
-                                size="small"
-                                style={textStyle}
+                                label={card.surveyAttendCount}
                                 sx={{
-                                  fontSize: 11,
-                                  marginRight: 1,
+                                  fontSize: '12px',
+                                  color: '#D7D3D3',
+                                  width: '60px',
                                   height: '20px',
-                                  backgroundColor: tagColor(tag),
-                                  opacity: 0.7,
+                                  fontWeight: 600,
+                                  justifyContent: 'space-between',
+                                  backgroundColor: '#FFFDF8',
+                                  boxShadow:
+                                    'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
+                                }}
+                                style={textStyle}
+                                icon={
+                                  <FaceIcon
+                                    sx={{
+                                      fontSize: '15px',
+                                    }}
+                                  />
+                                }
+                              />
+
+                              <Chip
+                                label={card.surveyStatusName}
+                                variant="outlined"
+                                sx={{
+                                  width: '40px',
+                                  height: '20px',
+                                  fontSize: '10px',
+                                  fontWeight: 600,
+                                  '& .MuiChip-label': {
+                                    padding: 0,
+                                  },
+                                  backgroundColor: '#FFFDF8',
+                                  color: getChipColor(card.surveyStatusName),
+                                }}
+                                style={textStyle}
+                              />
+                            </Stack>
+                            {/* </Stack> */}
+
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'stretch',
+                                fontSize: 12,
+                                color: '#8B8B8B',
+                                fontWeight: 600,
+                                marginBottom: '5px',
+                                fontFamily,
+                              }}
+                            >
+                              <EventAvailableIcon
+                                sx={{
+                                  fontSize: '15px',
+                                  marginRight: '4px',
                                 }}
                               />
-                            ))}
-                          </Stack>
-                        </CardContent>
+                              {card.surveyClosingAt}
+                            </div>
+
+                            <Typography
+                              variant="h5"
+                              component="div"
+                              sx={{
+                                fontSize: 18,
+                                fontWeight: 600,
+                                marginBottom: '8px',
+                                cursor: 'pointer',
+                                maxHeight: '47px', // 원하는 높이 설정
+                                overflow: 'hidden',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                height: '47px',
+                                WebkitBoxOrient: 'vertical',
+                                color: '#8B8B8B',
+                              }}
+                              style={textStyle}
+                            >
+                              {card.surveyTitle}
+                            </Typography>
+                            {/* 태그 등 카드에 관한 내용 표시 */}
+                            <Stack
+                              direction="row"
+                              spacing={1}
+                              sx={{ marginTop: '30px' }}
+                            >
+                              {card.tagName.map((tag) => (
+                                <Chip
+                                  key={tag}
+                                  label={tag}
+                                  size="small"
+                                  style={textStyle}
+                                  sx={{
+                                    fontSize: 11,
+                                    marginRight: 1,
+                                    height: '20px',
+                                    backgroundColor: tagColor(tag),
+                                    opacity: 0.7,
+                                  }}
+                                />
+                              ))}
+                            </Stack>
+                          </CardContent>
+                        </CardActionArea>
                       </Card>
                     </SwiperSlide>
                   </div>
@@ -368,7 +393,14 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                       />
                     )}
                   </div>
-                  <ClearTwoToneIcon onClick={handleIconClick} />
+                  <ClearTwoToneIcon
+                    onClick={handleIconClick}
+                    sx={{
+                      '&:hover': {
+                        cursor: 'pointer',
+                      },
+                    }}
+                  />
 
                   {/* 닫기 아이콘 */}
                 </Box>
