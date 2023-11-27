@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /** @jsxImportSource @emotion/react */
 
 import { Box } from '@mui/system';
@@ -14,11 +15,30 @@ const styles = {
   iconBox: css({
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
+  }),
+
+  popoverBox: css({
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '12px 12px 20px 12px',
+  }),
+
+  copyClipBoardBox: css({
+    marginBottom: '12px',
+  }),
+
+  imageButton: css({
+    padding: '0px',
+    outline: 'none',
+    border: 'none',
+    backgroundColor: '#ffffff',
+    marginRight: '8px',
   }),
 
   image: css({
-    width: '30px',
+    width: '40px',
+    borderRadius: '30px',
   }),
 };
 
@@ -41,12 +61,12 @@ export default function Sharing({ shareTitle, shareUrl }: SNSSharingParams) {
     shareToNaver,
     shareToNavigator,
   } = useSNSShare({
-    shareTitle: 'My Share Title',
-    shareUrl: 'https://example.com',
+    shareTitle,
+    shareUrl,
   });
 
   return (
-    <Box css={styles.iconBox}>
+    <Box>
       <Button onClick={handleOpenPopover}>
         <IosShareIcon />
       </Button>
@@ -63,44 +83,64 @@ export default function Sharing({ shareTitle, shareUrl }: SNSSharingParams) {
           horizontal: 'center',
         }}
       >
-        <Box css={styles.iconBox}>
-          <Box>
+        <Box css={styles.popoverBox}>
+          <Box css={styles.copyClipBoardBox}>
             <CopyToClipBoard copyText="asdfsadf" />
           </Box>
 
           <Box css={styles.iconBox}>
-            <Button onClick={shareToKakaoTalk}>
+            <button
+              type="button"
+              css={styles.imageButton}
+              onClick={shareToKakaoTalk}
+            >
               <img
                 src={`${process.env.PUBLIC_URL}/images/sharingLogo/kakao_logo.png`}
                 alt="kakao"
                 css={styles.image}
               />
-            </Button>
-            <Button onClick={shareToFacebook}>
+            </button>
+            <button
+              type="button"
+              css={styles.imageButton}
+              onClick={shareToFacebook}
+            >
               <img
                 src={`${process.env.PUBLIC_URL}/images/sharingLogo/facebook_logo.png`}
                 alt="kakao"
                 css={styles.image}
               />
-            </Button>
-            <Button onClick={shareToNaver}>
+            </button>
+            <button
+              type="button"
+              css={styles.imageButton}
+              onClick={shareToNaver}
+            >
               <img
                 src={`${process.env.PUBLIC_URL}/images/sharingLogo/naver_logo.png`}
                 alt="kakao"
                 css={styles.image}
               />
-            </Button>
-            <Button onClick={shareToTwitter}>
+            </button>
+            <button
+              type="button"
+              css={styles.imageButton}
+              onClick={shareToTwitter}
+            >
               <img
                 src={`${process.env.PUBLIC_URL}/images/sharingLogo/twitter_logo.png`}
                 alt="kakao"
                 css={styles.image}
               />
-            </Button>
+            </button>
             {isAvailNavigator && (
-              <Button onClick={shareToNavigator}>
+              <button
+                aria-label="Share"
+                type="button"
+                onClick={shareToNavigator}
+              >
                 <ShareIcon />
-              </Button>
+              </button>
             )}
           </Box>
         </Box>

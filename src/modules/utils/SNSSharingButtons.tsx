@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Box, Button } from '@mui/material';
-import { css } from '@emotion/react';
 import useSNSShare from './SNSSharing';
 
 export default function SNSSharingButtons() {

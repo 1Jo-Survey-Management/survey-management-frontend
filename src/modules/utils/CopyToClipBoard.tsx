@@ -1,28 +1,56 @@
 /** @jsxImportSource @emotion/react */
 
 import React, { useState } from 'react';
-import { Alert, Fade, Input, TextField, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { css, keyframes } from '@emotion/react';
+import { css } from '@emotion/react';
+import CheckIcon from '@mui/icons-material/Check';
 
-const fadeOut = keyframes`
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-`;
+const fontFamily = 'GmarketSansMedium';
+
 const styles = {
-  //   alertStyle = css({
-  //     animationName,
-  //   }),
-
   copyBox: css({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    minWidth: '270px',
+  }),
+
+  copyInput: css({
+    marginRight: '20px',
+    outline: 'none',
+    height: '40px',
+    borderRadius: '8px',
+    backgroundColor: 'rgba(90, 101, 118, 0.09)',
+    border: '1px solid rgba(90, 101, 119, 0.24)',
+    padding: '0px 16px',
+  }),
+
+  copyCheckButton: css({
+    width: '80px',
+    borderRadius: '8px',
+    color: '#ffffff',
+    border: '1px solid',
+    backgroundColor: '#747474',
+    fontWeight: 'bold',
+    fontFamily,
+    fontSize: '14px',
+    boxSizing: 'border-box',
+
+    '&:hover': {
+      backgroundColor: '#3e3e3e',
+    },
+  }),
+
+  textStyle: css({
+    fontFamily,
+    color: '#464646',
+    padding: '7px 7px 7px 3px',
+  }),
+
+  checkIcon: css({
+    fontSize: '18px',
+    marginRight: '5px',
   }),
 };
 
@@ -42,58 +70,36 @@ const handleCopyToClipBoard = async (copyText: string) => {
 
 export default function CopyToClipBoard({ copyText }: CopyToClipBoardProps) {
   const [copied, setCopied] = useState(false);
-  const [copyFailed, setCopyFailed] = useState(false);
 
   const handleCopyClick = async () => {
     const success = await handleCopyToClipBoard(copyText);
 
     if (success) {
       setCopied(true);
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
     } else {
-      setCopyFailed(true);
-      setTimeout(() => {
-        setCopyFailed(false);
-      }, 2000);
+      setCopied(false);
+      console.error('copy error');
     }
   };
 
   return (
     <Box>
-      <Box>
-        <Typography>공유하기</Typography>
-        <Box css={styles.copyBox}>
-          <TextField
-            id="outlined-read-only-input"
-            defaultValue={copyText}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <ContentCopyIcon onClick={handleCopyClick} />
-        </Box>
+      <Typography css={styles.textStyle}>설문 공유하기</Typography>
+      <Box css={styles.copyBox}>
+        <input value={copyText} readOnly css={styles.copyInput} />
+
+        {!copied && (
+          <Button onClick={handleCopyClick} css={styles.copyCheckButton}>
+            복사
+          </Button>
+        )}
+        {copied && (
+          <Button css={styles.copyCheckButton}>
+            <CheckIcon onClick={handleCopyClick} css={styles.checkIcon} />
+            완료
+          </Button>
+        )}
       </Box>
-      {copied && (
-        // <Alert
-        //   severity="info"
-        //   css={{
-        //     opacity: 0,
-        //     animation: `${fadeOut} 2s`, // fadeOut 애니메이션 적용
-        //   }}
-        // >
-        //   복사 완료! 잠시 후 사라집니다.
-        // </Alert>
-        <Fade in={copied}>
-          <Alert severity="info">복사 완료! 잠시 후 사라집니다.</Alert>
-        </Fade>
-      )}
-      {copyFailed && (
-        <Fade in={copyFailed}>
-          <Alert severity="error">복사 실패! 잠시 후 사라집니다.</Alert>
-        </Fade>
-      )}
     </Box>
   );
 }
