@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button, Typography } from '@mui/material';
+import { Backdrop, Button, CircularProgress, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import styled from '@emotion/styled';
 
@@ -70,6 +70,8 @@ const ResponsiveImage = styled.img`
  * @returns LoginDispay
  */
 function LoginDisplay() {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const navigate = useNavigate();
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
@@ -77,6 +79,8 @@ function LoginDisplay() {
   const cancelSubmit = async () => {
     const userNo = localStorage.getItem('userNo');
     const userNickname = localStorage.getItem('userNickname');
+
+    setIsLoading(true);
 
     if (userNo !== '' && userNickname === '') {
       try {
@@ -101,6 +105,7 @@ function LoginDisplay() {
       itemsToRemove.push('accessCode');
       itemsToRemove.forEach((item) => localStorage.removeItem(item));
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -122,85 +127,107 @@ function LoginDisplay() {
       return duplicatedCheck;
     };
 
-    if (accessCode && accessCodeDuplicateCheck()) {
-      axios
-        .get(redirectUri, {
-          params: {
-            code: accessCode,
-            state: 'STATE_STRING',
-          },
-        })
-        .then((response) => {
-          const { userNo, accessToken, userImage, userNickname, expiresIn } =
-            response.data.content;
+    const loginLogin = async () => {
+      if (accessCode && accessCodeDuplicateCheck()) {
+        setIsLoading(true);
 
-          localStorage.setItem('accessCode', accessCode);
-          localStorage.setItem('userNo', userNo);
-          localStorage.setItem('userNickname', userNickname);
-          localStorage.setItem('userImage', userImage);
-          localStorage.setItem('accessToken', accessToken);
-          localStorage.setItem('expiresIn', expiresIn);
+        await axios
+          .get(redirectUri, {
+            params: {
+              code: accessCode,
+              state: 'STATE_STRING',
+            },
+          })
+          .then((response) => {
+            const { userNo, accessToken, userImage, userNickname, expiresIn } =
+              response.data.content;
 
-          if (userNo != null && userNickname != null) {
-            if (
-              localStorageAccessToken == null ||
-              accessToken !== localStorageAccessToken
-            ) {
-              localStorage.setItem('userNo', userNo);
-              localStorage.setItem('userNickname', userNickname);
-              localStorage.setItem('userImage', userImage);
-              localStorage.setItem('accessToken', accessToken);
-              localStorage.setItem('expiresIn', expiresIn);
-
-              axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-
-              navigate('/survey/main');
-              return;
-            }
-
-            if (expiresIn) {
-              localStorage.setItem('userNo', userNo);
-              localStorage.setItem('userNickname', userNickname);
-              localStorage.setItem('userImage', userImage);
-              localStorage.setItem('accessToken', accessToken);
-              localStorage.setItem('expiresIn', expiresIn);
-            }
-            navigate('/survey/main');
-
-            if (accessToken === localStorageAccessToken) {
-              axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-              navigate('/survey/main');
-            } else {
-              itemsToRemove.forEach((item) => localStorage.removeItem(item));
-
-              navigate('/login');
-            }
-          }
-
-          if (userNo != null && !userNickname) {
+            localStorage.setItem('accessCode', accessCode);
             localStorage.setItem('userNo', userNo);
             localStorage.setItem('userNickname', userNickname);
             localStorage.setItem('userImage', userImage);
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('expiresIn', expiresIn);
 
-            axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+            if (userNo != null && userNickname != null) {
+              if (
+                localStorageAccessToken == null ||
+                accessToken !== localStorageAccessToken
+              ) {
+                localStorage.setItem('userNo', userNo);
+                localStorage.setItem('userNickname', userNickname);
+                localStorage.setItem('userImage', userImage);
+                localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('expiresIn', expiresIn);
 
-            setShowModal(true);
-          }
-        })
-        .catch((error) => {
-          console.error('Error : ', error);
-        });
-    } else {
-      cancelSubmit();
-      navigate('/login');
-    }
+                axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+
+                navigate('/survey/main');
+                return;
+              }
+
+              if (expiresIn) {
+                localStorage.setItem('userNo', userNo);
+                localStorage.setItem('userNickname', userNickname);
+                localStorage.setItem('userImage', userImage);
+                localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('expiresIn', expiresIn);
+              }
+              navigate('/survey/main');
+
+              if (accessToken === localStorageAccessToken) {
+                axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+                navigate('/survey/main');
+              } else {
+                itemsToRemove.forEach((item) => localStorage.removeItem(item));
+
+                navigate('/login');
+              }
+            }
+
+            if (userNo != null && !userNickname) {
+              localStorage.setItem('userNo', userNo);
+              localStorage.setItem('userNickname', userNickname);
+              localStorage.setItem('userImage', userImage);
+              localStorage.setItem('accessToken', accessToken);
+              localStorage.setItem('expiresIn', expiresIn);
+
+              axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+
+              setShowModal(true);
+            }
+
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            setIsLoading(true);
+            console.error('Error : ', error);
+          });
+      } else {
+        setIsLoading(true);
+        cancelSubmit();
+        navigate('/login');
+      }
+    };
+
+    loginLogin();
   }, []);
 
   const goLogin = () => {
+    setIsLoading(true);
     navigate('/survey/main');
   };
+
+  if (isLoading) {
+    return (
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
 
   return (
     <Box sx={basicBox}>
