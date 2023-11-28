@@ -8,6 +8,21 @@ interface GooglePieChartProps {
   selectionAnswer: [string, number][];
 }
 
+const generateRandomPastelColor = (): string => {
+  const pastelColors = [
+    '#FFD1DC', // 연한 분홍
+    '#FFA07A', // 연한 주황
+    '#FFB6C1', // 연한 분홍
+    '#FFDEAD', // 연한 베이지
+    '#87CEEB', // 연한 하늘색
+    '#98FB98', // 연한 녹색
+    '#DDA0DD', // 연한 보라
+    '#FFD700', // 연한 금색
+  ];
+
+  return pastelColors[Math.floor(Math.random() * pastelColors.length)];
+};
+
 export default function GooglePieChart({
   selectionAnswer,
 }: GooglePieChartProps) {
@@ -35,11 +50,9 @@ export default function GooglePieChart({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const extractChartData = (data: [string, number][]): [string, number][] =>
-    data.map((item) => [item[0], item[1]]);
-
   const aggregateData = (data: any[]) => {
     const aggregatedData = [];
+    const colors = [];
     const map = new Map();
     for (const item of data) {
       if (map.has(item[0])) {
@@ -48,24 +61,26 @@ export default function GooglePieChart({
       } else {
         map.set(item[0], aggregatedData.length);
         aggregatedData.push([item[0], item[1]]);
+        colors.push(generateRandomPastelColor());
       }
     }
-    return aggregatedData;
+    return { aggregatedData, colors };
   };
 
-  const chartData = extractChartData(selectionAnswer);
-
-  const aggregatedChartData = aggregateData(chartData);
-  aggregatedChartData.unshift(['selectionValue', 'selectionCount']);
+  const { aggregatedData, colors } = aggregateData(selectionAnswer);
+  aggregatedData.unshift(['selectionValue', 'selectionCount']);
 
   return (
     <Chart
       chartType="PieChart"
-      data={aggregatedChartData}
+      data={aggregatedData}
       width="100%"
       height="250px"
-      options={options}
       style={{ marginTop: '0' }}
+      options={{
+        ...options,
+        colors,
+      }}
     />
   );
 }

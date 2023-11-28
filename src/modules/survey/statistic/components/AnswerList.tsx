@@ -110,6 +110,7 @@ export default function AnswerList({ selectList }: selectionList) {
           <TableRow>
             <TableCell
               sx={{
+                padding: '10px 20px 10px 20px',
                 width: '70%',
                 backgroundColor: '#747474',
                 color: 'white',
@@ -120,6 +121,7 @@ export default function AnswerList({ selectList }: selectionList) {
             </TableCell>
             <TableCell
               sx={{
+                padding: '10px 20px 10px 20px',
                 backgroundColor: '#747474',
                 color: 'white',
                 fontWeight: 'bold',
