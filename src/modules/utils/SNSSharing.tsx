@@ -94,6 +94,12 @@ const shareToNaver = ({ shareTitle, shareUrl }: SNSSharingParams) => {
   openWindow(shareURL);
 };
 
+/**
+ * 모바일 자체 공유하기 기능을 이용한 공유하기 입니다.
+ *
+ * @param {@see SNSSharingParams} 공유하기 제목과 URL 입니다.
+ * @author 강명관
+ */
 const shareToNavigator = ({ shareTitle, shareUrl }: SNSSharingParams) => {
   const sharedData: ShareData = {
     title: shareTitle,
@@ -102,18 +108,21 @@ const shareToNavigator = ({ shareTitle, shareUrl }: SNSSharingParams) => {
 
   try {
     if (navigator.canShare && navigator.canShare(sharedData)) {
-      navigator
-        .share(sharedData)
-        .then(() => console.log('공유 성공'))
-        .catch(() => console.log('공유 취소'));
+      navigator.share(sharedData);
     }
   } catch (e) {
-    console.log('공유 실패');
+    console.error(e);
   }
 };
 
 const isAvailNavigator = typeof navigator.share !== 'undefined';
 
+/**
+ * 위에 정의된 각종 공유하기 기능을 hook으로 만들었습니다.
+ *
+ * @param {@see SNSSharingParams} 공유하기 제목과 URL 입니다.
+ * @author 강명관
+ */
 const useSNSShare = ({ shareTitle, shareUrl }: SNSSharingParams) => ({
   isAvailNavigator,
   shareToTwitter: () => shareToTwitter({ shareTitle, shareUrl }),

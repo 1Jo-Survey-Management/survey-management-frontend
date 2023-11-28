@@ -1,12 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /** @jsxImportSource @emotion/react */
 
 import { Box } from '@mui/system';
 import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import IosShareIcon from '@mui/icons-material/IosShare';
+import IconButton from '@mui/material/IconButton';
 import ShareIcon from '@mui/icons-material/Share';
-import { Button, Popover } from '@mui/material';
+import { Popover } from '@mui/material';
 import { SNSSharingParams } from './SNSSharingType';
 import useSNSShare from './SNSSharing';
 import CopyToClipBoard from './CopyToClipBoard';
@@ -22,6 +22,10 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     padding: '12px 12px 20px 12px',
+  }),
+
+  popoverIcon: css({
+    color: '#000000',
   }),
 
   copyClipBoardBox: css({
@@ -42,6 +46,14 @@ const styles = {
   }),
 };
 
+/**
+ * 공유하기를 담당하는 컴포넌트 입니다.
+ *
+ * @component
+ * @param {@see SNSSharingParams} 공유하기 제목과 URL 입니다.
+ * @returns 공유하기 디자인 컴포넌트
+ * @author 강명관
+ */
 export default function Sharing({ shareTitle, shareUrl }: SNSSharingParams) {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -67,25 +79,25 @@ export default function Sharing({ shareTitle, shareUrl }: SNSSharingParams) {
 
   return (
     <Box>
-      <Button onClick={handleOpenPopover}>
-        <IosShareIcon />
-      </Button>
-
+      <IconButton onClick={handleOpenPopover}>
+        <IosShareIcon css={styles.popoverIcon} />
+      </IconButton>
       <Popover
         open={openPopover}
         onClose={handleClosePopover}
+        anchorEl={anchorEl}
         anchorOrigin={{
-          vertical: 'top',
+          vertical: 'bottom',
           horizontal: 'left',
         }}
         transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
+          vertical: 'top',
+          horizontal: 'left',
         }}
       >
         <Box css={styles.popoverBox}>
           <Box css={styles.copyClipBoardBox}>
-            <CopyToClipBoard copyText="asdfsadf" />
+            <CopyToClipBoard copyText={shareUrl} />
           </Box>
 
           <Box css={styles.iconBox}>
