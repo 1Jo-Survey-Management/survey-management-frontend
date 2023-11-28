@@ -121,7 +121,7 @@ export default function AnswerList({ selectList }: selectionList) {
             </TableCell>
             <TableCell
               sx={{
-                padding: '10px 20px 10px 20px',
+                padding: '10px 20px 10px',
                 backgroundColor: '#747474',
                 color: 'white',
                 fontWeight: 'bold',

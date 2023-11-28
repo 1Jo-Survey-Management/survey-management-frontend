@@ -42,15 +42,26 @@ const styles = {
     },
   },
   googleChartContent: {
+    border: '1px solid #757575',
+    borderRadius: '3%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '350px',
+
     '@media (min-width: 600px)': {
-      width: '100%',
+      width: '800px',
+      height: '550px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   },
 
   subjectContent: {
     width: '100%',
     border: '1px solid #757575',
-    borderRadius: '10%',
+    borderRadius: '3%',
     '@media (max-width: 600px)': {
       width: '100%',
       height: '40%',
@@ -80,11 +91,13 @@ const styles = {
     },
   },
   surveyInfo: {
-    width: '95%',
-    fontSize: '15px',
+    width: '100%',
+    margin: '5px 0 5px 0',
+    fontSize: '10px',
     textAlign: 'right',
-    '@media (max-width: 400px)': {
-      fontSize: '13px',
+    '@media (max-width: 600px)': {
+      fontSize: '15px',
+      margin: '5px 0 5px 0',
     },
   },
 };
@@ -332,7 +345,9 @@ export default function StatisticsPage() {
                         sx={{
                           fontSize: '1rem',
                           fontWeight: 'bold',
-                          margin: '20px 0 20px 0',
+                          '@media (min-width: 600px)': {
+                            fontSize: '1.4rem',
+                          },
                         }}
                       >
                         📝 파이차트로 보는 통계
@@ -349,6 +364,9 @@ export default function StatisticsPage() {
                           fontSize: '1rem',
                           fontWeight: 'bold',
                           margin: '20px 0 20px 0',
+                          '@media (min-width: 600px)': {
+                            fontSize: '1.4rem',
+                          },
                         }}
                       >
                         📝 파이차트로 보는 통계
@@ -359,20 +377,9 @@ export default function StatisticsPage() {
                     </>
                   )}
                   {questionTypeNo === 3 && (
-                    <>
-                      <Typography
-                        sx={{
-                          fontSize: '1rem',
-                          fontWeight: 'bold',
-                          margin: '20px 0 20px 0',
-                        }}
-                      >
-                        📝 파이차트로 보는 통계
-                      </Typography>
-                      <Box sx={styles.googleChartContent}>
-                        <GooglePieChart selectionAnswer={chartData} />
-                      </Box>
-                    </>
+                    <Box sx={styles.googleChartContent}>
+                      <GooglePieChart selectionAnswer={chartData} />
+                    </Box>
                   )}
                   {questionTypeNo === 4 && (
                     <>
@@ -380,7 +387,9 @@ export default function StatisticsPage() {
                         sx={{
                           fontSize: '1rem',
                           fontWeight: 'bold',
-                          margin: '20px 0 20px 0',
+                          '@media (min-width: 600px)': {
+                            fontSize: '1.4rem',
+                          },
                         }}
                       >
                         📝 워드클라우드로 보는 통계
@@ -390,7 +399,6 @@ export default function StatisticsPage() {
                           display: 'flex',
                           flexDirection: 'column',
                           alignItems: 'center',
-                          padding: '10px 10px 10px 10px',
                         }}
                       >
                         <Box sx={styles.subjectContent}>
@@ -406,7 +414,10 @@ export default function StatisticsPage() {
                         sx={{
                           fontSize: '1rem',
                           fontWeight: 'bold',
-                          margin: '20px 0 20px 0',
+                          margin: '20px 0 0 0',
+                          '@media (min-width: 600px)': {
+                            fontSize: '1.4rem',
+                          },
                         }}
                       >
                         🔥답변 랭킹
@@ -416,7 +427,6 @@ export default function StatisticsPage() {
                           display: 'flex',
                           flexDirection: 'column',
                           alignItems: 'center',
-                          padding: '10px 10px 10px 10px',
                         }}
                       >
                         <AnswerList selectList={shortSubData} />
@@ -430,7 +440,9 @@ export default function StatisticsPage() {
                         sx={{
                           fontSize: '1rem',
                           fontWeight: 'bold',
-                          margin: '20px 0 20px 0',
+                          '@media (min-width: 600px)': {
+                            fontSize: '1.4rem',
+                          },
                         }}
                       >
                         📝 장문의 긴 답변
