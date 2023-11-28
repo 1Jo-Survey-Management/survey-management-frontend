@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { AnimatePresence, Variants, motion } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
-
+import customAxios from 'axios';
 import Swal from 'sweetalert2';
 import axios from '../../../login/components/customApi';
 import AttendSingleChoice from '../components/AttendSingleChoice';
@@ -402,61 +402,83 @@ function AttendSurvey() {
   };
 
   /**
+   * 설문에 대한 모든 정보를 가져오는 메서드 입니다.
+   *
+   * @author 강명관, 박창우
+   */
+  const fetchSurveyData = async () => {
+    setIsLoading(true);
+
+    const surveyAttendAxios = customAxios.create({
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    });
+
+    const response = await surveyAttendAxios.get<SurveyData>(
+      `${process.env.REACT_APP_BASE_URL}/api/for-attend/surveys/survey-data`
+    );
+
+    const filteredData = response.data.content
+      .filter((item) => item.surveyNo.toString() === surveyNo)
+      .sort((a, b) => a.surveyQuestionNo - b.surveyQuestionNo);
+
+    setSurveyData({
+      ...response.data,
+      content: filteredData,
+    });
+
+    if (response.data.success && filteredData.length > 0) {
+      setSurveyTitle(filteredData[0].surveyTitle);
+    }
+    setIsLoading(false);
+  };
+
+  /**
+   * 설문에 대한 마감시간을 가져오는 메서드 입니다.
+   *
+   * @author 강명관, 박창우
+   */
+  const fetchSurveyClosingTime = async () => {
+    const surveyAttendAxios = customAxios.create({
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    });
+
+    const response = await surveyAttendAxios.get(
+      `${process.env.REACT_APP_BASE_URL}/api/for-attend/surveys/closing-time/${surveyNo}`
+    );
+
+    if (response.data.success && response.data.content) {
+      setClosingTime(new Date(response.data.content));
+    }
+  };
+
+  /**
    * 컴포넌트가 마운트 될 때 설문조사 데이터를 가져오는 함수입니다.
    *
    * @returns 없음
-   * @author 박창우
+   * @author 박창우, 강명관
    */
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true); // 로딩 시작
-      try {
-        const response = await axios.get<SurveyData>(
-          `${process.env.REACT_APP_BASE_URL}/api/for-attend/surveys/survey-data`
-        );
-        // surveyNo에 해당하는 데이터만 필터링합니다.
-        const filteredData = response.data.content
-          .filter((item) => item.surveyNo.toString() === surveyNo)
-          .sort((a, b) => a.surveyQuestionNo - b.surveyQuestionNo);
-
-        setSurveyData({
-          ...response.data,
-          content: filteredData,
-        });
-
-        if (response.data.success && filteredData.length > 0) {
-          setSurveyTitle(filteredData[0].surveyTitle);
-        }
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching survey data:', error);
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [surveyNo]);
-
-  useEffect(() => {
-    if (surveyNo) {
-      axios
-        .get(
-          `${process.env.REACT_APP_BASE_URL}/api/for-attend/surveys/closing-time/${surveyNo}`
-        )
-        .then((response) => {
-          if (response.data.success && response.data.content) {
-            setClosingTime(new Date(response.data.content));
-          } else {
-            console.error(
-              'Failed to fetch closing time:',
-              response.data.errorResponse
-            );
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching closing time:', error);
-        });
+    if (!surveyNo || Number.isNaN(Number(surveyNo))) {
+      navigate('/');
+      return;
     }
+
+    setIsLoading(true);
+
+    Promise.all([fetchSurveyData(), fetchSurveyClosingTime()])
+      .then(() => {
+        setIsLoading(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(() => {
+        sessionStorage.setItem('redirectToSurvey', surveyNo);
+        setIsLoading(false);
+        navigate('/login');
+      });
   }, [surveyNo]);
 
   function alertAndScrollTo(item: SurveyItem) {

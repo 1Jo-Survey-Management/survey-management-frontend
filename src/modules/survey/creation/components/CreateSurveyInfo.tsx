@@ -213,8 +213,6 @@ function CreateSurveyInfo({
     const selectedCount = tagValueArray.length;
 
     if (selectedCount > maxTagCount) {
-      console.log('여기 걸리는건가?');
-      console.log(tagValueArray);
       const limitedSelection = tagValueArray.slice(0, maxTagCount);
       setSurveyInfo({
         ...surveyInfo,
