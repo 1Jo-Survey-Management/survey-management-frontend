@@ -60,7 +60,11 @@ const shareToFacebook = ({ shareUrl }: SNSSharingParams) => {
  * @param {@see SNSSharingParams} 공유하기 제목과 URL 입니다.
  * @author 강명관
  */
-const shareToKakaoTalk = ({ shareTitle, shareUrl }: SNSSharingParams) => {
+const shareToKakaoTalk = ({
+  shareTitle,
+  shareUrl,
+  shareImageUrl,
+}: SNSSharingParams) => {
   if (window.Kakao === undefined) {
     return;
   }
@@ -71,12 +75,16 @@ const shareToKakaoTalk = ({ shareTitle, shareUrl }: SNSSharingParams) => {
     kakao.init(process.env.REACT_APP_KAKAO_API_KEY);
   }
 
-  kakao?.Share.sendDefault({
-    objectType: 'text',
-    text: shareTitle,
-    link: {
-      mobileWebUrl: shareUrl,
-      webUrl: shareUrl,
+  kakao?.Share.createDefaultButton({
+    container: '#kakaotalk-sharing-btn',
+    objectType: 'feed',
+    content: {
+      title: shareTitle,
+      imageUrl: shareImageUrl,
+      link: {
+        mobileWebUrl: shareUrl,
+        webUrl: shareUrl,
+      },
     },
   });
 };
@@ -123,13 +131,20 @@ const isAvailNavigator = typeof navigator.share !== 'undefined';
  * @param {@see SNSSharingParams} 공유하기 제목과 URL 입니다.
  * @author 강명관
  */
-const useSNSShare = ({ shareTitle, shareUrl }: SNSSharingParams) => ({
+const useSNSShare = ({
+  shareTitle,
+  shareUrl,
+  shareImageUrl,
+}: SNSSharingParams) => ({
   isAvailNavigator,
-  shareToTwitter: () => shareToTwitter({ shareTitle, shareUrl }),
-  shareToFacebook: () => shareToFacebook({ shareTitle, shareUrl }),
-  shareToKakaoTalk: () => shareToKakaoTalk({ shareTitle, shareUrl }),
-  shareToNaver: () => shareToNaver({ shareTitle, shareUrl }),
-  shareToNavigator: () => shareToNavigator({ shareTitle, shareUrl }),
+  shareToTwitter: () => shareToTwitter({ shareTitle, shareUrl, shareImageUrl }),
+  shareToFacebook: () =>
+    shareToFacebook({ shareTitle, shareUrl, shareImageUrl }),
+  shareToKakaoTalk: () =>
+    shareToKakaoTalk({ shareTitle, shareUrl, shareImageUrl }),
+  shareToNaver: () => shareToNaver({ shareTitle, shareUrl, shareImageUrl }),
+  shareToNavigator: () =>
+    shareToNavigator({ shareTitle, shareUrl, shareImageUrl }),
 });
 
 export default useSNSShare;
