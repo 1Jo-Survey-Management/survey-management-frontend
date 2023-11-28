@@ -343,7 +343,7 @@ function SurveySearch() {
   return (
     <div>
       <style>{customStyles}</style>
-      <Container>
+      <Container sx={{ marginTop: '60px' }}>
         <Typography
           component="div"
           sx={{
