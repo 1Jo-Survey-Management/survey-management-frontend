@@ -10,9 +10,9 @@ import RadioButton from '../components/RowRadioButtonsGroup';
 import InputNickName from '../components/NameInput';
 import GetBirth from '../components/BasicDatePicker';
 import StyledButton from '../components/StyledButton';
-import { imageUploadToS3 } from '../../survey/creation/utils/ImageUploadUtil';
 
 import axios from '../components/customApi';
+import { imageUploadToS3 } from '../../utils/ImageUploadUtil';
 
 interface UserInfo {
   userBirth: string;

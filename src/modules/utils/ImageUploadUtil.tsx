@@ -1,5 +1,5 @@
 import axios from 'axios';
-import customAxios from '../../login/components/customApi';
+import customAxios from '../login/components/customApi';
 
 /**
  * 백엔드 서버로부터 S3에 해당 파일이름으로 PreSigned URL을 받아오는 메서드 입니다.
