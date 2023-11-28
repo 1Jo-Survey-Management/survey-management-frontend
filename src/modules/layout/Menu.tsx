@@ -112,9 +112,6 @@ function Menu({ toggleDrawer }: MenuProps) {
     fetchUserData();
   }, []);
 
-  // const userInfoCheck = (checkedUserInfo: UserInfoProps) =>
-  //   checkedUserInfo.userNo !== null && checkedUserInfo.userImage !== null;
-
   /**
    * 내가 참여한 설문 페이지로 이동하는 메서드 입니다.
    *
