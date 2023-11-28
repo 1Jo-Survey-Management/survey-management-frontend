@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { SNSSharingParams } from './SNSSharingType';
 
 /**
@@ -61,6 +62,17 @@ const shareToFacebook = ({ shareUrl }: SNSSharingParams) => {
  * @author 강명관
  */
 const shareToKakaoTalk = ({ shareTitle, shareUrl }: SNSSharingParams) => {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://developers.kakao.com/sdk/js/kakao.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   if (window.Kakao === undefined) {
     return;
   }
