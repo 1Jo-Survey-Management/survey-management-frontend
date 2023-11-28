@@ -45,6 +45,8 @@ function Main() {
   const [recentSurveyLoaded, setRecentSurveyLoaded] = useState(false);
   const [closingSurveyLoaded, setClosingSurveyLoaded] = useState(false);
 
+  const navigate = useNavigate();
+
   const fetchWeeklySurveyData = async () => {
     try {
       const weeklyResponse = await axios.get(
@@ -88,7 +90,11 @@ function Main() {
     fetchClosingSurveyData();
   }, []);
 
-  const navigate = useNavigate();
+  const redirectToSurvey = sessionStorage.getItem('redirectToSurvey');
+
+  useEffect(() => {
+    console.log(redirectToSurvey);
+  }, [redirectToSurvey]);
 
   if (!weeklySurveyLoaded && !recentSurveyLoaded && !closingSurveyLoaded) {
     return (

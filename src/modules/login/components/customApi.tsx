@@ -38,7 +38,9 @@ Api.interceptors.response.use(
     return response;
   },
   (error) => {
-    window.location.href = '/login';
+    console.log(error);
+    console.log(error.config.url);
+    // window.location.href = '/login';
 
     return Promise.reject(error);
   }

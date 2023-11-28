@@ -331,7 +331,7 @@ export const validationSurvey = async (
     Swal.fire({
       icon: 'error',
       title: '선택지 정보가 올바르지 않습니다.',
-      text: `선태지 작성 정보를 다시 확인해주세요`,
+      text: `선택지 작성 정보를 다시 확인해주세요`,
     });
     return false;
   }
