@@ -98,40 +98,56 @@ export default function AnswerList({ selectList }: selectionList) {
   }, [selectList]);
 
   return (
-    <>
-      <TableContainer
-        component={Paper}
-        sx={{ maxHeight: 250 }}
-        style={textStyle}
-      >
-        <Table
-          sx={{ minWidth: 300, backgroundColor: '#D5C2EE' }}
-          aria-label="simple table"
-        >
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ width: '75%' }}>답변</TableCell>
-              <TableCell>답변수</TableCell>
+    <TableContainer
+      component={Paper}
+      sx={{
+        maxHeight: 250,
+      }}
+      style={textStyle}
+    >
+      <Table aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell
+              sx={{
+                width: '70%',
+                backgroundColor: '#747474',
+                color: 'white',
+                fontWeight: 'bold',
+              }}
+            >
+              답변
+            </TableCell>
+            <TableCell
+              sx={{
+                backgroundColor: '#747474',
+                color: 'white',
+                fontWeight: 'bold',
+              }}
+            >
+              답변수
+            </TableCell>
+          </TableRow>
+        </TableHead>
+
+        <TableBody>
+          {selectStats.map((row) => (
+            <TableRow key={row.surveySubjectiveAnswer}>
+              <TableCell
+                sx={{
+                  overflow: 'auto',
+                  // textOverflow: 'ellipsis',
+                  whiteSpace: 'pre-wrap',
+                  maxWidth: 0,
+                }}
+              >
+                {row.surveySubjectiveAnswer}
+              </TableCell>
+              <TableCell>{row.surveySubjectiveAnswerCount}</TableCell>
             </TableRow>
-          </TableHead>
-        </Table>
-      </TableContainer>
-      <TableContainer
-        component={Paper}
-        sx={{ maxHeight: 250 }}
-        style={textStyle}
-      >
-        <Table sx={{ minWidth: 300 }} aria-label="simple table">
-          <TableBody>
-            {selectStats.map((row) => (
-              <TableRow key={row.surveySubjectiveAnswer}>
-                <TableCell>{row.surveySubjectiveAnswer}</TableCell>
-                <TableCell>{row.surveySubjectiveAnswerCount}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }

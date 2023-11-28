@@ -107,6 +107,7 @@ export default function BasicModal() {
     localStorage.removeItem('userNickname');
     localStorage.removeItem('userImage');
     localStorage.removeItem('expiresIn');
+    localStorage.removeItem('isMember');
     setOpen(false);
   };
 

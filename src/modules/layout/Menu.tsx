@@ -17,6 +17,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
+import axios from '../login/components/customApi';
 
 interface UserInfoProps {
   userNo: number | null;
@@ -91,6 +92,26 @@ function Menu({ toggleDrawer }: MenuProps) {
     });
   }, []);
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/api/users/user-info`
+        );
+        if (response.data) {
+          setUserInfo({
+            userNo: response.data.userNo,
+            userImage: response.data.userImage,
+            userNickname: response.data.userNickname,
+          });
+        }
+      } catch (error) {
+        console.error('유저 정보 불러오기 오류: ', error);
+      }
+    };
+    fetchUserData();
+  }, []);
+
   // const userInfoCheck = (checkedUserInfo: UserInfoProps) =>
   //   checkedUserInfo.userNo !== null && checkedUserInfo.userImage !== null;
 
@@ -138,9 +159,7 @@ function Menu({ toggleDrawer }: MenuProps) {
     >
       <Box css={styels.avatarArea}>
         <Avatar
-          // src={
-          //   userInfoCheck(userInfo) ? `${IMAGE_API_BASE}${userInfo.userNo}` : ''
-          // }
+          src={userInfo.userImage ? `${userInfo.userImage}` : ''}
           css={styels.avatarImage}
         />
       </Box>
