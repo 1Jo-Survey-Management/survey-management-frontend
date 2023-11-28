@@ -22,7 +22,22 @@ function updateWordCloudData(
   return wordCloudData;
 }
 
-function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
+const generateRandomPastelColor = (): string => {
+  const pastelColors = [
+    '#FFD1DC', // 연한 분홍
+    '#FFA07A', // 연한 주황
+    '#FFB6C1', // 연한 분홍
+    '#FFDEAD', // 연한 베이지
+    '#87CEEB', // 연한 하늘색
+    '#98FB98', // 연한 녹색
+    '#DDA0DD', // 연한 보라
+    '#FFD700', // 연한 금색
+  ];
+
+  return pastelColors[Math.floor(Math.random() * pastelColors.length)];
+};
+
+function WordCloud({ wordCloud }: WordCloudProps): JSX.Element | null {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   const [wordCloudData, setWordCloudData] = useState<
@@ -44,7 +59,7 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
   };
 
   function calculateSizeBasedOnLength(text: string) {
-    return Math.max(10, 50 - text.length * 2);
+    return Math.max(10, 30 - text.length * 2);
   }
 
   useEffect(() => {
@@ -92,8 +107,17 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
                   : Math.random() * 200 + 210
               }) rotate(${Math.random() * 90 - 45})`
           )
-          .style('font-size', (d) => calculateSizeBasedOnLength(d.text))
-          .style('fill', 'steelblue')
+          .style('font-size', `${window.innerWidth <= 600 ? 20 : 70}`)
+          .style(
+            'font-size',
+            (d) =>
+              `${
+                window.innerWidth <= 600
+                  ? d.size + calculateSizeBasedOnLength(d.text)
+                  : d.size + 20 + calculateSizeBasedOnLength(d.text)
+              }`
+          )
+          .style('fill', () => generateRandomPastelColor())
           .attr('text-anchor', 'middle')
           .text((d) => d.text);
 
@@ -105,4 +129,4 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
   return <svg ref={svgRef} />;
 }
 
-export default WordCloudTest;
+export default WordCloud;

@@ -24,7 +24,7 @@ import {
 } from '../../creation/types/SurveyTypes';
 import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
 import { validationSurveyWithoutSurveyImage } from '../../creation/util/ValidatorUtil';
-import { imageUploadToS3 } from '../../utils/ImageUploadUtil';
+import { imageUploadToS3 } from '../../../utils/ImageUploadUtil';
 
 interface ModifySurveyProps {
   surveyInfo: SurveyInfoProps;

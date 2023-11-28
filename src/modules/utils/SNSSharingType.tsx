@@ -1,0 +1,4 @@
+export interface SNSSharingParams {
+  shareTitle: string;
+  shareUrl: string;
+}

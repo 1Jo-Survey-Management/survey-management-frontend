@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -28,7 +30,9 @@ import 'swiper/css/free-mode';
 import 'swiper/css/pagination';
 import 'swiper/swiper-bundle.css';
 import '../../../../global.css';
+import { css } from '@emotion/react';
 import { CardDataListProps, CardDataProps } from '../types/MainType';
+import Sharing from '../../../utils/Sharing';
 
 const customStyles = `
     .swal-custom-popup {
@@ -59,6 +63,11 @@ const modalSubText = {
   marginBottom: '10px',
   color: '#858585',
 };
+
+const sharingBox = css({
+  display: 'flex',
+  alignItems: 'center',
+});
 
 // const titleStyle = {
 //   display: 'flex',
@@ -210,20 +219,6 @@ function RecentSurvey({ cardList }: CardDataListProps) {
                             image={card.surveyImage}
                             alt="survey image"
                           />
-                          {/* <Card
-                        variant="elevation"
-                        sx={{
-                          width: '156px',
-                          height: '180px',
-                          borderRadius: 2,
-                          backgroundColor: '#FBFBFB',
-                          boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-                          marginLeft: '5px',
-                        }}
-                        style={textStyle}
-                        onClick={() => openCardModal(card)}
-                        role="button"
-                      > */}
                           <CardContent
                             sx={{
                               justifyContent: 'space-between',
@@ -400,14 +395,23 @@ function RecentSurvey({ cardList }: CardDataListProps) {
                     )}
                   </div>
 
-                  <ClearTwoToneIcon
-                    onClick={handleIconClick}
-                    sx={{
-                      '&:hover': {
-                        cursor: 'pointer',
-                      },
-                    }}
-                  />
+                  <Box css={sharingBox}>
+                    {selectedCard && (
+                      <Sharing
+                        shareTitle={selectedCard.surveyTitle}
+                        shareUrl={`${process.env.REACT_APP_FRONT_BASE_URL}/survey/attend/${selectedCard.surveyNo}`}
+                      />
+                    )}
+
+                    <ClearTwoToneIcon
+                      onClick={handleIconClick}
+                      sx={{
+                        '&:hover': {
+                          cursor: 'pointer',
+                        },
+                      }}
+                    />
+                  </Box>
                 </Box>
                 <Box
                   sx={{
