@@ -68,7 +68,6 @@ const shareToKakaoTalk = ({ shareTitle, shareUrl }: SNSSharingParams) => {
     script.async = true;
     document.body.appendChild(script);
 
-    // 정리 함수 반환
     return () => {
       document.body.removeChild(script);
     };
