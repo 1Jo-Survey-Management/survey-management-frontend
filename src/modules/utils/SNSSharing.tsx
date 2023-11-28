@@ -75,8 +75,7 @@ const shareToKakaoTalk = ({
     kakao.init(process.env.REACT_APP_KAKAO_API_KEY);
   }
 
-  kakao?.Share.createDefaultButton({
-    container: '#kakaotalk-sharing-btn',
+  kakao?.Share.sendDefault({
     objectType: 'feed',
     content: {
       title: shareTitle,
