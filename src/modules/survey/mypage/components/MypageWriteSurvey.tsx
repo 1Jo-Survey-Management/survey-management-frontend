@@ -391,7 +391,9 @@ function Mypage() {
   };
 
   return (
-    <Container sx={{ paddingLeft: '16px', paddingRight: '16px' }}>
+    <Container
+      sx={{ paddingLeft: '16px', paddingRight: '16px', marginTop: '60px' }}
+    >
       <style>{customStyles}</style>
 
       <Typography

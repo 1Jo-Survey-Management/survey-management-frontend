@@ -24,3 +24,15 @@ export interface CardDataListProps {
 export interface DataLoaded {
   handleDataLoaded(): void;
 }
+
+export interface ModalProps {
+  openModal: boolean;
+  closeCardModal(): void;
+  selectedCard: CardDataProps;
+}
+
+export interface ModalButtonGroupProps {
+  numUser(): number | null;
+  selectedCard: CardDataProps;
+  showSwalAlert(): void;
+}

@@ -45,6 +45,8 @@ function Main() {
   const [recentSurveyLoaded, setRecentSurveyLoaded] = useState(false);
   const [closingSurveyLoaded, setClosingSurveyLoaded] = useState(false);
 
+  const navigate = useNavigate();
+
   const fetchWeeklySurveyData = async () => {
     try {
       const weeklyResponse = await axios.get(
@@ -88,7 +90,11 @@ function Main() {
     fetchClosingSurveyData();
   }, []);
 
-  const navigate = useNavigate();
+  const redirectToSurvey = sessionStorage.getItem('redirectToSurvey');
+
+  useEffect(() => {
+    console.log(redirectToSurvey);
+  }, [redirectToSurvey]);
 
   if (!weeklySurveyLoaded && !recentSurveyLoaded && !closingSurveyLoaded) {
     return (
@@ -104,7 +110,7 @@ function Main() {
   }
 
   return (
-    <Container sx={{ maxWidth: '1150px' }}>
+    <Container sx={{ maxWidth: '1150px', marginTop: '60px' }}>
       <h2 style={textStyle}>인기 설문🔥</h2>
       <WeeklySurvey cardList={weeklySurveyData} />
       <div style={arrowStyle} />
