@@ -257,6 +257,7 @@ export default function MainModal({
                   <Sharing
                     shareTitle={selectedCard.surveyTitle}
                     shareUrl={`${process.env.REACT_APP_FRONT_BASE_URL}/survey/attend/${selectedCard.surveyNo}`}
+                    shareImageUrl={selectedCard.surveyImage}
                   />
                 )}
 

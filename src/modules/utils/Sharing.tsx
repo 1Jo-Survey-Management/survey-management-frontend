@@ -44,6 +44,16 @@ const styles = {
     width: '40px',
     borderRadius: '30px',
   }),
+
+  navigator: css({
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+    border: 'none',
+    textAlign: 'center',
+    lineHeight: '40px',
+    verticalAlign: 'middle',
+  }),
 };
 
 /**
@@ -54,7 +64,11 @@ const styles = {
  * @returns 공유하기 디자인 컴포넌트
  * @author 강명관
  */
-export default function Sharing({ shareTitle, shareUrl }: SNSSharingParams) {
+export default function Sharing({
+  shareTitle,
+  shareUrl,
+  shareImageUrl,
+}: SNSSharingParams) {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -75,6 +89,7 @@ export default function Sharing({ shareTitle, shareUrl }: SNSSharingParams) {
   } = useSNSShare({
     shareTitle,
     shareUrl,
+    shareImageUrl,
   });
 
   return (
@@ -150,6 +165,7 @@ export default function Sharing({ shareTitle, shareUrl }: SNSSharingParams) {
                 aria-label="Share"
                 type="button"
                 onClick={shareToNavigator}
+                css={styles.navigator}
               >
                 <ShareIcon />
               </button>
