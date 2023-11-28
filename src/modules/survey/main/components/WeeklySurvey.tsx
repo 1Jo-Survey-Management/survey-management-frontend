@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import './Modal.css';
+import './Swiper.css';
 import FaceIcon from '@mui/icons-material/Face';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import {
@@ -30,12 +31,18 @@ const customStyles = `
 const styles = {
   CardSwiper: {
     width: '100%',
-    height: '100%',
+    height: '400px',
+    '@media (max-width: 600px)': {
+      height: '200px',
+    },
   },
 
   slide: {
     width: '100%',
     height: '400px',
+    '@media (max-width: 600px)': {
+      height: '200px',
+    },
   },
 };
 const fontFamily = 'nanumsquare';
@@ -72,25 +79,29 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
   return (
     <div>
       <style>{customStyles}</style>
-      <Box
-        sx={{
-          height: '400px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          '@media (max-width: 600px)': {
-            height: '200px',
-          },
-        }}
-      >
-        {cardList.length > 0 ? (
-          <Swiper css={styles.CardSwiper} {...swiperParams}>
+      {cardList.length > 0 ? (
+        <Box
+          sx={{
+            height: '400px',
+            '@media (max-width: 600px)': {
+              height: '200px',
+            },
+          }}
+        >
+          <Swiper
+            css={styles.CardSwiper}
+            {...swiperParams}
+            className="swiper-wrapper"
+          >
             <Box
               sx={{
                 display: 'flex',
                 flexWrap: 'wrap',
                 justifyContent: 'center',
-                height: '100%',
+                height: '400px',
+                '@media (max-width: 600px)': {
+                  height: '200px',
+                },
                 alignItems: 'center',
               }}
             >
@@ -112,7 +123,7 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
                               width: '274px',
                               '@media (max-width: 600px)': {
                                 height: 0,
-                                width: '156px',
+                                width: '153px',
                               },
                             }}
                             image={card.surveyImage}
@@ -240,7 +251,19 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
                 ))}
             </Box>
           </Swiper>
-        ) : (
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '400px',
+            '@media (max-width: 600px)': {
+              height: '200px',
+            },
+          }}
+        >
           <Typography variant="h5">인기설문이 없습니다🥲</Typography>
         )}
       </Box>

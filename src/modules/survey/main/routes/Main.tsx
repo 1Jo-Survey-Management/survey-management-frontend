@@ -110,7 +110,7 @@ function Main() {
   }
 
   return (
-    <Container sx={{ maxWidth: '1150px' }}>
+    <Container sx={{ maxWidth: '1150px', marginTop: '60px' }}>
       <h2 style={textStyle}>인기 설문🔥</h2>
       <WeeklySurvey cardList={weeklySurveyData} />
       <div style={arrowStyle} />
