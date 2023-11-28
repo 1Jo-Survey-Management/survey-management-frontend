@@ -68,6 +68,14 @@ const handleCopyToClipBoard = async (copyText: string) => {
   }
 };
 
+/**
+ * 공유하기 박스에서 사용되는 복사를 담당하는 컴포넌트 입니다.
+ *
+ * @component
+ * @param {@see SNSSharingParams} 공유하기 제목과 URL 입니다.
+ * @returns 복사하기 기능
+ * @author 강명관
+ */
 export default function CopyToClipBoard({ copyText }: CopyToClipBoardProps) {
   const [copied, setCopied] = useState(false);
 
