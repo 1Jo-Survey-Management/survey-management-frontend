@@ -265,8 +265,8 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
           }}
         >
           <Typography variant="h5">인기설문이 없습니다🥲</Typography>
-        )}
-      </Box>
+        </Box>
+      )}
       {openModal && selectedCard && (
         <MainModal
           openModal={openModal}
