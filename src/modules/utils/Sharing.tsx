@@ -92,10 +92,10 @@ export default function Sharing({ shareTitle, shareUrl }: SNSSharingParams) {
             <button
               type="button"
               css={styles.imageButton}
-              onClick={shareToKakaoTalk}
+              onClick={shareToFacebook}
             >
               <img
-                src={`${process.env.PUBLIC_URL}/images/sharingLogo/kakao_logo.png`}
+                src={`${process.env.PUBLIC_URL}/images/sharingLogo/facebook.png`}
                 alt="kakao"
                 css={styles.image}
               />
@@ -103,10 +103,10 @@ export default function Sharing({ shareTitle, shareUrl }: SNSSharingParams) {
             <button
               type="button"
               css={styles.imageButton}
-              onClick={shareToFacebook}
+              onClick={shareToKakaoTalk}
             >
               <img
-                src={`${process.env.PUBLIC_URL}/images/sharingLogo/facebook_logo.png`}
+                src={`${process.env.PUBLIC_URL}/images/sharingLogo/kakaotalk.png`}
                 alt="kakao"
                 css={styles.image}
               />
@@ -117,7 +117,7 @@ export default function Sharing({ shareTitle, shareUrl }: SNSSharingParams) {
               onClick={shareToNaver}
             >
               <img
-                src={`${process.env.PUBLIC_URL}/images/sharingLogo/naver_logo.png`}
+                src={`${process.env.PUBLIC_URL}/images/sharingLogo/naver.png`}
                 alt="kakao"
                 css={styles.image}
               />
@@ -128,7 +128,7 @@ export default function Sharing({ shareTitle, shareUrl }: SNSSharingParams) {
               onClick={shareToTwitter}
             >
               <img
-                src={`${process.env.PUBLIC_URL}/images/sharingLogo/twitter_logo.png`}
+                src={`${process.env.PUBLIC_URL}/images/sharingLogo/twitter.png`}
                 alt="kakao"
                 css={styles.image}
               />
