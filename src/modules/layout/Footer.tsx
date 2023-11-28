@@ -16,7 +16,7 @@ function Footer() {
           display: 'flex',
           bottom: 0,
           width: '100%',
-          height: '120px',
+          height: '50px',
           justifyContent: 'center',
           zIndex: 1000,
           alignItems: 'center',
@@ -24,7 +24,12 @@ function Footer() {
         color="D3D4F5"
       >
         <Toolbar>
-          <Typography variant="h6" fontWeight="700" color="#3e3e3e">
+          <Typography
+            variant="h6"
+            fontSize="0.8rem"
+            fontWeight="700"
+            color="#3e3e3e"
+          >
             Survey Plus v.0.0.1
           </Typography>
         </Toolbar>

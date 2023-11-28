@@ -848,7 +848,7 @@ function Mypage() {
               className="modal-scroll-box"
               sx={{
                 overflow: 'auto',
-                height: '30vh',
+                height: '28vh',
                 '@media screen and (min-height: 1000px)': {
                   overflow: 'auto',
                   height: '36vh',
@@ -862,6 +862,12 @@ function Mypage() {
                 '@media screen and  (max-width: 376px) and (max-width: 600px)':
                   {
                     height: '24vh',
+                  },
+                '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 500px) and (max-height: 700px)':
+                  {
+                    overflow: 'auto',
+
+                    height: '20vh',
                   },
               }}
             >
@@ -976,7 +982,7 @@ function Mypage() {
                       handleClickSurveyModify(selectedCard.surveyNo)
                     }
                     sx={{
-                      width: '165px',
+                      width: '160px',
                       marginBottom: '8px',
                       backgroundColor: '#ebebeb',
                       '&:hover': {
@@ -988,7 +994,10 @@ function Mypage() {
                       color: 'black',
                       fontWeight: '600',
                       '@media (max-width: 600px)': {
-                        width: '145px',
+                        width: '140px',
+                      },
+                      '@media (max-width: 375px)': {
+                        width: '130px',
                       },
                       '@media (min-height: 801px) and (max-height: 1000px)': {
                         marginTop: '90px',
@@ -1003,7 +1012,7 @@ function Mypage() {
                     className="post-button"
                     onClick={() => handleClickPostSurvey(selectedCard.surveyNo)}
                     sx={{
-                      width: '165px',
+                      width: '160px',
                       marginBottom: '8px',
                       backgroundColor: '#ebebeb',
                       '&:hover': {
@@ -1015,7 +1024,10 @@ function Mypage() {
                       color: 'black',
                       fontWeight: '600',
                       '@media (max-width: 600px)': {
-                        width: '145px',
+                        width: '140px',
+                      },
+                      '@media (max-width: 375px)': {
+                        width: '130px',
                       },
                       '@media (min-height: 801px) and (max-height: 1000px)': {
                         marginTop: '90px',

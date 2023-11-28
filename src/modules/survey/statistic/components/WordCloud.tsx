@@ -29,8 +29,8 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
     { text: string; size: number }[]
   >([]);
 
-  const [width] = useState<number>(window.innerWidth < 600 ? 300 : 500);
-  const [height] = useState<number>(window.innerWidth < 600 ? 200 : 500);
+  const [width] = useState<number>(window.innerWidth < 600 ? 300 : 800);
+  const [height] = useState<number>(window.innerWidth < 600 ? 200 : 600);
 
   const incrementValue = 10;
 
@@ -43,12 +43,16 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
     setWordCloudData(updatedWordCloudData);
   };
 
+  function calculateSizeBasedOnLength(text: string) {
+    return Math.max(10, 50 - text.length * 2);
+  }
+
   useEffect(() => {
     updateWordCloud();
   }, [wordCloud]);
 
   useEffect(() => {
-    if (wordCloudData && wordCloudData.length && width && height) {
+    if (wordCloudData) {
       const svg = svgRef.current;
 
       if (svg) {
@@ -63,37 +67,35 @@ function WordCloudTest({ wordCloud }: WordCloudProps): JSX.Element | null {
             wordCloudData.map((d) => ({
               text: d.text,
               size: d.size,
-              rotate: Math.random() * 90 - 45, // 무작위 회전 각도 (-45도에서 45도 사이)
             }))
           )
-
           .padding(5)
-          .rotate(() => Math.random() * 90 - 45) // 무작위 회전 각도 (-45도에서 45도 사이)
-          .fontSize((d) => d.size + 20)
-          .on('end', (wordData) => {
-            selection
-              .selectAll('text')
-              .data(wordData)
-              .enter()
-              .append('text')
-              .attr(
-                'transform',
-                () =>
-                  `translate(${
-                    window.innerWidth <= 600
-                      ? Math.random() * 110 + 50 // 600px 이하일 때
-                      : Math.random() * 250 + 90 // 600px 초과일 때
-                  },${
-                    window.innerWidth <= 600
-                      ? Math.random() * 140 + 35
-                      : Math.random() * 250 + 90
-                  }) rotate(${Math.random() * 90 - 45})`
-              )
-              .style('font-size', (d) => `${d.size}px`)
-              .style('fill', 'steelblue')
-              .attr('text-anchor', 'middle')
-              .text((d) => d.text);
-          });
+          .rotate(() => Math.random() * 90 - 45);
+
+        const wordData = layout.words();
+
+        selection
+          .selectAll('text')
+          .data(wordData)
+          .enter()
+          .append('text')
+          .attr(
+            'transform',
+            () =>
+              `translate(${
+                window.innerWidth <= 600
+                  ? Math.random() * 110 + 105 // 600px 이하일 때
+                  : Math.random() * 200 + 210 // 600px 초과일 때
+              },${
+                window.innerWidth <= 600
+                  ? Math.random() * 60 + 61
+                  : Math.random() * 200 + 210
+              }) rotate(${Math.random() * 90 - 45})`
+          )
+          .style('font-size', (d) => calculateSizeBasedOnLength(d.text))
+          .style('fill', 'steelblue')
+          .attr('text-anchor', 'middle')
+          .text((d) => d.text);
 
         layout.start();
       }

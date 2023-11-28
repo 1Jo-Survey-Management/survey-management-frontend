@@ -39,18 +39,19 @@ const styles = {
 
   inputBox: css({
     display: 'flex',
-    flexGrow: '1',
+    flexGrow: 0.9,
   }),
 
   input: css({
-    flexGrow: 0.9,
+    flexGrow: 0.85,
   }),
 
   removeAndAddIconBox: css({
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'end',
+    justifyContent: 'flex-end',
     width: '53px',
+    minWidth: '53px',
   }),
 
   selectionBox: css({
