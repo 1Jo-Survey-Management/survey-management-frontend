@@ -665,7 +665,7 @@ function Mypage() {
                         marginRight: '4px',
                       }}
                     />
-                    {`${card.surveyAttendCreatedAt.split(' ')[0]}`}
+                    {card.surveyAttendCreatedAt} 참여
                   </div>
 
                   <Typography
@@ -888,7 +888,7 @@ function Mypage() {
               className="modal-scroll-box"
               sx={{
                 overflow: 'auto',
-                height: '30vh',
+                height: '28vh',
                 '@media screen and (min-height: 1000px)': {
                   overflow: 'auto',
                   height: '36vh',
@@ -902,6 +902,12 @@ function Mypage() {
                 '@media screen and  (max-width: 376px) and (max-width: 600px)':
                   {
                     height: '24vh',
+                  },
+                '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 500px) and (max-height: 700px)':
+                  {
+                    overflow: 'auto',
+
+                    height: '20vh',
                   },
               }}
             >
@@ -945,7 +951,7 @@ function Mypage() {
               }}
             >
               <Alert severity="success">
-                {selectedCard?.surveyAttendCreatedAt}
+                {selectedCard?.surveyAttendCreatedAt} 참여
               </Alert>
             </Box>
 

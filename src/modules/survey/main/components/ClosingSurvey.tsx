@@ -536,7 +536,7 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                   className="modal-scroll-box"
                   sx={{
                     overflow: 'auto',
-                    height: '30vh',
+                    height: '28vh',
                     '@media screen and (min-height: 1000px)': {
                       overflow: 'auto',
                       height: '36vh',
@@ -550,6 +550,12 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                     '@media screen and  (max-width: 376px) and (max-width: 600px)':
                       {
                         height: '24vh',
+                      },
+                    '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 500px) and (max-height: 700px)':
+                      {
+                        overflow: 'auto',
+
+                        height: '20vh',
                       },
                   }}
                 >
@@ -606,7 +612,7 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                   {selectedCard?.openStatusName === '회원 공개' &&
                     numUser() === null && (
                       <Alert severity="error">
-                        설문 결과를 보시려면 로그인해주세요.
+                        결과를 보시려면 로그인해주세요.
                       </Alert>
                     )}
                 </Box>
@@ -643,6 +649,9 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                       fontWeight: '600',
                       '@media (min-height: 801px) and (max-height: 1000px)': {
                         marginTop: '90px',
+                      },
+                      '@media (max-width: 375px)': {
+                        marginTop: '50px',
                       },
                     }}
                   >
