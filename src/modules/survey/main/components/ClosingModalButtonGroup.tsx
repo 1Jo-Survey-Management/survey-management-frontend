@@ -90,27 +90,6 @@ export default function ClosingModalButtoonGroup({
           설문 결과보기
         </Button>
       )}
-
-      {(!selectedCard?.openStatusName ||
-        selectedCard?.openStatusName === '전체 공개' ||
-        (selectedCard?.openStatusName === '비공개' &&
-          numUser() !== null &&
-          numUser() === selectedCard?.userNo) ||
-        (selectedCard?.openStatusName === '회원 공개' &&
-          numUser() !== null)) && (
-        <Button
-          onClick={() => {
-            if (selectedCard?.surveyAttendCount === 0) {
-              showSwalAlert();
-            } else {
-              navigate(`/survey/statistics/${selectedCard?.surveyNo}`);
-            }
-          }}
-          css={styles.surveyResultButton}
-        >
-          설문 결과보기
-        </Button>
-      )}
     </div>
   );
 }
