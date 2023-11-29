@@ -77,6 +77,10 @@ const styles = {
     fontSize: '25px',
     fontWeight: 'bold',
     margin: '20px 0 20px 0',
+    '@media (min-width: 600px)': {
+      fontSize: '40px',
+      margin: '5px 0 5px 0',
+    },
   },
   componentText: {
     fontSize: '20px',
@@ -84,7 +88,7 @@ const styles = {
     margin: '10px',
     fontWeight: 'bold',
     '@media (min-width: 400px)': {
-      fontSize: '15px',
+      fontSize: '30px',
     },
   },
   surveyInfo: {
