@@ -83,6 +83,7 @@ const styles = {
   textStyle: css({
     marginRight: '10px',
     fontWeight: 'bold',
+    minWidth: '62.45px',
   }),
 
   inputStyle: css({

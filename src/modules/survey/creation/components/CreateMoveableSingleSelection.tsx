@@ -39,7 +39,7 @@ const styles = {
 
   inputBox: css({
     display: 'flex',
-    flexGrow: 0.9,
+    flexGrow: 0.85,
   }),
 
   input: css({
@@ -283,7 +283,7 @@ function CreateMoveableSingleSelection({
                 }
               />
             </Box>
-            <Box css={styles.inputBox} sx={{ display: 'flex', flexGrow: '1' }}>
+            <Box css={styles.inputBox}>
               <Radio disabled name={`radio-buttons-${selection.selectionId}`} />
               <Input
                 placeholder="문항을 입력해주세요."
