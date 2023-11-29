@@ -15,7 +15,8 @@ import {
   Container,
   Stack,
 } from '@mui/material';
-import { AnimatePresence, Variants, motion } from 'framer-motion';
+import { useScroll, AnimatePresence, Variants, motion } from 'framer-motion';
+
 import { useNavigate, useParams } from 'react-router-dom';
 import customAxios from 'axios';
 import Swal from 'sweetalert2';
@@ -44,6 +45,7 @@ interface UserResponse {
 const MAIN_PAGE = '/survey/main';
 
 function AttendSurvey() {
+  const { scrollYProgress } = useScroll();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [closingTime, setClosingTime] = useState<Date | null>(null);
@@ -415,22 +417,16 @@ function AttendSurvey() {
       },
     });
 
-    const response = await surveyAttendAxios.get<SurveyData>(
-      `${process.env.REACT_APP_BASE_URL}/api/for-attend/surveys/survey-data`
+    customAxios.interceptors.request.clear();
+    customAxios.interceptors.response.clear();
+    const { data } = await surveyAttendAxios.get(
+      `${process.env.REACT_APP_BASE_URL}/api/for-attend/surveys/survey-data/${surveyNo}`
     );
 
-    const filteredData = response.data.content
-      .filter((item) => item.surveyNo.toString() === surveyNo)
-      .sort((a, b) => a.surveyQuestionNo - b.surveyQuestionNo);
+    const resultSurveyData: SurveyData = data;
+    setSurveyData(resultSurveyData);
+    setSurveyTitle(resultSurveyData.content[0].surveyTitle);
 
-    setSurveyData({
-      ...response.data,
-      content: filteredData,
-    });
-
-    if (response.data.success && filteredData.length > 0) {
-      setSurveyTitle(filteredData[0].surveyTitle);
-    }
     setIsLoading(false);
   };
 
@@ -474,10 +470,17 @@ function AttendSurvey() {
         setIsLoading(false);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       })
-      .catch(() => {
-        sessionStorage.setItem('redirectToSurvey', surveyNo);
+      .catch((error) => {
+        if (error.response.status === 404) {
+          Swal.fire({
+            icon: 'error',
+            title: '존재하지 않는 설문입니다.',
+          });
+        } else {
+          sessionStorage.setItem('redirectToSurveyNo', surveyNo);
+        }
         setIsLoading(false);
-        navigate('/login');
+        navigate('/');
       });
   }, [surveyNo]);
 
@@ -608,6 +611,21 @@ function AttendSurvey() {
   }
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
+      {/* 스크롤 프로그레스바 */}
+      <motion.div
+        className="bar"
+        style={{
+          scaleX: scrollYProgress,
+          height: '8px',
+          backgroundColor: '#747474',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 2,
+          originX: 0,
+        }}
+      />
       <h1
         style={{ fontSize: '25px', display: 'flex', justifyContent: 'center' }}
       >

@@ -142,7 +142,6 @@ function SurveySearch() {
 
     if (page === 0) {
       setFilteredData(response.data);
-      console.log(response);
     } else {
       setFilteredData((prevData) => [...prevData, ...response.data]);
     }
@@ -177,7 +176,6 @@ function SurveySearch() {
         setFilteredData([]);
       }
       setHasMore(false);
-      console.log('마감 데이터1', filteredData);
       return;
     }
     if (page === 0) {
@@ -185,8 +183,6 @@ function SurveySearch() {
     } else {
       setFilteredData((prevData) => [...prevData, ...response.data]);
     }
-
-    console.log('마감 데이터', filteredData);
   }
 
   useEffect(() => {
@@ -202,7 +198,6 @@ function SurveySearch() {
         fetchSurveyClosed();
       }
     };
-    console.log('data', filteredData);
     setHasMore(true);
 
     fetchData();
@@ -290,9 +285,7 @@ function SurveySearch() {
     fetchSearchSurvey(test);
   };
 
-  useEffect(() => {
-    console.log('너 몇번도냐');
-  }, [searchWord, searchButtonClicked]);
+  useEffect(() => {}, [searchWord, searchButtonClicked]);
 
   useEffect(() => {
     setFilteredData(searchData);
@@ -871,27 +864,7 @@ function SurveySearch() {
                 </Box>
               </Box>
               <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
-              <Box
-                className="modal-scroll-box"
-                sx={{
-                  overflow: 'auto',
-                  height: '30vh',
-                  '@media screen and (min-height: 1000px)': {
-                    overflow: 'auto',
-                    height: '36vh',
-                  },
-
-                  '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 800px) and (max-height: 1000px)':
-                    {
-                      height: '23vh',
-                    },
-
-                  '@media screen and  (max-width: 376px) and (max-width: 600px)':
-                    {
-                      height: '24vh',
-                    },
-                }}
-              >
+              <div className="modal-scroll-box">
                 {/* 설문조사 사진 */}
                 <Box
                   sx={{
@@ -922,7 +895,7 @@ function SurveySearch() {
                     ? `설문 설명: ${selectedCard.surveyDescription}`
                     : ''}
                 </Typography>
-              </Box>
+              </div>
               <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
 
               <Box

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Swal from 'sweetalert2';
 /**
  * intercepter를 통하여 토큰 만료시 refreshToken으로 자동 갱신하기 위한 axois 커스텀 컴포넌트입니다
  * @author 김선규
@@ -39,8 +40,16 @@ Api.interceptors.response.use(
   },
   (error) => {
     console.log(error);
-    console.log(error.config.url);
-    // window.location.href = '/login';
+
+    if (error.response.status === 401) {
+      window.location.href = '/login';
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: '잘못된 요청입니다.',
+      });
+      window.location.href = '/';
+    }
 
     return Promise.reject(error);
   }

@@ -10,6 +10,7 @@ import {
   CircularProgress,
   Container,
 } from '@mui/material';
+import { motion, useScroll } from 'framer-motion';
 import Swal from 'sweetalert2';
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
@@ -74,20 +75,21 @@ const styles = {
   titleText: {
     width: '100%',
     textAlign: 'center',
-    fontSize: '30px',
+    fontSize: '25px',
     fontWeight: 'bold',
     margin: '20px 0 20px 0',
-    '@media (max-width: 400px)': {
-      fontSize: '30px',
+    '@media (min-width: 600px)': {
+      fontSize: '40px',
+      margin: '5px 0 5px 0',
     },
   },
   componentText: {
-    fontSize: '25px',
+    fontSize: '20px',
     textAlign: 'left',
     margin: '10px',
     fontWeight: 'bold',
-    '@media (max-width: 400px)': {
-      fontSize: '20px',
+    '@media (min-width: 400px)': {
+      fontSize: '30px',
     },
   },
   surveyInfo: {
@@ -123,6 +125,7 @@ const customStyles = `
  * @author 김선규
  */
 export default function StatisticsPage() {
+  const { scrollYProgress } = useScroll();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectStat, setSelectStat] = useState<Selection[]>([]);
   const [surveyTitle, setSurveyTitle] = useState<string>();
@@ -223,6 +226,21 @@ export default function StatisticsPage() {
         paddingRight: '5px',
       }}
     >
+      {/* 스크롤 프로그레스바 */}
+      <motion.div
+        className="bar"
+        style={{
+          scaleX: scrollYProgress,
+          height: '8px',
+          backgroundColor: '#747474',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 2,
+          originX: 0,
+        }}
+      />
       <Box sx={styles.card}>
         <Typography fontStyle={textStyle} sx={styles.titleText}>
           {surveyTitle}
