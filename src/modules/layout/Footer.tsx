@@ -164,7 +164,7 @@ function Footer() {
               },
             }}
           >
-            Swagger
+            API Docs
           </Typography>
         </Box>
       </Box>
