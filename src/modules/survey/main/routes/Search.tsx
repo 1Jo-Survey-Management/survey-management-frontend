@@ -142,7 +142,6 @@ function SurveySearch() {
 
     if (page === 0) {
       setFilteredData(response.data);
-      console.log(response);
     } else {
       setFilteredData((prevData) => [...prevData, ...response.data]);
     }
@@ -177,7 +176,6 @@ function SurveySearch() {
         setFilteredData([]);
       }
       setHasMore(false);
-      console.log('마감 데이터1', filteredData);
       return;
     }
     if (page === 0) {
@@ -185,8 +183,6 @@ function SurveySearch() {
     } else {
       setFilteredData((prevData) => [...prevData, ...response.data]);
     }
-
-    console.log('마감 데이터', filteredData);
   }
 
   useEffect(() => {
@@ -202,7 +198,6 @@ function SurveySearch() {
         fetchSurveyClosed();
       }
     };
-    console.log('data', filteredData);
     setHasMore(true);
 
     fetchData();
@@ -290,9 +285,7 @@ function SurveySearch() {
     fetchSearchSurvey(test);
   };
 
-  useEffect(() => {
-    console.log('너 몇번도냐');
-  }, [searchWord, searchButtonClicked]);
+  useEffect(() => {}, [searchWord, searchButtonClicked]);
 
   useEffect(() => {
     setFilteredData(searchData);
