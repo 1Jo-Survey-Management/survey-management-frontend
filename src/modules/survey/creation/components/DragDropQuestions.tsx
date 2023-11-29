@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import { Typography } from '@mui/material';
+import { IconButton, Tooltip, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import React from 'react';
 import {
@@ -9,6 +9,7 @@ import {
   Droppable,
   DropResult,
 } from 'react-beautiful-dnd';
+
 import { DragDropQuestionProps, QuestionProps } from '../types/SurveyTypes';
 import CreateQuestion from './CreateQuestion';
 
@@ -96,31 +97,44 @@ function DragDropQuestion({ questions, setQuestions }: DragDropQuestionProps) {
                     <Box
                       css={{
                         border: 'none',
-                        backgroundColor: '#d3d3d366',
-                        minWidth: '33px',
+                        backgroundColor: '#ffffff',
+                        minWidth: '36px',
+                        minHeight: '26px',
                         display: 'inline-block',
                         width: 'auto',
                         color: '#000',
                         fontWeight: 'bold',
-                        borderRadius: '2px',
+                        transform: 'translateX(4px) translateY(66px)',
+                        borderRadius: '3px',
                         textAlign: 'center',
                         fontSize: '14px',
                       }}
                     >
-                      <Box css={{ display: 'flex', alignItems: 'center' }}>
-                        <img
-                          src="/q_letter_icon_212286.png"
-                          alt="Q"
-                          width="19px"
-                          css={{
-                            marginBottom: '2px',
-                          }}
-                        />
-                        <Typography css={{ fontSize: '17px' }}>
-                          {index + 1}
-                        </Typography>
-                      </Box>
+                      <Tooltip title={`문항 ${index + 1}번`} placement="right">
+                        <IconButton>
+                          <img
+                            src="/q_letter_icon_212286.png"
+                            alt="Q"
+                            width="20px"
+                            css={{
+                              marginBottom: '2px',
+                              marginLeft: '2px',
+                            }}
+                          />
+                          <Typography
+                            css={{
+                              fontSize: '20px',
+                              color: '#3e3e3e',
+                              transform: 'translateX(-1px) translateY(0px)',
+                              fontWeight: '600',
+                            }}
+                          >
+                            {index + 1}
+                          </Typography>
+                        </IconButton>
+                      </Tooltip>
                     </Box>
+
                     <CreateQuestion
                       key={question.questionId}
                       question={question}
