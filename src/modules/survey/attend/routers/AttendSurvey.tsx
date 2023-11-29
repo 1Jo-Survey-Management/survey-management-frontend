@@ -15,7 +15,8 @@ import {
   Container,
   Stack,
 } from '@mui/material';
-import { AnimatePresence, Variants, motion } from 'framer-motion';
+import { useScroll, AnimatePresence, Variants, motion } from 'framer-motion';
+
 import { useNavigate, useParams } from 'react-router-dom';
 import customAxios from 'axios';
 import Swal from 'sweetalert2';
@@ -44,6 +45,7 @@ interface UserResponse {
 const MAIN_PAGE = '/survey/main';
 
 function AttendSurvey() {
+  const { scrollYProgress } = useScroll();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [closingTime, setClosingTime] = useState<Date | null>(null);
@@ -609,6 +611,21 @@ function AttendSurvey() {
   }
   return (
     <Container maxWidth="md" sx={{ paddingLeft: '5px', paddingRight: '5px' }}>
+      {/* 스크롤 프로그레스바 */}
+      <motion.div
+        className="bar"
+        style={{
+          scaleX: scrollYProgress,
+          height: '8px',
+          backgroundColor: '#747474',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 2,
+          originX: 0,
+        }}
+      />
       <h1
         style={{ fontSize: '25px', display: 'flex', justifyContent: 'center' }}
       >
