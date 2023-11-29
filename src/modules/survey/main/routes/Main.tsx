@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import { Backdrop, Box, CircularProgress } from '@mui/material';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Floating from '../components/Floating';
 import ClosingSurvey from '../components/ClosingSurvey';
 import RecentSurvey from '../components/RecentSurvey';
@@ -119,6 +120,7 @@ function Main() {
         <h2 style={textStyle}>최근 등록된 설문📝</h2>
         <Button onClick={() => navigate('/survey/search')} style={searchAll}>
           전체 보기
+          <ChevronRightIcon sx={{ marginBottom: '2.5px' }} />
         </Button>
       </Box>
 
