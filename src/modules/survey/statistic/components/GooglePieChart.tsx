@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Chart } from 'react-google-charts';
 import '../../../../global.css';
 import { Box } from '@mui/system';
@@ -32,8 +32,9 @@ export default function GooglePieChart({
   });
   const [maxSelectionValue, setMaxSelectionValue] = useState<string>('');
   const [maxSelectionCount, setMaxSelectionCount] = useState<number>(0);
+  const colorsRef = useRef<string[]>([]);
 
-  useEffect(() => {}, [selectionAnswer]);
+  // useEffect(() => {}, [selectionAnswer]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -55,7 +56,6 @@ export default function GooglePieChart({
 
   const aggregateData = (data: any[]) => {
     const aggregatedData = [];
-    const colors = [];
     const map = new Map();
 
     for (const item of data) {
@@ -68,9 +68,9 @@ export default function GooglePieChart({
           setMaxSelectionValue(item[0]);
         }
       } else {
+        colorsRef.current.push(generateRandomPastelColor());
         map.set(item[0], aggregatedData.length);
         aggregatedData.push([item[0], item[1]]);
-        colors.push(generateRandomPastelColor());
 
         if (item[1] > maxSelectionCount) {
           setMaxSelectionCount(item[1]);
@@ -78,10 +78,10 @@ export default function GooglePieChart({
         }
       }
     }
-    return { aggregatedData, colors, maxSelectionValue };
+    return { aggregatedData, colorsRef, maxSelectionValue };
   };
 
-  const { aggregatedData, colors } = aggregateData(selectionAnswer);
+  const { aggregatedData } = aggregateData(selectionAnswer);
   aggregatedData.unshift(['selectionValue', 'selectionCount']);
 
   return (
@@ -97,22 +97,10 @@ export default function GooglePieChart({
         }}
         options={{
           ...options,
-          colors,
+          colors: colorsRef.current,
           is3D: true,
         }}
       />
-      {/* <Typography
-        sx={{
-          fontSize: '1rem',
-          fontWeight: 'bold',
-          marginTop: '10px',
-          '@media (min-width: 600px)': {
-            fontSize: '1.5rem',
-          },
-        }}
-      >
-        🔥{maxSelectionValue}이 {maxSelectionCount}번 선택받아 불타고 있습니다!
-      </Typography> */}
     </Box>
   );
 }

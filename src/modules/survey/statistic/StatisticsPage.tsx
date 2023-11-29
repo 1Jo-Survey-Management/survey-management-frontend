@@ -74,20 +74,17 @@ const styles = {
   titleText: {
     width: '100%',
     textAlign: 'center',
-    fontSize: '30px',
+    fontSize: '25px',
     fontWeight: 'bold',
     margin: '20px 0 20px 0',
-    '@media (max-width: 400px)': {
-      fontSize: '30px',
-    },
   },
   componentText: {
-    fontSize: '25px',
+    fontSize: '20px',
     textAlign: 'left',
     margin: '10px',
     fontWeight: 'bold',
-    '@media (max-width: 400px)': {
-      fontSize: '20px',
+    '@media (min-width: 400px)': {
+      fontSize: '15px',
     },
   },
   surveyInfo: {
