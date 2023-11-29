@@ -10,6 +10,7 @@ import {
   CircularProgress,
   Container,
 } from '@mui/material';
+import { motion, useScroll } from 'framer-motion';
 import Swal from 'sweetalert2';
 import AnswerList from './components/AnswerList';
 import '../../../global.css';
@@ -124,6 +125,7 @@ const customStyles = `
  * @author 김선규
  */
 export default function StatisticsPage() {
+  const { scrollYProgress } = useScroll();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectStat, setSelectStat] = useState<Selection[]>([]);
   const [surveyTitle, setSurveyTitle] = useState<string>();
@@ -224,6 +226,21 @@ export default function StatisticsPage() {
         paddingRight: '5px',
       }}
     >
+      {/* 스크롤 프로그레스바 */}
+      <motion.div
+        className="bar"
+        style={{
+          scaleX: scrollYProgress,
+          height: '8px',
+          backgroundColor: '#747474',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 2,
+          originX: 0,
+        }}
+      />
       <Box sx={styles.card}>
         <Typography fontStyle={textStyle} sx={styles.titleText}>
           {surveyTitle}
