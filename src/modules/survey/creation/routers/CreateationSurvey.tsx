@@ -5,6 +5,7 @@ import Container from '@mui/material/Container';
 import { Box, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
+import Swal from 'sweetalert2';
 import axios from '../../../login/components/customApi';
 import FloatingActionButtons from '../components/FloatingActionButtons';
 import CreateSurveyInfo from '../components/CreateSurveyInfo';
@@ -143,6 +144,10 @@ function CreateationSurvey() {
       );
 
       if (response.status === 201) {
+        Swal.fire({
+          icon: 'success',
+          title: '설문 작성이 완료되었습니다!',
+        });
         navigate(MYPAGE_WRITE_PAGE);
       } else {
         console.error('요청 실패:', response.status, response.statusText);
@@ -159,6 +164,17 @@ function CreateationSurvey() {
    * @author 강명관
    */
   const handleSubmitSurveyPost = async () => {
+    const isConfirmed = await Swal.fire({
+      title: '정말 게시하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '확인',
+      cancelButtonText: '취소',
+    });
+
+    if (!isConfirmed.value) {
+      return;
+    }
     const validationResult = await validationSurvey(
       surveyInfo,
       surveyImage,

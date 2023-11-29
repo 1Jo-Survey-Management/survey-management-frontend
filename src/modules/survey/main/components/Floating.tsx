@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import Swal from 'sweetalert2';
 
 export default function FloatingActionButtons() {
   const navigate = useNavigate();
@@ -12,6 +13,18 @@ export default function FloatingActionButtons() {
       top: 0,
       behavior: 'smooth', // 부드럽게 스크롤하도록 설정
     });
+  };
+
+  const handleAddClick = () => {
+    const loginUserNo = localStorage.getItem('userNo');
+    if (!loginUserNo) {
+      Swal.fire({
+        icon: 'error',
+        title: '설문 작성을 하시려면 로그인 해주세요.',
+      });
+      return;
+    }
+    navigate('/survey/register');
   };
 
   const styles = {
@@ -57,7 +70,7 @@ export default function FloatingActionButtons() {
           },
         }}
         color="primary"
-        onClick={() => navigate('/survey/register')}
+        onClick={handleAddClick}
       >
         <AddIcon />
       </Fab>

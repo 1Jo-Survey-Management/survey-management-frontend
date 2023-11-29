@@ -363,30 +363,44 @@ function Mypage() {
    */
   const handleDeleteClick = () => {
     if (selectedCard) {
-      if (window.confirm('작성 중인 설문을 삭제하시겠습니까?')) {
-        const mySurveyDTO = {
-          surveyStatusNo: selectedCard.surveyStatusNo,
-          surveyNo: selectedCard.surveyNo,
-        };
-        axios
-          .put(
-            `${process.env.REACT_APP_BASE_URL}/api/my-surveys/update-write-surveys`,
-            mySurveyDTO
-          )
-          .then(() => {
-            Swal.fire({
-              icon: 'success',
-              title: '설문이 삭제 완료되었습니다!',
+      Swal.fire({
+        title: '작성 중인 설문을 삭제하시겠습니까?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3e3e3e',
+        cancelButtonColor: '#747474',
+        confirmButtonText: '네, 삭제합니다',
+        cancelButtonText: '아니요',
+        customClass: {
+          popup: 'swal-custom-popup',
+          container: 'swal-custom-container',
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const mySurveyDTO = {
+            surveyStatusNo: selectedCard.surveyStatusNo,
+            surveyNo: selectedCard.surveyNo,
+          };
+          axios
+            .put(
+              `${process.env.REACT_APP_BASE_URL}/api/my-surveys/update-write-surveys`,
+              mySurveyDTO
+            )
+            .then(() => {
+              Swal.fire({
+                icon: 'success',
+                title: '설문이 삭제 완료되었습니다!',
+              });
+
+              closeCardModal();
+
+              fetchCardData();
+            })
+            .catch((error) => {
+              console.error('설문 삭제 중 오류 발생:', error);
             });
-
-            closeCardModal();
-
-            fetchCardData();
-          })
-          .catch((error) => {
-            console.error('설문 삭제 중 오류 발생:', error);
-          });
-      }
+        }
+      });
     }
   };
 

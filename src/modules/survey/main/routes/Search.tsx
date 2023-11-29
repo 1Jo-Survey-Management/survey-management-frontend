@@ -871,27 +871,7 @@ function SurveySearch() {
                 </Box>
               </Box>
               <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
-              <Box
-                className="modal-scroll-box"
-                sx={{
-                  overflow: 'auto',
-                  height: '30vh',
-                  '@media screen and (min-height: 1000px)': {
-                    overflow: 'auto',
-                    height: '36vh',
-                  },
-
-                  '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 800px) and (max-height: 1000px)':
-                    {
-                      height: '23vh',
-                    },
-
-                  '@media screen and  (max-width: 376px) and (max-width: 600px)':
-                    {
-                      height: '24vh',
-                    },
-                }}
-              >
+              <div className="modal-scroll-box">
                 {/* 설문조사 사진 */}
                 <Box
                   sx={{
@@ -922,7 +902,7 @@ function SurveySearch() {
                     ? `설문 설명: ${selectedCard.surveyDescription}`
                     : ''}
                 </Typography>
-              </Box>
+              </div>
               <Divider sx={{ marginBottom: '10px', marginTop: '10px' }} />
 
               <Box
