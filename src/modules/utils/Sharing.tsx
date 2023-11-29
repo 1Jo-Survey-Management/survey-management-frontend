@@ -45,7 +45,7 @@ const styles = {
     borderRadius: '30px',
   }),
 
-  navigator: css({
+  navigatorIcon: css({
     width: '40px',
     height: '40px',
     borderRadius: '50%',
@@ -53,6 +53,11 @@ const styles = {
     textAlign: 'center',
     lineHeight: '40px',
     verticalAlign: 'middle',
+    display: 'flex',
+    color: '#ffffff',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: '#747474',
   }),
 };
 
@@ -165,7 +170,7 @@ export default function Sharing({
                 aria-label="Share"
                 type="button"
                 onClick={shareToNavigator}
-                css={styles.navigator}
+                css={styles.navigatorIcon}
               >
                 <ShareIcon />
               </button>
