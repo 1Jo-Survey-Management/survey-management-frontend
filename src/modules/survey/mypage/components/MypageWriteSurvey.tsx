@@ -923,7 +923,6 @@ function Mypage() {
               sx={{
                 marginTop: '15px',
                 paddingBottom: '5px',
-                '@media (max-width: 600px)': {},
               }}
             >
               {selectedCard?.surveyStatusNo === 1 && (

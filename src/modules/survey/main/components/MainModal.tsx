@@ -172,6 +172,11 @@ const styles = {
 
         height: '20vh',
       },
+    // '@media (min-height: 601px) and (max-height: 800px)': {
+    //   overflow: 'auto',
+
+    //   height: '18vh',
+    // },
   }),
 
   surveyImageBox: css({
