@@ -31,7 +31,7 @@ function Footer() {
             opacity: '0.7',
             gap: '100px',
             '@media (max-width: 600px)': {
-              paddingRight: '20px',
+              paddingRight: '10px',
               flexDirection: 'column',
               gap: '20px',
             },
@@ -72,6 +72,7 @@ function Footer() {
               flexDirection: 'column',
               justifyContent: 'center',
               opacity: '0.7',
+              paddingLeft: '24px',
             }}
           >
             <img
@@ -80,16 +81,18 @@ function Footer() {
               style={{
                 width: '130px',
                 height: 'auto',
+
+                marginLeft: '10px',
               }}
             />
             <Box
               sx={{
                 display: 'flex',
                 flexDirection: 'row',
-                justifyContent: 'center',
-                gap: '10px',
+                justifyContent: 'space-between',
                 marginTop: '15px',
                 alignItems: 'center',
+                width: '150px',
               }}
             >
               <img
@@ -132,10 +135,11 @@ function Footer() {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'center',
+            alignItems: 'flex-end',
             opacity: '0.7',
             gap: '100px',
             '@media (max-width: 600px)': {
-              paddingLeft: '20px',
+              paddingLeft: '10px',
               flexDirection: 'column',
               gap: '20px',
             },
@@ -150,6 +154,7 @@ function Footer() {
               '&:hover': {
                 cursor: 'pointer',
               },
+              justifyContent: 'flex-end',
             }}
           >
             ERD Cloud
@@ -162,6 +167,7 @@ function Footer() {
               '&:hover': {
                 cursor: 'pointer',
               },
+              justifyContent: 'flex-end',
             }}
           >
             API Docs

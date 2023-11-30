@@ -1,11 +1,12 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
 import { Box, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import Swal from 'sweetalert2';
+import customAxios from 'axios';
 import axios from '../../../login/components/customApi';
 import FloatingActionButtons from '../components/FloatingActionButtons';
 import CreateSurveyInfo from '../components/CreateSurveyInfo';
@@ -89,6 +90,34 @@ function CreateationSurvey() {
       selections: [],
     },
   ]);
+
+  const fetchValidUserCheck = async () => {
+    const axiosForUserValidation = customAxios.create({
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    });
+
+    try {
+      const response = await axiosForUserValidation.get(
+        `${process.env.REACT_APP_BASE_URL}/api/users/valid-check`
+      );
+
+      if (response.status !== 200) {
+        Swal.fire({
+          icon: 'error',
+          title: '로그인이 필요한 서비스입니다.',
+        });
+        navigate('/');
+      }
+    } catch (error) {
+      navigate('/');
+    }
+  };
+
+  useEffect(() => {
+    fetchValidUserCheck();
+  }, []);
 
   const handleAddQuestion = () => {
     setQuestions([
