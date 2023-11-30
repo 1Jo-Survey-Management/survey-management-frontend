@@ -283,7 +283,7 @@ function CreateMoveableSingleSelection({
                 }
               />
             </Box>
-            <Box css={styles.inputBox}>
+            <Box css={styles.inputBox} sx={{ maxWidth: '85%' }}>
               <Radio disabled name={`radio-buttons-${selection.selectionId}`} />
               <Input
                 placeholder="문항을 입력해주세요."
