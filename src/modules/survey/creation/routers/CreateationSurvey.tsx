@@ -102,7 +102,6 @@ function CreateationSurvey() {
       const response = await axiosForUserValidation.get(
         `${process.env.REACT_APP_BASE_URL}/api/users/valid-check`
       );
-
       if (response.status !== 200) {
         Swal.fire({
           icon: 'error',
@@ -111,6 +110,10 @@ function CreateationSurvey() {
         navigate('/');
       }
     } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: '로그인이 필요한 서비스입니다.',
+      });
       navigate('/');
     }
   };
