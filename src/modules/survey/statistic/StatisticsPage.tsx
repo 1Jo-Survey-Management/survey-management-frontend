@@ -26,6 +26,7 @@ const styles = {
       justifyContent: 'center',
       alignItems: 'center',
       width: '100%',
+      marginTop: '30px',
     },
   },
   cardTitle: {
@@ -51,8 +52,8 @@ const styles = {
     height: '350px',
 
     '@media (min-width: 600px)': {
-      width: '800px',
-      height: '550px',
+      width: '820px',
+      height: '480px',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
@@ -63,7 +64,7 @@ const styles = {
     width: '100%',
     border: '1px solid #757575',
     borderRadius: '3%',
-    '@media (max-width: 600px)': {
+    '@media (maxWidth: 600px)': {
       width: '100%',
       height: '40%',
     },
@@ -95,18 +96,13 @@ const styles = {
   surveyInfo: {
     width: '100%',
     margin: '5px 0 5px 0',
-    fontSize: '10px',
+    fontSize: '20px',
     textAlign: 'right',
-    '@media (max-width: 600px)': {
+    '@media (maxWidth: 600px)': {
       fontSize: '15px',
       margin: '5px 0 5px 0',
     },
   },
-};
-
-const fontFamily = "'Noto Sans KR', sans-serif";
-const textStyle = {
-  fontFamily,
 };
 
 const customStyles = `
@@ -242,9 +238,7 @@ export default function StatisticsPage() {
         }}
       />
       <Box sx={styles.card}>
-        <Typography fontStyle={textStyle} sx={styles.titleText}>
-          {surveyTitle}
-        </Typography>
+        <Typography sx={styles.titleText}>{surveyTitle}</Typography>
       </Box>
       {Object.keys(allItems).map((questionNo, index) => {
         const itemsForQuestion: Selection[] = allItems[questionNo];
@@ -346,11 +340,11 @@ export default function StatisticsPage() {
             <Card sx={styles.cardTitle} key={questionNo}>
               <CardContent>
                 <Box>
-                  <Typography style={textStyle} sx={styles.componentText}>
+                  <Typography sx={styles.componentText}>
                     {index + 1} . {itemsForQuestion[0].surveyQuestionTitle}
                   </Typography>
 
-                  <Typography style={textStyle} sx={styles.surveyInfo}>
+                  <Typography sx={styles.surveyInfo}>
                     설문 참여자 수 :{' '}
                     {itemsForQuestion[0].selectionCount !== 0
                       ? countSelections(itemsForQuestion)
@@ -363,6 +357,7 @@ export default function StatisticsPage() {
                         sx={{
                           fontSize: '1rem',
                           fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
                           '@media (min-width: 600px)': {
                             fontSize: '1.4rem',
                           },
@@ -395,9 +390,23 @@ export default function StatisticsPage() {
                     </>
                   )}
                   {questionTypeNo === 3 && (
-                    <Box sx={styles.googleChartContent}>
-                      <GooglePieChart selectionAnswer={chartData} />
-                    </Box>
+                    <>
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
+                          '@media (min-width: 600px)': {
+                            fontSize: '1.4rem',
+                          },
+                        }}
+                      >
+                        📝 파이차트로 보는 통계
+                      </Typography>
+                      <Box sx={styles.googleChartContent}>
+                        <GooglePieChart selectionAnswer={chartData} />
+                      </Box>
+                    </>
                   )}
                   {questionTypeNo === 4 && (
                     <>
@@ -405,6 +414,7 @@ export default function StatisticsPage() {
                         sx={{
                           fontSize: '1rem',
                           fontWeight: 'bold',
+                          margin: '20px 0 20px 0',
                           '@media (min-width: 600px)': {
                             fontSize: '1.4rem',
                           },
