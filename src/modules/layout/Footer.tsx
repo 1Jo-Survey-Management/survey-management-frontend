@@ -161,7 +161,9 @@ function Footer() {
           </Typography>
           <Typography
             onClick={() =>
-              window.open('http://localhost:8080/swagger-ui/index.html')
+              window.open(
+                'https://survey-management.shop/swagger-ui/index.html'
+              )
             }
             sx={{
               '&:hover': {

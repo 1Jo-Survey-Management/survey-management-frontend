@@ -40,6 +40,7 @@ import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
 
 import Swal from 'sweetalert2';
+import Floating from '../../main/components/Floating';
 import axios from '../../../login/components/customApi';
 import '../../../../global.css';
 
@@ -1085,6 +1086,7 @@ function Mypage() {
           </div>
         </Fade>
       </Modal>
+      <Floating />
     </Container>
   );
 }
