@@ -89,7 +89,7 @@ export default function GooglePieChart({
       <Chart
         chartType="PieChart"
         data={aggregatedData}
-        width={`${window.innerWidth <= 600 ? '300px' : '780px'}`}
+        width={`${window.innerWidth <= 600 ? '300px' : '700px'}`}
         height={`${window.innerWidth <= 600 ? '250px' : '400px'}`}
         style={{
           marginTop: '0',
