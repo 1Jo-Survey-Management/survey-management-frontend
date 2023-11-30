@@ -19,6 +19,7 @@ import Search from './modules/survey/main/routes/Search';
 import AttendSurvey from './modules/survey/attend/routers/AttendSurvey';
 import axios from './modules/login/components/customApi';
 import MypageUserModify from './modules/survey/mypage/components/MypageUserModify';
+import NotFoundPage from './modules/layout/NotFoundPage';
 
 const GlobalStyle = createGlobalStyle`
 @font-face{
@@ -81,6 +82,7 @@ function App() {
               path="/survey/mypageUserModify"
               element={<MypageUserModify />}
             />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
       </ThemeProvider>
