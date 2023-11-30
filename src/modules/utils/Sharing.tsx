@@ -59,6 +59,12 @@ const styles = {
     alignItems: 'center',
     backgroundColor: '#747474',
   }),
+
+  iconButtonStyle: css({
+    width: '40px',
+    backgroundColor: '#747474',
+    color: '#ffffff',
+  }),
 };
 
 /**
@@ -166,14 +172,12 @@ export default function Sharing({
               />
             </button>
             {isAvailNavigator && (
-              <button
-                aria-label="Share"
-                type="button"
+              <IconButton
+                css={styles.iconButtonStyle}
                 onClick={shareToNavigator}
-                css={styles.navigatorIcon}
               >
                 <ShareIcon />
-              </button>
+              </IconButton>
             )}
           </Box>
         </Box>
