@@ -224,7 +224,7 @@ function Mypage() {
   const resetData = async () => {
     const loggedInUserNo = localStorage.getItem('userNo');
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/api/my-surveys/write-surveys`
+      `${process.env.REACT_APP_BASE_URL}/api/my-surveys/attend-surveys`
     );
 
     const cardData: CardData[] = response.data.content || [];
@@ -489,7 +489,6 @@ function Mypage() {
             }}
           >
             <MenuItem value="전체">전체</MenuItem>
-            <MenuItem value={1}>작성 중</MenuItem>
             <MenuItem value={2}>진행 중</MenuItem>
             <MenuItem value={3}>마감</MenuItem>
           </Select>
