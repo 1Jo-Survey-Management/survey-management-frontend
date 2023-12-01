@@ -18,6 +18,7 @@ import WordCloud from './components/WordCloud';
 import GooglePieChart from './components/GooglePieChart';
 import { Selection } from './types/SurveyStatisticTypes';
 import axios from '../../login/components/customApi';
+import Floating from '../main/components/Floating';
 
 const styles = {
   card: {
@@ -520,6 +521,7 @@ export default function StatisticsPage() {
           </Button>
         </Card>
       </Box>
+      <Floating />
     </Container>
   );
 }

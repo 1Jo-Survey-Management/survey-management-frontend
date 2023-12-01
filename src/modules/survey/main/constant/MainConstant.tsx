@@ -43,8 +43,8 @@ export const swiperParams: SwiperOptions = {
     },
 
     0: {
-      slidesPerView: 1.8,
-      spaceBetween: 3,
+      slidesPerView: 1.9,
+      spaceBetween: 15,
     },
   },
 };

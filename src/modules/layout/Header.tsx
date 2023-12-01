@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
+import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import { Drawer, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -30,6 +31,50 @@ const StyledButton = styled.button`
     height: 20px;
   }
 `;
+
+const styles = {
+  box: css({ flexGrow: 1, display: 'center', alignItems: 'flex-end' }),
+  logostyle: css({
+    maxWidth: '125px',
+    maxHeight: '110px',
+    display: 'center',
+    justifyItems: 'center',
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  }),
+  headerStyle: css({
+    backgroundColor: '#FFFFFF',
+    boxShadow: 'none',
+    height: '110px',
+    marginBottom: '0',
+  }),
+  toolbar: css({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+    width: '100%',
+    height: '60px',
+    marginTop: '15px',
+  }),
+  menu: css({
+    color: '#272727',
+    marginTop: '15px',
+  }),
+  logoImage: css({
+    width: '100%',
+    height: 'auto',
+    color: '#000000',
+    marginLeft: '10px',
+    marginTop: '20px',
+  }),
+  loginout: css({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: '15px',
+  }),
+};
 
 /**
  * 웹 애플리케이션의 헤더 컴포넌트입니다.
@@ -119,32 +164,11 @@ function Header() {
     };
 
   return (
-    <Box
-      sx={{ flexGrow: 1, display: 'center', alignItems: 'flex-end' }}
-      height={90}
-    >
-      <AppBar
-        position="static"
-        sx={{
-          backgroundColor: '#FFFFFF',
-          boxShadow: 'none',
-          height: '110px',
-          marginBottom: '0',
-        }}
-      >
-        <Toolbar
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignContent: 'center',
-            width: '100%',
-            height: '60px',
-            marginTop: '15px',
-          }}
-        >
+    <Box css={styles.box} height={90}>
+      <AppBar position="static" css={styles.headerStyle}>
+        <Toolbar css={styles.toolbar}>
           <IconButton
-            size="large"
-            sx={{ color: '#272727', marginTop: '15px' }}
+            css={styles.menu}
             aria-label="menu"
             onClick={toggleDrawer(true)}
           >
@@ -160,37 +184,17 @@ function Header() {
               <Menu toggleDrawer={toggleDrawer} />
             </Drawer>
           </React.Fragment>
-          <div
-            style={{
-              maxWidth: '125px',
-              maxHeight: '110px',
-              display: 'center',
-              justifyItems: 'center',
-            }}
-          >
+          <div css={styles.logostyle}>
             <img
               src={`${process.env.PUBLIC_URL}/images/surveyLogo/logoplus.png`}
               alt="로고"
-              style={{
-                width: '100%',
-                height: 'auto',
-                color: '#000000',
-                marginLeft: '10px',
-                marginTop: '20px',
-              }}
+              css={styles.logoImage}
               onClick={goMain}
               onKeyDown={goMain}
               role="presentation"
             />
           </div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: '15px',
-            }}
-          >
+          <div css={styles.loginout}>
             {!properLogin() ? (
               <StyledButton
                 type="button"
