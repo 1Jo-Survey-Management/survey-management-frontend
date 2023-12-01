@@ -31,17 +31,17 @@ const customStyles = `
 const styles = {
   CardSwiper: {
     width: '100%',
-    height: '400px',
+    height: '420px',
     '@media (max-width: 600px)': {
-      height: '200px',
+      height: '220px',
     },
   },
 
   slide: {
     width: '100%',
-    height: '400px',
+    height: '420px',
     '@media (max-width: 600px)': {
-      height: '200px',
+      height: '220px',
     },
   },
 };
@@ -82,9 +82,9 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
       {cardList.length > 0 ? (
         <Box
           sx={{
-            height: '400px',
+            height: '420px',
             '@media (max-width: 600px)': {
-              height: '200px',
+              height: '220px',
             },
           }}
         >
@@ -113,17 +113,24 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
                       key={`slide_${card.surveyNo}`}
                       style={styles.slide}
                     >
-                      <Card sx={{ maxWidth: 345, borderRadius: 4 }}>
+                      <Card
+                        sx={{
+                          maxWidth: 340,
+                          borderRadius: 4,
+                          marginLeft: '2px',
+                          marginTop: '2px',
+                        }}
+                      >
                         <CardActionArea onClick={() => openCardModal(card)}>
                           <CardMedia
                             component="img"
                             sx={{
                               display: 'flex',
                               height: '150px',
-                              width: '274px',
+                              width: '270px',
                               '@media (max-width: 600px)': {
                                 height: 0,
-                                width: '153px',
+                                width: '150px',
                               },
                             }}
                             image={card.surveyImage}

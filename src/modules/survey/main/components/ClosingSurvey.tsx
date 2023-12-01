@@ -103,7 +103,14 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                           : styles.slide
                       }
                     >
-                      <Card sx={{ maxWidth: 345, borderRadius: 4 }}>
+                      <Card
+                        sx={{
+                          maxWidth: 345,
+                          borderRadius: 4,
+                          marginLeft: '2px',
+                          marginTop: '2px',
+                        }}
+                      >
                         <CardActionArea onClick={() => openCardModal(card)}>
                           <CardMedia
                             component="img"
