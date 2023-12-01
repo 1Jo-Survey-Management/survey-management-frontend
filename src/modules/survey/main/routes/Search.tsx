@@ -286,7 +286,14 @@ function SurveySearch() {
   return (
     <div>
       <style>{customStyles}</style>
-      <Container sx={{ marginTop: '60px' }}>
+      <Container
+        sx={{
+          marginTop: '60px',
+          '@media (max-width: 600px)': {
+            marginTop: '30px',
+          },
+        }}
+      >
         <Typography
           component="div"
           sx={{

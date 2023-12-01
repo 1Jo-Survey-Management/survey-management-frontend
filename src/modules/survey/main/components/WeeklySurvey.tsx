@@ -32,17 +32,11 @@ const styles = {
   CardSwiper: {
     width: '100%',
     height: '420px',
-    '@media (max-width: 600px)': {
-      height: '220px',
-    },
   },
 
   slide: {
     width: '100%',
     height: '420px',
-    '@media (max-width: 600px)': {
-      height: '220px',
-    },
   },
 };
 const fontFamily = 'nanumsquare';
