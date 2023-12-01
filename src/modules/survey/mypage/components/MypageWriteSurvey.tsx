@@ -407,7 +407,14 @@ function Mypage() {
 
   return (
     <Container
-      sx={{ paddingLeft: '16px', paddingRight: '16px', marginTop: '60px' }}
+      sx={{
+        paddingLeft: '16px',
+        paddingRight: '16px',
+        marginTop: '60px',
+        '@media (max-width: 600px)': {
+          marginTop: '30px',
+        },
+      }}
     >
       <style>{customStyles}</style>
 

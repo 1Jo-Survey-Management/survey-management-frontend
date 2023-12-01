@@ -312,7 +312,17 @@ function MypageUserModify() {
   }
 
   return (
-    <Container maxWidth="md" sx={{ paddingLeft: '16px', paddingRight: '16px' }}>
+    <Container
+      maxWidth="md"
+      sx={{
+        paddingLeft: '16px',
+        paddingRight: '16px',
+        marginTop: '60px',
+        '@media (max-width: 600px)': {
+          marginTop: '30px',
+        },
+      }}
+    >
       <Card sx={{ marginBottom: '60px', marginTop: '30px' }}>
         <CardContent>
           <h1
