@@ -212,23 +212,30 @@ function CreateQuestion({
    * @author 강명관
    */
   const handleRequiredSwitchChange = (targetQuestion: QuestionProps) => {
+    const targetQuestionIndex = questions.indexOf(targetQuestion);
+
     const checkMovableQuestionBetweenTargetQuestion = questions.some(
-      (prevQuestion) => {
-        if (
-          prevQuestion.questionType === QuestionTypeEnum.MOVEABLE_QUESTION &&
-          prevQuestion.selections.some(
-            (selection) =>
-              selection.questionMoveId &&
-              selection.questionMoveId > questions.indexOf(targetQuestion) + 1
-          )
-        ) {
-          return true;
+      (prevQuestion, index) => {
+        if (prevQuestion.questionType !== QuestionTypeEnum.MOVEABLE_QUESTION) {
+          return false;
         }
-        return false;
+
+        if (targetQuestionIndex < index) {
+          return false;
+        }
+
+        return prevQuestion.selections.some(
+          (selection) =>
+            selection.questionMoveId &&
+            selection.questionMoveId > questions.indexOf(targetQuestion) + 1
+        );
       }
     );
 
-    if (checkMovableQuestionBetweenTargetQuestion) {
+    if (
+      checkMovableQuestionBetweenTargetQuestion &&
+      !targetQuestion.questionRequired
+    ) {
       Swal.fire({
         icon: 'error',
         title: '문항 이동사이의 문항은 필수가 될 수 없습니다.',
@@ -254,7 +261,7 @@ function CreateQuestion({
 
   useEffect(() => {
     handelSwitchChange();
-  }, [question]);
+  }, [question.questionRequired]);
 
   /**
    * 설문 문항의 제목과 설명을 작성하는 메서드 입니다.
