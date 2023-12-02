@@ -57,7 +57,7 @@ function WordCloud({ wordCloud }: WordCloudProps): JSX.Element | null {
   const [height] = useState<number>(window.innerWidth < 600 ? 200 : 600);
   const placedWords = useRef<{ x: number; y: number }[]>([]);
 
-  const incrementValue = 1;
+  const incrementValue = 3;
 
   const updateWordCloud = () => {
     const updatedWordCloudData = wordCloud.reduce(
