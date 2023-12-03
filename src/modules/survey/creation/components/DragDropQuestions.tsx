@@ -9,6 +9,7 @@ import {
   Droppable,
   DropResult,
 } from 'react-beautiful-dnd';
+import { QuestionTypeEnum } from '../../enums/QuestionTypeEnum';
 
 import { DragDropQuestionProps, QuestionProps } from '../types/SurveyTypes';
 import CreateQuestion from './CreateQuestion';
@@ -65,6 +66,33 @@ function DragDropQuestion({ questions, setQuestions }: DragDropQuestionProps) {
       result.source.index,
       result.destination.index
     );
+
+    const isMoveableQuestion = (targetQuestion: QuestionProps) =>
+      targetQuestion.questionType === QuestionTypeEnum.MOVEABLE_QUESTION;
+
+    reorderQuestion.forEach((prevQuestion) => {
+      if (!isMoveableQuestion(prevQuestion)) {
+        return;
+      }
+
+      const maxSelectedMoveableQuestionIndex = Math.max(
+        ...prevQuestion.selections.map((targetSelection) => {
+          if (!targetSelection.questionMoveId) {
+            return 0;
+          }
+
+          return targetSelection.questionMoveId;
+        })
+      );
+
+      for (
+        let i = reorderQuestion.indexOf(prevQuestion) + 1;
+        i < maxSelectedMoveableQuestionIndex;
+        i += 1
+      ) {
+        reorderQuestion[i].questionRequired = false;
+      }
+    });
 
     setQuestions(reorderQuestion);
   };

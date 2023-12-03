@@ -1,10 +1,13 @@
+/** @jsxImportSource @emotion/react */
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Swal from 'sweetalert2';
+import { css } from '@emotion/react';
 
 export default function FloatingActionButtons() {
   const navigate = useNavigate();
@@ -12,6 +15,13 @@ export default function FloatingActionButtons() {
     window.scrollTo({
       top: 0,
       behavior: 'smooth', // 부드럽게 스크롤하도록 설정
+    });
+  };
+
+  const scrollToBottom = () => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
     });
   };
 
@@ -28,50 +38,39 @@ export default function FloatingActionButtons() {
   };
 
   const styles = {
-    fabBox: {
+    fabBox: css({
       position: 'fixed',
       bottom: '10px',
       right: '10px',
       display: 'flex',
       flexDirection: 'column',
       zIndex: '1',
-    },
-    fabStyles: {
-      width: '50px',
-      height: '50px',
-      marginBottom: '15px',
-    },
+    }),
+    fabStyles: css({
+      width: '44px',
+      height: '44px',
+      marginBottom: '8px',
+      color: 'white',
+      backgroundColor: '#3e3e3e',
+      '&:hover': {
+        backgroundColor: '#6C6B6B',
+      },
+    }),
   };
 
   return (
-    <Box sx={styles.fabBox}>
-      <Fab
-        sx={{
-          ...styles.fabStyles,
-          backgroundColor: '#3E3E3E',
-          marginRight: '25px',
-          '&:hover': {
-            backgroundColor: '#747474', // Change this to the desired color on hover
-          },
-        }}
-        color="primary"
-        aria-label="pageup"
-        onClick={scrollToTop}
-      >
+    <Box css={styles.fabBox}>
+      <Fab css={styles.fabStyles} aria-label="pageup" onClick={scrollToTop}>
         <ArrowDropUpIcon />
       </Fab>
       <Fab
-        sx={{
-          ...styles.fabStyles,
-          backgroundColor: '#3E3E3E',
-          marginRight: '25px',
-          '&:hover': {
-            backgroundColor: '#747474', // Change this to the desired color on hover
-          },
-        }}
-        color="primary"
-        onClick={handleAddClick}
+        css={styles.fabStyles}
+        aria-label="pagedown"
+        onClick={scrollToBottom}
       >
+        <ArrowDropDownIcon />
+      </Fab>
+      <Fab css={styles.fabStyles} onClick={handleAddClick}>
         <AddIcon />
       </Fab>
     </Box>

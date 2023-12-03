@@ -169,14 +169,13 @@ const styles = {
     '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 500px) and (max-height: 700px)':
       {
         overflow: 'auto',
-
         height: '20vh',
       },
-    // '@media (min-height: 601px) and (max-height: 800px)': {
-    //   overflow: 'auto',
-
-    //   height: '18vh',
-    // },
+    '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 801px) and (max-height: 1000px)':
+      {
+        overflow: 'auto',
+        height: '16vh',
+      },
   }),
 
   surveyImageBox: css({

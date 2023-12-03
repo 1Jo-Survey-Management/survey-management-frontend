@@ -18,6 +18,7 @@ import WordCloud from './components/WordCloud';
 import GooglePieChart from './components/GooglePieChart';
 import { Selection } from './types/SurveyStatisticTypes';
 import axios from '../../login/components/customApi';
+import Floating from '../main/components/Floating';
 
 const styles = {
   card: {
@@ -96,10 +97,10 @@ const styles = {
   surveyInfo: {
     width: '100%',
     margin: '5px 0 5px 0',
-    fontSize: '20px',
+    fontSize: '15px',
     textAlign: 'right',
-    '@media (maxWidth: 600px)': {
-      fontSize: '15px',
+    '@media (min-width: 600px)': {
+      fontSize: '20px',
       margin: '5px 0 5px 0',
     },
   },
@@ -357,7 +358,7 @@ export default function StatisticsPage() {
                         sx={{
                           fontSize: '1rem',
                           fontWeight: 'bold',
-                          margin: '20px 0 20px 0',
+                          margin: '10px 0 10px 0',
                           '@media (min-width: 600px)': {
                             fontSize: '1.4rem',
                           },
@@ -376,7 +377,7 @@ export default function StatisticsPage() {
                         sx={{
                           fontSize: '1rem',
                           fontWeight: 'bold',
-                          margin: '20px 0 20px 0',
+                          margin: '10px 0 10px 0',
                           '@media (min-width: 600px)': {
                             fontSize: '1.4rem',
                           },
@@ -395,7 +396,7 @@ export default function StatisticsPage() {
                         sx={{
                           fontSize: '1rem',
                           fontWeight: 'bold',
-                          margin: '20px 0 20px 0',
+                          margin: '10px 0 10px 0',
                           '@media (min-width: 600px)': {
                             fontSize: '1.4rem',
                           },
@@ -414,7 +415,7 @@ export default function StatisticsPage() {
                         sx={{
                           fontSize: '1rem',
                           fontWeight: 'bold',
-                          margin: '20px 0 20px 0',
+                          margin: '10px 0 10px 0',
                           '@media (min-width: 600px)': {
                             fontSize: '1.4rem',
                           },
@@ -427,6 +428,7 @@ export default function StatisticsPage() {
                           display: 'flex',
                           flexDirection: 'column',
                           alignItems: 'center',
+                          margin: '10px 0 10px 0',
                         }}
                       >
                         <Box sx={styles.subjectContent}>
@@ -442,7 +444,7 @@ export default function StatisticsPage() {
                         sx={{
                           fontSize: '1rem',
                           fontWeight: 'bold',
-                          margin: '20px 0 0 0',
+                          margin: '20px 0 10px 0',
                           '@media (min-width: 600px)': {
                             fontSize: '1.4rem',
                           },
@@ -520,6 +522,7 @@ export default function StatisticsPage() {
           </Button>
         </Card>
       </Box>
+      <Floating />
     </Container>
   );
 }

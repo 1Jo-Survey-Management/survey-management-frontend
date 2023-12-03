@@ -39,6 +39,7 @@ import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
 
 import Swal from 'sweetalert2';
+import Floating from '../../main/components/Floating';
 import axios from '../../../login/components/customApi';
 import '../../../../global.css';
 
@@ -406,7 +407,14 @@ function Mypage() {
 
   return (
     <Container
-      sx={{ paddingLeft: '16px', paddingRight: '16px', marginTop: '60px' }}
+      sx={{
+        paddingLeft: '16px',
+        paddingRight: '16px',
+        marginTop: '60px',
+        '@media (max-width: 600px)': {
+          marginTop: '30px',
+        },
+      }}
     >
       <style>{customStyles}</style>
 
@@ -1080,6 +1088,7 @@ function Mypage() {
           </div>
         </Fade>
       </Modal>
+      <Floating />
     </Container>
   );
 }

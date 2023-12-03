@@ -40,6 +40,7 @@ import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
 
 import Swal from 'sweetalert2';
+import Floating from '../../main/components/Floating';
 import axios from '../../../login/components/customApi';
 import '../../../../global.css';
 
@@ -223,7 +224,7 @@ function Mypage() {
   const resetData = async () => {
     const loggedInUserNo = localStorage.getItem('userNo');
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/api/my-surveys/write-surveys`
+      `${process.env.REACT_APP_BASE_URL}/api/my-surveys/attend-surveys`
     );
 
     const cardData: CardData[] = response.data.content || [];
@@ -395,7 +396,14 @@ function Mypage() {
 
   return (
     <Container
-      sx={{ paddingLeft: '16px', paddingRight: '16px', marginTop: '60px' }}
+      sx={{
+        paddingLeft: '16px',
+        paddingRight: '16px',
+        marginTop: '60px',
+        '@media (max-width: 600px)': {
+          marginTop: '30px',
+        },
+      }}
     >
       <style>{customStyles}</style>
 
@@ -488,7 +496,6 @@ function Mypage() {
             }}
           >
             <MenuItem value="전체">전체</MenuItem>
-            <MenuItem value={1}>작성 중</MenuItem>
             <MenuItem value={2}>진행 중</MenuItem>
             <MenuItem value={3}>마감</MenuItem>
           </Select>
@@ -1085,6 +1092,7 @@ function Mypage() {
           </div>
         </Fade>
       </Modal>
+      <Floating />
     </Container>
   );
 }

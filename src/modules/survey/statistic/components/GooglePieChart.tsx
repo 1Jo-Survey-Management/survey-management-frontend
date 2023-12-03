@@ -9,21 +9,40 @@ interface GooglePieChartProps {
   selectionAnswer: [string, number][];
 }
 
-const generateRandomPastelColor = (): string => {
-  const pastelColors = [
-    '#FFD1DC', // 연한 분홍
-    '#FFA07A', // 연한 주황
-    '#FFB6C1', // 연한 분홍
-    '#FFDEAD', // 연한 베이지
-    '#87CEEB', // 연한 하늘색
-    '#98FB98', // 연한 녹색
-    '#DDA0DD', // 연한 보라
-    '#FFD700', // 연한 금색
-  ];
+// const generateRandomPastelColor = (): string => {
+//   const pastelColors = [
+//     '#FFD1DC', // 연한 분홍
+//     '#FFA07A', // 연한 주황
+//     '#FFB6C1', // 연한 분홍
+//     '#FFDEAD', // 연한 베이지
+//     '#87CEEB', // 연한 하늘색
+//     '#98FB98', // 연한 녹색
+//     '#DDA0DD', // 연한 보라
+//     '#FFD700', // 연한 금색
+//     '#FFB5C5',
+//     '#FFD47A',
+//     '#C1FFC1',
+//     '#FED8B1',
+//     '#B0E0E6',
+//     '#D3FFCE',
+//     '#E6CFFF',
+//     '#FFEC8B',
+//     '#FF6347',
+//     '#9ACD32',
+//     '#FFC0CB',
+//     '#FFECB3',
+//     '#FFE4E1',
+//     '#F0FFF0',
+//     '#DDA0FF',
+//     '#FFF68F',
+//     '#FF4500',
+//     '#ADFF2F',
+//     '#E0BBE4',
+//     '#FFD700',
+//   ];
 
-  return pastelColors[Math.floor(Math.random() * pastelColors.length)];
-};
-
+//   return pastelColors[Math.floor(Math.random() * pastelColors.length)];
+// };
 export default function GooglePieChart({
   selectionAnswer,
 }: GooglePieChartProps) {
@@ -33,8 +52,6 @@ export default function GooglePieChart({
   const [maxSelectionValue, setMaxSelectionValue] = useState<string>('');
   const [maxSelectionCount, setMaxSelectionCount] = useState<number>(0);
   const colorsRef = useRef<string[]>([]);
-
-  // useEffect(() => {}, [selectionAnswer]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -54,6 +71,49 @@ export default function GooglePieChart({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const generateUniqueRandomPastelColor = (): string => {
+    const pastelColors = [
+      '#FFD1DC',
+      '#FFA07A',
+      '#FFB6C1',
+      '#FFDEAD',
+      '#87CEEB',
+      '#98FB98',
+      '#DDA0DD',
+      '#FFD700',
+      '#FFB5C5',
+      '#FFD47A',
+      '#C1FFC1',
+      '#FED8B1',
+      '#B0E0E6',
+      '#D3FFCE',
+      '#E6CFFF',
+      '#FFEC8B',
+      '#FF6347',
+      '#9ACD32',
+      '#FFC0CB',
+      '#FFECB3',
+      '#FFE4E1',
+      '#F0FFF0',
+      '#DDA0FF',
+      '#FFF68F',
+      '#FF4500',
+      '#ADFF2F',
+      '#E0BBE4',
+      '#FFD700',
+    ];
+
+    const unusedColors = pastelColors.filter(
+      (color) => !colorsRef.current.includes(color)
+    );
+    const randomColor =
+      unusedColors[Math.floor(Math.random() * unusedColors.length)];
+
+    colorsRef.current.push(randomColor);
+
+    return randomColor;
+  };
+
   const aggregateData = (data: any[]) => {
     const aggregatedData = [];
     const map = new Map();
@@ -68,9 +128,9 @@ export default function GooglePieChart({
           setMaxSelectionValue(item[0]);
         }
       } else {
-        colorsRef.current.push(generateRandomPastelColor());
+        const randomColor = generateUniqueRandomPastelColor();
         map.set(item[0], aggregatedData.length);
-        aggregatedData.push([item[0], item[1]]);
+        aggregatedData.push([item[0], item[1], randomColor]);
 
         if (item[1] > maxSelectionCount) {
           setMaxSelectionCount(item[1]);
@@ -78,11 +138,15 @@ export default function GooglePieChart({
         }
       }
     }
-    return { aggregatedData, colorsRef, maxSelectionValue };
+    return { aggregatedData, maxSelectionValue };
   };
 
   const { aggregatedData } = aggregateData(selectionAnswer);
-  aggregatedData.unshift(['selectionValue', 'selectionCount']);
+  aggregatedData.unshift([
+    'selectionValue',
+    'selectionCount',
+    { role: 'style' },
+  ]);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>

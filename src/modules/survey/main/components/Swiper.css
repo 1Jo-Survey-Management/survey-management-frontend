@@ -1,7 +1,7 @@
 .swiper-wrapper {
   position: relative;
   width: 100%;
-  height: 400px;
+  height: 420px;
   z-index: 1;
   display: flex;
   transition-property: transform;
@@ -13,6 +13,6 @@
 }
 @media (max-width: 600px) {
   .swiper-wrapper {
-    height: 200px;
+    height: 220px;
   }
 }

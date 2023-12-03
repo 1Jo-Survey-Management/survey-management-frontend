@@ -286,7 +286,14 @@ function SurveySearch() {
   return (
     <div>
       <style>{customStyles}</style>
-      <Container sx={{ marginTop: '60px' }}>
+      <Container
+        sx={{
+          marginTop: '60px',
+          '@media (max-width: 600px)': {
+            marginTop: '30px',
+          },
+        }}
+      >
         <Typography
           component="div"
           sx={{
@@ -441,7 +448,7 @@ function SurveySearch() {
                 display: 'flex',
                 flexWrap: 'wrap',
                 justifyContent: 'flex-start',
-                gap: '15px',
+                gap: '10px',
                 height: '100%',
 
                 marginBottom: '5px',
@@ -462,8 +469,10 @@ function SurveySearch() {
                       width: '264px',
                       borderRadius: 4,
                       '@media (max-width: 600px)': {
-                        width: '160px',
+                        width: '163px',
                       },
+                      marginLeft: '2px',
+                      marginTop: '2px',
                     }}
                   >
                     <CardActionArea onClick={() => openCardModal(card)}>
@@ -475,7 +484,7 @@ function SurveySearch() {
                           width: '264px',
                           '@media (max-width: 600px)': {
                             height: 0,
-                            maxWidth: '156px',
+                            maxWidth: '163px',
                           },
                         }}
                         image={card.surveyImage}
@@ -503,7 +512,7 @@ function SurveySearch() {
                 > */}
                       <CardContent
                         sx={{
-                          padding: '8px',
+                          padding: '10px',
                           justifyContent: 'space-between',
                         }}
                       >
