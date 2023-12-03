@@ -448,7 +448,7 @@ function SurveySearch() {
                 display: 'flex',
                 flexWrap: 'wrap',
                 justifyContent: 'flex-start',
-                gap: '15px',
+                gap: '10px',
                 height: '100%',
 
                 marginBottom: '5px',
@@ -469,8 +469,11 @@ function SurveySearch() {
                       width: '264px',
                       borderRadius: 4,
                       '@media (max-width: 600px)': {
-                        width: '160px',
+                        width: '163px',
                       },
+                      marginLeft: '2px',
+                      marginTop: '2px',
+                      padding: '10px',
                     }}
                   >
                     <CardActionArea onClick={() => openCardModal(card)}>
@@ -482,7 +485,7 @@ function SurveySearch() {
                           width: '264px',
                           '@media (max-width: 600px)': {
                             height: 0,
-                            maxWidth: '156px',
+                            maxWidth: '163px',
                           },
                         }}
                         image={card.surveyImage}
