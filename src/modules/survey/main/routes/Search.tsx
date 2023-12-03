@@ -473,7 +473,6 @@ function SurveySearch() {
                       },
                       marginLeft: '2px',
                       marginTop: '2px',
-                      padding: '10px',
                     }}
                   >
                     <CardActionArea onClick={() => openCardModal(card)}>
@@ -513,7 +512,7 @@ function SurveySearch() {
                 > */}
                       <CardContent
                         sx={{
-                          padding: '8px',
+                          padding: '10px',
                           justifyContent: 'space-between',
                         }}
                       >
