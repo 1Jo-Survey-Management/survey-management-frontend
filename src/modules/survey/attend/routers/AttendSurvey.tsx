@@ -541,9 +541,6 @@ function AttendSurvey() {
             `Missing response for question: ${item.surveyQuestionNo}`
           );
           alertAndScrollTo(item);
-          console.log(
-            '!responseExists일 때 alertAndScrollTo 함수 실행 후 콘솔'
-          );
           return;
         }
 
