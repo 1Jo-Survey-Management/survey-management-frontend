@@ -13,6 +13,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import LibraryAddCheckRoundedIcon from '@mui/icons-material/LibraryAddCheckRounded';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 
 import {
@@ -668,13 +669,17 @@ function Mypage() {
                       fontFamily,
                     }}
                   >
-                    <EventAvailableIcon
+                    <LibraryAddCheckRoundedIcon
                       sx={{
                         fontSize: '15px',
                         marginRight: '4px',
+                        color: 'green',
                       }}
                     />
-                    {card.surveyAttendCreatedAt} 참여
+                    {new Date(card.surveyAttendCreatedAt).toLocaleDateString(
+                      'ko-KR'
+                    )}{' '}
+                    참여
                   </div>
 
                   <Typography

@@ -39,6 +39,20 @@ const GlobalStyle = createGlobalStyle`
       margin: 0;
       padding: 0;
     }
+
+    *::-webkit-scrollbar {
+      width: 8px;
+    }
+  
+    *::-webkit-scrollbar-thumb {
+      background-color: #3e3e3e;
+      border-radius: 5px;
+    }
+
+    .swal2-popup {
+      width: 300px;
+      font-size: 14px;
+    }
   `;
 
 const Theme = createTheme({
