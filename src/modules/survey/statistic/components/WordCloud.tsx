@@ -1,159 +1,105 @@
 import React, { useEffect, useState, useRef } from 'react';
 import * as d3 from 'd3';
 import cloud from 'd3-cloud';
+import 'd3-array';
 
 interface WordCloudProps {
   wordCloud: { text: string; size: number }[];
 }
 
 function updateWordCloudData(
-  wordCloudData: { text: string; size: number }[],
-  newText: string,
-  incrementValue: number
-): { text: string; size: number }[] {
+  wordCloudData: { text: string }[],
+  newText: string
+  // incrementValue: number
+): { text: string }[] {
   const existingWord = wordCloudData.find((item) => item.text === newText);
 
   if (existingWord) {
-    existingWord.size += incrementValue;
   } else {
-    wordCloudData.push({ text: newText, size: incrementValue });
+    wordCloudData.push({ text: newText });
   }
 
   return wordCloudData;
 }
 
-const generateRandomPastelColor = (): string => {
-  const pastelColors = [
-    '#FF0000', // 빨강
-    '#00FF00', // 초록
-    '#0000FF', // 파랑
-    '#FF00FF', // 핑크
-    '#800000', // 갈색
-    '#008000', // 올리브
-    '#000080', // 네이비
-    '#FFA500', // 주황
-    '#A52A2A', // 갈색
-    '#800080', // 자주
-    '#808000', // 올리브
-    '#FF6347', // 토마토
-    '#2F4F4F', // 슬레이트 그레이
-    '#4682B4', // 스틸 블루
-    '#556B2F', // 다크 올리브 그린
-    '#8B4513', // 시에나 갈색
-    '#9932CC', // 다크 오치드
-  ];
-
-  return pastelColors[Math.floor(Math.random() * pastelColors.length)];
-};
-
-function WordCloud({ wordCloud }: WordCloudProps): JSX.Element | null {
-  const svgRef = useRef<SVGSVGElement | null>(null);
-
-  const [wordCloudData, setWordCloudData] = useState<
-    { text: string; size: number }[]
-  >([]);
-
-  const [width] = useState<number>(window.innerWidth < 600 ? 350 : 800);
-  const [height] = useState<number>(window.innerWidth < 600 ? 200 : 600);
-  const placedWords = useRef<{ x: number; y: number }[]>([]);
-
-  const incrementValue = 3;
-
+function WordCloud({ wordCloud }: WordCloudProps): JSX.Element | any {
+  const [wordCloudData, setWordCloudData] = useState<{ text: string }[]>([]);
   const updateWordCloud = () => {
     const updatedWordCloudData = wordCloud.reduce(
-      (acc, word) => updateWordCloudData(acc, word.text, incrementValue),
+      (acc, word) => updateWordCloudData(acc, word.text),
       [...wordCloudData]
     );
 
-    updatedWordCloudData.sort((a, b) => b.size - a.size);
-
-    const trimmedWordCloudData = updatedWordCloudData.slice(0, 10);
-
-    setWordCloudData(trimmedWordCloudData);
+    setWordCloudData(updatedWordCloudData);
   };
-
-  function calculateSizeBasedOnLength(text: string) {
-    return Math.max(10, 30 - text.length * 2);
-  }
-  // const widthPadding = 20;
-  const widthThreshold = 600;
-  const heightPadding = width <= widthThreshold ? 4 : 25;
-
-  const checkCollision = (x: number, y: number): boolean =>
-    placedWords.current.some(
-      (word) => y > word.y - heightPadding && y < word.y + heightPadding
-    );
 
   useEffect(() => {
     updateWordCloud();
   }, [wordCloud]);
 
-  useEffect(() => {
-    if (wordCloudData) {
-      const svg = svgRef.current;
+  const wordCloudDataString = JSON.stringify(wordCloudData);
 
-      if (svg) {
-        const selection = d3
-          .select<SVGSVGElement, unknown>(svg)
-          .attr('width', width)
-          .attr('height', height);
+  d3.text(wordCloudDataString).then((text) => {
+    const stopwords = new Set(
+      "i,me,my,myself,we,us,our,ours,ourselves,you,your,yours,yourself,yourselves,he,him,his,himself,she,her,hers,herself,it,its,itself,they,them,their,theirs,themselves,what,which,who,whom,whose,this,that,these,those,am,is,are,was,were,be,been,being,have,has,had,having,do,does,did,doing,will,would,should,can,could,ought,i'm,you're,he's,she's,it's,we're,they're,i've,you've,we've,they've,i'd,you'd,he'd,she'd,we'd,they'd,i'll,you'll,he'll,she'll,we'll,they'll,isn't,aren't,wasn't,weren't,hasn't,haven't,hadn't,doesn't,don't,didn't,won't,wouldn't,shan't,shouldn't,can't,cannot,couldn't,mustn't,let's,that's,who's,what's,here's,there's,when's,where's,why's,how's,a,an,the,and,but,if,or,because,as,until,while,of,at,by,for,with,about,against,between,into,through,during,before,after,above,below,to,from,up,upon,down,in,out,on,off,over,under,again,further,then,once,here,there,when,where,why,how,all,any,both,each,few,more,most,other,some,such,no,nor,not,only,own,same,so,than,too,very,say,says,said,shall".split(
+        ','
+      )
+    );
+    const words = text
+      .trim()
+      .split(/[\s.]+/g)
+      .map((w) => w.replace(/^[“‘"\-—()[\]{}]+/g, ''))
+      .map((w) => w.replace(/[;:.!?()[\]{},"'’”\-—]+$/g, ''))
+      .map((w) => w.replace(/['’]s$/g, ''))
+      .map((w) => w.substring(0, 30))
+      .map((w) => w.toLowerCase())
+      .filter((w) => w && !stopwords.has(w));
 
-        const layout = cloud<{ text: string; size: number }>()
-          .size([width, height])
-          .words(
-            wordCloudData.map((d) => ({
-              text: d.text,
-              size: d.size,
-            }))
-          )
-          .spiral('rectangular')
-          .rotate(() => Math.random() * 90);
+    var fontFamily = 'sans-serif';
+    var fontScale = 15;
+    var padding = 0;
+    var height = 500;
+    var width = 700;
+    const rotate = () => 0; // () => (~~(Math.random() * 6) - 3) * 30
 
-        const wordData = layout.words();
+    var data = d3
+      .rollups(
+        words,
+        (group) => group.length,
+        (w) => w
+      )
+      .sort(([, a], [, b]) => d3.descending(a, b))
+      .slice(0, 250)
+      .map(([text, value]) => ({ text, value }));
+    console.log(data);
 
-        selection
-          .selectAll('text')
-          .data(wordData)
-          .enter()
+    const svg = d3
+      .select('#word-cloud-div')
+      .append('svg')
+      .attr('height', height)
+      .attr('width', width)
+      .attr('font-family', fontFamily)
+      .attr('text-anchor', 'middle');
+
+    const w_cloud = cloud()
+      .size([width, height])
+      .words(data.map((d) => Object.create(d)))
+      .padding(padding)
+      .rotate(rotate)
+      .font(fontFamily)
+      .fontSize((d) =>
+        typeof d.size === 'number' ? Math.sqrt(d.size) * fontScale : 0
+      ) // 값이 숫자가 아닐 때 기본값 0 사용
+      .on('word', ({ size, x, y, rotate, text }) => {
+        return svg
           .append('text')
-          .attr('transform', () => {
-            let x;
-            let y;
-            do {
-              x =
-                window.innerWidth <= 600
-                  ? Math.random() * 300 + 20
-                  : Math.random() * 600 + 100;
-              y =
-                window.innerWidth <= 600
-                  ? Math.random() * 180 + 15
-                  : Math.random() * 400 + 100;
-            } while (checkCollision(x, y));
+          .attr('font-size', size as number)
+          .attr('transform', `translate(${x},${y}) rotate(${rotate})`)
+          .text(text as string);
+      });
 
-            placedWords.current.push({ x, y });
-
-            return `translate(${x},${y}) `;
-          })
-          .style('font-size', `${window.innerWidth <= 600 ? 20 : 70}`)
-          .style(
-            'font-size',
-            (d) =>
-              `${
-                window.innerWidth <= 600
-                  ? d.size + calculateSizeBasedOnLength(d.text)
-                  : d.size + 20 + calculateSizeBasedOnLength(d.text)
-              }`
-          )
-          .style('fill', () => generateRandomPastelColor())
-          .attr('text-anchor', 'middle')
-          .text((d) => d.text);
-
-        layout.start();
-      }
-    }
-  }, [wordCloudData, width, height]);
-
-  return <svg ref={svgRef} />;
+    w_cloud.start();
+  });
 }
 
 export default WordCloud;
