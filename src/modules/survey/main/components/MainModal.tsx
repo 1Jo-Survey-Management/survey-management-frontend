@@ -1,6 +1,14 @@
 /** @jsxImportSource @emotion/react */
 
-import { Box, Chip, Fade, Modal, Typography, Divider } from '@mui/material';
+import {
+  Box,
+  Chip,
+  Fade,
+  Modal,
+  Typography,
+  Divider,
+  Card,
+} from '@mui/material';
 import React from 'react';
 import './Modal.css';
 import FaceIcon from '@mui/icons-material/Face';
@@ -37,7 +45,9 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    width: '100%',
   }),
+
   textStyle: css({
     fontFamily,
     textOverflow: 'ellipsis',
@@ -74,6 +84,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    width: '100%',
   }),
 
   userAvatar: css({
@@ -86,28 +97,31 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     color: '#393939',
-    height: '45px',
+    height: '30px',
     fontWeight: '700',
   }),
 
   surveyTitleBox: css({
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'flex-start',
-    height: '80px',
+    alignItems: 'center',
+    // height: '80px',
   }),
 
   surveyTitle: css({
     fontFamily,
     textOverflow: 'ellipsis',
     fontWeight: 'bold',
-    marginBottom: '15px',
+    // marginBottom: '15px',
+    width: '100%',
+    height: '100%',
   }),
 
   surveyOptionContainer: css({
     display: 'flex',
     justifyContent: 'space-between',
     flexDirection: 'column',
+    width: '100%',
   }),
 
   surveyAvailableDate: css({
@@ -152,36 +166,37 @@ const styles = {
 
   modalScrollBox: css({
     overflow: 'auto',
-    height: '28vh',
-    '@media screen and (min-height: 1000px)': {
-      overflow: 'auto',
-      height: '36vh',
-    },
+    height: '38vh',
+    // '@media screen and (min-height: 1000px)': {
+    //   overflow: 'auto',
+    //   height: '36vh',
+    // },
 
-    '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 800px) and (max-height: 1000px)':
-      {
-        height: '23vh',
-      },
+    // '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 800px) and (max-height: 1000px)':
+    //   {
+    //     height: '23vh',
+    //   },
 
-    '@media screen and  (max-width: 376px) and (max-width: 600px)': {
-      height: '24vh',
-    },
-    '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 500px) and (max-height: 700px)':
-      {
-        overflow: 'auto',
-        height: '20vh',
-      },
-    '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 801px) and (max-height: 1000px)':
-      {
-        overflow: 'auto',
-        height: '16vh',
-      },
+    // '@media screen and  (max-width: 376px) and (max-width: 600px)': {
+    //   height: '24vh',
+    // },
+    // '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 500px) and (max-height: 700px)':
+    //   {
+    //     overflow: 'auto',
+    //     height: '20vh',
+    //   },
+    // '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 801px) and (max-height: 1000px)':
+    //   {
+    //     overflow: 'auto',
+    //     height: '16vh',
+    //   },
   }),
 
   surveyImageBox: css({
     display: 'flex',
     flexDirection: 'row',
     paddingBottom: '15px',
+    // height: '100%',
   }),
 
   surveyImage: css({
@@ -194,8 +209,9 @@ const styles = {
     justifyContent: 'flex-start',
     alignItems: 'center',
     textAlign: 'start',
-    paddingBottom: '15px',
     fontFamily,
+    fontWeight: '600',
+    // width: '80%',
   }),
 };
 
@@ -238,7 +254,15 @@ export default function MainModal({
     >
       <Fade in={openModal}>
         <div className="modal">
-          <Box>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexDirection: 'column',
+              height: '100%',
+            }}
+          >
             <Box css={styles.modalShareAndCloseBox}>
               <div>
                 <Chip
@@ -316,7 +340,13 @@ export default function MainModal({
               </Box>
             </Box>
             <Divider css={styles.modalDivider} />
-            <Box className="modal-scroll-box" css={styles.modalScrollBox}>
+            <Card
+              className="modal-scroll-box"
+              css={styles.modalScrollBox}
+              sx={{
+                borderRadius: '10px',
+              }}
+            >
               {/* 설문조사 사진 */}
               <Box css={styles.surveyImageBox}>
                 <img
@@ -325,10 +355,21 @@ export default function MainModal({
                   css={styles.surveyImage}
                 />{' '}
               </Box>
-              <Typography id="modal-description" css={styles.surveyDescription}>
-                {`설문 설명: ${selectedCard.surveyDescription}`}
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  textAlign: 'start',
+                  fontSize: 15,
+                  fontWeight: 600,
+                  padding: '0px 15px 15px 15px',
+                }}
+              >
+                {selectedCard.surveyDescription}
               </Typography>
-            </Box>
+            </Card>
             <Divider css={styles.modalDivider} />
 
             {selectedCard.surveyStatusName === SURVEY_STATUS_PROGRESS && (

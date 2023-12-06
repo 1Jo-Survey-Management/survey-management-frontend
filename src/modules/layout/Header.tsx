@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /** @jsxImportSource @emotion/react */
 
 import React, { useState } from 'react';
@@ -84,15 +85,15 @@ function Header() {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
 
-  const getLogoutImageSrc = () =>
-    isHovered
-      ? `${process.env.PUBLIC_URL}/images/loginImage/logoutbuttonhover.png`
-      : `${process.env.PUBLIC_URL}/images/loginImage/logoutbutton.png`;
+  // const getLogoutImageSrc = () =>
+  //   isHovered
+  //     ? `${process.env.PUBLIC_URL}/images/loginImage/logoutbuttonhover.png`
+  //     : `${process.env.PUBLIC_URL}/images/loginImage/logoutbutton.png`;
 
-  const getLoginImageSrc = () =>
-    isHovered
-      ? `${process.env.PUBLIC_URL}/images/loginImage/loginbuttonhover.png`
-      : `${process.env.PUBLIC_URL}/images/loginImage/loginbutton.png`;
+  // const getLoginImageSrc = () =>
+  //   isHovered
+  //     ? `${process.env.PUBLIC_URL}/images/loginImage/loginbuttonhover.png`
+  //     : `${process.env.PUBLIC_URL}/images/loginImage/loginbutton.png`;
 
   /**
    * 메인 페이지로 이동하는 함수
@@ -202,7 +203,7 @@ function Header() {
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 style={{
-                  backgroundImage: `url(${getLoginImageSrc()})`,
+                  backgroundImage: `url(${process.env.PUBLIC_URL}/images/loginImage/loginbutton.png)`,
                 }}
               >
                 {}
@@ -214,7 +215,7 @@ function Header() {
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 style={{
-                  backgroundImage: `url(${getLogoutImageSrc()})`,
+                  backgroundImage: `url(${process.env.PUBLIC_URL}/images/loginImage/logoutbutton.png)`,
                 }}
               >
                 {}
