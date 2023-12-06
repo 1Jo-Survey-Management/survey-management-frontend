@@ -8,8 +8,6 @@ import { ModalButtonGroupProps } from '../types/MainType';
 
 const styles = {
   modalButtonGroupBox: css({
-    // marginTop: '15px',
-    // paddingBottom: '15px',
     width: '100%',
   }),
 
@@ -25,9 +23,6 @@ const styles = {
     },
     color: 'black',
     fontWeight: '600',
-    // '@media (min-height: 801px) and (max-height: 1000px)': {
-    //   marginTop: '60px',
-    // },
   }),
 
   alertArea: css({
