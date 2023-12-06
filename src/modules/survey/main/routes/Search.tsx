@@ -48,7 +48,6 @@ type CardData = {
 };
 
 function SurveySearch() {
-  // style 태그를 사용해 커스텀 스타일 정의
   const customStyles = `
     .swal-custom-popup {
       z-index: 1500; // 필요한 z-index 값
@@ -151,7 +150,7 @@ function SurveySearch() {
   useEffect(() => {
     const fetchData = async () => {
       if (searching) {
-        return; // Do not fetch more data if searching
+        return;
       }
       if (selectedState === '전체(모든 카드)') {
         fetchSurveyAll();
@@ -379,7 +378,7 @@ function SurveySearch() {
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  e.preventDefault(); // 기본 엔터 동작 막기
+                  e.preventDefault();
                   handleSearch(search);
                 }
               }}
@@ -490,26 +489,7 @@ function SurveySearch() {
                         image={card.surveyImage}
                         alt="survey image"
                       />
-                      {/* <Card
-                  className="card-size"
-                  variant="elevation"
-                  sx={{
-                    marginLeft: '5px',
-                    width: '160px',
-                    height: '180px',
-                    borderRadius: 2,
-                    backgroundColor: '#F9F9F9',
-                    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-                    '@media (max-width: 600px)': {
-                      width: '152px',
-                      height: '170px',
-                      marginRight: '7px',
-                    },
-                  }} */}
-                      {/* style={textStyle}
-                  onClick={() => openCardModal(card)}
-                  role="button"
-                > */}
+
                       <CardContent
                         sx={{
                           padding: '10px',
@@ -555,7 +535,6 @@ function SurveySearch() {
                                 padding: 0,
                               },
                               backgroundColor: '#F9F9F9',
-                              // boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.3)',
                               color: getChipColor(card.surveyStatusName),
                             }}
                             style={textStyle}
@@ -590,7 +569,7 @@ function SurveySearch() {
                             fontWeight: 600,
                             marginBottom: '8px',
                             cursor: 'pointer',
-                            maxHeight: '47px', // 원하는 높이 설정
+                            maxHeight: '47px',
                             overflow: 'hidden',
                             display: '-webkit-box',
                             height: '47px',
@@ -628,7 +607,6 @@ function SurveySearch() {
                                 marginRight: 1,
                                 height: '20px',
                                 backgroundColor: tagColor(tag),
-                                // opacity: 0.7,
                               }}
                             />
                           ))}

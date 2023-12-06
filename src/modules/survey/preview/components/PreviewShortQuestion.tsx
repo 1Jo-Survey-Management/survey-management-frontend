@@ -29,17 +29,17 @@ const styles = {
   answerInput: css({
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
-        borderColor: 'lightgray', // 기본 테두리 색상
+        borderColor: 'lightgray',
       },
       '&:hover fieldset': {
-        borderColor: 'gray', // 호버 시 테두리 색상
+        borderColor: 'gray',
       },
       '&.Mui-focused fieldset': {
-        borderColor: '#3e3e3e', // 포커스 시 테두리 색상
+        borderColor: '#3e3e3e',
       },
     },
     '& .MuiInputLabel-root.Mui-focused': {
-      color: '#3e3e3e', // 포커스 시 레이블 색상
+      color: '#3e3e3e',
     },
   }),
 };

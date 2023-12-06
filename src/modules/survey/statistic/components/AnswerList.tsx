@@ -138,7 +138,6 @@ export default function AnswerList({ selectList }: selectionList) {
               <TableCell
                 sx={{
                   overflow: 'auto',
-                  // textOverflow: 'ellipsis',
                   whiteSpace: 'pre-wrap',
                   maxWidth: 0,
                 }}

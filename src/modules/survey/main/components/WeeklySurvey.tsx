@@ -19,7 +19,6 @@ import { CardDataListProps, CardDataProps } from '../types/MainType';
 import MainModal from './MainModal';
 import { swiperParams, tagColor } from '../constant/MainConstant';
 
-// style 태그를 사용해 커스텀 스타일 정의
 const customStyles = `
   .swal-custom-popup {
     z-index: 1500; /* 필요한 z-index 값 */
@@ -182,7 +181,6 @@ function WeeklySurvey({ cardList }: CardDataListProps) {
                                 style={textStyle}
                               />
                             </Stack>
-                            {/* </Stack> */}
 
                             <div
                               style={{
