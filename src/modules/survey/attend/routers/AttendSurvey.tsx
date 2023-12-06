@@ -488,18 +488,24 @@ function AttendSurvey() {
     Swal.fire({
       icon: 'error',
       title: '필수 응답 문항에 답변하세요.',
+    }).then((result) => {
+      if (result.isConfirmed || result.isDismissed) {
+        setTimeout(() => {
+          const targetElement = document.getElementById(
+            `question-${item.surveyQuestionNo}`
+          );
+
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            console.error(
+              'Target element not found for question:',
+              item.surveyQuestionNo
+            );
+          }
+        }, 300); // 300ms 지연
+      }
     });
-    const targetElement = document.getElementById(
-      `question-${item.surveyQuestionNo}`
-    );
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      console.error(
-        'Target element not found for question:',
-        item.surveyQuestionNo
-      );
-    }
   }
 
   /**
