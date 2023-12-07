@@ -30,7 +30,8 @@ function WordCloud({ wordCloud }: WordCloudProps): JSX.Element | null {
     const words = wordCloudDataString
       .trim()
       .split(/,/g)
-      .map((w) => w.replace(/[\]]/g, ''))
+      .map((w) => w.replace(/\[/g, ''))
+      .map((w) => w.replace(/\]/g, ''))
       .map((w) => w.replace(/"/g, ''))
       .map((w) => w.substring(0, 15))
       .map((w) => w.toLowerCase());
