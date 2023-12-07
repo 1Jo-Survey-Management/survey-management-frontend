@@ -20,20 +20,20 @@ const style = {
   border: '0px solid white',
   backgroundColor: '#3e3e3e',
   '&:hover': {
-    backgroundColor: '#ffffff', // 호버 시 배경 색상
-    color: 'black', // 호버 시 폰트 색상
+    backgroundColor: '#ffffff',
+    color: 'black',
     border: '1px solid #3e3e3e',
     fontWeight: '600',
   },
   '&.Mui-focusVisible': {
-    backgroundColor: '#ffffff', // 클릭 시 배경 색상
-    color: 'black', // 클릭 시 폰트 색상
+    backgroundColor: '#ffffff',
+    color: 'black',
     border: '1px solid #3e3e3e',
     fontWeight: '600',
   },
   '&:active': {
-    backgroundColor: '#ffffff', // 클릭 시 배경 색상 (또 다른 옵션)
-    color: 'black', // 클릭 시 폰트 색상
+    backgroundColor: '#ffffff',
+    color: 'black',
     border: '1px solid #3e3e3e',
     fontWeight: '600',
   },

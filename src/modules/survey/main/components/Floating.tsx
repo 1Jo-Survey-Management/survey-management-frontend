@@ -14,7 +14,7 @@ export default function FloatingActionButtons() {
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth', // 부드럽게 스크롤하도록 설정
+      behavior: 'smooth',
     });
   };
 

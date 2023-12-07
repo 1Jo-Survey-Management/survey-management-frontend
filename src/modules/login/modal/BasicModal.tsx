@@ -33,7 +33,6 @@ interface UserInfo {
 export default function BasicModal() {
   const navigate = useNavigate();
 
-  // style 태그를 사용해 커스텀 스타일 정의
   const customStyles = `
     .swal-custom-popup {
       z-index: 1500; // 필요한 z-index 값
@@ -169,6 +168,10 @@ export default function BasicModal() {
       };
 
       try {
+        Swal.fire({
+          icon: 'success',
+          title: '회원가입에 성공하였습니다',
+        });
         const response = await axios.post(
           `${process.env.REACT_APP_BASE_URL}/api/oauthLogin/regist`,
           userInfoRegist,

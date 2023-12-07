@@ -29,7 +29,7 @@ function MypageUserModify() {
   const [imagePreview, setImagePreview] = useState<string | null>();
   const [previousImage, setPreviousImage] = useState<string>('');
   const [nickname, setNickname] = useState('');
-  const [isLoading, setIsLoading] = useState<boolean>(true); // 로딩 상태 초기화
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [nicknameCheckResult, setNicknameCheckResult] = useState<string | null>(
     ''
   );
@@ -68,7 +68,7 @@ function MypageUserModify() {
       } catch (error) {
         console.error('유저 정보 불러오기 오류: ', error);
       } finally {
-        setIsLoading(false); // 로딩 완료
+        setIsLoading(false);
       }
     };
     fetchUserData();
@@ -106,7 +106,7 @@ function MypageUserModify() {
     }
   };
 
-  // 이미지 업로드 로직을 검토합니다.
+  // 이미지 업로드 로직을 검토
   const uploadImage = async () => {
     if (selectedFile && userData.userNo) {
       try {
@@ -150,7 +150,7 @@ function MypageUserModify() {
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
 
-    // 입력된 값이 없을 경우, 검사를 중지하고 필요한 상태를 초기화합니다.
+    // 입력된 값이 없을 경우, 검사를 중지하고 필요한 상태를 초기화
     if (value.trim() === '') {
       setNickname(value);
       setIsNicknameEmpty(true);
@@ -160,16 +160,16 @@ function MypageUserModify() {
       return;
     }
 
-    // 입력된 값의 길이가 16자를 초과하는지 검사합니다.
+    // 입력된 값의 길이가 16자를 초과하는지 검사
     if (value.length > 16) {
       setIsOverLimit(true);
       setNicknameCheckResult(
         '특수문자는 사용 할 수 없으며 최소 2자, 최대 16자를 초과할 수 없습니다.'
       );
-      return; // 더 이상의 처리를 중지합니다.
+      return;
     }
 
-    // 닉네임의 형식을 검사합니다.
+    // 닉네임의 형식을 검사
     const isValidNickname = nicknameRegex.test(value);
 
     setNickname(value);
@@ -200,7 +200,7 @@ function MypageUserModify() {
       return;
     }
 
-    // 닉네임의 형식과 길이를 검사합니다.
+    // 닉네임의 형식과 길이를 검사
     if (!nicknameRegex.test(nickname)) {
       Swal.fire({
         icon: 'error',
@@ -229,8 +229,6 @@ function MypageUserModify() {
         } else {
           setNicknameCheckResult('이미 사용 중인 닉네임입니다.');
           setIsNicknameChecked(false);
-
-          // window.alert('이미 사용 중인 닉네임입니다.');
         }
       }
     } catch (error: unknown) {
@@ -242,7 +240,6 @@ function MypageUserModify() {
             title: '이미 사용 중인 닉네임입니다.',
             text: `다시 입력 후 확인해주세요.`,
           });
-          // window.alert('이미 사용 중인 닉네임입니다.');
           setIsNicknameChecked(false);
         }
       }

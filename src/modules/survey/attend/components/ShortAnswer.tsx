@@ -26,7 +26,6 @@ function ShortAnswer({
 }: ShortAnswerProps) {
   const [answer, setAnswer] = useState<string>('');
   const [isOverLimit, setIsOverLimit] = useState<boolean>(false);
-  // 입력 필드의 값이 공백만 있는지 확인하는 상태
   const [isOnlyWhitespace, setIsOnlyWhitespace] = useState<boolean>(false);
 
   /**
@@ -43,7 +42,7 @@ function ShortAnswer({
       setAnswer(newValue);
       onAnswerChange(newValue);
       setIsOverLimit(false);
-      setIsOnlyWhitespace(!newValue.trim()); // 공백만 있는 경우 true 설정
+      setIsOnlyWhitespace(!newValue.trim());
     } else {
       setIsOverLimit(true);
     }
@@ -119,17 +118,17 @@ function ShortAnswer({
           sx={{
             '& .MuiOutlinedInput-root': {
               '& fieldset': {
-                borderColor: 'lightgray', // 기본 테두리 색상
+                borderColor: 'lightgray',
               },
               '&:hover fieldset': {
-                borderColor: 'gray', // 호버 시 테두리 색상
+                borderColor: 'gray',
               },
               '&.Mui-focused fieldset': {
-                borderColor: '#3e3e3e', // 포커스 시 테두리 색상
+                borderColor: '#3e3e3e',
               },
             },
             '& .MuiInputLabel-root.Mui-focused': {
-              color: '#3e3e3e', // 포커스 시 레이블 색상
+              color: '#3e3e3e',
             },
           }}
         />

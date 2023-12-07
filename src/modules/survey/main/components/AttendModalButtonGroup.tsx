@@ -96,7 +96,7 @@ export default function AttendModalButtonGroup({
           참여를 원하시면 로그인해주세요
         </Alert>
       )}
-      {/* 결과보기, 참여하기 버튼 */}
+      {/* 통계보기, 참여하기 버튼 */}
       {(!selectedCard?.openStatusName ||
         selectedCard?.openStatusName === '전체 공개' ||
         (selectedCard?.openStatusName === '비공개' &&

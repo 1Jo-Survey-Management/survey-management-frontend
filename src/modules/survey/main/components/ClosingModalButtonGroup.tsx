@@ -24,12 +24,6 @@ const styles = {
     },
     color: 'black',
     fontWeight: '600',
-    // '@media (min-height: 801px) and (max-height: 1000px)': {
-    //   marginTop: '90px',
-    // },
-    // '@media (max-width: 375px)': {
-    //   marginTop: '50px',
-    // },
   }),
   alertArea: css({
     marginBottom: '8px',
@@ -75,8 +69,7 @@ export default function ClosingModalButtoonGroup({
           통계를 보시려면 로그인해주세요.
         </Alert>
       )}
-      {/* 결과보기, 참여하기 버튼 */}
-      {/* 결과보기 버튼 */}
+      {/* 통계보기 버튼 */}
       {(!selectedCard?.openStatusName ||
         selectedCard?.openStatusName === '전체 공개' ||
         (selectedCard?.openStatusName === '비공개' &&

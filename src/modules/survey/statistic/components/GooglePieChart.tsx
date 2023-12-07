@@ -9,40 +9,6 @@ interface GooglePieChartProps {
   selectionAnswer: [string, number][];
 }
 
-// const generateRandomPastelColor = (): string => {
-//   const pastelColors = [
-//     '#FFD1DC', // 연한 분홍
-//     '#FFA07A', // 연한 주황
-//     '#FFB6C1', // 연한 분홍
-//     '#FFDEAD', // 연한 베이지
-//     '#87CEEB', // 연한 하늘색
-//     '#98FB98', // 연한 녹색
-//     '#DDA0DD', // 연한 보라
-//     '#FFD700', // 연한 금색
-//     '#FFB5C5',
-//     '#FFD47A',
-//     '#C1FFC1',
-//     '#FED8B1',
-//     '#B0E0E6',
-//     '#D3FFCE',
-//     '#E6CFFF',
-//     '#FFEC8B',
-//     '#FF6347',
-//     '#9ACD32',
-//     '#FFC0CB',
-//     '#FFECB3',
-//     '#FFE4E1',
-//     '#F0FFF0',
-//     '#DDA0FF',
-//     '#FFF68F',
-//     '#FF4500',
-//     '#ADFF2F',
-//     '#E0BBE4',
-//     '#FFD700',
-//   ];
-
-//   return pastelColors[Math.floor(Math.random() * pastelColors.length)];
-// };
 export default function GooglePieChart({
   selectionAnswer,
 }: GooglePieChartProps) {
