@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import { Alert, Box, Button } from '@mui/material';
+import { Alert, Button } from '@mui/material';
 import React from 'react';
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
@@ -8,8 +8,7 @@ import { ModalButtonGroupProps } from '../types/MainType';
 
 const styles = {
   modalButtonGroupBox: css({
-    marginTop: '15px',
-    paddingBottom: '15px',
+    width: '100%',
   }),
 
   surveyResultButton: css({
@@ -20,13 +19,14 @@ const styles = {
       backgroundColor: 'gray',
       color: 'white',
       fontWeight: '900',
-      fontSize: '15px',
+      fontSize: '14px',
     },
     color: 'black',
     fontWeight: '600',
-    '@media (min-height: 801px) and (max-height: 1000px)': {
-      marginTop: '60px',
-    },
+  }),
+
+  alertArea: css({
+    marginBottom: '8px',
   }),
 
   surveyAttendButton: css({
@@ -52,40 +52,51 @@ export default function AttendModalButtonGroup({
   const navigate = useNavigate();
 
   return (
-    <div>
-      <Box css={styles.modalButtonGroupBox}>
-        {/* 참여하기 제한 조건 */}
-        {selectedCard?.attendCheckList &&
-          selectedCard.attendCheckList.includes(false) && (
-            <Alert severity="info">이미 참여한 설문입니다.</Alert>
-          )}
-
-        {selectedCard?.userNo === numUser() &&
-          selectedCard?.openStatusName === '전체 공개' && (
-            <Alert severity="success">본인이 작성한 설문입니다.</Alert>
-          )}
-        {selectedCard?.userNo === numUser() &&
-          selectedCard?.openStatusName === '회원 공개' && (
-            <Alert severity="success">본인이 작성한 설문입니다.</Alert>
-          )}
-
-        {selectedCard?.openStatusName === '비공개' &&
-          (numUser() !== selectedCard.userNo ? (
-            <Alert severity="warning">설문 작성자만 볼 수 있습니다.</Alert>
-          ) : (
-            <Alert severity="success">해당 비공개 설문의 작성자입니다.</Alert>
-          ))}
-
-        {selectedCard?.openStatusName === '회원 공개' && numUser() === null && (
-          <Alert severity="error">결과를 보시려면 로그인해주세요.</Alert>
+    <div css={styles.modalButtonGroupBox}>
+      {/* 참여하기 제한 조건 */}
+      {selectedCard?.attendCheckList &&
+        selectedCard.attendCheckList.includes(false) && (
+          <Alert severity="info" css={styles.alertArea}>
+            이미 참여한 설문입니다.
+          </Alert>
         )}
 
-        {numUser() === null && selectedCard?.openStatusName === '전체 공개' && (
-          <Alert severity="error">참여를 원하시면 로그인해주세요</Alert>
+      {selectedCard?.userNo === numUser() &&
+        selectedCard?.openStatusName === '전체 공개' && (
+          <Alert severity="success" css={styles.alertArea}>
+            본인이 작성한 설문입니다.
+          </Alert>
         )}
-      </Box>
+      {selectedCard?.userNo === numUser() &&
+        selectedCard?.openStatusName === '회원 공개' && (
+          <Alert severity="success" css={styles.alertArea}>
+            본인이 작성한 설문입니다.
+          </Alert>
+        )}
+
+      {selectedCard?.openStatusName === '비공개' &&
+        (numUser() !== selectedCard.userNo ? (
+          <Alert severity="warning" css={styles.alertArea}>
+            설문 작성자만 볼 수 있습니다.
+          </Alert>
+        ) : (
+          <Alert severity="success" css={styles.alertArea}>
+            해당 비공개 설문의 작성자입니다.
+          </Alert>
+        ))}
+
+      {selectedCard?.openStatusName === '회원 공개' && numUser() === null && (
+        <Alert severity="error" css={styles.alertArea}>
+          통계를 보시려면 로그인해주세요.
+        </Alert>
+      )}
+
+      {numUser() === null && selectedCard?.openStatusName === '전체 공개' && (
+        <Alert severity="error" css={styles.alertArea}>
+          참여를 원하시면 로그인해주세요
+        </Alert>
+      )}
       {/* 결과보기, 참여하기 버튼 */}
-      {/* 결과보기 버튼 */}
       {(!selectedCard?.openStatusName ||
         selectedCard?.openStatusName === '전체 공개' ||
         (selectedCard?.openStatusName === '비공개' &&
@@ -103,7 +114,7 @@ export default function AttendModalButtonGroup({
           }}
           css={styles.surveyResultButton}
         >
-          설문 결과보기
+          설문 통계보기
         </Button>
       )}
 
