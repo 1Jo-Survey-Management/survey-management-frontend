@@ -212,7 +212,7 @@ function AttendSingleMoveChoice({
               color: 'black',
               marginBottom: '10px',
               '&.Mui-focused': {
-                color: '#3e3e3e', // 포커스 시 색상 변경
+                color: '#3e3e3e',
               },
             }}
           >
@@ -249,7 +249,7 @@ function AttendSingleMoveChoice({
                           height: '18px',
                         },
                         '&.Mui-checked': {
-                          color: '#3e3e3e', // 선택 시 라디오 버튼 색상 변경
+                          color: '#3e3e3e',
                         },
                       }}
                       onClick={() =>

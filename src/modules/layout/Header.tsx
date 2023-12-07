@@ -85,16 +85,6 @@ function Header() {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
 
-  // const getLogoutImageSrc = () =>
-  //   isHovered
-  //     ? `${process.env.PUBLIC_URL}/images/loginImage/logoutbuttonhover.png`
-  //     : `${process.env.PUBLIC_URL}/images/loginImage/logoutbutton.png`;
-
-  // const getLoginImageSrc = () =>
-  //   isHovered
-  //     ? `${process.env.PUBLIC_URL}/images/loginImage/loginbuttonhover.png`
-  //     : `${process.env.PUBLIC_URL}/images/loginImage/loginbutton.png`;
-
   /**
    * 메인 페이지로 이동하는 함수
    * @author 김선규

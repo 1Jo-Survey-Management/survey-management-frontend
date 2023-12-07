@@ -105,14 +105,12 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    // height: '80px',
   }),
 
   surveyTitle: css({
     fontFamily,
     textOverflow: 'ellipsis',
     fontWeight: 'bold',
-    // marginBottom: '15px',
     width: '100%',
     height: '100%',
   }),
@@ -167,36 +165,12 @@ const styles = {
   modalScrollBox: css({
     overflow: 'auto',
     height: '38vh',
-    // '@media screen and (min-height: 1000px)': {
-    //   overflow: 'auto',
-    //   height: '36vh',
-    // },
-
-    // '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 800px) and (max-height: 1000px)':
-    //   {
-    //     height: '23vh',
-    //   },
-
-    // '@media screen and  (max-width: 376px) and (max-width: 600px)': {
-    //   height: '24vh',
-    // },
-    // '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 500px) and (max-height: 700px)':
-    //   {
-    //     overflow: 'auto',
-    //     height: '20vh',
-    //   },
-    // '@media screen and (min-width: 374px) and (max-width: 600px) and (min-height: 801px) and (max-height: 1000px)':
-    //   {
-    //     overflow: 'auto',
-    //     height: '16vh',
-    //   },
   }),
 
   surveyImageBox: css({
     display: 'flex',
     flexDirection: 'row',
     paddingBottom: '15px',
-    // height: '100%',
   }),
 
   surveyImage: css({
@@ -211,7 +185,6 @@ const styles = {
     textAlign: 'start',
     fontFamily,
     fontWeight: '600',
-    // width: '80%',
   }),
 };
 
@@ -301,6 +274,8 @@ export default function MainModal({
                 {selectedCard.userNickName}
               </Typography>
             </Box>
+            <Divider sx={{ marginBottom: '3px', marginTop: '3px' }} />
+
             {/* 설문 조사 타이틀 */}
             <Box className="titleStyle" css={styles.surveyTitleBox}>
               <Typography
@@ -311,6 +286,7 @@ export default function MainModal({
                 {selectedCard.surveyTitle}
               </Typography>
             </Box>
+            <Divider sx={{ marginBottom: '3px', marginTop: '3px' }} />
 
             {/* 작성자, 참여자수, 태그들 */}
             <Box css={styles.surveyOptionContainer}>

@@ -179,7 +179,6 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                                 style={textStyle}
                               />
                             </Stack>
-                            {/* </Stack> */}
 
                             <div
                               style={{
@@ -209,7 +208,7 @@ function ClosingSurvey({ cardList }: CardDataListProps) {
                                 fontWeight: 600,
                                 marginBottom: '8px',
                                 cursor: 'pointer',
-                                maxHeight: '47px', // 원하는 높이 설정
+                                maxHeight: '47px',
                                 overflow: 'hidden',
                                 display: '-webkit-box',
                                 WebkitLineClamp: 2,

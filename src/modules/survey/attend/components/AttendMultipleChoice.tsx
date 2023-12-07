@@ -104,7 +104,7 @@ function AttendMultipleChoice({
               color: 'black',
               marginBottom: '10px',
               '&.Mui-focused': {
-                color: '#3e3e3e', // 포커스 시 색상 변경
+                color: '#3e3e3e',
               },
             }}
           >
@@ -125,55 +125,6 @@ function AttendMultipleChoice({
               paddingTop: '10px',
             }}
           >
-            {/* {questionItems.map((item) => (
-              <div key={item.selectionNo}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      sx={{
-                        '& svg': {
-                          width: '18px',
-                          height: '18px',
-                        },
-                      }}
-                      checked={checkedValues.some(
-                        (v) => v.selectionValue === (item.selectionValue || '')
-                      )}
-                      onChange={handleCheckboxChange}
-                      value={item.selectionValue || ''}
-                      name={item.selectionNo.toString()}
-                    />
-                  }
-                  label={
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: checkedValues.some(
-                          (v) =>
-                            v.selectionValue === (item.selectionValue || '')
-                        )
-                          ? 'blue'
-                          : 'inherit',
-                        fontWeight: checkedValues.some(
-                          (v) =>
-                            v.selectionValue === (item.selectionValue || '')
-                        )
-                          ? 'bold'
-                          : 'normal',
-                        fontSize: checkedValues.some(
-                          (v) =>
-                            v.selectionValue === (item.selectionValue || '')
-                        )
-                          ? '0.9rem'
-                          : '0.8rem',
-                      }}
-                    >
-                      {item.selectionValue || ''}
-                    </Typography>
-                  }
-                />
-              </div>
-            ))} */}
             {questionItems.map((item) => (
               <div key={item.selectionNo}>
                 <FormControlLabel
@@ -185,10 +136,10 @@ function AttendMultipleChoice({
                           height: '18px',
                         },
                         '&.Mui-checked': {
-                          color: '#3e3e3e', // 선택 시 체크박스 색상 변경
+                          color: '#3e3e3e',
                         },
                         '&:hover': {
-                          backgroundColor: 'transparent', // 호버 시 배경색 변경
+                          backgroundColor: 'transparent',
                         },
                       }}
                       checked={checkedValues.some(
@@ -203,7 +154,7 @@ function AttendMultipleChoice({
                     <Typography
                       variant="body2"
                       sx={{
-                        color: '#3e3e3e', // 레이블의 폰트 색상 변경
+                        color: '#3e3e3e',
                         fontWeight: checkedValues.some(
                           (v) =>
                             v.selectionValue === (item.selectionValue || '')

@@ -1,5 +1,4 @@
 import React from 'react';
-import './Footer.css';
 import { Box, Toolbar, Divider, Typography } from '@mui/material';
 
 /**

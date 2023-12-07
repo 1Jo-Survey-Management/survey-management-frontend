@@ -225,8 +225,8 @@ function Mypage() {
     );
 
     setFilteredData(filtered);
-    setState('전체'); // 상태를 '전체'로 설정
-    setSearchTerm(''); // 검색어를 비움
+    setState('전체');
+    setSearchTerm('');
   };
 
   /**
@@ -484,18 +484,18 @@ function Mypage() {
               height: '100%',
               '& .MuiOutlinedInput-root': {
                 '& fieldset': {
-                  borderColor: '#3e3e3e', // 기본 테두리 색상
+                  borderColor: '#3e3e3e',
                 },
                 '&:hover fieldset': {
-                  borderColor: '#747474', // 호버 시 테두리 색상
+                  borderColor: '#747474',
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: '#3e3e3e', // 포커스 시 테두리 색상
+                  borderColor: '#3e3e3e',
                 },
               },
               '& .MuiSelect-select': {
                 '&:focus': {
-                  backgroundColor: 'transparent', // 포커스 시 배경 색상 유지
+                  backgroundColor: 'transparent',
                 },
               },
             }}

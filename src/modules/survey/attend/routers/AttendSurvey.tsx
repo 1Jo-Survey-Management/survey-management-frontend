@@ -127,7 +127,7 @@ function AttendSurvey() {
             (item) =>
               item.surveyQuestionNo === selectedQuestionNo &&
               item.selectionNo !== selectionNo &&
-              item.surveyQuestionMoveNo !== moveToQuestionNo // 현재 선택된 moveToQuestionNo와 다른 surveyQuestionMoveNo만 포함
+              item.surveyQuestionMoveNo !== moveToQuestionNo
           )
           .map((item) => item.surveyQuestionMoveNo);
 
@@ -503,7 +503,7 @@ function AttendSurvey() {
               item.surveyQuestionNo
             );
           }
-        }, 300); // 300ms 지연
+        }, 300);
       }
     });
   }
@@ -558,7 +558,6 @@ function AttendSurvey() {
       }
     }
 
-    // Swal 사용하여 확인 받기
     const isConfirmed = await Swal.fire({
       title: '설문을 제출하시겠습니까?',
       icon: 'question',
@@ -664,16 +663,16 @@ function AttendSurvey() {
           onClick={handleSubmit}
           sx={{
             marginBottom: '60px',
-            backgroundColor: '#ffffff', // 기본 배경색
-            color: 'black', // 기본 폰트 색상
+            backgroundColor: '#ffffff',
+            color: 'black',
             fontWeight: '600',
             '&:hover': {
-              backgroundColor: '#3e3e3e', // 호버 시 배경색
-              color: 'white', // 호버 시 폰트 색상
+              backgroundColor: '#3e3e3e',
+              color: 'white',
             },
             '&.Mui-focusVisible': {
-              backgroundColor: '#ffffff', // 포커스 시 배경색
-              color: 'black', // 포커스 시 폰트 색상
+              backgroundColor: '#ffffff',
+              color: 'black',
             },
           }}
         >
