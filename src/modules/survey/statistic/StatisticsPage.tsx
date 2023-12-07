@@ -346,7 +346,7 @@ export default function StatisticsPage() {
                   </Typography>
 
                   <Typography sx={styles.surveyInfo}>
-                    문항 답변수 :{' '}
+                    선택지 답변수 :{' '}
                     {itemsForQuestion[0].selectionCount !== 0
                       ? countSelections(itemsForQuestion)
                       : countSubjectiveAnswerCount(itemsForQuestion)}
