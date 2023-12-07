@@ -100,8 +100,8 @@ function AttendSurvey() {
     questionTypeNo: number,
     isMovable: boolean,
     isUnchecked: boolean,
-    endOfSurvey: boolean,
-    selectionNo: number
+    endOfSurvey: boolean
+    // selectionNo: number
   ) => {
     setHiddenQuestions((prevHiddenQuestions) => {
       const currentHiddenQuestions =
@@ -121,29 +121,12 @@ function AttendSurvey() {
       }
 
       if (isMovable && questionTypeNo === 2) {
-        // 현재 문항의 다른 선택지들의 surveyQuestionMoveNo 값들을 찾기
-        const additionalHiddenQuestions = surveyData.content
-          .filter(
-            (item) =>
-              item.surveyQuestionNo === selectedQuestionNo &&
-              item.selectionNo !== selectionNo &&
-              item.surveyQuestionMoveNo !== moveToQuestionNo
-          )
-          .map((item) => item.surveyQuestionMoveNo);
-
-        // 숨겨야 할 질문 번호들을 추가 (현재 선택된 moveToQuestionNo는 제외)
+        // 숨길 질문 번호들을 추가
         for (let i = selectedQuestionNo + 1; i < moveToQuestionNo; i += 1) {
           if (!newHiddenQuestions.includes(i)) {
             newHiddenQuestions.push(i);
           }
         }
-
-        // additionalHiddenQuestions에 포함된 문항들을 숨김 처리
-        additionalHiddenQuestions.forEach((hiddenQuestionNo) => {
-          if (!newHiddenQuestions.includes(hiddenQuestionNo)) {
-            newHiddenQuestions.push(hiddenQuestionNo);
-          }
-        });
       } else if (
         (!isMovable && questionTypeNo === 2 && moveToQuestionNo === 0) ||
         isUnchecked
@@ -191,27 +174,17 @@ function AttendSurvey() {
     // 사용자 응답을 업데이트
     if (isUnchecked || endOfSurvey) {
       setUserResponses((prevResponses) => {
-        // 현재 선택된 문항을 제외한 다른 응답들을 필터링
         let updatedResponses = prevResponses.filter(
           (response) => response.surveyQuestionNo !== selectedQuestionNo
         );
 
         if (endOfSurvey) {
-          // endOfSurvey가 true인 경우, 해당 문항 뒤의 문항들을 제외
           const questionsToRemove = uniqueQuestions.filter(
             (q) => q > selectedQuestionNo
           );
           updatedResponses = updatedResponses.filter(
             (response) => !questionsToRemove.includes(response.surveyQuestionNo)
           );
-
-          // 현재 선택된 문항의 응답을 추가
-          const currentResponse = prevResponses.find(
-            (response) => response.surveyQuestionNo === selectedQuestionNo
-          );
-          if (currentResponse) {
-            updatedResponses = [...updatedResponses, currentResponse];
-          }
         }
 
         return updatedResponses;
