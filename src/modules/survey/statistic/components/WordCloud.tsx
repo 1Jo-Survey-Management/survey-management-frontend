@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import cloud from 'd3-cloud';
 import 'd3-array';
@@ -6,63 +6,50 @@ import 'd3-array';
 interface WordCloudProps {
   wordCloud: { text: string; size: number }[];
 }
+// 무작위 색상을 생성하는 함수
+function getRandomColor(): string {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
 
-function updateWordCloudData(
-  wordCloudData: { text: string }[],
-  newText: string
-  // incrementValue: number
-): { text: string }[] {
-  const existingWord = wordCloudData.find((item) => item.text === newText);
+  Array.from({ length: 6 }).forEach(() => {
+    color += letters[Math.floor(Math.random() * 16)];
+  });
 
-  if (existingWord) {
-  } else {
-    wordCloudData.push({ text: newText });
-  }
-
-  return wordCloudData;
+  return color;
 }
 
-function WordCloud({ wordCloud }: WordCloudProps): JSX.Element | any {
-  const [wordCloudData, setWordCloudData] = useState<{ text: string }[]>([]);
-  const updateWordCloud = () => {
-    const updatedWordCloudData = wordCloud.reduce(
-      (acc, word) => updateWordCloudData(acc, word.text),
-      [...wordCloudData]
-    );
-
-    setWordCloudData(updatedWordCloudData);
-  };
+function WordCloud({ wordCloud }: WordCloudProps): JSX.Element | null {
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    updateWordCloud();
-  }, [wordCloud]);
+    if (!containerRef.current) return;
 
-  const wordCloudDataString = JSON.stringify(wordCloudData);
+    const extractedWords = wordCloud.map((item) => item.text);
+    const wordCloudDataString = JSON.stringify(extractedWords);
 
-  d3.text(wordCloudDataString).then((text) => {
-    const stopwords = new Set(
-      "i,me,my,myself,we,us,our,ours,ourselves,you,your,yours,yourself,yourselves,he,him,his,himself,she,her,hers,herself,it,its,itself,they,them,their,theirs,themselves,what,which,who,whom,whose,this,that,these,those,am,is,are,was,were,be,been,being,have,has,had,having,do,does,did,doing,will,would,should,can,could,ought,i'm,you're,he's,she's,it's,we're,they're,i've,you've,we've,they've,i'd,you'd,he'd,she'd,we'd,they'd,i'll,you'll,he'll,she'll,we'll,they'll,isn't,aren't,wasn't,weren't,hasn't,haven't,hadn't,doesn't,don't,didn't,won't,wouldn't,shan't,shouldn't,can't,cannot,couldn't,mustn't,let's,that's,who's,what's,here's,there's,when's,where's,why's,how's,a,an,the,and,but,if,or,because,as,until,while,of,at,by,for,with,about,against,between,into,through,during,before,after,above,below,to,from,up,upon,down,in,out,on,off,over,under,again,further,then,once,here,there,when,where,why,how,all,any,both,each,few,more,most,other,some,such,no,nor,not,only,own,same,so,than,too,very,say,says,said,shall".split(
-        ','
-      )
-    );
-    const words = text
+    const words = wordCloudDataString
       .trim()
-      .split(/[\s.]+/g)
-      .map((w) => w.replace(/^[“‘"\-—()[\]{}]+/g, ''))
-      .map((w) => w.replace(/[;:.!?()[\]{},"'’”\-—]+$/g, ''))
-      .map((w) => w.replace(/['’]s$/g, ''))
-      .map((w) => w.substring(0, 30))
-      .map((w) => w.toLowerCase())
-      .filter((w) => w && !stopwords.has(w));
+      .split(/,/g)
+      .map((w) => w.replace(/[\]]/g, ''))
+      .map((w) => w.replace(/"/g, ''))
+      .map((w) => w.substring(0, 15))
+      .map((w) => w.toLowerCase());
 
-    var fontFamily = 'sans-serif';
-    var fontScale = 15;
-    var padding = 0;
-    var height = 500;
-    var width = 700;
-    const rotate = () => 0; // () => (~~(Math.random() * 6) - 3) * 30
+    // D3 코드 시작
+    const fontFamily = 'GmarketSansMedium';
+    const WebFontScale = 20;
+    const mobileFontScale = 3.5;
+    const padding = 2;
+    const height = window.innerWidth < 600 ? 190 : 600;
+    const width = window.innerWidth < 600 ? 330 : 800;
+    const rotate = () => 0;
 
-    var data = d3
+    const mobileSizeMediaQuery: (size: number) => number = (size) =>
+      window.innerWidth <= 600
+        ? size * mobileFontScale
+        : Math.sqrt(size) * WebFontScale;
+
+    const data = d3
       .rollups(
         words,
         (group) => group.length,
@@ -70,36 +57,44 @@ function WordCloud({ wordCloud }: WordCloudProps): JSX.Element | any {
       )
       .sort(([, a], [, b]) => d3.descending(a, b))
       .slice(0, 250)
-      .map(([text, value]) => ({ text, value }));
-    console.log(data);
+      .map(([text, size]) => ({ text, size }));
 
     const svg = d3
-      .select('#word-cloud-div')
+      .select(containerRef.current)
       .append('svg')
       .attr('height', height)
       .attr('width', width)
       .attr('font-family', fontFamily)
       .attr('text-anchor', 'middle');
 
-    const w_cloud = cloud()
+    const wordCloudLayout = cloud()
       .size([width, height])
-      .words(data.map((d) => Object.create(d)))
+      .words(data)
       .padding(padding)
       .rotate(rotate)
       .font(fontFamily)
       .fontSize((d) =>
-        typeof d.size === 'number' ? Math.sqrt(d.size) * fontScale : 0
-      ) // 값이 숫자가 아닐 때 기본값 0 사용
-      .on('word', ({ size, x, y, rotate, text }) => {
-        return svg
+        typeof d.size === 'number' ? mobileSizeMediaQuery(d.size) : 1
+      )
+      .on('word', ({ size, x, y, rotate: wordRotate, text }) => {
+        svg
           .append('text')
           .attr('font-size', size as number)
-          .attr('transform', `translate(${x},${y}) rotate(${rotate})`)
+          .attr('transform', `translate(${x},${y}) rotate(${wordRotate})`)
+          .attr('fill', getRandomColor())
           .text(text as string);
       });
 
-    w_cloud.start();
-  });
+    wordCloudLayout.start();
+
+    // return () => {
+    //   if (containerRef.current) {
+    //     d3.select(containerRef.current).selectAll('*').remove();
+    //   }
+    // };
+  }, [wordCloud]);
+
+  return <div ref={containerRef} />;
 }
 
 export default WordCloud;
