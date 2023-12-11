@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
@@ -342,7 +343,7 @@ export default function StatisticsPage() {
               <CardContent>
                 <Box>
                   <Typography sx={styles.componentText}>
-                    {index + 1} . {itemsForQuestion[0].surveyQuestionTitle}
+                    {itemsForQuestion[0].surveyQuestionTitle}
                   </Typography>
 
                   <Typography sx={styles.surveyInfo}>
@@ -495,7 +496,6 @@ export default function StatisticsPage() {
           </Box>
         );
       })}
-
       <Box sx={styles.card}>
         <Card sx={styles.cardTitle}>
           {' '}

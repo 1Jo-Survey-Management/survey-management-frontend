@@ -11,16 +11,11 @@ interface InputBirthDateProps {
   onChange: (value: string) => void;
 }
 
-/**
- * 생년월일 입력 데이트 픽커입니다
- * @author 김선규
- * @returns date Picker 컴포넌트
- */
 export default function ResponsiveDatePickers({
   onChange,
 }: InputBirthDateProps) {
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(
-    dayjs('')
+    dayjs('2004-01-01')
   );
 
   const handleDateChange = (date: dayjs.Dayjs | null) => {
@@ -54,9 +49,11 @@ export default function ResponsiveDatePickers({
         >
           <DemoItem label="생년월일">
             <DesktopDatePicker
-              disableFuture
+              disableFuture // 미래 날짜 비활성화
               value={selectedDate}
               onChange={handleDateChange}
+              minDate={dayjs('1910-01-01')}
+              maxDate={dayjs('2004-01-01')}
             />
           </DemoItem>
         </DemoContainer>
